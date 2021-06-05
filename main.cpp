@@ -1,26 +1,28 @@
-#include <active_record.hpp>
+#include "include/active_record.hpp"
 
-struct MyDatabase : public active_record::database {
-    struct Member : public database::table<Member> {
-        static auto table_name = "members_table";
-        struct ID : public column::integer<Member, ID> {
-            static auto column_name = "id";
-            static auto validators = { allow_null, uniqueness };
-        } id;
-        struct Name : public column::string<Member, Name> {
-            static auto column_name = "name";
-        } name;
-        using columns = std::tuple<ID, Name>;
-    };
+struct Member : public active_record::model<Member> {
+    static constexpr auto table_name = "members_table";
+    struct ID : public active_record::attributes::integer<Member, ID> {
+        static constexpr auto column_name = "id";
+        //static constepxr auto validators = { allow_null, uniqueness };
+    } id;
+    struct Name : public active_record::attributes::string<Member, Name> {
+        static constexpr auto column_name = "name";
+    } name;
+    using attributes = std::tuple<ID, Name>;
+};
 
-    struct EnteringLog : public database::table {
-        struct Mebmer : public relation::belongs_to<Member> {
-            
-        } member;
-    };
+struct EnteringLog : public active_record::model<EnteringLog> {
+    static constexpr auto table_name = "entering_log_table";
+    struct ID : public active_record::attributes::integer<Member, ID> {
+        static constexpr auto column_name = "id";
+        //static constepxr auto validators = { allow_null, uniqueness };
+    } id;
+    using attributes = std::tuple<ID>;
 };
 
 int main(){
+    /*
     databaseAdaptor adapt = SQLite3("test.sqlite3");
     //databaseAdaptor = Postgresql("postgresql://localhost/mydb");
     MyDatabase database = databaseAdaptor.connect<MyDatabase>();
@@ -47,7 +49,7 @@ int main(){
             std::cout  << error << std::endl;
         }
     }
-
+    */
     
     return 0;
 }

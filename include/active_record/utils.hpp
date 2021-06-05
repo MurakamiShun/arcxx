@@ -2,6 +2,10 @@
 #include <concepts>
 
 namespace active_record{
+    using string = std::string;
+    using string_view = std::string_view;
+    using datetime = std::chrono::utc_clock;
+
     template <class ContainerType> 
     concept Container = requires(ContainerType a, const ContainerType b) 
     {
@@ -24,5 +28,11 @@ namespace active_record{
         { a.size() } -> std::same_as<typename ContainerType::size_type>;
         { a.max_size() } -> std::same_as<typename ContainerType::size_type>;
         { a.empty() } -> std::same_as<bool>;
+    };
+
+    template<class TupleType>
+    concept Tuple = requires {
+        std::tuple_size<TupleType>::value;
+        { std::bool_constant<std::is_standard_layout_v<TupleType>>{} } -> std::same_as<std::bool_constant<false>>;
     };
 }
