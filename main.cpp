@@ -1,4 +1,7 @@
 #include "include/active_record.hpp"
+#include <string>
+#include <iostream>
+#include <cmath>
 
 struct Member : public active_record::model<Member> {
     static constexpr auto table_name = "members_table";
@@ -9,7 +12,7 @@ struct Member : public active_record::model<Member> {
     struct Name : public active_record::attributes::string<Member, Name> {
         static constexpr auto column_name = "name";
     } name;
-    using attributes = std::tuple<ID, Name>;
+    std::tuple<ID&, Name&> attributes = std::tie(id, name);
 };
 
 struct EnteringLog : public active_record::model<EnteringLog> {
@@ -18,10 +21,16 @@ struct EnteringLog : public active_record::model<EnteringLog> {
         static constexpr auto column_name = "id";
         //static constepxr auto validators = { allow_null, uniqueness };
     } id;
-    using attributes = std::tuple<ID>;
+    std::tuple<ID&> attributes = std::tie(id);
 };
 
 int main(){
+    Member::ID id{ 10 };
+    id.value() = 10;
+    constexpr auto table_name = id.column_full_name().first;
+    std::cout << id.column_full_name().first << std::endl;
+    std::cout << Member::column_full_names() << std::endl;
+
     /*
     databaseAdaptor adapt = SQLite3("test.sqlite3");
     //databaseAdaptor = Postgresql("postgresql://localhost/mydb");

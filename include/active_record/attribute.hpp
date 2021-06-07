@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 #include "model.hpp"
+#include "query.hpp"
 #include "utils.hpp"
 
 namespace active_record {
@@ -22,19 +23,28 @@ namespace active_record {
             static std::false_type check(...) {}
             static constexpr bool value = decltype(check(std::declval<Attribute>()))::value;
         };
+
     public:
+        using model_type = Model;
+        using attribute_type = Attribute;
+        using value_type = Type;
+
         static constexpr bool has_column_name = has_column_name_impl::value;
         static constexpr bool has_validators = has_validators_impl::value;
-
         static constexpr std::pair<active_record::string_view, active_record::string_view> column_full_name() {
-            static_assert(Model::has_table_name, "Model doesn't have column_name. Declare like \"static constexpr auto table_name = \"hoge_table\"\"");
-            static_assert(has_column_name, "Attribute doesn't have column_name. Declare like \"static constexpr auto column_name = \"hogehage\"\"");
             return { Model::table_name, Attribute::column_name };
         };
-        attribute() {}
-        attribute(std::optional<Type>& default_value) : data(default_value) {}
+        constexpr attribute() {}
+        constexpr attribute(const std::optional<Type>& default_value) : data(default_value) {}
+        constexpr attribute(std::optional<Type>&& default_value) : data(std::move(default_value)) {}
+        constexpr attribute(std::nullopt_t) : data(std::nullopt) {}
+        constexpr attribute(const Type& default_value) : data(default_value) {}
+        constexpr attribute(Type&& default_value) : data(std::move(default_value)) {}
+
+
         //virtual void from_string(const database::string_view str) = 0;
         //virtual database::string to_string() const = 0;
+        
         bool is_valid() const {
             if constexpr (has_validations<Attribute>::value) {
                 for (const auto& val : Attribute::validators) {
@@ -42,14 +52,6 @@ namespace active_record {
                 }
             }
             return true;
-        }
-        Attribute& operator=(const std::optional<Type> dst) {
-            data = dst;
-            return *dynamic_cast<Attribute*>(this);
-        }
-        Attribute& operator=(const std::optional<const Type> dst) {
-            data = dst;
-            return *dynamic_cast<Attribute*>(this);
         }
         explicit operator bool() const noexcept { return static_cast<bool>(data); }
         const Type& value() const& { return data.value(); }
@@ -65,21 +67,32 @@ namespace active_record {
 
         template<typename Model, typename Attribute>
         struct string : public attribute<Model, Attribute, active_record::string> {
+            using attribute<Model, Attribute, active_record::string>::attribute;
         };
 
         template<typename Model, typename Attribute>
-        struct integer : public attribute<Model, Attribute, int32_t> {};
+        struct integer : public attribute<Model, Attribute, int32_t> {
+            using attribute<Model, Attribute, int32_t>::attribute;
+        };
 
         template<typename Model, typename Attribute>
-        struct decimal : public attribute<Model, Attribute, float> {};
+        struct decimal : public attribute<Model, Attribute, float> {
+            using attribute<Model, Attribute, float>::attribute;
+        };
 
         template<typename Model, typename Attribute>
-        struct boolean : public attribute<Model, Attribute, bool> {};
+        struct boolean : public attribute<Model, Attribute, bool> {
+            using attribute<Model, Attribute, bool>::attribute;
+        };
 
         template<typename Model, typename Attribute>
-        struct datetime : public attribute<Model, Attribute, active_record::datetime> {};
+        struct datetime : public attribute<Model, Attribute, active_record::datetime> {
+            using attribute<Model, Attribute, active_record::datetime>::attribute;
+        };
 
         template<typename Model, typename Attribute>
-        struct binary : public attribute<Model, Attribute, std::vector<std::byte>> {};
+        struct binary : public attribute<Model, Attribute, std::vector<std::byte>> {
+            using attribute<Model, Attribute, std::vector<std::byte>>::attribute;
+        };
     };
 }
