@@ -8,7 +8,6 @@ namespace active_record {
     template<typename Model, typename Attribute, typename Type>
     class attribute {
     private:
-        using validator = std::function<bool(const Type&)>;
         struct has_column_name_impl {
             template<typename S>
             static decltype(S::column_name, std::true_type()) check(S) {}
@@ -25,6 +24,7 @@ namespace active_record {
     protected:
         std::optional<Type> data;
     public:
+        using validator = std::function<bool(const std::optional<Type>&)>;
         using model_type = Model;
         using attribute_type = Attribute;
         using value_type = Type;
@@ -34,6 +34,8 @@ namespace active_record {
         static constexpr std::pair<active_record::string_view, active_record::string_view> column_full_name() {
             return { Model::table_name, Attribute::column_name };
         };
+
+        inline static const validator not_null = [](const std::optional<Type>& t) -> bool { return static_cast<bool>(t); };
 
         constexpr attribute() {}
         constexpr attribute(const std::optional<Type>& default_value) : data(default_value) {}

@@ -67,14 +67,13 @@ namespace active_record {
         static query_relation<bool> insert(const C&);
         
         template<std::same_as<Derived>... Models>
-        static query_relation<bool> insert(const Models&... models) {
-            return insert({ models... });
-        }
+        static query_relation<bool> insert(const Models&... models);
+
 
         template<typename... Columns>
-        static constexpr query_relation<std::vector<Derived>> where([[maybe_unused]] Columns...);
-        template<typename... Columns>
         static constexpr query_relation<std::vector<std::tuple<Columns...>>> select([[maybe_unused]] Columns...);
+        template<typename... Columns>
+        static constexpr query_relation<std::vector<Derived>> where([[maybe_unused]] Columns...);
         template<typename Column>
         static constexpr query_relation<std::vector<Column>> pluck([[maybe_unused]] Column);
         static constexpr query_relation<std::vector<Derived>> all();

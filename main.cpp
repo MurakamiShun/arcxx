@@ -8,7 +8,7 @@ struct Member : public active_record::model<Member> {
     struct ID : public active_record::attributes::integer<Member, ID> {
         using active_record::attributes::integer<Member, ID>::integer;
         static constexpr auto column_name = "id";
-        //static constepxr auto validators = { allow_null, uniqueness };
+        inline static const auto validators = { not_null };
     } id;
     struct Name : public active_record::attributes::string<Member, Name> {
         using active_record::attributes::string<Member, Name>::string;

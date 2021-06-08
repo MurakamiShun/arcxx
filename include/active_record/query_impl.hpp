@@ -115,9 +115,30 @@ namespace active_record{
         query_relation<Result> where([[maybe_unused]] Relations... relations);
     };
 
+    namespace{
+        template<typename Derived>
+        constexpr active_record::string values_to_string(const Derived& src) {
+            const auto value_strings = src.to_strings();
+            active_record::string result = "(";
+            active_record::string delimiter = "";
+            for (const auto& value : value_strings) {
+                result += delimiter +"\'" + value + "\'";
+                delimiter = ",";
+            }
+            result += ")";
+            return result;
+        }
+
+        template<typename Derived, typename... Tail>
+        constexpr active_record::string values_to_string(const Derived& src, const Tail&... tail) {
+            const auto first = values_to_string(src);
+            return first + "," + values_to_string(tail...);
+        }
+    }
+
     template<typename Derived>
     template<Container C>
-    inline query_relation<bool> model<Derived>::insert(const C& models) {
+    static query_relation<bool> model<Derived>::insert(const C& models) {
         auto column_names = Derived::column_names();
         active_record::string table = active_record::string("\"") + Derived::table_name + "\"" + "(";
         active_record::string delimiter = "";
@@ -130,16 +151,31 @@ namespace active_record{
         active_record::string values;
         active_record::string value_delimiter = "";
         for (const auto& src : models) {
-            const auto value_strings = src.to_strings();
-            values += value_delimiter + "(";
-            delimiter = "";
-            for (const auto& value : value_strings) {
-                values += delimiter + "\'" + value + "\'";
-                delimiter = ",";
-            }
-            values += ")";
+            values += value_delimiter + values_to_string(src);
             value_delimiter = ",";
         }
+        return query_relation<bool> {
+            query_operation::insert,
+                std::move(values),
+                std::move(table),
+                active_record::string(""),
+                active_record::string("")
+        };
+    }
+
+    template<typename Derived>
+    template<std::same_as<Derived>... Models>
+    static query_relation<bool> model<Derived>::insert(const Models&... models) {
+        auto column_names = Derived::column_names();
+        active_record::string table = active_record::string("\"") + Derived::table_name + "\"" + "(";
+        active_record::string delimiter = "";
+        for (auto& col_name : column_names) {
+            table += delimiter + "\"" + active_record::string(col_name) + "\"";
+            delimiter = ",";
+        }
+        table += ")";
+
+        const auto values = values_to_string(models...);
         return query_relation<bool> {
             query_operation::insert,
                 std::move(values),
