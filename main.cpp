@@ -6,10 +6,12 @@
 struct Member : public active_record::model<Member> {
     static constexpr auto table_name = "members_table";
     struct ID : public active_record::attributes::integer<Member, ID> {
+        using active_record::attributes::integer<Member, ID>::integer;
         static constexpr auto column_name = "id";
         //static constepxr auto validators = { allow_null, uniqueness };
     } id;
     struct Name : public active_record::attributes::string<Member, Name> {
+        using active_record::attributes::string<Member, Name>::string;
         static constexpr auto column_name = "name";
     } name;
     std::tuple<ID&, Name&> attributes = std::tie(id, name);
@@ -24,12 +26,22 @@ struct EnteringLog : public active_record::model<EnteringLog> {
     std::tuple<ID&> attributes = std::tie(id);
 };
 
-int main(){
-    Member::ID id{ 10 };
-    id.value() = 10;
+int main() {
+    Member::ID id = 10;
+    Member::Name name = "test";
+    id = std::nullopt;
     constexpr auto table_name = id.column_full_name().first;
     std::cout << id.column_full_name().first << std::endl;
-    std::cout << Member::column_full_names() << std::endl;
+    std::cout << Member::column_names()[0] << std::endl;
+    std::cout << id.to_string() << std::endl;
+
+    Member member;
+    member.id = 123;
+    member.name = "nkodice";
+    std::cout << member.to_strings()[1] << std::endl;
+
+    std::array<Member, 4> members;
+    std::cout << Member::insert(members).to_sql() << std::endl;
 
     /*
     databaseAdaptor adapt = SQLite3("test.sqlite3");

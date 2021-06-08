@@ -34,7 +34,7 @@ namespace active_record{
                 return active_record::string("SELECT ") + query_op_arg + " FROM " + query_table + " WHERE " + query_condition + query_options + ";";
             }
             else if (operation == query_operation::insert) {
-                return active_record::string("INSERT INTO ") + query_table + " VALUES " + " ( " + query_op_arg + " );";
+                return active_record::string("INSERT INTO ") + query_table + " VALUES " + query_op_arg + ";";
             }
             else if (operation == query_operation::destroy) {
                 return active_record::string("DELETE FROM ") + query_table + " WHERE " + query_condition + ";";
@@ -54,6 +54,13 @@ namespace active_record{
             query_table(std::move(table)),
             query_condition(std::move(condition)),
             query_options(std::move(options)),
+            operation(op) {
+        }
+        constexpr query_operation_common(const query_operation op, const active_record::string& op_arg, const active_record::string& table, const active_record::string& condition, const active_record::string& options) :
+            query_op_arg(op_arg),
+            query_table(table),
+            query_condition(condition),
+            query_options(options),
             operation(op) {
         }
     };
@@ -109,12 +116,36 @@ namespace active_record{
     };
 
     template<typename Derived>
-    inline query_relation<bool> model<Derived>::insert(const Derived& src) {
+    template<Container C>
+    inline query_relation<bool> model<Derived>::insert(const C& models) {
+        auto column_names = Derived::column_names();
+        active_record::string table = active_record::string("\"") + Derived::table_name + "\"" + "(";
+        active_record::string delimiter = "";
+        for (auto& col_name : column_names) {
+            table += delimiter + "\"" + active_record::string(col_name) + "\"";
+            delimiter = ",";
+        }
+        table += ")";
+
+        active_record::string values;
+        active_record::string value_delimiter = "";
+        for (const auto& src : models) {
+            const auto value_strings = src.to_strings();
+            values += value_delimiter + "(";
+            delimiter = "";
+            for (const auto& value : value_strings) {
+                values += delimiter + "\'" + value + "\'";
+                delimiter = ",";
+            }
+            values += ")";
+            value_delimiter = ",";
+        }
         return query_relation<bool> {
-            .operation = query_operation::insert,
-                .query_op_arg = "",
-                .query_table = Derived::column_full_names(),
-                .query_condition = ""
+            query_operation::insert,
+                std::move(values),
+                std::move(table),
+                active_record::string(""),
+                active_record::string("")
         };
     }
 }
