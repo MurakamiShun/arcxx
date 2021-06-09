@@ -14,26 +14,26 @@ namespace active_record {
         struct has_table_name_impl {
         private:
             template<typename S>
-            static decltype(S::table_name, std::true_type()) check(S) {}
-            static std::false_type check(...) {}
+            static decltype(S::table_name, std::true_type()) check(S);
+            static std::false_type check(...);
         public:
-            static constexpr bool value = decltype(check(std::declval<Derived>()))::value;
+            static constexpr bool value = std::invoke_result_t<decltype(&has_table_name_impl::check), Derived>::value;
         };
         struct has_attributes_impl {
         private:
             template<typename S>
-            static decltype(std::declval<S>().attributes, std::true_type()) check(S) {}
-            static std::false_type check(...) {}
+            static decltype(std::declval<S>().attributes, std::true_type()) check(S);
+            static std::false_type check(...);
         public:
-            static constexpr bool value = decltype(check(std::declval<Derived>()))::value;
+            static constexpr bool value = std::invoke_result_t<decltype(&has_attributes_impl::check), Derived>::value;
         };
         // column_names
         template<std::size_t Last>
-        static constexpr std::array<active_record::string_view, 1> column_names_aux(std::index_sequence<Last>) {
+        static constexpr std::array<active_record::string_view, 1> column_names_aux(std::index_sequence<Last>) noexcept {
             return { std::get<Last>(Derived{}.attributes).column_name };
         }
         template<std::size_t Head, std::size_t... Tail>
-        static constexpr std::array<active_record::string_view, 1 + sizeof...(Tail)> column_names_aux(std::index_sequence<Head, Tail...>) {
+        static constexpr std::array<active_record::string_view, 1 + sizeof...(Tail)> column_names_aux(std::index_sequence<Head, Tail...>) noexcept {
             std::array<active_record::string_view, 1 + sizeof...(Tail)> head_name = { std::get<Head>(Derived{}.attributes).column_name };
             const std::array<active_record::string_view, sizeof...(Tail)> tail_names = column_names_aux(std::index_sequence<Tail...>{});
             std::copy(tail_names.begin(), tail_names.end(), head_name.begin() + 1);
@@ -55,7 +55,7 @@ namespace active_record {
     public:
         static constexpr bool has_table_name = has_table_name_impl::value;
         static constexpr bool has_attributes = has_attributes_impl::value;
-        static constexpr auto column_names() {
+        static constexpr auto column_names() noexcept {
             return column_names_aux(std::make_index_sequence<std::tuple_size_v<decltype(Derived{}.attributes)>>{});
         }
 
@@ -63,13 +63,13 @@ namespace active_record {
             return to_strings_aux(std::make_index_sequence<std::tuple_size_v<decltype(Derived{}.attributes)>>{});
         }
 
-        virtual ~model() {}
+        constexpr virtual ~model() {}
 
         template<Container C>
-        static query_relation<bool> insert(const C&);
+        static constexpr query_relation<bool> insert(const C&);
         
         template<std::same_as<Derived>... Models>
-        static query_relation<bool> insert(const Models&... models);
+        static constexpr query_relation<bool> insert(const Models&... models);
 
 
         template<typename... Columns>

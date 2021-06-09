@@ -5,20 +5,6 @@
 #include "utils.hpp"
 
 namespace active_record{
-    enum class query_operation {
-        unspecified,
-        select,
-        insert,
-        destroy,
-        update,
-        condition
-    };
-
-    enum class order {
-        asc,
-        desc
-    };
-
     template<typename T>
     concept Column = std::derived_from<T, attribute<typename T::model_type, typename T::attribute_type, typename T::value_type>>;
 
@@ -46,7 +32,7 @@ namespace active_record{
                 return active_record::string("SELECT ") + query_op_arg + " FROM " + query_table + " WHERE " + query_condition + query_options + ";";
             }
             else {
-                return active_record::string("SELECT ") + query_op_arg + " FROM " + query_table + " WHERE " + query_condition + query_options + ";";
+                return active_record::string("SELECT ") + query_op_arg + " FROM " + query_table + ";";
             }
         }
         query_operation_common(const query_operation op, active_record::string&& op_arg, active_record::string&& table, active_record::string&& condition, active_record::string&& options) :
@@ -114,7 +100,7 @@ namespace active_record{
         query_relation<Result> where([[maybe_unused]] Relations... relations);
     };
 
-    namespace{
+    namespace {
         template<typename Derived>
         constexpr active_record::string values_to_string(const Derived& src) {
             const auto value_strings = src.to_strings();
@@ -137,12 +123,12 @@ namespace active_record{
 
     template<typename Derived>
     template<Container C>
-    inline query_relation<bool> model<Derived>::insert(const C& models) {
+    inline constexpr query_relation<bool> model<Derived>::insert(const C& models) {
         auto column_names = Derived::column_names();
-        active_record::string table = active_record::string("\"") + Derived::table_name + "\"" + "(";
+        active_record::string table = active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"(";
         active_record::string delimiter = "";
         for (auto& col_name : column_names) {
-            table += delimiter + "\"" + active_record::string(col_name) + "\"";
+            table += delimiter + "\"" + active_record::string{ col_name } + "\"";
             delimiter = ",";
         }
         table += ")";
@@ -157,19 +143,19 @@ namespace active_record{
             query_operation::insert,
                 std::move(values),
                 std::move(table),
-                active_record::string(""),
-                active_record::string("")
+                active_record::string{ "" },
+                active_record::string{ "" }
         };
     }
 
     template<typename Derived>
     template<std::same_as<Derived>... Models>
-    inline query_relation<bool> model<Derived>::insert(const Models&... models) {
+    inline constexpr query_relation<bool> model<Derived>::insert(const Models&... models) {
         auto column_names = Derived::column_names();
-        active_record::string table = active_record::string("\"") + Derived::table_name + "\"" + "(";
+        active_record::string table = active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"(";
         active_record::string delimiter = "";
         for (auto& col_name : column_names) {
-            table += delimiter + "\"" + active_record::string(col_name) + "\"";
+            table += delimiter + "\"" + active_record::string{ col_name } + "\"";
             delimiter = ",";
         }
         table += ")";
@@ -179,8 +165,26 @@ namespace active_record{
             query_operation::insert,
                 std::move(values),
                 std::move(table),
-                active_record::string(""),
-                active_record::string("")
+                active_record::string{ "" },
+                active_record::string{ "" }
+        };
+    }
+
+    template<typename Derived>
+    inline constexpr query_relation<std::vector<Derived>> model<Derived>::all() {
+        auto column_names = Derived::column_names();
+        active_record::string columns = "";
+        active_record::string delimiter = "";
+        for (auto& col_name : column_names) {
+            columns += delimiter + "\"" + active_record::string{ Derived::table_name } + "\".\"" + active_record::string{ col_name } + "\"";
+            delimiter = ",";
+        }
+        return query_relation<std::vector<Derived>> {
+            query_operation::unspecified,
+                std::move(columns),
+                active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"",
+                active_record::string{ "" },
+                active_record::string{ "" }
         };
     }
 }

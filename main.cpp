@@ -9,6 +9,7 @@ struct Member : public active_record::model<Member> {
         using active_record::attributes::integer<Member, ID>::integer;
         static constexpr auto column_name = "id";
         inline static const auto validators = { not_null };
+        constexpr ~ID(){}
     } id;
     struct Name : public active_record::attributes::string<Member, Name> {
         using active_record::attributes::string<Member, Name>::string;
@@ -42,6 +43,7 @@ int main() {
 
     std::array<Member, 4> members;
     std::cout << Member::insert(members).to_sql() << std::endl;
+    std::cout << Member::all().to_sql() << std::endl;
 
     /*
     databaseAdaptor adapt = SQLite3("test.sqlite3");
