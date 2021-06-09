@@ -1,6 +1,8 @@
 #pragma once
 #include <type_traits>
 #include <array>
+#include <utility>
+#include <vector>
 #include "query.hpp"
 
 namespace active_record {
@@ -40,11 +42,11 @@ namespace active_record {
 
         // values_to_string
         template<std::size_t Last>
-        const std::array<active_record::string, 1> to_strings_aux(std::index_sequence<Last>) const {
+        constexpr std::array<active_record::string, 1> to_strings_aux(std::index_sequence<Last>) const {
             return { std::get<Last>(dynamic_cast<const Derived*>(this)->attributes).to_string() };
         }
         template<std::size_t Head, std::size_t... Tail>
-        const std::array<active_record::string, 1 + sizeof...(Tail)> to_strings_aux(std::index_sequence<Head, Tail...>) const {
+        constexpr std::array<active_record::string, 1 + sizeof...(Tail)> to_strings_aux(std::index_sequence<Head, Tail...>) const {
             std::array<active_record::string, 1 + sizeof...(Tail)> head_name = { std::get<Head>(dynamic_cast<const Derived*>(this)->attributes).to_string() };
             const std::array<active_record::string, sizeof...(Tail)> tail_names = to_strings_aux(std::index_sequence<Tail...>{});
             std::copy(tail_names.begin(), tail_names.end(), head_name.begin() + 1);

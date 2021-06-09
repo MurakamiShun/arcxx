@@ -27,9 +27,9 @@ struct EnteringLog : public active_record::model<EnteringLog> {
 };
 
 int main() {
-    Member::ID id = 10;
+    constexpr Member::ID id = 10;
     Member::Name name = "test";
-    id = std::nullopt;
+    //id = std::nullopt;
     constexpr auto table_name = id.column_full_name().first;
     std::cout << id.column_full_name().first << std::endl;
     std::cout << Member::column_names()[0] << std::endl;

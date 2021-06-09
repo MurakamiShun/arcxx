@@ -1,5 +1,7 @@
 #pragma once
 #include <functional>
+#include <optional>
+//#include <format>
 #include "model.hpp"
 #include "query.hpp"
 #include "utils.hpp"
@@ -49,7 +51,7 @@ namespace active_record {
         virtual active_record::string to_string() const = 0;
         
         bool is_valid() const {
-            if constexpr (has_validations<Attribute>::value) {
+            if constexpr (has_validators) {
                 for (const auto& val : Attribute::validators) {
                     if (!val(data)) return false;
                 }
@@ -113,7 +115,8 @@ namespace active_record {
             
             virtual active_record::string to_string() const override {
                 // ISO 8601 yyyyMMddTHHmmss+09:00
-                return static_cast<bool>(*this) ? std::format("%FT%T%z", this->value()) : "null";
+                //return static_cast<bool>(*this) ? std::format("%FT%T%z", this->value()) : "null";
+                return active_record::string("");
             }
         };
 

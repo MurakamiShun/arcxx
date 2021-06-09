@@ -1,5 +1,9 @@
 #pragma once
 #include <concepts>
+#include <string>
+#include <string_view>
+#include <chrono>
+#include <tuple>
 
 namespace active_record{
     using string = std::string;

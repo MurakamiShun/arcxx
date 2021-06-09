@@ -20,7 +20,7 @@ namespace active_record{
     };
 
     template<typename T>
-    concept Column = std::derived_from<T, attribute<T::model_type, T::attribute_type, T::value_type>>;
+    concept Column = std::derived_from<T, attribute<typename T::model_type, typename T::attribute_type, typename T::value_type>>;
 
     struct query_operation_common {
         const query_operation operation;
@@ -49,14 +49,14 @@ namespace active_record{
                 return active_record::string("SELECT ") + query_op_arg + " FROM " + query_table + " WHERE " + query_condition + query_options + ";";
             }
         }
-        constexpr query_operation_common(const query_operation op, active_record::string&& op_arg, active_record::string&& table, active_record::string&& condition, active_record::string&& options) :
+        query_operation_common(const query_operation op, active_record::string&& op_arg, active_record::string&& table, active_record::string&& condition, active_record::string&& options) :
             query_op_arg(std::move(op_arg)),
             query_table(std::move(table)),
             query_condition(std::move(condition)),
             query_options(std::move(options)),
             operation(op) {
         }
-        constexpr query_operation_common(const query_operation op, const active_record::string& op_arg, const active_record::string& table, const active_record::string& condition, const active_record::string& options) :
+        query_operation_common(const query_operation op, const active_record::string& op_arg, const active_record::string& table, const active_record::string& condition, const active_record::string& options) :
             query_op_arg(op_arg),
             query_table(table),
             query_condition(condition),
@@ -71,7 +71,7 @@ namespace active_record{
     };
 
     template<Container Result>
-    requires std::derived_from<Result::value_type, model<Result::value_type>>
+    requires std::derived_from<typename Result::value_type, model<typename Result::value_type>>
     struct query_relation<Result> : public query_operation_common {
         using query_operation_common::query_operation_common;
 
@@ -99,7 +99,7 @@ namespace active_record{
     };
 
     template<Container Result>
-    requires Tuple<Result::value_type>
+    requires Tuple<typename Result::value_type>
     struct query_relation<Result> : public query_operation_common {
         using query_operation_common::query_operation_common;
 
@@ -110,8 +110,7 @@ namespace active_record{
         query_relation<Result> order([[maybe_unused]] Col, active_record::order);
         query_relation<Result> limit(std::size_t);
 
-        template<typename... Relations>
-        requires std::derived_from<query_operation_common>
+        template<std::derived_from<query_operation_common>... Relations>
         query_relation<Result> where([[maybe_unused]] Relations... relations);
     };
 
@@ -138,7 +137,7 @@ namespace active_record{
 
     template<typename Derived>
     template<Container C>
-    static query_relation<bool> model<Derived>::insert(const C& models) {
+    inline query_relation<bool> model<Derived>::insert(const C& models) {
         auto column_names = Derived::column_names();
         active_record::string table = active_record::string("\"") + Derived::table_name + "\"" + "(";
         active_record::string delimiter = "";
@@ -165,7 +164,7 @@ namespace active_record{
 
     template<typename Derived>
     template<std::same_as<Derived>... Models>
-    static query_relation<bool> model<Derived>::insert(const Models&... models) {
+    inline query_relation<bool> model<Derived>::insert(const Models&... models) {
         auto column_names = Derived::column_names();
         active_record::string table = active_record::string("\"") + Derived::table_name + "\"" + "(";
         active_record::string delimiter = "";
