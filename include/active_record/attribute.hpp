@@ -1,8 +1,6 @@
 #pragma once
 #include <functional>
 #include <optional>
-#include "model.hpp"
-#include "query.hpp"
 #include "utils.hpp"
 
 namespace active_record {
@@ -67,4 +65,7 @@ namespace active_record {
         [[nodiscard]] Type* operator->() { return data.operator->(); }
         [[nodiscard]] const Type* operator->() const { return data.operator->(); }
     };
+
+    template<typename T>
+    concept Attribute = std::derived_from<T, attribute<typename T::model_type, typename T::attribute_type, typename T::value_type>>;
 }

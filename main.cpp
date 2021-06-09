@@ -44,6 +44,8 @@ int main() {
     std::array<Member, 4> members;
     std::cout << Member::insert(members).to_sql() << std::endl;
     std::cout << Member::all().to_sql() << std::endl;
+    std::cout << Member::select(Member::ID{}).to_sql() << std::endl;
+    std::cout << Member::pluck(Member::ID{}).to_sql() << std::endl;
 
     /*
     databaseAdaptor adapt = SQLite3("test.sqlite3");

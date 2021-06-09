@@ -11,7 +11,8 @@ namespace active_record {
             constexpr string(active_record::string::const_pointer default_value) : attribute<Model, Attribute, active_record::string>(active_record::string(default_value)) {}
 
             [[nodiscard]] constexpr virtual active_record::string to_string() const override {
-                return static_cast<bool>(*this) ? this->value() : "null";
+                // require sanitize
+                return static_cast<bool>(*this) ? active_record::string{"\'"} + this->value() + "\'" : "null";
             }
         };
 

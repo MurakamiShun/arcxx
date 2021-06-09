@@ -5,9 +5,6 @@
 #include "utils.hpp"
 
 namespace active_record{
-    template<typename T>
-    concept Column = std::derived_from<T, attribute<typename T::model_type, typename T::attribute_type, typename T::value_type>>;
-
     struct query_operation_common {
         const query_operation operation;
         const active_record::string query_op_arg;
@@ -17,7 +14,7 @@ namespace active_record{
         const active_record::string query_options;
         [[nodiscard]] const active_record::string to_sql() const {
             if (operation == query_operation::select) {
-                return active_record::string("SELECT ") + query_op_arg + " FROM " + query_table + " WHERE " + query_condition + query_options + ";";
+                return active_record::string("SELECT ") + query_op_arg + " FROM " + query_table + (query_condition.empty() ? "": (" WHERE " + query_condition)) + query_options + ";";
             }
             else if (operation == query_operation::insert) {
                 return active_record::string("INSERT INTO ") + query_table + " VALUES " + query_op_arg + ";";
@@ -67,20 +64,20 @@ namespace active_record{
         query_relation<bool> count() {
             return query_relation<bool>();
         }
-        template<Column... Cols>
+        template<Attribute... Cols>
         query_relation<std::tuple<Cols...>> sum([[maybe_unused]] Cols... cols);
 
-        template<Column... Col>
+        template<Attribute... Col>
         static query_relation<std::vector<std::tuple<Col...>>> select([[maybe_unused]] Col... cols);
         
-        template<Column Col>
+        template<Attribute Col>
         static query_relation<std::vector<Col>> pluck([[maybe_unused]] Col);
 
-        template<Column Col>
+        template<Attribute Col>
         query_relation<Result> order([[maybe_unused]] Col, active_record::order);
         query_relation<Result> limit(std::size_t);
 
-        template<Column... Cols>
+        template<Attribute... Cols>
         query_relation<Result> where([[maybe_unused]] Cols... cols);
     };
 
@@ -92,7 +89,7 @@ namespace active_record{
         template<typename Relation>
         query_relation<Result> join([[maybe_unused]] Relation);
         
-        template<Column Col>
+        template<Attribute Col>
         query_relation<Result> order([[maybe_unused]] Col, active_record::order);
         query_relation<Result> limit(std::size_t);
 
@@ -101,23 +98,23 @@ namespace active_record{
     };
 
     namespace {
-        template<typename Derived>
-        constexpr active_record::string values_to_string(const Derived& src) {
+        template<typename Model>
+        constexpr active_record::string values_to_string(const Model& src) {
             const auto value_strings = src.to_strings();
             active_record::string result = "(";
             active_record::string delimiter = "";
             for (const auto& value : value_strings) {
-                result += delimiter +"\'" + value + "\'";
+                result += delimiter + value;
                 delimiter = ",";
             }
             result += ")";
             return result;
         }
 
-        template<typename Derived, typename... Tail>
-        constexpr active_record::string values_to_string(const Derived& src, const Tail&... tail) {
-            const auto first = values_to_string(src);
-            return first + "," + values_to_string(tail...);
+        template<typename Model, typename... Tail>
+        constexpr active_record::string values_to_string(const Model& src, const Tail&... tail) {
+            const auto first = values_to_string(std::forward<Model>(src));
+            return first + "," + values_to_string(std::forward<Tail>(tail)...);
         }
     }
 
@@ -182,6 +179,42 @@ namespace active_record{
         return query_relation<std::vector<Derived>> {
             query_operation::unspecified,
                 std::move(columns),
+                active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"",
+                active_record::string{ "" },
+                active_record::string{ "" }
+        };
+    }
+
+    namespace {
+        template<Attribute Last>
+        constexpr active_record::string make_column_names_string([[maybe_unused]]const Last&){
+            constexpr auto full_name = Last::column_full_name();
+            return active_record::string{ "\"" } + active_record::string{ full_name.first } + "\".\"" + active_record::string{ full_name.second } + "\"";
+        }
+        template<Attribute Head, Attribute... Tail>
+        constexpr active_record::string make_column_names_string(const Head& head, const Tail&... tail){
+            return make_column_names_string(head) + "," + make_column_names_string(tail...);
+        }
+    }
+
+    template<typename Derived>
+    template<Attribute... Attrs>
+    inline constexpr query_relation<std::vector<std::tuple<Attrs...>>> model<Derived>::select(Attrs... attrs) {
+        return query_relation<std::vector<std::tuple<Attrs...>>> {
+            query_operation::select,
+                make_column_names_string(attrs...),
+                active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"",
+                active_record::string{ "" },
+                active_record::string{ "" }
+        };
+    }
+
+    template<typename Derived>
+    template<Attribute Attr>
+    inline constexpr query_relation<std::vector<Attr>> model<Derived>::pluck(Attr attr) {
+        return query_relation<std::vector<Attr>> {
+            query_operation::select,
+                make_column_names_string(attr),
                 active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"",
                 active_record::string{ "" },
                 active_record::string{ "" }

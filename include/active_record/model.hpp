@@ -4,6 +4,7 @@
 #include <utility>
 #include <vector>
 #include "query.hpp"
+#include "attribute.hpp"
 
 namespace active_record {
     template<typename Derived>
@@ -22,7 +23,7 @@ namespace active_record {
         struct has_attributes_impl {
         private:
             template<typename S>
-            static decltype(std::declval<S>().attributes, std::true_type()) check(S);
+            static decltype(std::declval<S>().attributes, std::true_type{}) check(S);
             static std::false_type check(...);
         public:
             static constexpr bool value = std::invoke_result_t<decltype(&has_attributes_impl::check), Derived>::value;
@@ -66,18 +67,19 @@ namespace active_record {
         constexpr virtual ~model() {}
 
         template<Container C>
-        static constexpr query_relation<bool> insert(const C&);
-        
+        static constexpr query_relation<bool> insert(const C&);        
         template<std::same_as<Derived>... Models>
         static constexpr query_relation<bool> insert(const Models&... models);
 
+        static constexpr query_relation<std::vector<Derived>> all();
+
+        template<Attribute... Attrs>
+        static constexpr query_relation<std::vector<std::tuple<Attrs...>>> select(Attrs...);
+
+        template<Attribute Attr>
+        static constexpr query_relation<std::vector<Attr>> pluck(Attr);
 
         template<typename... Columns>
-        static constexpr query_relation<std::vector<std::tuple<Columns...>>> select([[maybe_unused]] Columns...);
-        template<typename... Columns>
-        static constexpr query_relation<std::vector<Derived>> where([[maybe_unused]] Columns...);
-        template<typename Column>
-        static constexpr query_relation<std::vector<Column>> pluck([[maybe_unused]] Column);
-        static constexpr query_relation<std::vector<Derived>> all();
+        static constexpr query_relation<std::vector<Derived>> where(Columns...);
     };
 }
