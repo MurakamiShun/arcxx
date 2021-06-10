@@ -1,4 +1,5 @@
 #include "attribute.hpp"
+#include "query_impl.hpp"
 //#include <format>
 
 namespace active_record {

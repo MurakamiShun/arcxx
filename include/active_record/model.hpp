@@ -79,7 +79,14 @@ namespace active_record {
         template<Attribute Attr>
         static constexpr query_relation<std::vector<Attr>> pluck(Attr);
 
-        template<typename... Columns>
-        static constexpr query_relation<std::vector<Derived>> where(Columns...);
+        template<Attribute... Attrs>
+        static constexpr query_relation<std::vector<Derived>> where(const Attrs&...);
+        template<Attribute... Attrs>
+        static constexpr query_relation<std::vector<Derived>> where(const Attrs&&... attrs){
+            return where(attrs...);
+        }
     };
+
+    template<typename T>
+    concept Model = std::derived_from<T, model<T>>;
 }

@@ -23,7 +23,7 @@ namespace active_record{
                 return active_record::string("DELETE FROM ") + query_table + " WHERE " + query_condition + ";";
             }
             else if (operation == query_operation::update) {
-                return active_record::string("UPDATE ") + query_table + " SET " + query_op_arg + " WHERE " + query_condition + ";";
+                return active_record::string("UPDATE ") + query_table + " SET " + query_op_arg + (query_condition.empty() ? "": (" WHERE " + query_condition)) + ";";
             }
             else if (operation == query_operation::condition) {
                 return active_record::string("SELECT ") + query_op_arg + " FROM " + query_table + " WHERE " + query_condition + query_options + ";";
@@ -98,8 +98,8 @@ namespace active_record{
     };
 
     namespace {
-        template<typename Model>
-        constexpr active_record::string values_to_string(const Model& src) {
+        template<Model Last>
+        constexpr active_record::string insert_values_to_string(const Last& src) {
             const auto value_strings = src.to_strings();
             active_record::string result = "(";
             active_record::string delimiter = "";
@@ -111,35 +111,40 @@ namespace active_record{
             return result;
         }
 
-        template<typename Model, typename... Tail>
-        constexpr active_record::string values_to_string(const Model& src, const Tail&... tail) {
-            const auto first = values_to_string(std::forward<Model>(src));
-            return first + "," + values_to_string(std::forward<Tail>(tail)...);
+        template<Model Head, Model... Tail>
+        constexpr active_record::string insert_values_to_string(const Head& src, const Tail&... tail) {
+            const auto first = insert_values_to_string(src);
+            return first + "," + insert_values_to_string(tail...);
+        }
+
+        template<Model Mod>
+        constexpr active_record::string insert_column_names_to_string() {
+            active_record::string table = active_record::string{ "\"" } + active_record::string{ Mod::table_name } + "\"(";
+            active_record::string delimiter = "";
+            const auto column_names = Mod::column_names();
+            for (const auto& col_name : column_names) {
+                table += delimiter + "\"" + active_record::string{ col_name } + "\"";
+                delimiter = ",";
+            }
+            table += ")";
+            return table;
         }
     }
 
     template<typename Derived>
     template<Container C>
     inline constexpr query_relation<bool> model<Derived>::insert(const C& models) {
-        auto column_names = Derived::column_names();
-        active_record::string table = active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"(";
-        active_record::string delimiter = "";
-        for (auto& col_name : column_names) {
-            table += delimiter + "\"" + active_record::string{ col_name } + "\"";
-            delimiter = ",";
-        }
-        table += ")";
-
-        active_record::string values;
+        active_record::string values = "";
         active_record::string value_delimiter = "";
         for (const auto& src : models) {
-            values += value_delimiter + values_to_string(src);
+            values += value_delimiter + insert_values_to_string(src);
             value_delimiter = ",";
         }
+
         return query_relation<bool> {
             query_operation::insert,
                 std::move(values),
-                std::move(table),
+                insert_column_names_to_string<Derived>(),
                 active_record::string{ "" },
                 active_record::string{ "" }
         };
@@ -148,38 +153,10 @@ namespace active_record{
     template<typename Derived>
     template<std::same_as<Derived>... Models>
     inline constexpr query_relation<bool> model<Derived>::insert(const Models&... models) {
-        auto column_names = Derived::column_names();
-        active_record::string table = active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"(";
-        active_record::string delimiter = "";
-        for (auto& col_name : column_names) {
-            table += delimiter + "\"" + active_record::string{ col_name } + "\"";
-            delimiter = ",";
-        }
-        table += ")";
-
-        const auto values = values_to_string(models...);
         return query_relation<bool> {
             query_operation::insert,
-                std::move(values),
-                std::move(table),
-                active_record::string{ "" },
-                active_record::string{ "" }
-        };
-    }
-
-    template<typename Derived>
-    inline constexpr query_relation<std::vector<Derived>> model<Derived>::all() {
-        auto column_names = Derived::column_names();
-        active_record::string columns = "";
-        active_record::string delimiter = "";
-        for (auto& col_name : column_names) {
-            columns += delimiter + "\"" + active_record::string{ Derived::table_name } + "\".\"" + active_record::string{ col_name } + "\"";
-            delimiter = ",";
-        }
-        return query_relation<std::vector<Derived>> {
-            query_operation::unspecified,
-                std::move(columns),
-                active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"",
+                insert_values_to_string(models...),
+                insert_column_names_to_string<Derived>(),
                 active_record::string{ "" },
                 active_record::string{ "" }
         };
@@ -187,14 +164,37 @@ namespace active_record{
 
     namespace {
         template<Attribute Last>
-        constexpr active_record::string make_column_names_string([[maybe_unused]]const Last&){
+        constexpr active_record::string column_full_names_to_string([[maybe_unused]]const Last&){
             constexpr auto full_name = Last::column_full_name();
             return active_record::string{ "\"" } + active_record::string{ full_name.first } + "\".\"" + active_record::string{ full_name.second } + "\"";
         }
         template<Attribute Head, Attribute... Tail>
-        constexpr active_record::string make_column_names_string(const Head& head, const Tail&... tail){
-            return make_column_names_string(head) + "," + make_column_names_string(tail...);
+        constexpr active_record::string column_full_names_to_string([[maybe_unused]] const Head&, [[maybe_unused]] const Tail&...){
+            return column_full_names_to_string(std::declval<Head>()) + "," + column_full_names_to_string(std::declval<Tail>()...);
         }
+
+        template<Model Mod>
+        constexpr active_record::string model_column_full_names_to_string(){
+            auto column_names = Mod::column_names();
+            active_record::string columns = "";
+            active_record::string delimiter = "";
+            for (auto& col_name : column_names) {
+                columns += delimiter + "\"" + active_record::string{ Mod::table_name } + "\".\"" + active_record::string{ col_name } + "\"";
+                delimiter = ",";
+            }
+            return columns;
+        }
+    }
+
+    template<typename Derived>
+    inline constexpr query_relation<std::vector<Derived>> model<Derived>::all() {
+        return query_relation<std::vector<Derived>> {
+            query_operation::unspecified,
+                model_column_full_names_to_string<Derived>(),
+                active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"",
+                active_record::string{ "" },
+                active_record::string{ "" }
+        };
     }
 
     template<typename Derived>
@@ -202,7 +202,7 @@ namespace active_record{
     inline constexpr query_relation<std::vector<std::tuple<Attrs...>>> model<Derived>::select(Attrs... attrs) {
         return query_relation<std::vector<std::tuple<Attrs...>>> {
             query_operation::select,
-                make_column_names_string(attrs...),
+                column_full_names_to_string(attrs...),
                 active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"",
                 active_record::string{ "" },
                 active_record::string{ "" }
@@ -214,10 +214,34 @@ namespace active_record{
     inline constexpr query_relation<std::vector<Attr>> model<Derived>::pluck(Attr attr) {
         return query_relation<std::vector<Attr>> {
             query_operation::select,
-                make_column_names_string(attr),
+                column_full_names_to_string(attr),
                 active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"",
                 active_record::string{ "" },
                 active_record::string{ "" }
         };
     }
+    
+    namespace {
+        template<Attribute Attr>
+        constexpr active_record::string attribute_equ_condition_string(const Attr& attr){
+            return column_full_names_to_string(attr) + " = " + attr.to_string();
+        }
+        template<Attribute Head, Attribute... Tail>
+        constexpr active_record::string attribute_equ_condition_string(const Head& head, const Tail&... tail){
+            return attribute_equ_condition_string(head) + " AND " + attribute_equ_condition_string(tail...);
+        }
+    }
+
+    template<typename Derived>
+    template<Attribute... Attrs>
+    inline constexpr query_relation<std::vector<Derived>> model<Derived>::where(const Attrs&... attrs) {
+        return query_relation<std::vector<Derived>> {
+            query_operation::condition,
+                model_column_full_names_to_string<Derived>(),
+                active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"",
+                attribute_equ_condition_string(attrs...),
+                active_record::string{ "" }
+        };
+    }
+        
 }

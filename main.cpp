@@ -46,6 +46,7 @@ int main() {
     std::cout << Member::all().to_sql() << std::endl;
     std::cout << Member::select(Member::ID{}).to_sql() << std::endl;
     std::cout << Member::pluck(Member::ID{}).to_sql() << std::endl;
+    std::cout << Member::where(Member::ID{10}, Member::Name{"nkodice"}).to_sql() << std::endl;
 
     /*
     databaseAdaptor adapt = SQLite3("test.sqlite3");
@@ -65,7 +66,7 @@ int main() {
     
     MyDatabase::Member::find(MyDatabase::Member::ID{10});
 
-    MyDatabase::EnteringLog::where<MyDatabase::EnteringLog::Member>(MyDatabase::Member::where("id = {}", {3, 4}).pluck<MyDatabase::Member::Name>()).count();
+    MyDatabase::EnteringLog::where<MyDatabase::EnteringLog::Member>(MyDatabase::Member::where().pluck<MyDatabase::Member::Name>()).count();
 
     MyDatabase::Member::joins<EnteringLog>().select(MyDatabase::Member::ID);
 
