@@ -17,4 +17,8 @@ namespace active_record {
     };
     template<typename T>
     struct query_relation;
+
+    struct query_condition {
+        active_record::string condition;
+    };
 }

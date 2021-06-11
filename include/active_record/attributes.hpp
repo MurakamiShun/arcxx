@@ -15,6 +15,23 @@ namespace active_record {
                 // require sanitize
                 return static_cast<bool>(*this) ? active_record::string{"\'"} + this->value() + "\'" : "null";
             }
+
+            /*static constexpr query_condition like(const active_record::string_view value){
+                // require sanitize
+                constexpr auto names = Attribute::column_full_name();
+                return query_condition {
+                    active_record::string{ "\"" } + active_record::string{ names.first } + "\".\"" + active_record::string{ names.second }
+                     + "\" LIKE \'" active_record::string{ value } + "\'"
+                };
+            }
+            static constexpr query_condition like(active_record::string&& value){
+                // require sanitize
+                constexpr auto names = Attribute::column_full_name();
+                return query_condition {
+                    active_record::string{ "\"" } + active_record::string{ names.first } + "\".\"" + active_record::string{ names.second }
+                     + "\" LIKE \'" value + "\'"
+                };
+            }*/
         };
 
         template<typename Model, typename Attribute>
