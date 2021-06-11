@@ -46,7 +46,8 @@ int main() {
     std::cout << Member::all().to_sql() << std::endl;
     std::cout << Member::select(Member::ID{}).to_sql() << std::endl;
     std::cout << Member::pluck(Member::ID{}).to_sql() << std::endl;
-    std::cout << Member::where(Member::ID{10}, Member::Name{"nko\' OR 1=1;--dice"}).to_sql() << std::endl;
+    std::cout << Member::where(Member::ID{10}, Member::Name::like("nko\\\' OR 1=1;--dice")).to_sql() << std::endl;
+    std::cout << Member::where(Member::ID::in(10,20,30)).to_sql() << std::endl;
 
     /*
     databaseAdaptor adapt = SQLite3("test.sqlite3");

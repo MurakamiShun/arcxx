@@ -19,6 +19,6 @@ namespace active_record {
     struct query_relation;
 
     struct query_condition {
-        active_record::string condition;
+        active_record::string str;
     };
 }

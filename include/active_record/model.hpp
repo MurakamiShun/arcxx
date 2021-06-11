@@ -7,6 +7,9 @@
 #include "attribute.hpp"
 
 namespace active_record {
+    template<typename T>
+    concept WhereArgs = Attribute<T> || std::same_as<T, query_condition>;
+
     template<typename Derived>
     class model {
     protected:
@@ -69,22 +72,18 @@ namespace active_record {
         template<Container C>
         static constexpr query_relation<bool> insert(const C&);        
         template<std::same_as<Derived>... Models>
-        static constexpr query_relation<bool> insert(const Models&... models);
+        static constexpr query_relation<bool> insert(const Models&...);
 
         static constexpr query_relation<std::vector<Derived>> all();
 
         template<Attribute... Attrs>
-        static constexpr query_relation<std::vector<std::tuple<Attrs...>>> select(Attrs...);
+        static constexpr query_relation<std::vector<std::tuple<Attrs...>>> select(const Attrs...);
 
         template<Attribute Attr>
-        static constexpr query_relation<std::vector<Attr>> pluck(Attr);
-
-        template<Attribute... Attrs>
-        static constexpr query_relation<std::vector<Derived>> where(const Attrs&...);
-        template<Attribute... Attrs>
-        static constexpr query_relation<std::vector<Derived>> where(const Attrs&&... attrs){
-            return where(attrs...);
-        }
+        static constexpr query_relation<std::vector<Attr>> pluck(const Attr);
+        
+        template<WhereArgs... Attrs>
+        static constexpr query_relation<std::vector<Derived>> where(const Attrs...);
     };
 
     template<typename T>

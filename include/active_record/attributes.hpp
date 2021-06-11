@@ -1,5 +1,5 @@
 #include "attribute.hpp"
-#include "query_impl.hpp"
+#include "query.hpp"
 //#include <format>
 
 namespace active_record {
@@ -7,31 +7,24 @@ namespace active_record {
         template<typename Model, typename Attribute>
         struct string : public attribute<Model, Attribute, active_record::string> {
             using attribute<Model, Attribute, active_record::string>::attribute;
-
-            constexpr string(const active_record::string_view default_value) : attribute<Model, Attribute, active_record::string>(active_record::string(default_value)) {}
-            constexpr string(active_record::string::const_pointer default_value) : attribute<Model, Attribute, active_record::string>(active_record::string(default_value)) {}
+            
+            template<std::convertible_to<active_record::string> StringType>
+            constexpr string(const StringType& default_value) : attribute<Model, Attribute, active_record::string>(active_record::string(default_value)) {}
 
             [[nodiscard]] constexpr virtual active_record::string to_string() const override {
                 // require sanitize
-                return static_cast<bool>(*this) ? active_record::string{"\'"} + this->value() + "\'" : "null";
+                return static_cast<bool>(*this) ? active_record::string{"\'"} + active_record::sanitize(this->value()) + "\'" : "null";
             }
 
-            /*static constexpr query_condition like(const active_record::string_view value){
+            template<std::convertible_to<active_record::string> StringType>
+            static constexpr query_condition like(const StringType& value){
                 // require sanitize
                 constexpr auto names = Attribute::column_full_name();
                 return query_condition {
                     active_record::string{ "\"" } + active_record::string{ names.first } + "\".\"" + active_record::string{ names.second }
-                     + "\" LIKE \'" active_record::string{ value } + "\'"
+                     + "\" LIKE \'" + active_record::sanitize(value) + "\'"
                 };
             }
-            static constexpr query_condition like(active_record::string&& value){
-                // require sanitize
-                constexpr auto names = Attribute::column_full_name();
-                return query_condition {
-                    active_record::string{ "\"" } + active_record::string{ names.first } + "\".\"" + active_record::string{ names.second }
-                     + "\" LIKE \'" value + "\'"
-                };
-            }*/
         };
 
         template<typename Model, typename Attribute>

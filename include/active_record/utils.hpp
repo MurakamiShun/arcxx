@@ -39,4 +39,22 @@ namespace active_record{
         std::tuple_size<TupleType>::value;
         { std::bool_constant<std::is_standard_layout_v<TupleType>>{} } -> std::same_as<std::bool_constant<false>>;
     };
+
+    active_record::string sanitize(const active_record::string& src) {
+        active_record::string result;
+        for(const auto& c : src) {
+            switch(c){
+                case '\'':
+                    result += "\'\'";
+                    break;
+                case '\\':
+                    result += "\\\\";
+                    break;
+                default:
+                    result += c;
+                    break;
+            }
+        };
+        return result;
+    }
 }

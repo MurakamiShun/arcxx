@@ -39,13 +39,6 @@ namespace active_record{
             query_options(std::move(options)),
             operation(op) {
         }
-        query_operation_common(const query_operation op, const active_record::string& op_arg, const active_record::string& table, const active_record::string& condition, const active_record::string& options) :
-            query_op_arg(op_arg),
-            query_table(table),
-            query_condition(condition),
-            query_options(options),
-            operation(op) {
-        }
     };
 
     template<typename T>
@@ -199,7 +192,7 @@ namespace active_record{
 
     template<typename Derived>
     template<Attribute... Attrs>
-    inline constexpr query_relation<std::vector<std::tuple<Attrs...>>> model<Derived>::select(Attrs... attrs) {
+    inline constexpr query_relation<std::vector<std::tuple<Attrs...>>> model<Derived>::select(const Attrs... attrs) {
         return query_relation<std::vector<std::tuple<Attrs...>>> {
             query_operation::select,
                 column_full_names_to_string(attrs...),
@@ -211,7 +204,7 @@ namespace active_record{
 
     template<typename Derived>
     template<Attribute Attr>
-    inline constexpr query_relation<std::vector<Attr>> model<Derived>::pluck(Attr attr) {
+    inline constexpr query_relation<std::vector<Attr>> model<Derived>::pluck(const Attr attr) {
         return query_relation<std::vector<Attr>> {
             query_operation::select,
                 column_full_names_to_string(attr),
@@ -223,23 +216,28 @@ namespace active_record{
     
     namespace {
         template<Attribute Attr>
-        constexpr active_record::string attribute_equ_condition_string(const Attr& attr){
+        constexpr active_record::string attributes_to_condition_string(const Attr& attr){
             return column_full_names_to_string(attr) + " = " + attr.to_string();
         }
-        template<Attribute Head, Attribute... Tail>
-        constexpr active_record::string attribute_equ_condition_string(const Head& head, const Tail&... tail){
-            return attribute_equ_condition_string(head) + " AND " + attribute_equ_condition_string(tail...);
+        
+        template<std::same_as<query_condition> Condition>
+        constexpr active_record::string attributes_to_condition_string(const Condition& cond){
+            return cond.str;
+        }
+        template<WhereArgs Head, WhereArgs... Tail>
+        constexpr active_record::string attributes_to_condition_string(const Head& head, const Tail&... tail){
+            return attributes_to_condition_string(head) + " AND " + attributes_to_condition_string(tail...);
         }
     }
 
     template<typename Derived>
-    template<Attribute... Attrs>
-    inline constexpr query_relation<std::vector<Derived>> model<Derived>::where(const Attrs&... attrs) {
+    template<WhereArgs... Attrs>
+    inline constexpr query_relation<std::vector<Derived>> model<Derived>::where(const Attrs... attrs) {
         return query_relation<std::vector<Derived>> {
             query_operation::condition,
                 model_column_full_names_to_string<Derived>(),
                 active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"",
-                attribute_equ_condition_string(attrs...),
+                attributes_to_condition_string(attrs...),
                 active_record::string{ "" }
         };
     }

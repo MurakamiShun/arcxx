@@ -22,6 +22,14 @@ namespace active_record {
             static std::false_type check(...);
             static constexpr bool value = std::invoke_result_t<decltype(&has_validators_impl::check), Attribute>::value;
         };
+
+        static constexpr active_record::string attribute_values_to_string(const Attribute& attr){
+            return attr.to_string();
+        }
+        template<std::same_as<Attribute>... Tail>
+        static constexpr active_record::string attribute_values_to_string(const Attribute& head, const Tail&... tail){
+            return attribute_values_to_string(head) + "," + attribute_values_to_string(tail...);
+        }
     protected:
         std::optional<Type> data;
     public:
@@ -46,7 +54,6 @@ namespace active_record {
         constexpr attribute(Type&& default_value) : data(std::move(default_value)) {}
         constexpr virtual ~attribute() {}
 
-        //virtual void from_string(const database::string_view str) = 0;
         virtual active_record::string to_string() const = 0;
         
         [[nodiscard]] constexpr bool is_valid() const {
@@ -64,6 +71,14 @@ namespace active_record {
         [[nodiscard]] Type&& value()&& { return std::move(data.value()); }
         [[nodiscard]] Type* operator->() { return data.operator->(); }
         [[nodiscard]] const Type* operator->() const { return data.operator->(); }
+
+        template<std::convertible_to<Attribute>... Attrs>
+        static constexpr query_condition in(const Attrs&... values) {
+            return query_condition{
+                active_record::string{ "\"" } + Model::table_name + "\".\"" + Attribute::column_name
+                + "\" in (" + attribute_values_to_string(Attribute{ values }...) + ")"
+            };
+        }
     };
 
     template<typename T>
