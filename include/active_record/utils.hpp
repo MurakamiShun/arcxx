@@ -2,6 +2,7 @@
 #include <concepts>
 #include <string>
 #include <string_view>
+#include <type_traits>
 #include <chrono>
 #include <tuple>
 

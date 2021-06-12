@@ -93,7 +93,7 @@ namespace active_record{
     namespace {
         template<Model Last>
         constexpr active_record::string insert_values_to_string(const Last& src) {
-            const auto value_strings = src.to_strings();
+            const auto value_strings = src.get_attribute_strings();
             active_record::string result = "(";
             active_record::string delimiter = "";
             for (const auto& value : value_strings) {

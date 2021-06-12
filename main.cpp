@@ -8,12 +8,13 @@ struct Member : public active_record::model<Member> {
     struct ID : public active_record::attributes::integer<Member, ID> {
         using active_record::attributes::integer<Member, ID>::integer;
         static constexpr auto column_name = "id";
-        inline static const auto validators = { not_null };
+        static constexpr auto validators = { primary_key };
         constexpr ~ID(){}
     } id;
     struct Name : public active_record::attributes::string<Member, Name> {
         using active_record::attributes::string<Member, Name>::string;
         static constexpr auto column_name = "name";
+        static constexpr auto validators = { not_null };
     } name;
     std::tuple<ID&, Name&> attributes = std::tie(id, name);
 };
@@ -35,20 +36,21 @@ int main() {
     std::cout << id.column_full_name().first << std::endl;
     std::cout << Member::column_names()[0] << std::endl;
     std::cout << id.to_string() << std::endl;
+    std::cout << "primary key: " << Member::ID::is_primary_key << std::endl;
 
     Member member;
     member.id = 123;
     member.name = "nkodice";
-    std::cout << member.to_strings()[1] << std::endl;
+    std::cout << member.get_attribute_strings()[1] << std::endl;
 
     std::array<Member, 4> members;
     std::cout << Member::insert(members).to_sql() << std::endl;
     std::cout << Member::all().to_sql() << std::endl;
     std::cout << Member::select(Member::ID{}).to_sql() << std::endl;
     std::cout << Member::pluck(Member::ID{}).to_sql() << std::endl;
-    std::cout << Member::where(Member::ID{10}, Member::Name::like("nko\\\' OR 1=1;--dice")).to_sql() << std::endl;
+    std::cout << Member::where(Member::ID{10}, Member::Name::like("nko\\\' OR 1=1;--dice表")).to_sql() << std::endl;
     std::cout << Member::where(Member::ID::in(10,20,30)).to_sql() << std::endl;
-
+    
     /*
     databaseAdaptor adapt = SQLite3("test.sqlite3");
     //databaseAdaptor = Postgresql("postgresql://localhost/mydb");

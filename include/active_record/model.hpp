@@ -1,8 +1,8 @@
 #pragma once
-#include <type_traits>
 #include <array>
 #include <utility>
 #include <vector>
+#include <algorithm>
 #include "query.hpp"
 #include "attribute.hpp"
 
@@ -21,7 +21,7 @@ namespace active_record {
             static decltype(S::table_name, std::true_type()) check(S);
             static std::false_type check(...);
         public:
-            static constexpr bool value = std::invoke_result_t<decltype(&has_table_name_impl::check), Derived>::value;
+            static constexpr bool value = decltype(check(std::declval<Derived>()))::value;
         };
         struct has_attributes_impl {
         private:
@@ -29,7 +29,7 @@ namespace active_record {
             static decltype(std::declval<S>().attributes, std::true_type{}) check(S);
             static std::false_type check(...);
         public:
-            static constexpr bool value = std::invoke_result_t<decltype(&has_attributes_impl::check), Derived>::value;
+            static constexpr bool value = decltype(check(std::declval<Derived>()))::value;
         };
         // column_names
         template<std::size_t Last>
@@ -46,13 +46,13 @@ namespace active_record {
 
         // values_to_string
         template<std::size_t Last>
-        constexpr std::array<active_record::string, 1> to_strings_aux(std::index_sequence<Last>) const {
+        constexpr std::array<active_record::string, 1> get_attribute_strings_aux(std::index_sequence<Last>) const {
             return { std::get<Last>(dynamic_cast<const Derived*>(this)->attributes).to_string() };
         }
         template<std::size_t Head, std::size_t... Tail>
-        constexpr std::array<active_record::string, 1 + sizeof...(Tail)> to_strings_aux(std::index_sequence<Head, Tail...>) const {
+        constexpr std::array<active_record::string, 1 + sizeof...(Tail)> get_attribute_strings_aux(std::index_sequence<Head, Tail...>) const {
             std::array<active_record::string, 1 + sizeof...(Tail)> head_name = { std::get<Head>(dynamic_cast<const Derived*>(this)->attributes).to_string() };
-            const std::array<active_record::string, sizeof...(Tail)> tail_names = to_strings_aux(std::index_sequence<Tail...>{});
+            const std::array<active_record::string, sizeof...(Tail)> tail_names = get_attribute_strings_aux(std::index_sequence<Tail...>{});
             std::copy(tail_names.begin(), tail_names.end(), head_name.begin() + 1);
             return head_name;
         }
@@ -63,8 +63,8 @@ namespace active_record {
             return column_names_aux(std::make_index_sequence<std::tuple_size_v<decltype(Derived{}.attributes)>>{});
         }
 
-        constexpr auto to_strings() const {
-            return to_strings_aux(std::make_index_sequence<std::tuple_size_v<decltype(Derived{}.attributes)>>{});
+        constexpr auto get_attribute_strings() const {
+            return get_attribute_strings_aux(std::make_index_sequence<std::tuple_size_v<decltype(Derived{}.attributes)>>{});
         }
 
         constexpr virtual ~model() {}
@@ -84,6 +84,13 @@ namespace active_record {
         
         template<WhereArgs... Attrs>
         static constexpr query_relation<std::vector<Derived>> where(const Attrs...);
+
+        /*
+        static constexpr create_table_query(const database& db){
+            return "CREATE TABLE IF NOT EXISTS" + Derived::table_name + "("
+            +");";
+        }
+        */
     };
 
     template<typename T>
