@@ -7,5 +7,6 @@
 #include "active_record/model.hpp"
 #include "active_record/attribute_impl.hpp"
 #include "active_record/query_impl.hpp"
+#include "active_record/relation.hpp"
 
 //#endif

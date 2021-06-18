@@ -12,8 +12,6 @@ namespace active_record {
 
     template<typename Derived>
     class model {
-    protected:
-        class relation;
     private:
         struct has_table_name_impl {
         private:
@@ -67,6 +65,10 @@ namespace active_record {
             return get_attribute_strings_aux(std::make_index_sequence<std::tuple_size_v<decltype(Derived{}.attributes)>>{});
         }
 
+        constexpr auto get_has_many_assosiations() const {
+
+        }
+
         constexpr virtual ~model() {}
 
         template<Container C>
@@ -91,6 +93,9 @@ namespace active_record {
             +");";
         }
         */
+
+        constexpr query_relation<bool> destroy();
+        constexpr query_relation<bool> save();
     };
 
     template<typename T>

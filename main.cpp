@@ -3,6 +3,8 @@
 #include <iostream>
 #include <cmath>
 
+struct EnteringLog;
+
 struct Member : public active_record::model<Member> {
     static constexpr auto table_name = "members_table";
     struct ID : public active_record::attributes::integer<Member, ID> {
@@ -25,7 +27,10 @@ struct EnteringLog : public active_record::model<EnteringLog> {
         static constexpr auto column_name = "id";
         //static constepxr auto validators = { allow_null, uniqueness };
     } id;
-    std::tuple<ID&> attributes = std::tie(id);
+    struct MemberID : public active_record::relation::reference_to<Member::ID> {
+        static constexpr auto column_name = "member_id";
+    } member_id;
+    std::tuple<ID&, MemberID&> attributes = std::tie(id, member_id);
 };
 
 int main() {
