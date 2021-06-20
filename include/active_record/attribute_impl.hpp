@@ -12,6 +12,16 @@ namespace active_record {
         template<std::convertible_to<active_record::string> StringType>
         constexpr attribute(const StringType& default_value) : attribute_common<Model, Attribute, active_record::string>(active_record::string{default_value}) {}
 
+        struct constraint_length_impl {
+            const size_t length;
+            constexpr bool operator()(const std::optional<active_record::string>& t) {
+                return static_cast<bool>(t) && t.value().length() <= length;
+            }
+        };
+        static const attribute_common<Model, Attribute, active_record::string>::constraint length(const size_t len) noexcept {
+            return constraint_length_impl{ len };
+        };
+
         [[nodiscard]] constexpr virtual active_record::string to_string() const override {
             // require sanitize
             return static_cast<bool>(*this) ? active_record::string{"\'"} + active_record::sanitize(this->value()) + "\'" : "null";
@@ -31,6 +41,7 @@ namespace active_record {
     template<typename Model, typename Attribute, std::integral Integer>
     struct attribute<Model, Attribute, Integer> : public attribute_common<Model, Attribute, Integer> {
         using attribute_common<Model, Attribute, Integer>::attribute_common;
+        inline static const attribute_common<Model, Attribute, Integer>::constraint auto_increment = [](const std::optional<Integer>& t) constexpr { return not_null(t) && unique(t); };
         
         [[nodiscard]] constexpr virtual active_record::string to_string() const override {
             return static_cast<bool>(*this) ? std::to_string(this->value()) : "null";

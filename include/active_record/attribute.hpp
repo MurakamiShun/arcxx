@@ -1,7 +1,9 @@
 #pragma once
 #include <optional>
 #include <utility>
+#include <typeinfo>
 #include "utils.hpp"
+#include "adaptor.hpp"
 
 namespace active_record {
     constexpr static auto unspecified = std::nullopt;
@@ -19,9 +21,9 @@ namespace active_record {
             static constexpr bool value = decltype(check(std::declval<Attribute>()))::value;
         };
 
-        struct has_validators_impl {
+        struct has_constraints_impl {
             template<typename S>
-            static decltype(S::validators, std::true_type{}) check(S);
+            static decltype(S::constraints, std::true_type{}) check(S);
             static std::false_type check(...);
             static constexpr bool value = decltype(check(std::declval<Attribute>()))::value;
         };
@@ -36,26 +38,47 @@ namespace active_record {
     protected:
         std::optional<Type> data;
     public:
-        using validator = bool(*)(const std::optional<Type>&);
+        using constraint = std::function<bool(const std::optional<Type>&)>;
         using model_type = Model;
         using attribute_type = Attribute;
         using value_type = Type;
 
         static constexpr bool has_column_name = has_column_name_impl::value;
-        static constexpr bool has_validators = has_validators_impl::value;
+        static constexpr bool has_constraints = has_constraints_impl::value;
         [[nodiscard]] static constexpr std::pair<active_record::string_view, active_record::string_view> column_full_name() noexcept {
             return { Model::table_name, Attribute::column_name };
         };
 
-        static constexpr validator not_null = [](const std::optional<Type>& t) constexpr { return static_cast<bool>(t); };
-        static constexpr validator unique = [](const std::optional<Type>& t) constexpr { return true; };
-        static constexpr validator primary_key = [](const std::optional<Type>& t) constexpr { return not_null(t) && unique(t); };
-        static constexpr validator auto_increment = [](const std::optional<Type>& t) constexpr { return not_null(t) && unique(t); };
-        static constexpr validator default_value(){
-            return [](const std::optional<Type>& t) constexpr { return true; };
+        // constexpr std::type_info::operator== is C++23
+        inline static const constraint not_null = [](const std::optional<Type>& t) constexpr { return static_cast<bool>(t); };
+        inline static const constraint unique = [](const std::optional<Type>& t) constexpr { return true; };
+        inline static const constraint primary_key = [](const std::optional<Type>& t) { return not_null(t) && unique(t); };
+        struct constraint_default_value_impl{
+            const Type default_value;
+            constexpr bool operator()(const std::optional<Type>&){ return true; }
+        };
+        static const constraint default_value(const Type& def_val) {
+            return constraint_default_value_impl{ def_val };
         }
 
-        inline static const bool is_primary_key =  has_validators && !(std::find(Attribute::validators.begin(), Attribute::validators.end(), primary_key) == Attribute::validators.end());
+        static const bool has_constraint(const constraint& c){
+            if (!has_constraints) return false;
+            for(const auto& con : Attribute::constraints){
+                if(con.target_type() == c.target_type()) return true;
+            }
+            return false;
+        }
+        static const constraint& get_constraint(const constraint& c){
+            if (!has_constraints) return nullptr;
+            for(const auto& con : Attribute::constraints){
+                if(con.target_type() == c.target_type()) return con;
+            }
+            return nullptr;
+        }
+
+        inline static const bool is_primary_key =  [](){
+            return has_constraint(primary_key);
+        }();
 
         constexpr attribute_common() {}
         constexpr attribute_common(const std::optional<Type>& default_value) : data(default_value) {}
@@ -66,10 +89,11 @@ namespace active_record {
         constexpr virtual ~attribute_common() {}
 
         virtual active_record::string to_string() const = 0;
+        static active_record::string column_statement_on_create_table(const adaptor&);
         
         [[nodiscard]] constexpr bool is_valid() const {
-            if constexpr (has_validators) {
-                for (const auto& val : Attribute::validators) {
+            if constexpr (has_constraints) {
+                for (const auto& val : Attribute::constraints) {
                     if (!val(data)) return false;
                 }
             }

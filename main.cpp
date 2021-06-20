@@ -10,13 +10,13 @@ struct Member : public active_record::model<Member> {
     struct ID : public active_record::attributes::integer<Member, ID> {
         using active_record::attributes::integer<Member, ID>::integer;
         static constexpr auto column_name = "id";
-        static constexpr auto validators = { primary_key };
+        inline static const auto constraints = { primary_key };
         constexpr ~ID(){}
     } id;
     struct Name : public active_record::attributes::string<Member, Name> {
         using active_record::attributes::string<Member, Name>::string;
         static constexpr auto column_name = "name";
-        static constexpr auto validators = { not_null };
+        inline static const auto constraints = { not_null, length(64) };
     } name;
     std::tuple<ID&, Name&> attributes = std::tie(id, name);
 };
@@ -25,7 +25,7 @@ struct EnteringLog : public active_record::model<EnteringLog> {
     static constexpr auto table_name = "entering_log_table";
     struct ID : public active_record::attributes::integer<Member, ID> {
         static constexpr auto column_name = "id";
-        //static constepxr auto validators = { allow_null, uniqueness };
+        //static constepxr auto constraints = { allow_null, uniqueness };
     } id;
     struct MemberID : public active_record::relation::reference_to<Member::ID> {
         static constexpr auto column_name = "member_id";

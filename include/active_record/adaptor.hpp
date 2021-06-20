@@ -1,6 +1,11 @@
 #pragma once
+#include "utils.hpp"
 
-class adaptor {
-private:
-public:
-};
+namespace active_record{
+    class adaptor {
+    private:
+    public:
+        template<typename T>
+        active_record::string attribute_typename();
+    };
+}

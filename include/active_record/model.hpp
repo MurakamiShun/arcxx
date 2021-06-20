@@ -65,10 +65,6 @@ namespace active_record {
             return get_attribute_strings_aux(std::make_index_sequence<std::tuple_size_v<decltype(Derived{}.attributes)>>{});
         }
 
-        constexpr auto get_has_many_assosiations() const {
-
-        }
-
         constexpr virtual ~model() {}
 
         template<Container C>
@@ -88,7 +84,7 @@ namespace active_record {
         static constexpr query_relation<std::vector<Derived>> where(const Attrs...);
 
         /*
-        static constexpr create_table_query(const database& db){
+        static constexpr active_record::stringcreate_table_query(const database& db){
             return "CREATE TABLE IF NOT EXISTS" + Derived::table_name + "("
             +");";
         }
