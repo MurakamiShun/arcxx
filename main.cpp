@@ -23,11 +23,11 @@ struct Member : public active_record::model<Member> {
 
 struct EnteringLog : public active_record::model<EnteringLog> {
     static constexpr auto table_name = "entering_log_table";
-    struct ID : public active_record::attributes::integer<Member, ID> {
+    struct ID : public active_record::attributes::integer<EnteringLog, ID> {
         static constexpr auto column_name = "id";
-        //static constepxr auto constraints = { allow_null, uniqueness };
+        inline static const auto constraints = { primary_key };
     } id;
-    struct MemberID : public active_record::relation::reference_to<Member::ID> {
+    struct MemberID : public active_record::relation::reference_to<Member::ID, EnteringLog, MemberID> {
         static constexpr auto column_name = "member_id";
     } member_id;
     std::tuple<ID&, MemberID&> attributes = std::tie(id, member_id);
@@ -40,6 +40,7 @@ int main() {
     constexpr auto table_name = id.column_full_name().first;
     std::cout << id.column_full_name().first << std::endl;
     std::cout << Member::column_names()[0] << std::endl;
+    std::cout << EnteringLog::MemberID{}.column_full_name().first << std::endl;
     std::cout << id.to_string() << std::endl;
     std::cout << "primary key: " << Member::ID::is_primary_key << std::endl;
 
@@ -55,6 +56,9 @@ int main() {
     std::cout << Member::pluck(Member::ID{}).to_sql() << std::endl;
     std::cout << Member::where(Member::ID{10}, Member::Name::like("nko\\\' OR 1=1;--dice表")).to_sql() << std::endl;
     std::cout << Member::where(Member::ID::in(10,20,30)).to_sql() << std::endl;
+
+    std::cout << Member::table_definition<active_record::sqlite3_adaptor>() << std::endl;
+    std::cout << EnteringLog::table_definition<active_record::sqlite3_adaptor>() << std::endl;
     
     /*
     databaseAdaptor adapt = SQLite3("test.sqlite3");

@@ -54,6 +54,23 @@ namespace active_record {
             std::copy(tail_names.begin(), tail_names.end(), head_name.begin() + 1);
             return head_name;
         }
+
+        template<typename Adaptor, Attribute Attr>
+        static active_record::string get_column_definitions([[maybe_unused]]std::tuple<Attr>) {
+            return Adaptor::template column_definition<Attr>();
+        }
+
+        template<typename Adaptor, Attribute Head, Attribute... Tail>
+        static active_record::string get_column_definitions([[maybe_unused]]std::tuple<Head, Tail...>) {
+            return get_column_definitions<Adaptor>(std::tuple<Head>{}) + ","
+                + get_column_definitions<Adaptor>(std::tuple<Tail...>{});
+        }
+
+        // remove reference
+        template<typename Adaptor, Attribute... Attrs>
+        static active_record::string get_column_definitions([[maybe_unused]]std::tuple<Attrs&...>) {
+            return get_column_definitions<Adaptor>(std::tuple<Attrs...>{});
+        }
     public:
         static constexpr bool has_table_name = has_table_name_impl::value;
         static constexpr bool has_attributes = has_attributes_impl::value;
@@ -63,6 +80,13 @@ namespace active_record {
 
         constexpr auto get_attribute_strings() const {
             return get_attribute_strings_aux(std::make_index_sequence<std::tuple_size_v<decltype(Derived{}.attributes)>>{});
+        }
+
+        template<typename Adaptor>
+        static active_record::string table_definition(){
+            return active_record::string{ "CREATE TABLE IF NOT EXISTS " } + active_record::string{ Derived::table_name } + "("
+                + get_column_definitions<Adaptor>(Derived{}.attributes)
+                + ");";
         }
 
         constexpr virtual ~model() {}
@@ -81,14 +105,7 @@ namespace active_record {
         static constexpr query_relation<std::vector<Attr>> pluck(const Attr);
         
         template<WhereArgs... Attrs>
-        static constexpr query_relation<std::vector<Derived>> where(const Attrs...);
-
-        /*
-        static constexpr active_record::stringcreate_table_query(const database& db){
-            return "CREATE TABLE IF NOT EXISTS" + Derived::table_name + "("
-            +");";
-        }
-        */
+        static constexpr query_relation<std::vector<Derived>> where(const Attrs...);        
 
         constexpr query_relation<bool> destroy();
         constexpr query_relation<bool> save();

@@ -62,18 +62,22 @@ namespace active_record {
         }
 
         static const bool has_constraint(const constraint& c){
-            if (!has_constraints) return false;
-            for(const auto& con : Attribute::constraints){
-                if(con.target_type() == c.target_type()) return true;
+            if constexpr (!has_constraints) return false;
+            else{
+                for(const auto& con : Attribute::constraints){
+                    if(con.target_type() == c.target_type()) return true;
+                }
+                return false;
             }
-            return false;
         }
-        static const constraint& get_constraint(const constraint& c){
-            if (!has_constraints) return nullptr;
-            for(const auto& con : Attribute::constraints){
-                if(con.target_type() == c.target_type()) return con;
+        static const std::optional<constraint> get_constraint(const constraint& c){
+            if constexpr (!has_constraints) return std::nullopt;
+            else{
+                for(const auto& con : Attribute::constraints){
+                    if(con.target_type() == c.target_type()) return con;
+                }
+                return std::nullopt;
             }
-            return nullptr;
         }
 
         inline static const bool is_primary_key =  [](){

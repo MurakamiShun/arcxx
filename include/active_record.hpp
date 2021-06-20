@@ -9,4 +9,6 @@
 #include "active_record/query_impl.hpp"
 #include "active_record/relation.hpp"
 
+#include "active_record/adaptors/sqlite3_adaptor.hpp"
+
 //#endif
