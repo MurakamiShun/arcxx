@@ -14,9 +14,6 @@ namespace active_record {
             operator bool() const {
                 return static_cast<bool>(data);
             }
-            query_relation<typename ForeignKey::model_type> load() {
-
-            }
         };
     }
 }
