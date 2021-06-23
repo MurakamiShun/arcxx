@@ -57,8 +57,8 @@ int main() {
     std::cout << Member::where(Member::ID{10}, Member::Name::like("nko\\\' OR 1=1;--dice表")).to_sql() << std::endl;
     std::cout << Member::where(Member::ID::in(10,20,30)).to_sql() << std::endl;
 
-    std::cout << Member::table_definition<active_record::sqlite3_adaptor>() << std::endl;
-    std::cout << EnteringLog::table_definition<active_record::sqlite3_adaptor>() << std::endl;
+    // /std::cout << Member::table_definition<active_record::sqlite3_adaptor>() << std::endl;
+    //std::cout << EnteringLog::table_definition<active_record::sqlite3_adaptor>() << std::endl;
     
     /*
     databaseAdaptor adapt = SQLite3("test.sqlite3");

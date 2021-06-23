@@ -51,7 +51,7 @@ namespace active_record {
 
         // constexpr std::type_info::operator== is C++23
         inline static const constraint not_null = [](const std::optional<Type>& t) constexpr { return static_cast<bool>(t); };
-        inline static const constraint unique = [](const std::optional<Type>& t) constexpr { return true; };
+        inline static const constraint unique = [](const std::optional<Type>&) constexpr { return true; };
         inline static const constraint primary_key = [](const std::optional<Type>& t) { return not_null(t) && unique(t); };
         struct constraint_default_value_impl{
             const Type default_value;
@@ -61,7 +61,7 @@ namespace active_record {
             return constraint_default_value_impl{ def_val };
         }
 
-        static const bool has_constraint(const constraint& c){
+        static bool has_constraint(const constraint& c){
             if constexpr (!has_constraints) return false;
             else{
                 for(const auto& con : Attribute::constraints){

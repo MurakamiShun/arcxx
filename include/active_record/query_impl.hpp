@@ -33,11 +33,11 @@ namespace active_record{
             }
         }
         query_operation_common(const query_operation op, active_record::string&& op_arg, active_record::string&& table, active_record::string&& condition, active_record::string&& options) :
+            operation(op),
             query_op_arg(std::move(op_arg)),
             query_table(std::move(table)),
             query_condition(std::move(condition)),
-            query_options(std::move(options)),
-            operation(op) {
+            query_options(std::move(options)) {
         }
     };
 

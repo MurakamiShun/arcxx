@@ -4,17 +4,17 @@
 
 namespace active_record {
     namespace relation {
-        template<typename PrimaryKey, typename Table, typename Attribute>
-        struct reference_to : public attribute<Table, Attribute, typename PrimaryKey::value_type> {
+        template<typename ForeignKey, typename Table, typename Attribute>
+        struct reference_to : public attribute<Table, Attribute, typename ForeignKey::value_type> {
         private:
-            std::optional<typename PrimaryKey::model_type> data;
+            std::optional<typename ForeignKey::model_type> data;
         public:
-            using attribute<Table, Attribute, typename PrimaryKey::value_type>::attribute;
-            using primary_key_type = PrimaryKey;
+            using attribute<Table, Attribute, typename ForeignKey::value_type>::attribute;
+            using foreign_key_type = ForeignKey;
             operator bool() const {
                 return static_cast<bool>(data);
             }
-            query_relation<typename PrimaryKey::model_type> load() {
+            query_relation<typename ForeignKey::model_type> load() {
 
             }
         };
