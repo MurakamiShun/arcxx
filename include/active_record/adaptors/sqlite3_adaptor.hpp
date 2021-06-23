@@ -18,9 +18,11 @@ namespace active_record {
             error_msg.set(result, db_obj);
         }
 
-        static int callback(void* result, int argv, char** argc, char** column_names) {
-            return SQLITE_OK;
-        }
+        template<typename T>
+        static int callback(void* result, int column_v, char** column_texts, char** column_names);
+
+        template<Container T>
+        static int callback(void* result, int column_v, char** column_texts, char** column_names);
 
         template<Attribute T>
         struct is_reference {
@@ -59,6 +61,13 @@ namespace active_record {
             sqlite3_close(db_obj);
         }
 
+        active_record::string_view version(){
+            return sqlite3_version;
+        }
+        int version_number(){
+            return sqlite3_libversion_number();
+        }
+
         /*
         template<typename T>
         T exec(query_relation<T> query){
@@ -70,10 +79,13 @@ namespace active_record {
                 &result,
                 &errmsg
             );
-            if(errmsg != nullptr){
+            if(errmsg != NULL){
+                error_msg.set(result, db_obj);
                 sqlite3_free(errmsg);
             }
-            error_msg.set(result, db_obj);
+            else{
+                error_msg.set(result, db_obj);
+            }
         }
         */
 

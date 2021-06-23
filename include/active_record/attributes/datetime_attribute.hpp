@@ -12,6 +12,9 @@ namespace active_record {
             //return static_cast<bool>(*this) ? std::format("%FT%T%z", this->value()) : "null";
             return active_record::string{ "" };
         }
+        virtual void from_string(const active_record::string&) override {
+
+        }
     };
 
     namespace attributes {

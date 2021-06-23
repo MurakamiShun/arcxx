@@ -6,13 +6,17 @@
 #include "adaptor.hpp"
 
 namespace active_record {
-    constexpr static auto unspecified = std::nullopt;
 
     template<typename Model, typename Attribute, typename Type>
     struct attribute;
+
+    struct attribute_string_convertor {
+        virtual active_record::string to_string() const = 0;
+        virtual void from_string(const active_record::string&) = 0;
+    };
     
     template<typename Model, typename Attribute, typename Type>
-    class attribute_common {
+    class attribute_common : public attribute_string_convertor {
     private:
         struct has_column_name_impl {
             template<typename S>
@@ -92,7 +96,6 @@ namespace active_record {
         constexpr attribute_common(Type&& default_value) : data(std::move(default_value)) {}
         constexpr virtual ~attribute_common() {}
 
-        virtual active_record::string to_string() const = 0;
         static active_record::string column_statement_on_create_table(const adaptor&);
         
         [[nodiscard]] constexpr bool is_valid() const {

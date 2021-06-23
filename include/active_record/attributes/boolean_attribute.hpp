@@ -10,6 +10,9 @@ namespace active_record {
         [[nodiscard]] constexpr virtual active_record::string to_string() const override {
             return static_cast<bool>(*this) ? (this->value() ? "true" : "false") : "null";
         }
+        virtual void from_string(const active_record::string& str) override {
+            this->value() = (str == "false" || str == "0") ? false : true;
+        }
     };
 
     namespace attributes {

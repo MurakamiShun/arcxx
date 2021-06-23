@@ -11,8 +11,11 @@ namespace active_record {
         public:
             using attribute<Table, Attribute, typename ForeignKey::value_type>::attribute;
             using foreign_key_type = ForeignKey;
-            operator bool() const {
-                return static_cast<bool>(data);
+            const typename ForeignKey::model_type* operator->() const {
+                return data.operator->();
+            }
+            typename ForeignKey::model_type* operator->() {
+                return data.operator->();
             }
         };
     }

@@ -24,6 +24,9 @@ namespace active_record {
             // require sanitize
             return static_cast<bool>(*this) ? active_record::string{"\'"} + active_record::sanitize(this->value()) + "\'" : "null";
         }
+        virtual void from_string(const active_record::string& str) override {
+            this->value() = str;
+        }
 
         template<std::convertible_to<active_record::string> StringType>
         static constexpr query_condition like(const StringType& value){

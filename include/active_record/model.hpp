@@ -14,78 +14,72 @@ namespace active_record {
     class model {
     private:
         struct has_table_name_impl {
-        private:
             template<typename S>
-            static decltype(S::table_name, std::true_type()) check(S);
+            static decltype(S::table_name, std::true_type{}) check(S);
             static std::false_type check(...);
-        public:
             static constexpr bool value = decltype(check(std::declval<Derived>()))::value;
         };
         struct has_attributes_impl {
-        private:
             template<typename S>
             static decltype(std::declval<S>().attributes, std::true_type{}) check(S);
             static std::false_type check(...);
-        public:
             static constexpr bool value = decltype(check(std::declval<Derived>()))::value;
         };
         
-        template<typename Adaptor, Attribute Attr>
-        static active_record::string get_column_definitions([[maybe_unused]]std::tuple<Attr>) {
-            return Adaptor::template column_definition<Attr>();
-        }
-
-        template<typename Adaptor, Attribute Head, Attribute... Tail>
-        static active_record::string get_column_definitions([[maybe_unused]]std::tuple<Head, Tail...>) {
-            return get_column_definitions<Adaptor>(std::tuple<Head>{}) + ","
-                + get_column_definitions<Adaptor>(std::tuple<Tail...>{});
-        }
-
-        // remove attribute reference
-        template<typename Adaptor, Attribute... Attrs>
-        static active_record::string get_column_definitions([[maybe_unused]]std::tuple<Attrs&...>) {
-            return get_column_definitions<Adaptor>(std::tuple<Attrs...>{});
-        }
-        // get column names from value tuple
-        template<std::size_t Last>
-        static constexpr std::array<active_record::string_view, 1> column_names_aux(std::index_sequence<Last>) noexcept {
-            return { std::get<Last>(Derived{}.attributes).column_name };
-        }
-        template<std::size_t Head, std::size_t... Tail>
-        static constexpr std::array<active_record::string_view, 1 + sizeof...(Tail)> column_names_aux(std::index_sequence<Head, Tail...>) noexcept {
-            std::array<active_record::string_view, 1 + sizeof...(Tail)> head_name = { std::get<Head>(Derived{}.attributes).column_name };
-            const std::array<active_record::string_view, sizeof...(Tail)> tail_names = column_names_aux(std::index_sequence<Tail...>{});
-            std::copy(tail_names.begin(), tail_names.end(), head_name.begin() + 1);
-            return head_name;
-        }
-
-        // tuple values to string
-        template<std::size_t Last>
-        constexpr std::array<active_record::string, 1> get_attribute_strings_aux(std::index_sequence<Last>) const {
-            return { std::get<Last>(dynamic_cast<const Derived*>(this)->attributes).to_string() };
-        }
-        template<std::size_t Head, std::size_t... Tail>
-        constexpr std::array<active_record::string, 1 + sizeof...(Tail)> get_attribute_strings_aux(std::index_sequence<Head, Tail...>) const {
-            std::array<active_record::string, 1 + sizeof...(Tail)> head_name = { std::get<Head>(dynamic_cast<const Derived*>(this)->attributes).to_string() };
-            const std::array<active_record::string, sizeof...(Tail)> tail_names = get_attribute_strings_aux(std::index_sequence<Tail...>{});
-            std::copy(tail_names.begin(), tail_names.end(), head_name.begin() + 1);
-            return head_name;
-        }
     public:
         static constexpr bool has_table_name = has_table_name_impl::value;
         static constexpr bool has_attributes = has_attributes_impl::value;
         static constexpr auto column_names() noexcept {
-            return column_names_aux(std::make_index_sequence<std::tuple_size_v<decltype(Derived{}.attributes)>>{});
+            return std::apply(
+                []<typename... Attrs>(Attrs...){ return std::array<const active_record::string_view, sizeof...(Attrs)>{(Attrs::column_name)...}; },
+                Derived{}.attributes
+            );
         }
 
         constexpr auto get_attribute_strings() const {
-            return get_attribute_strings_aux(std::make_index_sequence<std::tuple_size_v<decltype(Derived{}.attributes)>>{});
+            return std::apply(
+                []<typename... Attrs>(const Attrs&... attrs){ return std::array<const active_record::string, sizeof...(Attrs)>{attrs.to_string()...}; },
+                dynamic_cast<const Derived*>(this)->attributes
+            );
         }
 
+        auto get_attribute_string_convertors() {
+            return std::apply(
+                []<typename... Attrs>(Attrs&... attrs){ return std::array<attribute_string_convertor* const, sizeof...(Attrs)>{&attrs...}; },
+                dynamic_cast<Derived*>(this)->attributes
+            );
+        }
+        const auto get_attribute_string_convertors() const {
+            return std::apply(
+                []<typename... Attrs>(const Attrs&... attrs){ return std::array<const attribute_string_convertor* const, sizeof...(Attrs)>{&attrs...}; },
+                dynamic_cast<const Derived*>(this)->attributes
+            );
+        }
+        attribute_string_convertor& operator[](const active_record::string_view col_name) {
+            static const auto names = column_names();
+            const auto col_idx = std::distance(names.begin(), std::find(names.begin(), names.end(), col_name));
+            return *(get_attribute_string_convertors()[col_idx]);
+        }
+        const attribute_string_convertor& operator[](const active_record::string_view col_name) const {
+            static const auto names = column_names();
+            const auto col_idx = std::distance(names.begin(), std::find(names.begin(), names.end(), col_name));
+            return *(get_attribute_string_convertors()[col_idx]);
+        }
+        
         template<typename Adaptor>
         static active_record::string table_definition(){
+            const auto column_definitions = std::apply(
+                []<typename... Attrs>(const Attrs&...){ return std::array<const active_record::string, sizeof...(Attrs)>{(Adaptor::template column_definition<Attrs>())...}; },
+                Derived{}.attributes
+            );
+            active_record::string col_defs = "";
+            active_record::string delimiter = "";
+            for(const auto& col_def : column_definitions){
+                col_defs += delimiter + col_def;
+                delimiter = ",";
+            }
             return active_record::string{ "CREATE TABLE IF NOT EXISTS " } + active_record::string{ Derived::table_name } + "("
-                + get_column_definitions<Adaptor>(Derived{}.attributes)
+                + col_defs
                 + ");";
         }
 
@@ -110,8 +104,8 @@ namespace active_record {
         template<WhereArgs... Attrs>
         static constexpr query_relation<std::vector<Derived>> where(const Attrs...);        
 
-        constexpr query_relation<bool> destroy();
-        constexpr query_relation<bool> save();
+        query_relation<bool> destroy();
+        query_relation<bool> save();
     };
 
     template<typename T>

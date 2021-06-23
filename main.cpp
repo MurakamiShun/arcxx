@@ -48,6 +48,7 @@ int main() {
     member.id = 123;
     member.name = "nkodice";
     std::cout << member.get_attribute_strings()[1] << std::endl;
+    std::cout << member["name"].to_string() << std::endl;
 
     std::array<Member, 4> members;
     std::cout << Member::insert(members).to_sql() << std::endl;
@@ -57,8 +58,8 @@ int main() {
     std::cout << Member::where(Member::ID{10}, Member::Name::like("nko\\\' OR 1=1;--dice表")).to_sql() << std::endl;
     std::cout << Member::where(Member::ID::in(10,20,30)).to_sql() << std::endl;
 
-    // /std::cout << Member::table_definition<active_record::sqlite3_adaptor>() << std::endl;
-    //std::cout << EnteringLog::table_definition<active_record::sqlite3_adaptor>() << std::endl;
+    std::cout << Member::table_definition<active_record::sqlite3_adaptor>() << std::endl;
+    std::cout << EnteringLog::table_definition<active_record::sqlite3_adaptor>() << std::endl;
     
     /*
     databaseAdaptor adapt = SQLite3("test.sqlite3");

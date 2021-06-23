@@ -1,6 +1,7 @@
 #pragma once
 #include "../attribute.hpp"
 #include "../query.hpp"
+#include <charconv>
 
 namespace active_record {
     template<typename Model, typename Attribute, std::integral Integer>
@@ -10,6 +11,9 @@ namespace active_record {
         
         [[nodiscard]] constexpr virtual active_record::string to_string() const override {
             return static_cast<bool>(*this) ? std::to_string(this->value()) : "null";
+        }
+        virtual void from_string(const active_record::string& str) override {
+            std::from_chars(&*str.begin(), &*str.end(), this->value());
         }
     };
 
