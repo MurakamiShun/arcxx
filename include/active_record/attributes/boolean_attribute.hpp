@@ -11,7 +11,9 @@ namespace active_record {
             return static_cast<bool>(*this) ? (this->value() ? "true" : "false") : "null";
         }
         virtual void from_string(const active_record::string& str) override {
-            this->value() = (str == "false" || str == "0") ? false : true;
+            if(str != "null" && str != "NULL"){
+                this->data = (str == "false" || str == "0") ? false : true;
+            }
         }
     };
 

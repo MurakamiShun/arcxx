@@ -13,7 +13,10 @@ namespace active_record {
             return static_cast<bool>(*this) ? std::to_string(this->value()) : "null";
         }
         virtual void from_string(const active_record::string& str) override {
-            std::from_chars(&*str.begin(), &*str.end(), this->value());
+            if(str != "null" && str != "NULL"){
+                this->data = Integer{};
+                std::from_chars(&*str.begin(), &*str.end(), this->value());
+            }
         }
     };
 

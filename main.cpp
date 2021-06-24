@@ -85,36 +85,20 @@ int main() {
         std::cout << "\033[31m" << connection.error_message() << "\033[m" << std::endl;
     }
     else std::cout << "\033[32m done! \033[m" << std::endl;
-    connection.close();
-    
-    /*
-    databaseAdaptor adapt = SQLite3("test.sqlite3");
-    //databaseAdaptor = Postgresql("postgresql://localhost/mydb");
-    MyDatabase database = databaseAdaptor.connect<MyDatabase>();
 
-    Member new_member;
-    new_member.id = 10;
-    new_member.name = "watanabe taro";
-
-    database.execute(MyDatabase::Member::create(new_member));
-
-    Member finder;
-    finder.id = 10;
-    auto result = database.execute(MyDatabase::Member::all());
-    auto query = MyDatabase::Member::select<MyDatabase::Member::ID, MyDatabase::Member::Name>().where("id < {}", 10).count();
-    
-    MyDatabase::Member::find(MyDatabase::Member::ID{10});
-
-    MyDatabase::EnteringLog::where<MyDatabase::EnteringLog::Member>(MyDatabase::Member::where().pluck<MyDatabase::Member::Name>()).count();
-
-    MyDatabase::Member::joins<EnteringLog>().select(MyDatabase::Member::ID);
-
-    if(database.errors.size()){
-        for(const auto& error : database.errors){
-            std::cout  << error << std::endl;
+    std::cout << "\033[33m[execution] \033[m" << Member::all().to_sql() << std::endl;
+    const auto all_members = connection.exec(Member::all());
+    if(connection.has_error()){
+        std::cout << "\033[31m" << connection.error_message() << "\033[m" << std::endl;
+    }
+    else {
+        std::cout << "\033[32m done! \033[m" << std::endl;
+        for(const auto& m : all_members){
+            std::cout << "id:" << m.id.to_string() << "\tname:" << m.name.to_string() << std::endl;
         }
     }
-    */
-    
+
+    connection.close();
+
     return 0;
 }

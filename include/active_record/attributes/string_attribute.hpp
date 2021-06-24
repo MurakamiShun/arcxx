@@ -25,7 +25,9 @@ namespace active_record {
             return static_cast<bool>(*this) ? active_record::string{"\'"} + active_record::sanitize(this->value()) + "\'" : "null";
         }
         virtual void from_string(const active_record::string& str) override {
-            this->value() = str;
+            if(str != "null" && str != "NULL"){
+                this->data = str;
+            }
         }
 
         template<std::convertible_to<active_record::string> StringType>

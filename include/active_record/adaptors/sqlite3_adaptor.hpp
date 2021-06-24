@@ -48,7 +48,7 @@ namespace active_record {
             for(int n = 0; n < col_number; ++n){
                 val[col_names[n]].from_string(col_texts[n]);
             }
-            result.push_back(val);
+            result->push_back(val);
             return SQLITE_OK;
         }
         template<Container T>
@@ -63,7 +63,7 @@ namespace active_record {
             for(int n = 0; n < col_number; ++n){
                 attribute_string_convertors[col_names[n]]->from_string(col_texts[n]);
             }
-            result.push_back(val);
+            result->push_back(val);
             return SQLITE_OK;
         }
     }
@@ -98,14 +98,13 @@ namespace active_record {
         }
 
         std::optional<active_record::string> error_msg = std::nullopt;
+        void set_error_msg(const char* msg_ptr){
+            if(msg_ptr == NULL || msg_ptr == nullptr) error_msg.reset();
+            else error_msg = msg_ptr;
+        }
         void set_error_msg(){
             auto msg_ptr = sqlite3_errmsg(db_obj);
-            if(msg_ptr != NULL) error_msg = msg_ptr;
-            else error_msg = std::nullopt;
-        }
-        void set_error_msg(char* msg){
-            if(msg != NULL) error_msg = msg;
-            else error_msg = std::nullopt;
+            set_error_msg(msg_ptr);
         }
     public:
         bool has_error() const noexcept { return static_cast<bool>(error_msg); }
@@ -129,8 +128,8 @@ namespace active_record {
         }
 
         template<typename T>
-        [[nodiscard]] T&& exec(query_relation<T> query){
-            std::vector<T> result;
+        [[nodiscard]] T exec(query_relation<T> query){
+            T result;
             char* errmsg = nullptr;
             sqlite3_exec(db_obj,
                 query.to_sql().c_str(),
@@ -138,11 +137,11 @@ namespace active_record {
                 &result,
                 &errmsg
             );
-            if(errmsg != NULL){
-                set_error_msg(errmsg);
+            set_error_msg(errmsg);
+            if(errmsg != NULL && errmsg != nullptr){
                 sqlite3_free(errmsg);
             }
-            return std::move(result);
+            return result;
         }
         bool exec(query_relation<bool> query){
             char* errmsg = nullptr;
@@ -152,8 +151,8 @@ namespace active_record {
                 nullptr,
                 &errmsg
             );
-            if(errmsg != NULL){
-                set_error_msg(errmsg);
+            set_error_msg(errmsg);
+            if(errmsg != NULL && errmsg != nullptr){
                 sqlite3_free(errmsg);
                 return false;
             }
