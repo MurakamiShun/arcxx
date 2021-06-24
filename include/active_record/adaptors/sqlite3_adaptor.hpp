@@ -1,28 +1,66 @@
 #pragma once
-#include <optional>
 #include "../adaptor.hpp"
 #include "../utils.hpp"
 #include "../query.hpp"
 #include "../attribute.hpp"
+#include <optional>
+#include <unordered_map>
 #if __has_include(<sqlite3.h>)
 #include <sqlite3.h>
 
 namespace active_record {
+    namespace sqlite3_options {
+        constexpr auto readonly   = SQLITE_OPEN_READONLY;
+        constexpr auto readwrite  = SQLITE_OPEN_READWRITE;
+        constexpr auto create     = SQLITE_OPEN_CREATE;
+        constexpr auto uri        = SQLITE_OPEN_URI;
+        constexpr auto memory     = SQLITE_OPEN_MEMORY;
+        constexpr auto no_mutex   = SQLITE_OPEN_NOMUTEX;
+        constexpr auto full_mutex = SQLITE_OPEN_FULLMUTEX;
+    }
+
     class sqlite3_adaptor : adaptor {
     private:
         sqlite3* db_obj;
 
         sqlite3_adaptor() = delete;
         sqlite3_adaptor(const active_record::string& file_name){
-            auto result = sqlite3_open(file_name.c_str(), &db_obj);
-            error_msg.set(result, db_obj);
+            auto result = sqlite3_open_v2(file_name.c_str(), &db_obj, 0, NULL);
+            if(result != SQLITE_OK) error_msg.set(db_obj);
         }
 
         template<typename T>
-        static int callback(void* result, int column_v, char** column_texts, char** column_names);
+        static int callback(void* res, int col_number, char** col_texts, char** col_names){
+            auto result = reinterpret_cast<T*>(res);
+            return SQLITE_OK;
+        }
 
         template<Container T>
-        static int callback(void* result, int column_v, char** column_texts, char** column_names);
+        requires std::derived_from<typename T::value_type, model<typename T::value_type>>
+        static int callback(void* res, int col_number, char** col_texts, char** col_names){
+            auto result = reinterpret_cast<T*>(res);
+            typename T::value_type val;
+            for(int n = 0; n < col_number; ++n){
+                val[col_names[n]].from_string(col_texts[n]);
+            }
+            result.push_back(val);
+            return SQLITE_OK;
+        }
+        template<Container T>
+        requires Tuple<typename T::value_type>
+        static int callback(void* res, int col_number, char** col_texts, char** col_names){
+            auto result = reinterpret_cast<T*>(res);
+            typename T::value_type val;
+            auto tmp = std::apply(
+                []<typename... Attrs>(Attrs&... attrs){ std::unordered_map<active_record::string, attribute_string_convertor*>{{attrs.column_name, &attrs}...}; },
+                val
+            );
+            for(int n = 0; n < col_number; ++n){
+                tmp[col_names[n]]->from_string(col_texts[n]);
+            }
+            result.push_back(val);
+            return SQLITE_OK;
+        }
 
         template<Attribute T>
         struct is_reference {
@@ -44,13 +82,11 @@ namespace active_record {
         }
     public:
         struct error_message{
-            std::optional<active_record::string> msg;
-            void set(const int errcode, sqlite3* db) {
-                if(errcode == SQLITE_OK) msg.reset();
-                else msg = sqlite3_errmsg(db);
-            }
-            void set(const char* errmsg) {
-                msg = errmsg;
+            std::optional<active_record::string> msg = std::nullopt;
+            void set(sqlite3* db) {
+                auto msg_ptr = sqlite3_errmsg(db);
+                if(msg_ptr != NULL) msg = msg_ptr;
+                else msg = std::nullopt;
             }
             operator bool(){ return static_cast<bool>(msg); }
         } error_msg;
@@ -68,26 +104,37 @@ namespace active_record {
             return sqlite3_libversion_number();
         }
 
-        /*
         template<typename T>
-        T exec(query_relation<T> query){
-            std::vector<std::vector<active_record::string>> result;
+        [[nodiscard]] T&& exec(query_relation<T> query){
+            std::vector<T> result;
             char* errmsg = nullptr;
-            auto result = sqlite3_exec(db_obj,
-                query.to_sql(),
+            sqlite3_exec(db_obj,
+                query.to_sql().c_str(),
                 &callback,
                 &result,
                 &errmsg
             );
             if(errmsg != NULL){
-                error_msg.set(result, db_obj);
+                error_msg.set(db_obj);
                 sqlite3_free(errmsg);
             }
-            else{
-                error_msg.set(result, db_obj);
-            }
+            return std::move(result);
         }
-        */
+        bool exec(query_relation<bool> query){
+            char* errmsg = nullptr;
+            sqlite3_exec(db_obj,
+                query.to_sql().c_str(),
+                nullptr,
+                nullptr,
+                &errmsg
+            );
+            if(errmsg != NULL){
+                error_msg.set(db_obj);
+                sqlite3_free(errmsg);
+                return false;
+            }
+            return true;
+        }
 
         template<Attribute T>
         requires std::same_as<typename T::value_type, active_record::string>
