@@ -67,21 +67,7 @@ namespace active_record {
         }
         
         template<typename Adaptor>
-        static active_record::string table_definition(){
-            const auto column_definitions = std::apply(
-                []<typename... Attrs>(const Attrs&...){ return std::array<const active_record::string, sizeof...(Attrs)>{(Adaptor::template column_definition<Attrs>())...}; },
-                Derived{}.attributes
-            );
-            active_record::string col_defs = "";
-            active_record::string delimiter = "";
-            for(const auto& col_def : column_definitions){
-                col_defs += delimiter + col_def;
-                delimiter = ",";
-            }
-            return active_record::string{ "CREATE TABLE IF NOT EXISTS " } + active_record::string{ Derived::table_name } + "("
-                + col_defs
-                + ");";
-        }
+        static query_relation<bool> table_definition();
 
         constexpr virtual ~model() {}
 

@@ -8,7 +8,8 @@ namespace active_record {
         insert,
         destroy,
         update,
-        condition
+        condition,
+        create_table
     };
 
     enum class order {

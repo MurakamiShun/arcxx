@@ -9,32 +9,37 @@
 #include <sqlite3.h>
 
 namespace active_record {
-    namespace sqlite3_options {
-        constexpr auto readonly   = SQLITE_OPEN_READONLY;
-        constexpr auto readwrite  = SQLITE_OPEN_READWRITE;
-        constexpr auto create     = SQLITE_OPEN_CREATE;
-        constexpr auto uri        = SQLITE_OPEN_URI;
-        constexpr auto memory     = SQLITE_OPEN_MEMORY;
-        constexpr auto no_mutex   = SQLITE_OPEN_NOMUTEX;
-        constexpr auto full_mutex = SQLITE_OPEN_FULLMUTEX;
-    }
-
-    class sqlite3_adaptor : adaptor {
-    private:
-        sqlite3* db_obj;
-
-        sqlite3_adaptor() = delete;
-        sqlite3_adaptor(const active_record::string& file_name){
-            auto result = sqlite3_open_v2(file_name.c_str(), &db_obj, 0, NULL);
-            if(result != SQLITE_OK) error_msg.set(db_obj);
+    namespace sqlite3 {
+        namespace options {
+            constexpr auto readonly   = SQLITE_OPEN_READONLY;
+            constexpr auto readwrite  = SQLITE_OPEN_READWRITE;
+            constexpr auto create     = SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE;
+            constexpr auto uri        = SQLITE_OPEN_URI;
+            constexpr auto memory     = SQLITE_OPEN_MEMORY;
+            constexpr auto no_mutex   = SQLITE_OPEN_NOMUTEX;
+            constexpr auto full_mutex = SQLITE_OPEN_FULLMUTEX;
         }
-
         template<typename T>
+        requires std::derived_from<T, model<T>>
         static int callback(void* res, int col_number, char** col_texts, char** col_names){
             auto result = reinterpret_cast<T*>(res);
+            for(int n = 0; n < col_number; ++n){
+                result[col_names[n]].from_string(col_texts[n]);
+            }
             return SQLITE_OK;
         }
-
+        template<Tuple T>
+        static int callback(void* res, int col_number, char** col_texts, char** col_names){
+            auto result = reinterpret_cast<T*>(res);
+            auto attribute_string_convertors = std::apply(
+                []<typename... Attrs>(Attrs&... attrs){ std::unordered_map<active_record::string_view, attribute_string_convertor*>{{attrs.column_name, &attrs}...}; },
+                *result
+            );
+            for(int n = 0; n < col_number; ++n){
+                attribute_string_convertors[col_names[n]]->from_string(col_texts[n]);
+            }
+            return SQLITE_OK;
+        }
         template<Container T>
         requires std::derived_from<typename T::value_type, model<typename T::value_type>>
         static int callback(void* res, int col_number, char** col_texts, char** col_names){
@@ -51,15 +56,26 @@ namespace active_record {
         static int callback(void* res, int col_number, char** col_texts, char** col_names){
             auto result = reinterpret_cast<T*>(res);
             typename T::value_type val;
-            auto tmp = std::apply(
-                []<typename... Attrs>(Attrs&... attrs){ std::unordered_map<active_record::string, attribute_string_convertor*>{{attrs.column_name, &attrs}...}; },
+            auto attribute_string_convertors = std::apply(
+                []<typename... Attrs>(Attrs&... attrs){ std::unordered_map<active_record::string_view, attribute_string_convertor*>{{attrs.column_name, &attrs}...}; },
                 val
             );
             for(int n = 0; n < col_number; ++n){
-                tmp[col_names[n]]->from_string(col_texts[n]);
+                attribute_string_convertors[col_names[n]]->from_string(col_texts[n]);
             }
             result.push_back(val);
             return SQLITE_OK;
+        }
+    }
+
+    class sqlite3_adaptor : adaptor {
+    private:
+        ::sqlite3* db_obj;
+
+        sqlite3_adaptor() = delete;
+        sqlite3_adaptor(const active_record::string& file_name, const int flags){
+            auto result = sqlite3_open_v2(file_name.c_str(), &db_obj, flags, NULL);
+            if(result != SQLITE_OK) set_error_msg();
         }
 
         template<Attribute T>
@@ -80,18 +96,26 @@ namespace active_record {
             }
             else return "";
         }
+
+        std::optional<active_record::string> error_msg = std::nullopt;
+        void set_error_msg(){
+            auto msg_ptr = sqlite3_errmsg(db_obj);
+            if(msg_ptr != NULL) error_msg = msg_ptr;
+            else error_msg = std::nullopt;
+        }
+        void set_error_msg(char* msg){
+            if(msg != NULL) error_msg = msg;
+            else error_msg = std::nullopt;
+        }
     public:
-        struct error_message{
-            std::optional<active_record::string> msg = std::nullopt;
-            void set(sqlite3* db) {
-                auto msg_ptr = sqlite3_errmsg(db);
-                if(msg_ptr != NULL) msg = msg_ptr;
-                else msg = std::nullopt;
-            }
-            operator bool(){ return static_cast<bool>(msg); }
-        } error_msg;
-        static sqlite3_adaptor open(const active_record::string& file_name){
-            return sqlite3_adaptor{ file_name };
+        bool has_error() const noexcept { return static_cast<bool>(error_msg); }
+        const active_record::string& error_message() const { return error_msg.value(); }
+        
+        static sqlite3_adaptor open(const active_record::string& file_name, const int flags = sqlite3::options::readwrite){
+            return sqlite3_adaptor{ file_name, flags };
+        }
+        bool close() {
+            return sqlite3_close(db_obj) == SQLITE_OK;
         }
         ~sqlite3_adaptor(){
             sqlite3_close(db_obj);
@@ -110,12 +134,12 @@ namespace active_record {
             char* errmsg = nullptr;
             sqlite3_exec(db_obj,
                 query.to_sql().c_str(),
-                &callback,
+                &sqlite3::callback<T>,
                 &result,
                 &errmsg
             );
             if(errmsg != NULL){
-                error_msg.set(db_obj);
+                set_error_msg(errmsg);
                 sqlite3_free(errmsg);
             }
             return std::move(result);
@@ -129,7 +153,7 @@ namespace active_record {
                 &errmsg
             );
             if(errmsg != NULL){
-                error_msg.set(db_obj);
+                set_error_msg(errmsg);
                 sqlite3_free(errmsg);
                 return false;
             }

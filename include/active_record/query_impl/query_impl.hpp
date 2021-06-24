@@ -13,20 +13,23 @@ namespace active_record{
         // order, limit
         const active_record::string query_options;
         [[nodiscard]] const active_record::string to_sql() const {
-            if (operation == query_operation::select) {
-                return active_record::string("SELECT ") + query_op_arg + " FROM " + query_table + (query_condition.empty() ? "": (" WHERE " + query_condition)) + query_options + ";";
+            if (operation == query_operation::create_table) {
+                return active_record::string{"CREATE TABLE IF NOT EXISTS "} + query_table + "(" + query_op_arg + ");";
+            }
+            else if (operation == query_operation::select) {
+                return active_record::string{"SELECT "} + query_op_arg + " FROM " + query_table + (query_condition.empty() ? "": (" WHERE " + query_condition)) + query_options + ";";
             }
             else if (operation == query_operation::insert) {
-                return active_record::string("INSERT INTO ") + query_table + " VALUES " + query_op_arg + ";";
+                return active_record::string{"INSERT INTO "} + query_table + " VALUES " + query_op_arg + ";";
             }
             else if (operation == query_operation::destroy) {
-                return active_record::string("DELETE FROM ") + query_table + " WHERE " + query_condition + ";";
+                return active_record::string{"DELETE FROM "} + query_table + " WHERE " + query_condition + ";";
             }
             else if (operation == query_operation::update) {
-                return active_record::string("UPDATE ") + query_table + " SET " + query_op_arg + (query_condition.empty() ? "": (" WHERE " + query_condition)) + ";";
+                return active_record::string{"UPDATE "} + query_table + " SET " + query_op_arg + (query_condition.empty() ? "": (" WHERE " + query_condition)) + ";";
             }
             else if (operation == query_operation::condition) {
-                return active_record::string("SELECT ") + query_op_arg + " FROM " + query_table + " WHERE " + query_condition + query_options + ";";
+                return active_record::string{"SELECT "} + query_op_arg + " FROM " + query_table + " WHERE " + query_condition + query_options + ";";
             }
             else {
                 return active_record::string("SELECT ") + query_op_arg + " FROM " + query_table + ";";

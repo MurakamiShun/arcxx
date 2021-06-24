@@ -58,8 +58,34 @@ int main() {
     std::cout << Member::where(Member::ID{10}, Member::Name::like("nko\\\' OR 1=1;--dice表")).to_sql() << std::endl;
     std::cout << Member::where(Member::ID::in(10,20,30)).to_sql() << std::endl;
 
-    std::cout << Member::table_definition<active_record::sqlite3_adaptor>() << std::endl;
-    std::cout << EnteringLog::table_definition<active_record::sqlite3_adaptor>() << std::endl;
+    std::cout << "\033[33m[connecting] \033[m" << std::endl;
+    auto connection = active_record::sqlite3_adaptor::open("test.sqlite3", active_record::sqlite3::options::create);
+    if(connection.has_error()){
+        std::cout << "\033[31m" << connection.error_message() << "\033[m" << std::endl;
+    }
+    else std::cout << "\033[32m done! \033[m" << std::endl;
+
+    std::cout << "\033[33m[execution] \033[m" << Member::table_definition<active_record::sqlite3_adaptor>().to_sql() << std::endl;
+    connection.exec(Member::table_definition<active_record::sqlite3_adaptor>());
+    if(connection.has_error()){
+        std::cout << "\033[31m" << connection.error_message() << "\033[m" << std::endl;
+    }
+    else std::cout << "\033[32m done! \033[m" << std::endl;
+
+    std::cout << "\033[33m[execution] \033[m" << EnteringLog::table_definition<active_record::sqlite3_adaptor>().to_sql() << std::endl;
+    connection.exec(EnteringLog::table_definition<active_record::sqlite3_adaptor>());
+    if(connection.has_error()){
+        std::cout << "\033[31m" << connection.error_message() << "\033[m" << std::endl;
+    }
+    else std::cout << "\033[32m done! \033[m" << std::endl;
+
+    std::cout << "\033[33m[execution] \033[m" << Member::insert(member).to_sql() << std::endl;
+    connection.exec(Member::insert(member));
+    if(connection.has_error()){
+        std::cout << "\033[31m" << connection.error_message() << "\033[m" << std::endl;
+    }
+    else std::cout << "\033[32m done! \033[m" << std::endl;
+    connection.close();
     
     /*
     databaseAdaptor adapt = SQLite3("test.sqlite3");

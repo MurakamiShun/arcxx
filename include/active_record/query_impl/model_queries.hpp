@@ -149,4 +149,26 @@ namespace active_record {
                 active_record::string{ "" }
         };
     }
+
+    template<typename Derived>
+    template<typename Adaptor>
+    inline query_relation<bool> model<Derived>::table_definition() {
+        const auto column_definitions = std::apply(
+            []<typename... Attrs>(const Attrs&...){ return std::array<const active_record::string, sizeof...(Attrs)>{(Adaptor::template column_definition<Attrs>())...}; },
+            Derived{}.attributes
+        );
+        active_record::string col_defs = "";
+        active_record::string delimiter = "";
+        for(const auto& col_def : column_definitions){
+            col_defs += delimiter + col_def;
+            delimiter = ",";
+        }
+        return query_relation<bool>{
+            query_operation::create_table,
+            std::move(col_defs),
+            active_record::string{ Derived::table_name },
+            "",
+            ""
+        };
+    }
 }
