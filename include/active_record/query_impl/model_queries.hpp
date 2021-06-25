@@ -106,7 +106,7 @@ namespace active_record {
     template<typename Derived>
     inline constexpr query_relation<std::vector<Derived>> model<Derived>::all() {
         return query_relation<std::vector<Derived>> {
-            query_operation::unspecified,
+            query_operation::select,
                 model_column_full_names_to_string<Derived>(),
                 active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"",
                 active_record::string{ "" },

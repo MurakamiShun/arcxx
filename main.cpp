@@ -45,42 +45,52 @@ int main() {
     members[1].name = "sasaki";
     members[1].name = "watanabe aaaaaaa";
     std::cout << "\033[33m[connecting] \033[m" << std::endl;
-    auto connection = active_record::sqlite3_adaptor::open("test.sqlite3", active_record::sqlite3::options::create);
-    if(connection.has_error()){
-        std::cout << "\033[31m" << connection.error_message() << "\033[m" << std::endl;
+    auto con = active_record::sqlite3_adaptor::open("test.sqlite3", active_record::sqlite3::options::create);
+    if(con.has_error()){
+        std::cout << "\033[31m" << con.error_message() << "\033[m" << std::endl;
+        return -1;
     }
     else std::cout << "\033[32m done! \033[m" << std::endl;
 
-    std::cout << "\033[33m[execution] \033[m" << Member::table_definition<active_record::sqlite3_adaptor>().to_sql() << std::endl;
-    connection.exec(Member::table_definition<active_record::sqlite3_adaptor>());
-    if(connection.has_error()){
-        std::cout << "\033[31m" << connection.error_message() << "\033[m" << std::endl;
+    std::cout << "\033[33m[transaction]" << std::endl;
+    std::cout << "    \033[33m[query] \033[m" << Member::table_definition<active_record::sqlite3_adaptor>().to_sql() << std::endl;
+    std::cout << "    \033[33m[query] \033[m" << EnteringLog::table_definition<active_record::sqlite3_adaptor>().to_sql() << std::endl;
+    
+    const auto creata_table_transaction = [&con](){
+        using namespace active_record;
+        using transaction = active_record::sqlite3::transaction;
+        if(const auto error = con.exec(Member::table_definition<sqlite3_adaptor>()); error){
+            return transaction::rollback;
+        }
+        if(const auto error = con.exec(EnteringLog::table_definition<sqlite3_adaptor>()); error){
+            return transaction::rollback;
+        }
+        return transaction::commit;
+    };
+    if(const auto [error, trans_result] = con.transaction(creata_table_transaction); error){
+        std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
     }
-    else std::cout << "\033[32m done! \033[m" << std::endl;
-
-    std::cout << "\033[33m[execution] \033[m" << EnteringLog::table_definition<active_record::sqlite3_adaptor>().to_sql() << std::endl;
-    connection.exec(EnteringLog::table_definition<active_record::sqlite3_adaptor>());
-    if(connection.has_error()){
-        std::cout << "\033[31m" << connection.error_message() << "\033[m" << std::endl;
+    else if(trans_result == active_record::sqlite3::transaction::rollback){
+        std::cout << "\033[31m" << "rollbacked!!" << "\033[m" << std::endl;
     }
     else std::cout << "\033[32m done! \033[m" << std::endl;
 
     std::cout << "\033[33m[execution] \033[m" << Member::insert(member).to_sql() << std::endl;
-    if(connection.exec(Member::insert(member))){
-        std::cout << "\033[31m" << connection.error_message() << "\033[m" << std::endl;
+    if(const auto error = con.exec(Member::insert(member)); error){
+        std::cout << "\033[31m" << con.error_message() << "\033[m" << std::endl;
     }
     else std::cout << "\033[32m done! \033[m" << std::endl;
 
     std::cout << "\033[33m[execution] \033[m" << Member::insert(members).to_sql() << std::endl;
-    if(connection.exec(Member::insert(members))){
-        std::cout << "\033[31m" << connection.error_message() << "\033[m" << std::endl;
+    if(const auto error = con.exec(Member::insert(members)); error){
+        std::cout << "\033[31m" << con.error_message() << "\033[m" << std::endl;
     }
     else std::cout << "\033[32m done! \033[m" << std::endl;
 
     std::cout << "\033[33m[execution] \033[m" << Member::all().to_sql() << std::endl;
-    const auto all_members = connection.exec(Member::all());
-    if(connection.has_error()){
-        std::cout << "\033[31m" << connection.error_message() << "\033[m" << std::endl;
+    
+    if(const auto [error, all_members] = con.exec(Member::all()); error){
+        std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
     }
     else {
         std::cout << "\033[32m done! \033[m" << std::endl;
@@ -89,7 +99,7 @@ int main() {
         }
     }
 
-    connection.close();
+    con.close();
 
     return 0;
 }

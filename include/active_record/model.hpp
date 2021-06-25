@@ -65,15 +65,15 @@ namespace active_record {
             const auto col_idx = std::distance(names.begin(), std::find(names.begin(), names.end(), col_name));
             return *(get_attribute_string_convertors()[col_idx]);
         }
-        
-        template<typename Adaptor>
-        static query_relation<bool> table_definition();
 
         constexpr virtual ~model() {}
 
         /* 
          * Implementations are query_impl/model_queries.hpp
          */
+        template<typename Adaptor>
+        static query_relation<bool> table_definition();
+
         template<Container C>
         static constexpr query_relation<bool> insert(const C&);        
         template<std::same_as<Derived>... Models>

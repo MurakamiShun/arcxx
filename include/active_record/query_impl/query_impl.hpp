@@ -32,7 +32,7 @@ namespace active_record{
                 return active_record::string{"SELECT "} + query_op_arg + " FROM " + query_table + " WHERE " + query_condition + query_options + ";";
             }
             else {
-                return active_record::string("SELECT ") + query_op_arg + " FROM " + query_table + ";";
+                return query_op_arg + ";";
             }
         }
         query_operation_common(const query_operation op, active_record::string&& op_arg, active_record::string&& table, active_record::string&& condition, active_record::string&& options) :

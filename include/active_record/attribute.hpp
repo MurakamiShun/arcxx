@@ -13,6 +13,7 @@ namespace active_record {
     struct attribute_string_convertor {
         virtual active_record::string to_string() const = 0;
         virtual void from_string(const active_record::string&) = 0;
+        virtual const void* value_ptr() const = 0;
     };
     
     template<typename Model, typename Attribute, typename Type>
@@ -113,6 +114,10 @@ namespace active_record {
         [[nodiscard]] Type&& value()&& { return std::move(data.value()); }
         [[nodiscard]] Type* operator->() { return data.operator->(); }
         [[nodiscard]] const Type* operator->() const { return data.operator->(); }
+        virtual const void* value_ptr() const override {
+            if(data) return &data.value();
+            else return nullptr;
+        }
 
         template<std::convertible_to<Attribute>... Attrs>
         static constexpr query_condition in(const Attrs&... values) {
