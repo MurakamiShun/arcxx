@@ -4,7 +4,7 @@
 
 namespace active_record {
     template<typename Model, typename Attribute, typename Type>
-    class attribute_common : public attribute_string_convertor {
+    class attribute_common {
     private:
         struct has_column_name_impl {
             template<typename S>
@@ -99,18 +99,18 @@ namespace active_record {
         [[nodiscard]] Type& value()& { return data.value(); }
         [[nodiscard]] const Type&& value() const&& { return std::move(data.value()); }
         [[nodiscard]] Type&& value()&& { return std::move(data.value()); }
-        virtual const void* value_ptr() const override {
-            if(data) return &data.value();
-            else return nullptr;
+
+        template<std::derived_from<adaptor> Adaptor = common_adaptor>
+        attribute_string_convertor get_string_convertor() {
+            return attribute_string_convertor{
+                [this](){
+                    return dynamic_cast<Attribute*>(this)->template to_string<Adaptor>();
+                },
+                [this](const active_record::string_view str){
+                    return dynamic_cast<Attribute*>(this)->template from_string<Adaptor>(str);
+                }
+            };
         }
-        /*
-        [[nodiscard]] constexpr virtual active_record::string to_string() const override {
-            return active_record::to_string(*dynamic_cast<const Attribute*>(this));
-        }
-        virtual void from_string(const active_record::string& str) override {
-            active_record::from_string(*dynamic_cast<Attribute*>(this), str);
-        }
-        */
 
         template<std::convertible_to<Attribute>... Attrs>
         static constexpr query_condition in(const Attrs&... values) {

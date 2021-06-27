@@ -2,10 +2,9 @@
 #include "utils.hpp"
 
 namespace active_record{
-    class adaptor {
-    private:
-    public:
+    struct adaptor {
         template<typename T>
         active_record::string attribute_typename();
     };
+    struct common_adaptor : public adaptor{};
 }

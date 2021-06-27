@@ -4,7 +4,6 @@
 #include "../query.hpp"
 #include "../attribute.hpp"
 #include <optional>
-#include <unordered_map>
 #if __has_include(<sqlite3.h>)
 #include <sqlite3.h>
 
@@ -38,11 +37,11 @@ namespace active_record {
         static int callback(void* res, int col_number, char** col_texts, char** col_names){
             auto result = reinterpret_cast<T*>(res);
             auto attribute_string_convertors = std::apply(
-                []<typename... Attrs>(Attrs&... attrs){ std::unordered_map<active_record::string_view, attribute_string_convertor*>{{attrs.column_name, &attrs}...}; },
+                []<typename... Attrs>(Attrs&... attrs){ std::unordered_map<active_record::string_view, attribute_string_convertor>{{attrs.column_name, attrs.get_string_convertor()}...}; },
                 *result
             );
             for(int n = 0; n < col_number; ++n){
-                attribute_string_convertors[col_names[n]]->from_string((col_texts[n] == nullptr) ? "null" : col_texts[n]);
+                attribute_string_convertors[col_names[n]].from_string((col_texts[n] == nullptr) ? "null" : col_texts[n]);
             }
             return SQLITE_OK;
         }
@@ -51,8 +50,9 @@ namespace active_record {
         static int callback(void* res, int col_number, char** col_texts, char** col_names){
             auto result = reinterpret_cast<T*>(res);
             typename T::value_type val;
-            for(int n = 0; n < col_number; ++n){
-                val[col_names[n]].from_string((col_texts[n] == nullptr) ? "null" : col_texts[n]);
+            auto attribute_string_convertors = val.get_attribute_string_convertors();
+            for(int n = 0; n < col_number; ++n) {
+                attribute_string_convertors[col_names[n]].from_string((col_texts[n] == nullptr) ? "null" : col_texts[n]);
             }
             result->push_back(val);
             return SQLITE_OK;
@@ -63,11 +63,11 @@ namespace active_record {
             auto result = reinterpret_cast<T*>(res);
             typename T::value_type val;
             auto attribute_string_convertors = std::apply(
-                []<typename... Attrs>(Attrs&... attrs){ std::unordered_map<active_record::string_view, attribute_string_convertor*>{{attrs.column_name, &attrs}...}; },
+                []<typename... Attrs>(Attrs&... attrs){ std::unordered_map<active_record::string_view, attribute_string_convertor>{{attrs.column_name, attrs.get_string_convertor()}...}; },
                 val
             );
             for(int n = 0; n < col_number; ++n){
-                attribute_string_convertors[col_names[n]]->from_string((col_texts[n] == nullptr) ? "null" : col_texts[n]);
+                attribute_string_convertors[col_names[n]].from_string((col_texts[n] == nullptr) ? "null" : col_texts[n]);
             }
             result->push_back(val);
             return SQLITE_OK;
@@ -265,11 +265,97 @@ namespace active_record {
             return transaction(func);
         }
     };
+
+    inline namespace sqlite3_string_convertors{
+        // boolean
+        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
+        requires std::same_as<typename Attr::value_type, bool>
+        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
+            return static_cast<bool>(attr) ? (attr.value() ? "1" : "0") : "null";
+        }
+        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
+        requires std::same_as<typename Attr::value_type, bool>
+        void from_string(Attr& attr, const active_record::string_view str){
+            if(str != "null"){
+                attr = ((str == "0") ? false : true);
+            }
+        }
+
+        // integer
+        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
+        requires std::integral<typename Attr::value_type>
+        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
+            return to_string<common_adaptor>(attr);
+        }
+        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
+        requires std::integral<typename Attr::value_type>
+        void from_string(Attr& attr, const active_record::string_view str) {
+            from_string<common_adaptor>(attr, str);
+        }
+
+        // decimal
+        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
+        requires std::floating_point<typename Attr::value_type>
+        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
+            return to_string<common_adaptor>(attr);
+        }
+        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
+        requires std::floating_point<typename Attr::value_type>
+        void from_string(Attr& attr, const active_record::string_view str){
+            from_string<common_adaptor>(attr, str);
+        }
+
+        // string
+        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
+        requires std::same_as<typename Attr::value_type, active_record::string>
+        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
+            return to_string<common_adaptor>(attr);
+        }
+        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
+        requires std::same_as<typename Attr::value_type, active_record::string>
+        void from_string(Attr& attr, const active_record::string_view str) {
+            from_string<common_adaptor>(attr, str);
+        }
+
+        // datetime
+        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
+        requires std::same_as<typename Attr::value_type, active_record::datetime>
+        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
+            // ISO 8601 yyyyMMddTHHmmss (sqlite supports only utc)
+            //return static_cast<bool>(attr) ? std::format("%FT%T", attr.value()) : "null";
+            return "";
+        }
+        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
+        requires std::same_as<typename Attr::value_type, active_record::datetime>
+        void from_string(Attr& attr, const active_record::string_view str){
+            active_record::datetime dt;
+            //std::chrono::parse("%fT%T", dt, str);
+            attr = dt;
+        }
+        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
+        requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
+        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
+            active_record::string hex = "x'";
+            char buf[4];
+            for(const auto b : attr.value()){
+                hex += active_record::string_view{buf, std::to_chars(buf, &buf[3], b, 16) + 1};
+            }
+            return static_cast<bool>(attr) ? hex + "'" : "null";
+        }
+        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
+        requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
+        void from_string(Attr& attr, const active_record::string_view str){
+            attr = std::vector<std::byte>{};
+            attr.value().reserve(str.size());
+            std::copy(str.begin(), str.end(), attr.value().begin());
+        }
+    }
 }
 #else
 #include <type_traits>
 namespace active_record {
-    template<typename SFINAE>
+
+    template<typename LazyInstantiate>
     struct sqlite3_adaptor_impl{static_assert(SFINAE::value, "sqlite3.h is not found");};
     
     using sqlite3_adaptor = sqlite3_adaptor_impl<std::false_type>;

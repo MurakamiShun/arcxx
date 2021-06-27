@@ -10,9 +10,8 @@ namespace active_record {
     struct attribute;
 
     struct attribute_string_convertor {
-        virtual active_record::string to_string() const = 0;
-        virtual void from_string(const active_record::string&) = 0;
-        virtual const void* value_ptr() const = 0;
+        const std::function<active_record::string()> to_string;
+        const std::function<void(const active_record::string_view)> from_string;
     };
 
     template<typename Model, typename Attribute, typename Type>
@@ -21,10 +20,11 @@ namespace active_record {
     template<typename T>
     concept Attribute = std::derived_from<T, attribute_common<typename T::model_type, typename T::attribute_type, typename T::value_type>>;
 
-    template<Attribute Attr>
+    template<std::derived_from<adaptor> Adaptor, Attribute Attr>
     requires false
     [[nodiscard]] constexpr active_record::string to_string(const Attr& attr);
-    template<Attribute Attr>
+
+    template<std::derived_from<adaptor> Adaptor, Attribute Attr>
     requires false
     void from_string(Attr& attr, const active_record::string_view str);
 }

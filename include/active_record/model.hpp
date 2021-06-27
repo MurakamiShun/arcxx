@@ -3,6 +3,7 @@
 #include <utility>
 #include <vector>
 #include <algorithm>
+#include <unordered_map>
 #include "query.hpp"
 #include "attribute.hpp"
 
@@ -43,27 +44,33 @@ namespace active_record {
             );
         }
 
+        template<std::derived_from<adaptor> Adaptor = common_adaptor>
         auto get_attribute_string_convertors() {
             return std::apply(
-                []<typename... Attrs>(Attrs&... attrs){ return std::array<attribute_string_convertor* const, sizeof...(Attrs)>{&attrs...}; },
+                []<typename... Attrs>(Attrs&... attrs){
+                    return std::unordered_map<active_record::string_view, attribute_string_convertor>{
+                        {attrs.column_name, attrs.template get_string_convertor<Adaptor>()}...
+                    };
+                },
                 dynamic_cast<Derived*>(this)->attributes
             );
         }
+        template<std::derived_from<adaptor> Adaptor = common_adaptor>
         const auto get_attribute_string_convertors() const {
             return std::apply(
-                []<typename... Attrs>(const Attrs&... attrs){ return std::array<const attribute_string_convertor* const, sizeof...(Attrs)>{&attrs...}; },
+                []<typename... Attrs>(const Attrs&... attrs){
+                    return std::unordered_map<active_record::string_view, const attribute_string_convertor>{
+                        {attrs.column_name, attrs.template get_string_convertor<Adaptor>()}...
+                    };
+                },
                 dynamic_cast<const Derived*>(this)->attributes
             );
         }
-        attribute_string_convertor& operator[](const active_record::string_view col_name) {
-            static const auto names = column_names();
-            const auto col_idx = std::distance(names.begin(), std::find(names.begin(), names.end(), col_name));
-            return *(get_attribute_string_convertors()[col_idx]);
+        attribute_string_convertor operator[](const active_record::string_view col_name) {
+            return get_attribute_string_convertors()[col_name];
         }
-        const attribute_string_convertor& operator[](const active_record::string_view col_name) const {
-            static const auto names = column_names();
-            const auto col_idx = std::distance(names.begin(), std::find(names.begin(), names.end(), col_name));
-            return *(get_attribute_string_convertors()[col_idx]);
+        const attribute_string_convertor operator[](const active_record::string_view col_name) const {
+            return get_attribute_string_convertors()[col_name];
         }
 
         constexpr virtual ~model() {}
