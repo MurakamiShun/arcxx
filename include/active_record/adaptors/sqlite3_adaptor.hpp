@@ -232,29 +232,17 @@ namespace active_record {
         }
 
         std::optional<active_record::string> begin(const active_record::string_view transaction_name = ""){
-            return exec(query_relation<bool>{
-                query_operation::unspecified,
-                active_record::string{ "BEGIN TRANSACTION " } + active_record::string{ transaction_name },
-                "", "", ""
-            });
+            return exec(raw_query<bool>(active_record::string{ "BEGIN TRANSACTION " } + active_record::string{ transaction_name }));
         }
         std::optional<active_record::string> commit(const active_record::string_view transaction_name = ""){
-            return exec(query_relation<bool>{
-                query_operation::unspecified,
-                active_record::string{ "COMMIT TRANSACTION " } + active_record::string{ transaction_name },
-                "", "", ""
-            });
+            return exec(raw_query<bool>(active_record::string{ "COMMIT TRANSACTION " } + active_record::string{ transaction_name }));
         }
         std::optional<active_record::string> rollback(const active_record::string_view transaction_name = ""){
-            return exec(query_relation<bool>{
-                query_operation::unspecified,
-                active_record::string{ "ROLLBACK TRANSACTION " } + active_record::string{ transaction_name },
-                "", "", ""
-            });
+            return exec(raw_query<bool>(active_record::string{ "ROLLBACK TRANSACTION " } + active_record::string{ transaction_name }));
         }
 
         template<std::convertible_to<std::function<sqlite3::transaction(void)>> F>
-        std::pair<std::optional<active_record::string>, sqlite3::transaction> transaction(const F& func) {
+        std::pair<std::optional<active_record::string>, sqlite3::transaction> transaction(F& func) {
             if(const auto errmsg = begin(); errmsg) return { errmsg, sqlite3::transaction::rollback };
             const auto transaction_result = func();
             switch (transaction_result) {
@@ -265,7 +253,15 @@ namespace active_record {
             }
         }
         template<std::convertible_to<std::function<sqlite3::transaction(void)>> F>
-        bool transaction(F&& func) {
+        std::pair<std::optional<active_record::string>, sqlite3::transaction>  transaction(F&& func) {
+            return transaction(func);
+        }
+        template<std::convertible_to<std::function<sqlite3::transaction(sqlite3_adaptor&)>> F>
+        std::pair<std::optional<active_record::string>, sqlite3::transaction> transaction(F& func) {
+            return transaction(static_cast<std::function<sqlite3::transaction()>>(std::bind(func, std::ref(*this))));
+        }
+        template<std::convertible_to<std::function<sqlite3::transaction(sqlite3_adaptor&)>> F>
+        std::pair<std::optional<active_record::string>, sqlite3::transaction>  transaction(F&& func) {
             return transaction(func);
         }
     };

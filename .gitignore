@@ -12,3 +12,4 @@ _deps
 **/*.out
 **/*.sqlite3
 .vscode
+docs/build

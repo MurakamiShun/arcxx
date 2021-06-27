@@ -1,21 +1,32 @@
 #pragma once
-#include "../attribute.hpp"
-#include "../query.hpp"
+#include "attribute_common_impl.hpp"
 #include <charconv>
 
 namespace active_record {
+    template<Attribute Attr>
+    requires std::floating_point<typename Attr::value_type>
+    [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
+        return static_cast<bool>(attr) ? std::to_string(attr.value()) : "null";
+    }
+    template<Attribute Attr>
+    requires std::floating_point<typename Attr::value_type>
+    void from_string(Attr& attr, const active_record::string_view str){
+        if(str != "null" && str != "NULL"){
+            typename Attr::value_type tmp;
+            std::from_chars(&*str.begin(), &*str.end(), tmp);
+            attr = tmp;
+        }
+    }
+    
     template<typename Model, typename Attribute, std::floating_point FP>
     struct attribute<Model, Attribute, FP> : attribute_common<Model, Attribute, FP> {
         using attribute_common<Model, Attribute, FP>::attribute_common;
         
         [[nodiscard]] constexpr virtual active_record::string to_string() const override {
-            return static_cast<bool>(*this) ? std::to_string(this->value()) : "null";
+            return active_record::to_string(*dynamic_cast<const Attribute*>(this));
         }
         virtual void from_string(const active_record::string& str) override {
-            if(str != "null" && str != "NULL"){
-                this->data = FP{};
-                std::from_chars(&*str.begin(), &*str.end(), this->value());
-            }
+            active_record::from_string(*dynamic_cast<Attribute*>(this), str);
         }
     };
 

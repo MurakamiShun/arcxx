@@ -91,5 +91,16 @@ namespace active_record{
 
         template<std::derived_from<query_operation_common>... Relations>
         query_relation<Result> where([[maybe_unused]] Relations... relations);
-    };     
+    };
+
+    template<typename T>
+    query_relation<T> raw_query(const active_record::string_view query_str) {
+        return query_relation<T>{
+            query_operation::unspecified,
+            active_record::string{ query_str },
+            "",
+            "",
+            ""
+        };
+    }
 }

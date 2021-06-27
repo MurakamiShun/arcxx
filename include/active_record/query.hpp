@@ -22,4 +22,7 @@ namespace active_record {
     struct query_condition {
         active_record::string str;
     };
+
+    template<typename T>
+    query_relation<T> raw_query(const active_record::string_view);
 }
