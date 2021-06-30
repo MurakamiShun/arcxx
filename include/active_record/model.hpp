@@ -8,8 +8,7 @@
 #include "attribute.hpp"
 
 namespace active_record {
-    template<typename T>
-    concept WhereArgs = Attribute<T> || std::same_as<T, query_condition>;
+    struct void_model;
 
     template<typename Derived>
     class model {
@@ -81,21 +80,21 @@ namespace active_record {
         template<typename Adaptor>
         static query_relation<bool> table_definition();
 
-        template<Container C>
-        static constexpr query_relation<bool> insert(const C&);        
+        // template<Container C>
+        // static constexpr query_relation<bool> insert(const C&);
         template<std::same_as<Derived>... Models>
-        static constexpr query_relation<bool> insert(const Models&...);
+        static constexpr query_relation<bool, void_attribute> insert(const Models&...);
 
-        static constexpr query_relation<std::vector<Derived>> all();
+        static constexpr query_relation<std::vector<Derived>, void_attribute> all();
 
         template<Attribute... Attrs>
-        static constexpr query_relation<std::vector<std::tuple<Attrs...>>> select(const Attrs...);
+        static constexpr query_relation<std::vector<std::tuple<Attrs...>>, void_attribute> select(const Attrs...);
 
         template<Attribute Attr>
-        static constexpr query_relation<std::vector<Attr>> pluck(const Attr);
+        static constexpr query_relation<std::vector<Attr>, void_attribute> pluck(const Attr);
         
-        template<WhereArgs... Attrs>
-        static constexpr query_relation<std::vector<Derived>> where(const Attrs...);        
+        template<Attribute... Attrs>
+        static constexpr query_relation<std::vector<Derived>, Attrs...> where(const Attrs...);
 
         query_relation<bool> destroy();
         query_relation<bool> save();
@@ -103,4 +102,8 @@ namespace active_record {
 
     template<typename T>
     concept Model = std::derived_from<T, model<T>>;
+
+    struct void_model : public active_record::model<void_model> {
+        static constexpr auto table_name = "void model is unused. This library has some problem.";
+    };
 }

@@ -193,6 +193,11 @@ namespace active_record {
             return sqlite3_libversion_number();
         }
 
+        static constexpr bool bindable = true;
+        static active_record::string bind_variable_str(const size_t idx) {
+            return active_record::string{ ":" } + std::to_string(idx);
+        }
+
         template<typename T>
         [[nodiscard]] std::pair<std::optional<active_record::string>, T> exec(query_relation<T> query){
             T result;
@@ -224,11 +229,6 @@ namespace active_record {
                 sqlite3_free(errmsg_ptr);
             }
             return errmsg;
-        }
-
-        template<Attribute T>
-        static active_record::string column_definition() {
-            return sqlite3::column_definition<T>();
         }
 
         std::optional<active_record::string> begin(const active_record::string_view transaction_name = ""){
@@ -263,6 +263,11 @@ namespace active_record {
         template<std::convertible_to<std::function<sqlite3::transaction(sqlite3_adaptor&)>> F>
         std::pair<std::optional<active_record::string>, sqlite3::transaction>  transaction(F&& func) {
             return transaction(func);
+        }
+
+        template<Attribute T>
+        static active_record::string column_definition() {
+            return sqlite3::column_definition<T>();
         }
     };
 

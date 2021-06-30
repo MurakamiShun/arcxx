@@ -120,4 +120,9 @@ namespace active_record {
             };
         }
     };
+
+    struct void_attribute: public attribute_common<void_model, void_attribute, std::false_type> {
+        using attribute_common<void_model, void_attribute, std::false_type>::attribute_common;
+        static constexpr auto column_name = "void attribute is unused. This library has some problem.";
+    };
 }

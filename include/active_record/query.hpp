@@ -16,7 +16,7 @@ namespace active_record {
         asc,
         desc
     };
-    template<typename T>
+    template<typename T, typename... BindAttrs>
     struct query_relation;
 
     struct query_condition {

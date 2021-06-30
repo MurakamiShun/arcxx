@@ -4,48 +4,115 @@
 #include "../attribute.hpp"
 #include "../adaptor.hpp"
 #include "../utils.hpp"
+#include <variant>
+#include <any>
 
-namespace active_record{
-    struct query_operation_common {
-        const query_operation operation;
-        const active_record::string query_op_arg;
-        const active_record::string query_table;
-        const active_record::string query_condition;
-        // order, limit
-        const active_record::string query_options;
+namespace active_record {
+    template<Attribute... BindAttrs>
+    struct query_relation_common {
+    public:
+        using str_or_bind = std::variant<active_record::string, size_t>;
+    private:
+        template<std::derived_from<adaptor> Adaptor>
+        struct str_or_bind_visitor {
+            const std::tuple<BindAttrs*...> bind_attrs;
+            active_record::string operator()(const active_record::string& str) const {
+                return str;
+            }
+            active_record::string operator()(const size_t idx) const {
+                if constexpr (Adaptor::bindable) return Adaptor::bind_variable_str(idx);
+                else {
+                    return std::apply(
+                        []<typename... Attrs>(const Attrs*... attrs){
+                            return std::array<active_record::string, std::tuple_size_v<decltype(bind_attrs)>>{ to_string<Adaptor>(*attrs)... };
+                        },
+                        bind_attrs
+                    )[idx];
+                }
+            }
+        };
+
+        template<std::derived_from<adaptor> Adaptor>
+        active_record::string sob_to_string(const std::vector<str_or_bind>& sobs) const {
+            active_record::string result;
+            str_or_bind_visitor<Adaptor> visitor{ };
+            for(const auto& sob : sobs) {
+                result += std::visit(visitor, sob);
+            }
+            return result;
+        }
+    public:        
+        query_operation operation;
+        std::vector<str_or_bind> query_op_arg;
+        std::vector<str_or_bind> query_table;
+        std::vector<str_or_bind> query_condition;
+        std::vector<str_or_bind> query_options; // order, limit
+        
+        std::tuple<BindAttrs*...> bind_attrs;
+        std::vector<std::any> temporary_attrs;
+
+        void* bind_attr_ptr(size_t index);
+        constexpr size_t bind_attrs_count() const {
+            if constexpr(std::is_same_v<void_attribute, decltype(std::get<0>(bind_attrs))>){
+                return 0;
+            }
+            else{
+                return std::tuple_size_v<decltype(bind_attrs)>;
+            }
+        }
+
+        query_relation_common() = delete;
+        query_relation_common(const std::tuple<BindAttrs*...> attrs) : bind_attrs(attrs){  }
+
         template<std::derived_from<adaptor> Adaptor = common_adaptor>
         [[nodiscard]] const active_record::string to_sql() const {
             if (operation == query_operation::create_table) {
-                return active_record::string{"CREATE TABLE IF NOT EXISTS "} + query_table + "(" + query_op_arg + ");";
+                return active_record::string{"CREATE TABLE IF NOT EXISTS "} + sob_to_string<Adaptor>(query_table)
+                    + "(" + sob_to_string<Adaptor>(query_op_arg) + ");";
             }
             else if (operation == query_operation::select) {
-                return active_record::string{"SELECT "} + query_op_arg + " FROM " + query_table + (query_condition.empty() ? "": (" WHERE " + query_condition)) + query_options + ";";
+                return active_record::string{"SELECT "} + sob_to_string<Adaptor>(query_op_arg)
+                    + " FROM " + sob_to_string<Adaptor>(query_table)
+                    + (query_condition.empty() ? "": (active_record::string{" WHERE "} + sob_to_string<Adaptor>(query_condition)))
+                    + sob_to_string<Adaptor>(query_options) + ";";
             }
             else if (operation == query_operation::insert) {
-                return active_record::string{"INSERT INTO "} + query_table + " VALUES " + query_op_arg + ";";
+                return active_record::string{"INSERT INTO "} + sob_to_string<Adaptor>(query_table)
+                    + " VALUES " + sob_to_string<Adaptor>(query_op_arg) + ";";
             }
             else if (operation == query_operation::destroy) {
-                return active_record::string{"DELETE FROM "} + query_table + " WHERE " + query_condition + ";";
+                return active_record::string{"DELETE FROM "} + sob_to_string<Adaptor>(query_table)
+                    + " WHERE " + sob_to_string<Adaptor>(query_condition) + ";";
             }
             else if (operation == query_operation::update) {
-                return active_record::string{"UPDATE "} + query_table + " SET " + query_op_arg + (query_condition.empty() ? "": (" WHERE " + query_condition)) + ";";
+                return active_record::string{"UPDATE "} + sob_to_string<Adaptor>(query_table)
+                    + " SET " + sob_to_string<Adaptor>(query_op_arg)
+                    + (query_condition.empty() ? "": (active_record::string{" WHERE "} + sob_to_string<Adaptor>(query_condition))) + ";";
             }
             else if (operation == query_operation::condition) {
-                return active_record::string{"SELECT "} + query_op_arg + " FROM " + query_table + " WHERE " + query_condition + query_options + ";";
+                return active_record::string{"SELECT "} + sob_to_string<Adaptor>(query_op_arg)
+                    + " FROM " + sob_to_string<Adaptor>(query_table)
+                    + " WHERE " + sob_to_string<Adaptor>(query_condition)
+                    + sob_to_string<Adaptor>(query_options) + ";";
             }
             else {
-                return query_op_arg + ";";
+                return sob_to_string<Adaptor>(query_op_arg) + ";";
             }
         }
     };
 
-    template<typename T>
-    struct query_relation : public query_operation_common {
+    template<typename T, typename... BindAttrs>
+    struct query_relation : public query_relation_common<BindAttrs...> {
+        query_relation() = delete;
+        query_relation(const std::tuple<BindAttrs*...> attrs) : query_relation(attrs){  }
     };
 
-    template<Container Result>
+    template<Container Result, Attribute... BindAttrs>
     requires std::derived_from<typename Result::value_type, model<typename Result::value_type>>
-    struct query_relation<Result> : public query_operation_common {
+    struct query_relation<Result, BindAttrs...> : public query_relation_common<BindAttrs...> {
+        query_relation() = delete;
+        query_relation(const std::tuple<BindAttrs*...> attrs) : query_relation(attrs){  }
+        /*
         query_relation<bool> update();
         query_relation<bool> destroy();
 
@@ -67,11 +134,15 @@ namespace active_record{
 
         template<Attribute... Cols>
         query_relation<Result> where([[maybe_unused]] Cols... cols);
+        */
     };
 
-    template<Container Result>
+    template<Container Result, Attribute... BindAttrs>
     requires Tuple<typename Result::value_type>
-    struct query_relation<Result> : public query_operation_common {
+    struct query_relation<Result, BindAttrs...> : public query_relation_common<BindAttrs...> {
+        query_relation() = delete;
+        query_relation(const std::tuple<BindAttrs*...> attrs) : query_relation(attrs){  }
+        /*
         template<typename Relation>
         query_relation<Result> join([[maybe_unused]] Relation);
         
@@ -79,18 +150,17 @@ namespace active_record{
         query_relation<Result> order([[maybe_unused]] Col, active_record::order);
         query_relation<Result> limit(std::size_t);
 
-        template<std::derived_from<query_operation_common>... Relations>
+        template<std::derived_from<query_relation_common>... Relations>
         query_relation<Result> where([[maybe_unused]] Relations... relations);
+        */
     };
 
     template<typename T>
-    query_relation<T> raw_query(const active_record::string_view query_str) {
-        return query_relation<T>{{
-            .operation       = query_operation::unspecified,
-            .query_op_arg    = active_record::string{ query_str },
-            .query_table     = "",
-            .query_condition = "",
-            .query_options   = ""
-        }};
+    query_relation<T, void_attribute> raw_query(const active_record::string_view query_str) {
+        query_relation<T> ret{ std::tuple<void_attribute*>{} };
+        ret.operation     = query_operation::unspecified,
+        ret.query_op_arg.push_back(active_record::string{ query_str });
+
+        return ret;
     }
 }
