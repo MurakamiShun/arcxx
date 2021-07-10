@@ -22,12 +22,17 @@ namespace active_record {
             active_record::string operator()(const size_t idx) const {
                 if constexpr (Adaptor::bindable) return Adaptor::bind_variable_str(idx);
                 else {
-                    return std::apply(
-                        []<typename... Attrs>(const Attrs*... attrs){
-                            return std::array<active_record::string, std::tuple_size_v<decltype(bind_attrs)>>{ to_string<Adaptor>(*attrs)... };
-                        },
-                        bind_attrs
-                    )[idx];
+                    if constexpr (std::is_same_v<std::tuple<void_attribute*>, BindAttrs>){
+                        return "";
+                    }
+                    else{
+                        return std::apply(
+                            []<typename... Attrs>(const Attrs*... attrs){
+                                return std::array<active_record::string, std::tuple_size_v<decltype(bind_attrs)>>{ to_string<Adaptor>(*attrs)... };
+                            },
+                            bind_attrs
+                        )[idx];
+                    }
                 }
             }
         };
@@ -35,7 +40,7 @@ namespace active_record {
         template<std::derived_from<adaptor> Adaptor>
         active_record::string sob_to_string(const std::vector<str_or_bind>& sobs) const {
             active_record::string result;
-            str_or_bind_visitor<Adaptor> visitor{ };
+            str_or_bind_visitor<Adaptor> visitor{ bind_attrs };
             for(const auto& sob : sobs) {
                 result += std::visit(visitor, sob);
             }

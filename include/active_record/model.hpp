@@ -13,7 +13,7 @@ namespace active_record {
 
     template<typename... T>
     auto reference_tuple_to_ptr_tuple(std::tuple<T&...>){
-        return std::tuple<T*...>{};
+        return std::tuple<const T*...>{};
     }
 
     template<typename Derived>
@@ -110,7 +110,7 @@ namespace active_record {
             ret.query_table.push_back(insert_column_names_to_string<Derived>());
             // insert values
             ret.query_op_arg.push_back("(");
-            for(auto i = 0; i < std::tuple_size_v<decltype(model.attributes)>; ++i){
+            for(size_t i = 0; i < std::tuple_size_v<decltype(model.attributes)>; ++i){
                 if (i != 0) ret.query_op_arg.push_back(",");
                 ret.query_op_arg.push_back(i);
             }

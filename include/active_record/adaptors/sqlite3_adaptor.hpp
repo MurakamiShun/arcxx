@@ -142,6 +142,60 @@ namespace active_record {
                     : "")
                 + reference_definition<T>();
         }
+
+        /* 
+         * variable binders 
+         */
+
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type>
+        int bind_variable(sqlite3_stmt* stmt, const size_t index, const Attr& attr) {
+            if(!attr) {
+                return sqlite3_bind_null(stmt, index + 1);
+            }
+            else {
+                if constexpr (sizeof(typename Attr::value_type) == sizeof(int64_t)) {
+                    return sqlite3_bind_int64(stmt, index + 1, attr.value());
+                }
+                else {
+                    return sqlite3_bind_int(stmt, index + 1, attr.value());
+                }
+            }
+        }
+
+        template<Attribute Attr>
+        requires std::floating_point<typename Attr::value_type>
+        int bind_variable(sqlite3_stmt* stmt, const size_t index, const Attr& attr) {
+            if(!attr) {
+                return sqlite3_bind_null(stmt, index + 1);
+            }
+            else {
+                return sqlite3_bind_double(stmt, index + 1, static_cast<double>(attr.value()));
+            }
+        }
+
+        template<Attribute Attr>
+        requires std::same_as<typename Attr::value_type, active_record::string>
+        int bind_variable(sqlite3_stmt* stmt, const size_t index, const Attr& attr) {
+            if(!attr) {
+                return sqlite3_bind_null(stmt, index + 1);
+            }
+            else {
+                // not copy text
+                return sqlite3_bind_text(stmt, index + 1, attr.value().c_str(), attr.value().length(), SQLITE_STATIC);
+            }
+        }
+        template<Attribute Attr>
+        requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
+        int bind_variable(sqlite3_stmt* stmt, const size_t index, const Attr& attr) {
+            if(!attr) {
+                return sqlite3_bind_null(stmt, index + 1);
+            }
+            else {
+                // not copy text
+                return sqlite3_bind_blob(stmt, index + 1, attr.value().data(), attr.value().size(), SQLITE_STATIC);
+            }
+        }
     }
 
     class sqlite3_adaptor : public adaptor {
@@ -195,7 +249,8 @@ namespace active_record {
 
         static constexpr bool bindable = true;
         static active_record::string bind_variable_str(const size_t idx) {
-            return active_record::string{ ":" } + std::to_string(idx);
+            // variable number must be between ?1 and ?250000
+            return active_record::string{ "?" } + std::to_string(idx + 1);
         }
 
         template<typename T, Tuple BindAttrs>
