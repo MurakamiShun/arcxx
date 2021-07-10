@@ -88,8 +88,8 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<typename Adaptor>
-    inline query_relation<bool, std::tuple<void_attribute*>> model<Derived>::table_definition() {
+    template<std::derived_from<adaptor> Adaptor>
+    inline active_record::string model<Derived>::schema::to_sql(bool create_if_not_exist) {
         const auto column_definitions = std::apply(
             []<typename... Attrs>(const Attrs&...){ return std::array<const active_record::string, sizeof...(Attrs)>{(Adaptor::template column_definition<Attrs>())...}; },
             Derived{}.attributes
@@ -100,11 +100,9 @@ namespace active_record {
             col_defs += delimiter + col_def;
             delimiter = ",";
         }
-        query_relation<bool, std::tuple<void_attribute*>> ret;
-        ret.operation = query_operation::create_table;
-        ret.query_op_arg.push_back(std::move(col_defs));
-        ret.query_table.push_back(Derived::table_name);
-        
-        return ret;
+
+        return active_record::string{"CREATE TABLE"} + (create_if_not_exist ? "IF NOT EXISTS " : "")
+            + active_record::string{ Derived::table_name }
+            + "(" + col_defs + ");";
     }
 }

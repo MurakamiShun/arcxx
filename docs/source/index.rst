@@ -12,9 +12,16 @@ Active Record C++ Documentation
 
    /installation/cmake
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Tutorial
+
+   /tutorial/database_connection
+   /tutorial/table_creation
 
 .. toctree::
    :maxdepth: 1
-   :caption: namepsaces
+   :caption: api
 
-   /api/namespaces/active_record
+   /namespaces/active_record
+   /namespaces/attributes

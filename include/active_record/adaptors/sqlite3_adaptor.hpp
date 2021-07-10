@@ -287,6 +287,23 @@ namespace active_record {
             return errmsg;
         }
 
+        template<Model Mod>
+        std::optional<active_record::string> create_table(const Mod::schema&){
+            char* errmsg_ptr = nullptr;
+            auto result_code = sqlite3_exec(db_obj,
+                Mod::schema::template to_sql<sqlite3_adaptor>().c_str(),
+                nullptr,
+                nullptr,
+                &errmsg_ptr
+            );
+            const auto errmsg = get_error_msg(result_code, errmsg_ptr);
+            error_msg = errmsg;
+            if(errmsg_ptr != nullptr){
+                sqlite3_free(errmsg_ptr);
+            }
+            return errmsg;
+        }
+
         std::optional<active_record::string> begin(const active_record::string_view transaction_name = ""){
             return exec(raw_query<bool>(active_record::string{ "BEGIN TRANSACTION " } + active_record::string{ transaction_name }));
         }

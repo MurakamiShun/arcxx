@@ -46,6 +46,11 @@ namespace active_record {
         }
         
     public:
+        struct schema {
+            template<std::derived_from<adaptor> Adaptor>
+            static active_record::string to_sql(bool create_if_not_exist = false);
+        };
+
         static constexpr bool has_table_name = has_table_name_impl::value;
         static constexpr bool has_attributes = has_attributes_impl::value;
         static constexpr auto column_names() noexcept {
@@ -96,8 +101,6 @@ namespace active_record {
         /* 
          * Implementations are query_impl/model_queries.hpp
          */
-        template<typename Adaptor>
-        static query_relation<bool, std::tuple<void_attribute*>> table_definition();
 
         static auto insert(const Derived& model) {
             query_relation<bool, decltype(reference_tuple_to_ptr_tuple(model.attributes))> ret;

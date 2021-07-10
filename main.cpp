@@ -1,7 +1,6 @@
 #include "include/active_record.hpp"
 #include <string>
 #include <iostream>
-#include <cmath>
 
 struct EnteringLog;
 
@@ -56,9 +55,9 @@ int main() {
     else std::cout << "\033[32m done! \033[m" << std::endl;
     
     std::cout << "\033[33m[transaction]" << std::endl;
-    std::cout << "    \033[33m[query] \033[m" << Member::table_definition<active_record::sqlite3_adaptor>().to_sql() << std::endl;
-    std::cout << "    \033[33m[query] \033[m" << EnteringLog::table_definition<active_record::sqlite3_adaptor>().to_sql() << std::endl;
-    
+    std::cout << "    \033[33m[query] \033[m" << Member::schema::to_sql<active_record::sqlite3_adaptor>() << std::endl;
+    std::cout << "    \033[33m[query] \033[m" << EnteringLog::schema::to_sql<active_record::sqlite3_adaptor>() << std::endl;
+    /*
     const auto creata_table_transaction = [](auto& connection){
         using namespace active_record;
         using transaction = active_record::sqlite3::transaction;
@@ -70,6 +69,7 @@ int main() {
         }
         return transaction::commit;
     };
+    
     if(const auto [error, trans_result] = con.transaction(creata_table_transaction); error){
         std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
     }
@@ -77,7 +77,7 @@ int main() {
         std::cout << "\033[31m" << "rollbacked!!" << "\033[m" << std::endl;
     }
     else std::cout << "\033[32m done! \033[m" << std::endl;
-    
+    */
     std::cout << "\033[33m[execution] \033[m" << Member::insert(member).to_sql<active_record::sqlite3_adaptor>() << std::endl;
     if(const auto error = con.exec(Member::insert(member)); error){
         std::cout << "\033[31m" << con.error_message() << "\033[m" << std::endl;
@@ -90,7 +90,7 @@ int main() {
     // }
     // else std::cout << "\033[32m done! \033[m" << std::endl;
 
-    std::cout << "\033[33m[execution] \033[m" << Member::all().to_sql() << std::endl;
+    std::cout << "\033[33m[execution] \033[m" << Member::all().to_sql<active_record::sqlite3_adaptor>() << std::endl;
     
     if(const auto [error, all_members] = con.exec(Member::all()); error){
         std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
