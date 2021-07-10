@@ -8,14 +8,14 @@
 #include <any>
 
 namespace active_record {
-    template<Attribute... BindAttrs>
+    template<Tuple BindAttrs>
     struct query_relation_common {
     public:
         using str_or_bind = std::variant<active_record::string, size_t>;
     private:
         template<std::derived_from<adaptor> Adaptor>
         struct str_or_bind_visitor {
-            const std::tuple<BindAttrs*...> bind_attrs;
+            const BindAttrs bind_attrs;
             active_record::string operator()(const active_record::string& str) const {
                 return str;
             }
@@ -48,12 +48,12 @@ namespace active_record {
         std::vector<str_or_bind> query_condition;
         std::vector<str_or_bind> query_options; // order, limit
         
-        std::tuple<BindAttrs*...> bind_attrs;
+        BindAttrs bind_attrs;
         std::vector<std::any> temporary_attrs;
 
         void* bind_attr_ptr(size_t index);
         constexpr size_t bind_attrs_count() const {
-            if constexpr(std::is_same_v<void_attribute, decltype(std::get<0>(bind_attrs))>){
+            if constexpr(std::is_same_v<void_attribute*, decltype(std::get<0>(bind_attrs))>){
                 return 0;
             }
             else{
@@ -61,8 +61,8 @@ namespace active_record {
             }
         }
 
-        query_relation_common() = delete;
-        query_relation_common(const std::tuple<BindAttrs*...> attrs) : bind_attrs(attrs){  }
+        query_relation_common(){}
+        query_relation_common(const BindAttrs attrs) : bind_attrs(attrs){  }
 
         template<std::derived_from<adaptor> Adaptor = common_adaptor>
         [[nodiscard]] const active_record::string to_sql() const {
@@ -101,17 +101,15 @@ namespace active_record {
         }
     };
 
-    template<typename T, typename... BindAttrs>
-    struct query_relation : public query_relation_common<BindAttrs...> {
-        query_relation() = delete;
-        query_relation(const std::tuple<BindAttrs*...> attrs) : query_relation(attrs){  }
+    template<typename T, Tuple BindAttrs>
+    struct query_relation : public query_relation_common<BindAttrs> {
+        using query_relation_common<BindAttrs>::query_relation_common;
     };
 
-    template<Container Result, Attribute... BindAttrs>
+    template<Container Result, Tuple BindAttrs>
     requires std::derived_from<typename Result::value_type, model<typename Result::value_type>>
-    struct query_relation<Result, BindAttrs...> : public query_relation_common<BindAttrs...> {
-        query_relation() = delete;
-        query_relation(const std::tuple<BindAttrs*...> attrs) : query_relation(attrs){  }
+    struct query_relation<Result, BindAttrs> : public query_relation_common<BindAttrs> {
+        using query_relation_common<BindAttrs>::query_relation_common;
         /*
         query_relation<bool> update();
         query_relation<bool> destroy();
@@ -137,11 +135,10 @@ namespace active_record {
         */
     };
 
-    template<Container Result, Attribute... BindAttrs>
+    template<Container Result, Tuple BindAttrs>
     requires Tuple<typename Result::value_type>
-    struct query_relation<Result, BindAttrs...> : public query_relation_common<BindAttrs...> {
-        query_relation() = delete;
-        query_relation(const std::tuple<BindAttrs*...> attrs) : query_relation(attrs){  }
+    struct query_relation<Result, BindAttrs> : public query_relation_common<BindAttrs> {
+        using query_relation_common<BindAttrs>::query_relation_common;
         /*
         template<typename Relation>
         query_relation<Result> join([[maybe_unused]] Relation);
@@ -156,8 +153,8 @@ namespace active_record {
     };
 
     template<typename T>
-    query_relation<T, void_attribute> raw_query(const active_record::string_view query_str) {
-        query_relation<T> ret{ std::tuple<void_attribute*>{} };
+    query_relation<T, std::tuple<void_attribute*>> raw_query(const active_record::string_view query_str) {
+        query_relation<T, std::tuple<void_attribute*>> ret;
         ret.operation     = query_operation::unspecified,
         ret.query_op_arg.push_back(active_record::string{ query_str });
 

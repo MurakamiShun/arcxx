@@ -38,7 +38,7 @@ namespace active_record{
     template<class TupleType>
     concept Tuple = requires {
         std::tuple_size<TupleType>::value;
-        { std::bool_constant<std::is_standard_layout_v<TupleType>>{} } -> std::same_as<std::bool_constant<false>>;
+        // { std::bool_constant<std::is_standard_layout_v<TupleType>>{} } -> std::same_as<std::bool_constant<false>>;
     };
 
     active_record::string sanitize(const active_record::string& src) {

@@ -4,11 +4,17 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
+#include <type_traits>
 #include "query.hpp"
 #include "attribute.hpp"
 
 namespace active_record {
     struct void_model;
+
+    template<typename... T>
+    auto reference_tuple_to_ptr_tuple(std::tuple<T&...>){
+        return std::tuple<T*...>{};
+    }
 
     template<typename Derived>
     class model {
@@ -25,6 +31,19 @@ namespace active_record {
             static std::false_type check(...);
             static constexpr bool value = decltype(check(std::declval<Derived>()))::value;
         };
+
+        template<typename Model>
+        static constexpr active_record::string insert_column_names_to_string() {
+            active_record::string table = active_record::string{ "\"" } + active_record::string{ Model::table_name } + "\"(";
+            active_record::string delimiter = "";
+            const auto column_names = Model::column_names();
+            for (const auto& col_name : column_names) {
+                table += delimiter + "\"" + active_record::string{ col_name } + "\"";
+                delimiter = ",";
+            }
+            table += ")";
+            return table;
+        }
         
     public:
         static constexpr bool has_table_name = has_table_name_impl::value;
@@ -78,26 +97,57 @@ namespace active_record {
          * Implementations are query_impl/model_queries.hpp
          */
         template<typename Adaptor>
-        static query_relation<bool> table_definition();
+        static query_relation<bool, std::tuple<void_attribute*>> table_definition();
 
-        // template<Container C>
-        // static constexpr query_relation<bool> insert(const C&);
-        template<std::same_as<Derived>... Models>
-        static constexpr query_relation<bool, void_attribute> insert(const Models&...);
+        static auto insert(const Derived& model) {
+            query_relation<bool, decltype(reference_tuple_to_ptr_tuple(model.attributes))> ret;
+            ret.operation = query_operation::insert;
+            // get attribute pointers in model
+            ret.bind_attrs = std::apply(
+                []<Attribute... Attrs>(const Attrs&... attrs){ return std::make_tuple(&attrs...); },
+                model.attributes
+            );
+            ret.query_table.push_back(insert_column_names_to_string<Derived>());
+            // insert values
+            ret.query_op_arg.push_back("(");
+            for(auto i = 0; i < std::tuple_size_v<decltype(model.attributes)>; ++i){
+                if (i != 0) ret.query_op_arg.push_back(",");
+                ret.query_op_arg.push_back(i);
+            }
+            ret.query_op_arg.push_back(")");
+            return ret;
+        }
+        static auto insert(Derived&& model){
+            query_relation<bool, decltype(reference_tuple_to_ptr_tuple(model.attributes))> ret;
+            ret.operation = query_operation::insert;
+            // copy to temporary
+            ret.temporary_attrs.push_back(std::move(model));
+            // get attribute pointers in temporary model
+            ret.bind_attrs = std::apply(
+                []<Attribute... Attrs>(const Attrs&... attrs){ return std::make_tuple(&attrs...); },
+                ret.temporary_attrs[0]
+            );
+            ret.query_table.push_back(insert_column_names_to_string<Derived>());
+            // insert values
+            ret.query_op_arg.push_back("(");
+            for(auto i = 0; i < std::tuple_size_v<decltype(model.attributes)>; ++i){
+                if (i != 0) ret.query_op_arg.push_back(",");
+                ret.query_op_arg.push_back(i);
+            }
+            ret.query_op_arg.push_back(")");
+            return ret;
+        }
 
-        static constexpr query_relation<std::vector<Derived>, void_attribute> all();
+        static query_relation<std::vector<Derived>, std::tuple<void_attribute*>> all();
 
         template<Attribute... Attrs>
-        static constexpr query_relation<std::vector<std::tuple<Attrs...>>, void_attribute> select(const Attrs...);
+        static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<void_attribute*>> select(const Attrs...);
 
         template<Attribute Attr>
-        static constexpr query_relation<std::vector<Attr>, void_attribute> pluck(const Attr);
+        static query_relation<std::vector<Attr>, std::tuple<void_attribute*>> pluck(const Attr);
         
         template<Attribute... Attrs>
-        static constexpr query_relation<std::vector<Derived>, Attrs...> where(const Attrs...);
-
-        query_relation<bool> destroy();
-        query_relation<bool> save();
+        static query_relation<std::vector<Derived>, std::tuple<Attrs*...>> where(const Attrs...);
     };
 
     template<typename T>
@@ -105,5 +155,6 @@ namespace active_record {
 
     struct void_model : public active_record::model<void_model> {
         static constexpr auto table_name = "void model is unused. This library has some problem.";
+        std::tuple<std::false_type> attributes;
     };
 }

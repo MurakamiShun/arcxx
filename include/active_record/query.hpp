@@ -16,13 +16,10 @@ namespace active_record {
         asc,
         desc
     };
-    template<typename T, typename... BindAttrs>
+    template<typename T, Tuple BindAttrs>
     struct query_relation;
 
     struct query_condition {
         active_record::string str;
     };
-
-    template<typename T>
-    query_relation<T> raw_query(const active_record::string_view);
 }

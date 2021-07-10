@@ -36,6 +36,7 @@ struct EnteringLog : public active_record::model<EnteringLog> {
 };
 
 int main() {
+    
     constexpr Member::ID id = 10;
     Member::Name name = "test";
     Member member;
@@ -53,11 +54,11 @@ int main() {
         return -1;
     }
     else std::cout << "\033[32m done! \033[m" << std::endl;
-
+    
     std::cout << "\033[33m[transaction]" << std::endl;
     std::cout << "    \033[33m[query] \033[m" << Member::table_definition<active_record::sqlite3_adaptor>().to_sql() << std::endl;
-    std::cout << "    \033[33m[query] \033[m" << EnteringLog::table_definition<active_record::sqlite3_adaptor>().to_sql() << std::endl;
-    
+    //std::cout << "    \033[33m[query] \033[m" << EnteringLog::table_definition<active_record::sqlite3_adaptor>().to_sql() << std::endl;
+    /*
     const auto creata_table_transaction = [](auto& connection){
         using namespace active_record;
         using transaction = active_record::sqlite3::transaction;
@@ -102,6 +103,6 @@ int main() {
     }
 
     con.close();
-
+    */
     return 0;
 }

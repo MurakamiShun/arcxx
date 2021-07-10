@@ -144,7 +144,7 @@ namespace active_record {
         }
     }
 
-    class sqlite3_adaptor : adaptor {
+    class sqlite3_adaptor : public adaptor {
     private:
         ::sqlite3* db_obj;
 
@@ -198,12 +198,12 @@ namespace active_record {
             return active_record::string{ ":" } + std::to_string(idx);
         }
 
-        template<typename T>
-        [[nodiscard]] std::pair<std::optional<active_record::string>, T> exec(query_relation<T> query){
+        template<typename T, Tuple BindAttrs>
+        [[nodiscard]] std::pair<std::optional<active_record::string>, T> exec(query_relation<T, BindAttrs> query){
             T result;
             char* errmsg_ptr = nullptr;
             const auto result_code = sqlite3_exec(db_obj,
-                query.to_sql().c_str(),
+                query.template to_sql<sqlite3_adaptor>().c_str(),
                 &sqlite3::callback<T>,
                 &result,
                 &errmsg_ptr
@@ -215,10 +215,11 @@ namespace active_record {
             }
             return {errmsg, result};
         }
-        std::optional<active_record::string> exec(query_relation<bool> query){
+        template<Tuple BindAttrs>
+        std::optional<active_record::string> exec(query_relation<bool, BindAttrs> query){
             char* errmsg_ptr = nullptr;
             auto result_code = sqlite3_exec(db_obj,
-                query.to_sql().c_str(),
+                query.template to_sql<sqlite3_adaptor>().c_str(),
                 nullptr,
                 nullptr,
                 &errmsg_ptr
@@ -361,7 +362,7 @@ namespace active_record {
 namespace active_record {
 
     template<typename LazyInstantiate>
-    struct sqlite3_adaptor_impl{static_assert(SFINAE::value, "sqlite3.h is not found");};
+    struct sqlite3_adaptor_impl{static_assert(LazyInstantiate::value, "sqlite3.h is not found");};
     
     using sqlite3_adaptor = sqlite3_adaptor_impl<std::false_type>;
 }
