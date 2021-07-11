@@ -27,6 +27,4 @@ namespace active_record {
     template<std::derived_from<adaptor> Adaptor, Attribute Attr>
     requires false
     void from_string(Attr& attr, const active_record::string_view str);
-
-    struct void_attribute;
 }

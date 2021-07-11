@@ -141,13 +141,13 @@ namespace active_record {
             return ret;
         }
 
-        static query_relation<std::vector<Derived>, std::tuple<void_attribute*>> all();
+        static query_relation<std::vector<Derived>, std::tuple<>> all();
 
         template<Attribute... Attrs>
-        static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<void_attribute*>> select(const Attrs...);
+        static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> select(const Attrs...);
 
         template<Attribute Attr>
-        static query_relation<std::vector<Attr>, std::tuple<void_attribute*>> pluck(const Attr);
+        static query_relation<std::vector<Attr>, std::tuple<>> pluck(const Attr);
         
         template<Attribute... Attrs>
         static query_relation<std::vector<Derived>, std::tuple<Attrs*...>> where(const Attrs...);
@@ -155,9 +155,4 @@ namespace active_record {
 
     template<typename T>
     concept Model = std::derived_from<T, model<T>>;
-
-    struct void_model : public active_record::model<void_model> {
-        static constexpr auto table_name = "void model is unused. This library has some problem.";
-        std::tuple<std::false_type> attributes;
-    };
 }

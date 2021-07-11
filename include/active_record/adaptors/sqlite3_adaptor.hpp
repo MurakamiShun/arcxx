@@ -4,9 +4,9 @@
 #include "../query.hpp"
 #include "../attribute.hpp"
 #include <optional>
-#include <iostream>
-#if __has_include(<sqlite3.h>)
 #include <sqlite3.h>
+#include "sqlite3/schema.hpp"
+#include "sqlite3/string_convertors.hpp"
 
 namespace active_record {
     namespace sqlite3 {
@@ -120,76 +120,6 @@ namespace active_record {
             return ret;
         }
 
-        namespace {
-            template<Attribute T>
-            struct is_reference {
-                template<typename S>
-                static decltype(std::declval<typename S::foreign_key_type>(), std::true_type{}) check(S);
-                static std::false_type check(...);
-                static constexpr bool value = decltype(check(std::declval<T>()))::value;
-            };
-            
-            template<Attribute T>
-            static active_record::string reference_definition(){
-                if constexpr(is_reference<T>::value){
-                    return active_record::string{ ",FOREIGN KEY(" }
-                        + active_record::string{ T::column_name } + ") REFERENCES "
-                        + active_record::string{ T::foreign_key_type::model_type::table_name } + "("
-                        + active_record::string{ T::foreign_key_type::column_name } + ")";
-                }
-                else return "";
-            }
-        }
-
-        template<Attribute T>
-        requires std::same_as<typename T::value_type, active_record::string>
-        active_record::string column_definition() {
-            return active_record::string{ T::column_name }
-                + " TEXT"
-                + (T::has_constraint(T::unique) ? " UNIQUE" : "")
-                + (T::has_constraint(T::primary_key) ? " PRIMARY KEY" : "")
-                + (T::has_constraint(T::not_null) ? " NOT NULL" : "")
-                + (T::has_constraint(typename T::constraint_default_value_impl{}) ?
-                    active_record::string{ (T::has_constraint(T::not_null) ? " ON CONFLICT REPLACE" : "") } + " DEFAULT '"
-                    + active_record::sanitize(T::get_constraint(typename T::constraint_default_value_impl{})->template target<typename T::constraint_default_value_impl>()->default_value) + "'"
-                    : "")
-                + (T::has_constraint(typename T::constraint_length_impl{}) ?
-                    active_record::string{ " CHECK(length(" } + active_record::string{ T::column_name }
-                    + ")<=" + std::to_string(T::get_constraint(typename T::constraint_length_impl{})->template target<typename T::constraint_length_impl>()->length) + ")"
-                    : "")
-                + reference_definition<T>();
-        }
-
-        template<Attribute T>
-        requires std::integral<typename T::value_type>
-        active_record::string column_definition() {
-            return active_record::string{ T::column_name }
-                + active_record::string{ " INTEGER" }
-                + (T::has_constraint(T::unique) ? " UNIQUE" : "")
-                + (T::has_constraint(T::primary_key) ? " PRIMARY KEY" : "")
-                + (T::has_constraint(T::not_null) ? " NOT NULL" : "")
-                + (T::has_constraint(typename T::constraint_default_value_impl{}) ?
-                    active_record::string{ (T::has_constraint(T::not_null) ? " ON CONFLICT REPLACE" : "") } + " DEFAULT "
-                    + std::to_string(T::get_constraint(typename T::constraint_default_value_impl{})->template target<typename T::constraint_default_value_impl>()->default_value)
-                    : "")
-                + reference_definition<T>();
-        }
-        
-        template<Attribute T>
-        requires std::floating_point<typename T::value_type>
-        active_record::string column_definition() {
-            return active_record::string{ T::column_name }
-                + active_record::string{ " REAL" }
-                + (T::has_constraint(T::unique) ? " UNIQUE" : "")
-                + (T::has_constraint(T::primary_key) ? " PRIMARY KEY" : "")
-                + (T::has_constraint(T::not_null) ? " NOT NULL" : "")
-                + (T::has_constraint(typename T::constraint_default_value_impl{}) ?
-                    active_record::string{ (T::has_constraint(T::not_null) ? " ON CONFLICT REPLACE" : "") } + " DEFAULT "
-                    + std::to_string(T::get_constraint(typename T::constraint_default_value_impl{})->template target<typename T::constraint_default_value_impl>()->default_value)
-                    : "")
-                + reference_definition<T>();
-        }
-
         /* 
          * variable binders 
          */
@@ -243,9 +173,6 @@ namespace active_record {
                 return sqlite3_bind_blob(stmt, index + 1, attr.value().data(), attr.value().size(), SQLITE_STATIC);
             }
         }
-        template<Attribute Attr>
-        requires std::same_as<Attr, void_attribute>
-        int bind_variable(sqlite3_stmt* stmt, const size_t index, const Attr& attr);
     }
 
     class sqlite3_adaptor : public adaptor {
@@ -274,7 +201,7 @@ namespace active_record {
         bool has_error() const noexcept { return static_cast<bool>(error_msg); }
         const active_record::string& error_message() const { return error_msg.value(); }
         
-        static sqlite3_adaptor open(const active_record::string& file_name, const int flags = sqlite3::options::readwrite){
+        static sqlite3_adaptor open(const active_record::string& file_name, const int flags = active_record::sqlite3::options::readwrite){
             return sqlite3_adaptor{ file_name, flags };
         }
         bool close() {
@@ -441,102 +368,7 @@ namespace active_record {
 
         template<Attribute T>
         static active_record::string column_definition() {
-            return sqlite3::column_definition<T>();
+            return active_record::sqlite3::column_definition<T>();
         }
     };
-
-    inline namespace sqlite3_string_convertors{
-        // boolean
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::same_as<typename Attr::value_type, bool>
-        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
-            return static_cast<bool>(attr) ? (attr.value() ? "1" : "0") : "null";
-        }
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::same_as<typename Attr::value_type, bool>
-        void from_string(Attr& attr, const active_record::string_view str){
-            if(str != "null"){
-                attr = ((str == "0") ? false : true);
-            }
-        }
-
-        // integer
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::integral<typename Attr::value_type>
-        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
-            return to_string<common_adaptor>(attr);
-        }
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::integral<typename Attr::value_type>
-        void from_string(Attr& attr, const active_record::string_view str) {
-            from_string<common_adaptor>(attr, str);
-        }
-
-        // decimal
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::floating_point<typename Attr::value_type>
-        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
-            return to_string<common_adaptor>(attr);
-        }
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::floating_point<typename Attr::value_type>
-        void from_string(Attr& attr, const active_record::string_view str){
-            from_string<common_adaptor>(attr, str);
-        }
-
-        // string
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::same_as<typename Attr::value_type, active_record::string>
-        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
-            return to_string<common_adaptor>(attr);
-        }
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::same_as<typename Attr::value_type, active_record::string>
-        void from_string(Attr& attr, const active_record::string_view str) {
-            from_string<common_adaptor>(attr, str);
-        }
-
-        // datetime
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::same_as<typename Attr::value_type, active_record::datetime>
-        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
-            // ISO 8601 yyyyMMddTHHmmss (sqlite supports only utc)
-            //return static_cast<bool>(attr) ? std::format("%FT%T", attr.value()) : "null";
-            return "";
-        }
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::same_as<typename Attr::value_type, active_record::datetime>
-        void from_string(Attr& attr, const active_record::string_view str){
-            active_record::datetime dt;
-            //std::chrono::parse("%fT%T", dt, str);
-            attr = dt;
-        }
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
-        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
-            active_record::string hex = "x'";
-            char buf[4];
-            for(const auto b : attr.value()){
-                hex += active_record::string_view{buf, std::to_chars(buf, &buf[3], b, 16) + 1};
-            }
-            return static_cast<bool>(attr) ? hex + "'" : "null";
-        }
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
-        void from_string(Attr& attr, const active_record::string_view str){
-            attr = std::vector<std::byte>{};
-            attr.value().reserve(str.size());
-            std::copy(str.begin(), str.end(), attr.value().begin());
-        }
-    }
 }
-#else
-#include <type_traits>
-namespace active_record {
-
-    template<typename LazyInstantiate>
-    struct sqlite3_adaptor_impl{static_assert(LazyInstantiate::value, "sqlite3.h is not found");};
-    
-    using sqlite3_adaptor = sqlite3_adaptor_impl<std::false_type>;
-}
-#endif

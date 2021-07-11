@@ -22,17 +22,12 @@ namespace active_record {
             active_record::string operator()(const size_t idx) const {
                 if constexpr (Adaptor::bindable) return Adaptor::bind_variable_str(idx);
                 else {
-                    if constexpr (std::is_same_v<std::tuple<void_attribute*>, BindAttrs>){
-                        return "";
-                    }
-                    else{
-                        return std::apply(
-                            []<typename... Attrs>(const Attrs*... attrs){
-                                return std::array<active_record::string, std::tuple_size_v<decltype(bind_attrs)>>{ to_string<Adaptor>(*attrs)... };
-                            },
-                            bind_attrs
-                        )[idx];
-                    }
+                    return std::apply(
+                        []<typename... Attrs>(const Attrs*... attrs){
+                            return std::array<active_record::string, std::tuple_size_v<decltype(bind_attrs)>>{ to_string<Adaptor>(*attrs)... };
+                        },
+                        bind_attrs
+                    )[idx];
                 }
             }
         };
@@ -57,12 +52,7 @@ namespace active_record {
         std::vector<std::any> temporary_attrs;
 
         static constexpr size_t bind_attrs_count() {
-            if constexpr(std::is_same_v<void_attribute*, std::tuple_element_t<0, BindAttrs>> || std::is_same_v<const void_attribute*, std::tuple_element_t<0, BindAttrs>>){
-                return 0;
-            }
-            else{
-                return std::tuple_size_v<BindAttrs>;
-            }
+            return std::tuple_size_v<BindAttrs>;
         }
 
         query_relation_common(){}
@@ -169,8 +159,8 @@ namespace active_record {
     };
 
     template<typename T>
-    query_relation<T, std::tuple<void_attribute*>> raw_query(const active_record::string_view query_str) {
-        query_relation<T, std::tuple<void_attribute*>> ret;
+    query_relation<T, std::tuple<>> raw_query(const active_record::string_view query_str) {
+        query_relation<T, std::tuple<>> ret;
         ret.operation     = query_operation::unspecified,
         ret.query_op_arg.push_back(active_record::string{ query_str });
 

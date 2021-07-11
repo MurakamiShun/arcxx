@@ -42,8 +42,8 @@ namespace active_record {
     }
 
     template<typename Derived>
-    inline query_relation<std::vector<Derived>, std::tuple<void_attribute*>> model<Derived>::all() {
-        query_relation<std::vector<Derived>, std::tuple<void_attribute*>> ret;
+    inline query_relation<std::vector<Derived>, std::tuple<>> model<Derived>::all() {
+        query_relation<std::vector<Derived>, std::tuple<>> ret;
         
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(model_column_full_names_to_string<Derived>());
@@ -54,8 +54,8 @@ namespace active_record {
 
     template<typename Derived>
     template<Attribute... Attrs>
-    inline query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<void_attribute*>> model<Derived>::select(const Attrs... attrs) {
-        query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<void_attribute*>> ret;
+    inline query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> model<Derived>::select(const Attrs... attrs) {
+        query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> ret;
         
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(column_full_names_to_string(attrs...));
@@ -65,8 +65,8 @@ namespace active_record {
 
     template<typename Derived>
     template<Attribute Attr>
-    inline query_relation<std::vector<Attr>, std::tuple<void_attribute*>> model<Derived>::pluck(const Attr attr) {
-        query_relation<std::vector<Attr>, std::tuple<void_attribute*>> ret;
+    inline query_relation<std::vector<Attr>, std::tuple<>> model<Derived>::pluck(const Attr attr) {
+        query_relation<std::vector<Attr>, std::tuple<>> ret;
         
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(column_full_names_to_string(attr));

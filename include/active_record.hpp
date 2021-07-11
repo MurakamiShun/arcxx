@@ -9,7 +9,9 @@
 #include "active_record/query_impl/query_impl.hpp"
 #include "active_record/query_impl/model_queries.hpp"
 #include "active_record/relation.hpp"
+#include "active_record/adaptor.hpp"
 
+#if __has_include(<sqlite3.h>)
 #include "active_record/adaptors/sqlite3_adaptor.hpp"
-
+#endif
 //#endif
