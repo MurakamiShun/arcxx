@@ -15,4 +15,9 @@ namespace active_record{
             return active_record::string{ "'common_adaptor can not bind parameters. Library has some problems.'" } + std::to_string(idx);
         }
     };
+
+    enum class transaction{
+        rollback,
+        commit
+    };
 }

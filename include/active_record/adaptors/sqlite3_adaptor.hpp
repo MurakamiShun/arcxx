@@ -4,6 +4,7 @@
 #include "../query.hpp"
 #include "../attribute.hpp"
 #include <optional>
+#include <iostream>
 #if __has_include(<sqlite3.h>)
 #include <sqlite3.h>
 
@@ -18,11 +19,6 @@ namespace active_record {
             constexpr auto no_mutex   = SQLITE_OPEN_NOMUTEX;
             constexpr auto full_mutex = SQLITE_OPEN_FULLMUTEX;
         }
-
-        enum class transaction{
-            rollback,
-            commit
-        };
 
         template<Attribute Attr>
         requires std::same_as<typename Attr::value_type, active_record::string>
@@ -255,27 +251,21 @@ namespace active_record {
     class sqlite3_adaptor : public adaptor {
     private:
         ::sqlite3* db_obj;
+        std::optional<active_record::string> error_msg = std::nullopt;
 
         sqlite3_adaptor() = delete;
         sqlite3_adaptor(const active_record::string& file_name, const int flags){
             auto result = sqlite3_open_v2(file_name.c_str(), &db_obj, flags, nullptr);
-            if(result != SQLITE_OK) error_msg = get_error_msg();
+            if(result != SQLITE_OK) error_msg = get_error_msg(result);
         }
-
-        std::optional<active_record::string> error_msg = std::nullopt;
 
         std::optional<active_record::string> get_error_msg(const char* msg_ptr){
             if(msg_ptr == nullptr) return std::nullopt;
             else return active_record::string{ msg_ptr };
         }
-        std::optional<active_record::string> get_error_msg(const int error_code, const char* msg_ptr){
-            if(error_code != SQLITE_OK){
-                if(msg_ptr != nullptr) return get_error_msg(msg_ptr);
-                else return get_error_msg(sqlite3_errstr(error_code));
-            }
-            else{
-                return std::nullopt;
-            }
+        std::optional<active_record::string> get_error_msg(const int result_code){
+            if(result_code != SQLITE_OK) return get_error_msg();
+            else return std::nullopt;
         }
         std::optional<active_record::string> get_error_msg(){
             return get_error_msg(sqlite3_errmsg(db_obj));
@@ -308,10 +298,9 @@ namespace active_record {
         }
 
         template<typename T, Tuple BindAttrs>
-        [[nodiscard]] std::pair<std::optional<active_record::string>, T> exec(query_relation<T, BindAttrs> query){
+        [[nodiscard]] std::pair<std::optional<active_record::string>, T> exec(const query_relation<T, BindAttrs>& query){
             T result;
-            const char* errmsg_ptr = nullptr;
-            const auto result_code = [this, &query, &errmsg_ptr, &result](){
+            const auto result_code = [this, &query, &result](){
                 const auto sql = query.template to_sql<sqlite3_adaptor>();
                 sqlite3_stmt* stmt = nullptr;
                 auto result_code = sqlite3_prepare_v2(
@@ -341,24 +330,17 @@ namespace active_record {
                             result = active_record::sqlite3::extract_column_data<T>(stmt);
                         }
                     }
-                    else if (status == SQLITE_DONE) {
-                        break;
-                    }
-                    else {
-                        errmsg_ptr = sqlite3_errmsg(db_obj);
-                        return status;
-                    }
+                    else if (status == SQLITE_DONE) break;
+                    else return status;
                 }
                 result_code = sqlite3_finalize(stmt);
                 return result_code;
             }();
 
-            const auto errmsg = get_error_msg(result_code, errmsg_ptr);
-            error_msg = errmsg;
-            return {errmsg, result};
+            return {error_msg = get_error_msg(result_code), result};
         }
         template<Tuple BindAttrs>
-        std::optional<active_record::string> exec(query_relation<bool, BindAttrs> query){
+        std::optional<active_record::string> exec(const query_relation<bool, BindAttrs>& query){
             if constexpr(query.bind_attrs_count() == 0){ // no bind variable
                 char* errmsg_ptr = nullptr;
                 auto result_code = sqlite3_exec(db_obj,
@@ -367,12 +349,12 @@ namespace active_record {
                     nullptr,
                     &errmsg_ptr
                 );
-                const auto errmsg = get_error_msg(result_code, errmsg_ptr);
-                error_msg = errmsg;
                 if(errmsg_ptr != nullptr){
+                    error_msg = get_error_msg(errmsg_ptr);
                     sqlite3_free(errmsg_ptr);
+                    return error_msg;
                 }
-                return errmsg;
+                return error_msg = get_error_msg(result_code);
             }
             else{
                 const auto sql = query.template to_sql<sqlite3_adaptor>();
@@ -384,7 +366,7 @@ namespace active_record {
                     &stmt,
                     nullptr
                 );
-                if(result_code != SQLITE_OK) return (error_msg = get_error_msg(result_code, nullptr));
+                if(result_code != SQLITE_OK) return error_msg = get_error_msg(result_code);
                 
                 if constexpr(query.bind_attrs_count() != 0) {
                     result_code = indexed_apply(
@@ -392,14 +374,18 @@ namespace active_record {
                         query.bind_attrs
                     );
                 }
-                if(result_code != SQLITE_OK) return (error_msg = get_error_msg(result_code, nullptr));
+                if(result_code != SQLITE_OK) return error_msg = get_error_msg(result_code);
 
                 result_code = sqlite3_step(stmt);
-                if(result_code != SQLITE_DONE) return (error_msg = get_error_msg(result_code, nullptr));
+                if(result_code != SQLITE_OK) return error_msg = get_error_msg(result_code);
 
                 result_code = sqlite3_finalize(stmt);
-                return (error_msg = get_error_msg(result_code, nullptr));
+                return error_msg = get_error_msg(result_code);
             }
+        }
+        template<typename T, Tuple BindAttrs>
+        auto exec(const query_relation<T, BindAttrs>&& query){
+            return exec(query);
         }
 
         template<Model Mod>
@@ -411,12 +397,12 @@ namespace active_record {
                 nullptr,
                 &errmsg_ptr
             );
-            const auto errmsg = get_error_msg(result_code, errmsg_ptr);
-            error_msg = errmsg;
             if(errmsg_ptr != nullptr){
+                error_msg = get_error_msg(errmsg_ptr);
                 sqlite3_free(errmsg_ptr);
+                return error_msg;
             }
-            return errmsg;
+            return error_msg = get_error_msg(result_code);
         }
 
         std::optional<active_record::string> begin(const active_record::string_view transaction_name = ""){
@@ -429,27 +415,27 @@ namespace active_record {
             return exec(raw_query<bool>(active_record::string{ "ROLLBACK TRANSACTION " } + active_record::string{ transaction_name }));
         }
 
-        template<std::convertible_to<std::function<sqlite3::transaction(void)>> F>
-        std::pair<std::optional<active_record::string>, sqlite3::transaction> transaction(F& func) {
-            if(const auto errmsg = begin(); errmsg) return { errmsg, sqlite3::transaction::rollback };
+        template<std::convertible_to<std::function<active_record::transaction(void)>> F>
+        std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F& func) {
+            if(const auto errmsg = begin(); errmsg) return { errmsg, active_record::transaction::rollback };
             const auto transaction_result = func();
             switch (transaction_result) {
-            case sqlite3::transaction::commit:
-                return { commit(), sqlite3::transaction::commit };
+            case active_record::transaction::commit:
+                return { commit(), active_record::transaction::commit };
             default:
-                return { rollback(), sqlite3::transaction::rollback };
+                return { rollback(), active_record::transaction::rollback };
             }
         }
-        template<std::convertible_to<std::function<sqlite3::transaction(void)>> F>
-        std::pair<std::optional<active_record::string>, sqlite3::transaction>  transaction(F&& func) {
+        template<std::convertible_to<std::function<active_record::transaction(void)>> F>
+        std::pair<std::optional<active_record::string>, active_record::transaction>  transaction(F&& func) {
             return transaction(func);
         }
-        template<std::convertible_to<std::function<sqlite3::transaction(sqlite3_adaptor&)>> F>
-        std::pair<std::optional<active_record::string>, sqlite3::transaction> transaction(F& func) {
-            return transaction(static_cast<std::function<sqlite3::transaction()>>(std::bind(func, std::ref(*this))));
+        template<std::convertible_to<std::function<active_record::transaction(sqlite3_adaptor&)>> F>
+        std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F& func) {
+            return transaction(static_cast<std::function<active_record::transaction()>>(std::bind(func, std::ref(*this))));
         }
-        template<std::convertible_to<std::function<sqlite3::transaction(sqlite3_adaptor&)>> F>
-        std::pair<std::optional<active_record::string>, sqlite3::transaction>  transaction(F&& func) {
+        template<std::convertible_to<std::function<active_record::transaction(sqlite3_adaptor&)>> F>
+        std::pair<std::optional<active_record::string>, active_record::transaction>  transaction(F&& func) {
             return transaction(func);
         }
 

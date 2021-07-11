@@ -101,7 +101,7 @@ namespace active_record {
             delimiter = ",";
         }
 
-        return active_record::string{"CREATE TABLE"} + (create_if_not_exist ? "IF NOT EXISTS " : "")
+        return active_record::string{"CREATE TABLE "} + (create_if_not_exist ? "IF NOT EXISTS " : "")
             + active_record::string{ Derived::table_name }
             + "(" + col_defs + ");";
     }

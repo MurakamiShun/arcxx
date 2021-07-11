@@ -57,14 +57,17 @@ int main() {
     std::cout << "\033[33m[transaction]" << std::endl;
     std::cout << "    \033[33m[query] \033[m" << Member::schema::to_sql<active_record::sqlite3_adaptor>() << std::endl;
     std::cout << "    \033[33m[query] \033[m" << EnteringLog::schema::to_sql<active_record::sqlite3_adaptor>() << std::endl;
-    /*
+    
     const auto creata_table_transaction = [](auto& connection){
         using namespace active_record;
-        using transaction = active_record::sqlite3::transaction;
-        if(const auto error = connection.create_table<Member>(); error){
+        using transaction = active_record::transaction;
+
+        if(const auto error = connection.template create_table<Member>(); error){
+            std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
             return transaction::rollback;
         }
-        if(const auto error = connection.create_table<EnteringLog>(); error){
+        if(const auto error = connection.template create_table<EnteringLog>(); error){
+            std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
             return transaction::rollback;
         }
         return transaction::commit;
@@ -73,13 +76,13 @@ int main() {
     if(const auto [error, trans_result] = con.transaction(creata_table_transaction); error){
         std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
     }
-    else if(trans_result == active_record::sqlite3::transaction::rollback){
+    else if(trans_result == active_record::transaction::rollback){
         std::cout << "\033[31m" << "rollbacked!!" << "\033[m" << std::endl;
     }
     else std::cout << "\033[32m done! \033[m" << std::endl;
-    */
+    
     std::cout << "\033[33m[execution] \033[m" << Member::insert(member).to_sql<active_record::sqlite3_adaptor>() << std::endl;
-    if(const auto error = con.exec(Member::insert(member)); error){
+    if(const auto error = Member::insert(member).exec(con); error){
         std::cout << "\033[31m" << con.error_message() << "\033[m" << std::endl;
     }
     else std::cout << "\033[32m done! \033[m" << std::endl;
@@ -92,7 +95,7 @@ int main() {
 
     std::cout << "\033[33m[execution] \033[m" << Member::all().to_sql<active_record::sqlite3_adaptor>() << std::endl;
     
-    if(const auto [error, all_members] = con.exec(Member::all()); error){
+    if(const auto [error, all_members] = Member::all().exec(con); error){
         std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
     }
     else {

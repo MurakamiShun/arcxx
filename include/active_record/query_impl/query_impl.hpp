@@ -56,12 +56,12 @@ namespace active_record {
         BindAttrs bind_attrs;
         std::vector<std::any> temporary_attrs;
 
-        constexpr size_t bind_attrs_count() const {
+        static constexpr size_t bind_attrs_count() {
             if constexpr(std::is_same_v<void_attribute*, std::tuple_element_t<0, BindAttrs>> || std::is_same_v<const void_attribute*, std::tuple_element_t<0, BindAttrs>>){
                 return 0;
             }
             else{
-                return std::tuple_size_v<decltype(bind_attrs)>;
+                return std::tuple_size_v<BindAttrs>;
             }
         }
 
@@ -108,12 +108,20 @@ namespace active_record {
     template<typename T, Tuple BindAttrs>
     struct query_relation : public query_relation_common<BindAttrs> {
         using query_relation_common<BindAttrs>::query_relation_common;
+        template<std::derived_from<adaptor> Adaptor>
+        decltype(auto) exec(Adaptor& adapt) const {
+            return adapt.exec(*this);
+        }
     };
 
     template<Container Result, Tuple BindAttrs>
     requires std::derived_from<typename Result::value_type, model<typename Result::value_type>>
     struct query_relation<Result, BindAttrs> : public query_relation_common<BindAttrs> {
         using query_relation_common<BindAttrs>::query_relation_common;
+        template<std::derived_from<adaptor> Adaptor>
+        decltype(auto) exec(Adaptor& adapt) const {
+            return adapt.exec(*this);
+        }
         /*
         query_relation<bool> update();
         query_relation<bool> destroy();
@@ -143,6 +151,10 @@ namespace active_record {
     requires Tuple<typename Result::value_type>
     struct query_relation<Result, BindAttrs> : public query_relation_common<BindAttrs> {
         using query_relation_common<BindAttrs>::query_relation_common;
+        template<std::derived_from<adaptor> Adaptor>
+        decltype(auto) exec(Adaptor& adapt) const {
+            return adapt.exec(*this);
+        }
         /*
         template<typename Relation>
         query_relation<Result> join([[maybe_unused]] Relation);
