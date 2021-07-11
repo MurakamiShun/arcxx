@@ -35,11 +35,66 @@ namespace active_record{
         { a.empty() } -> std::same_as<bool>;
     };
 
+    template<class Tuple, std::size_t... I>
+    constexpr auto tuple_slice(Tuple& t, std::index_sequence<I...>&&){
+        return std::tie(std::get<I>(t)...);
+    }
+    template<class Tuple, std::size_t... I>
+    constexpr auto tuple_slice(Tuple&& t, std::index_sequence<I...>&&){
+        return std::make_tuple(std::get<I>(t)...);
+    }
+
+    template<std::size_t from, std::size_t to>
+    constexpr auto make_index_sequence_between(){
+        return []<std::size_t... I>(std::index_sequence<I...>&&){
+            return std::index_sequence<(I + from)...>{};
+        }(std::make_index_sequence<to-from>());
+    }
+    
+    namespace {
+        template<std::size_t I, class Last>
+        constexpr auto indexed_apply_aux(std::tuple<Last&>&& l){
+            return std::make_tuple<std::pair<std::size_t, Last&>>({I, std::get<0>(l)});
+        }
+        template<std::size_t I, class Last>
+        constexpr auto indexed_apply_aux(std::tuple<Last>& l){
+            return std::make_tuple<std::pair<std::size_t, Last&>>({I, std::get<0>(l)});
+        }
+
+        template<std::size_t I, class Head, class... Tail>
+        requires (sizeof...(Tail) > 0) // for clang
+        constexpr auto indexed_apply_aux(std::tuple<Head&, Tail&...>&& t){
+            return std::tuple_cat(
+                std::make_tuple<std::pair<std::size_t, Head&>>({ I, std::get<0>(t) }),
+                indexed_apply_aux<I+1>(tuple_slice(
+                    t,
+                    make_index_sequence_between<1, sizeof...(Tail)+1>()
+                ))
+            );
+        }
+        template<std::size_t I, class Head, class... Tail>
+        requires (sizeof...(Tail) > 0) // for clang
+        constexpr auto indexed_apply_aux(std::tuple<Head, Tail...>& t){
+            return std::tuple_cat(
+                std::make_tuple<std::pair<std::size_t, Head&>>({ I, std::get<0>(t) }),
+                indexed_apply_aux<I+1>(tuple_slice(
+                    t,
+                    make_index_sequence_between<1, sizeof...(Tail)+1>()
+                ))
+            );
+        }
+    }
+
     template<class TupleType>
     concept Tuple = requires {
         std::tuple_size<TupleType>::value;
         // { std::bool_constant<std::is_standard_layout_v<TupleType>>{} } -> std::same_as<std::bool_constant<false>>;
     };
+
+    template<class F, class Tuple>
+    constexpr decltype(auto) indexed_apply(F&& f, Tuple&& t){
+        return std::apply(f, indexed_apply_aux<0>(t));
+    }
 
     active_record::string sanitize(const active_record::string& src) {
         active_record::string result;

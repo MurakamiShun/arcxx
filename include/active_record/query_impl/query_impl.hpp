@@ -56,9 +56,8 @@ namespace active_record {
         BindAttrs bind_attrs;
         std::vector<std::any> temporary_attrs;
 
-        void* bind_attr_ptr(size_t index);
         constexpr size_t bind_attrs_count() const {
-            if constexpr(std::is_same_v<void_attribute*, decltype(std::get<0>(bind_attrs))>){
+            if constexpr(std::is_same_v<void_attribute*, std::tuple_element_t<0, BindAttrs>> || std::is_same_v<const void_attribute*, std::tuple_element_t<0, BindAttrs>>){
                 return 0;
             }
             else{

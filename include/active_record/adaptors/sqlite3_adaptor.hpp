@@ -24,53 +24,104 @@ namespace active_record {
             commit
         };
 
+        template<Attribute Attr>
+        requires std::same_as<typename Attr::value_type, active_record::string>
+        bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, Attr& attr){
+            const auto type = sqlite3_column_type(stmt, idx);
+            if(type == SQLITE_TEXT){
+                auto text_ptr = sqlite3_column_text(stmt, idx);
+                attr = active_record::string{ reinterpret_cast<const char*>(text_ptr) };
+                return true;
+            }
+            else if(type == SQLITE_NULL){
+                attr = std::nullopt;
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type>
+        bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, Attr& attr){
+            const auto type = sqlite3_column_type(stmt, idx);
+            if(type == SQLITE_INTEGER){
+                if constexpr(sizeof(typename Attr::value_type) == sizeof(int64_t)){
+                    attr = sqlite3_column_int64(stmt, idx);
+                }
+                else{
+                    attr = sqlite3_column_int(stmt, idx);
+                }
+                return true;
+            }
+            else if(type == SQLITE_NULL){
+                attr = std::nullopt;
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        template<Attribute Attr>
+        requires std::floating_point<typename Attr::value_type>
+        bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, Attr& attr){
+            const auto type = sqlite3_column_type(stmt, idx);
+            if(type == SQLITE_FLOAT){
+                attr = sqlite3_column_double(stmt, idx);
+                return true;
+            }
+            else if(type == SQLITE_NULL){
+                attr = std::nullopt;
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        template<Attribute Attr>
+        requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
+        bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, Attr& attr){
+            const auto type = sqlite3_column_type(stmt, idx);
+            if(type == SQLITE_BLOB){
+                auto ptr = sqlite3_column_blob(stmt, idx);
+                attr = std::vector<std::byte>{};
+                const auto size = sqlite3_column_bytes(stmt, idx);
+                attr.value().resize(size);
+                std::copy_n(attr.value().begin(), ptr, size);
+                sqlite3_free(ptr);
+                return true;
+            }
+            else if(type == SQLITE_NULL){
+                attr = std::nullopt;
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+
         template<typename T>
         requires std::derived_from<T, model<T>>
-        static int callback(void* res, int col_number, char** col_texts, char** col_names){
-            auto result = reinterpret_cast<T*>(res);
-            for(int n = 0; n < col_number; ++n){
-                result[col_names[n]].from_string((col_texts[n] == nullptr) ? "null" : col_texts[n]);
-            }
-            return SQLITE_OK;
+        T extract_column_data(sqlite3_stmt* stmt){
+            T ret;
+            indexed_apply(
+                [stmt]<typename... Attrs>(Attrs... attrs){
+                    return (set_column_data(stmt, attrs.first, attrs.second) && ...);
+                },
+                ret.attributes
+            );
+            return ret;
         }
         template<Tuple T>
-        static int callback(void* res, int col_number, char** col_texts, char** col_names){
-            auto result = reinterpret_cast<T*>(res);
-            auto attribute_string_convertors = std::apply(
-                []<typename... Attrs>(Attrs&... attrs){ std::unordered_map<active_record::string_view, attribute_string_convertor>{{attrs.column_name, attrs.get_string_convertor()}...}; },
-                *result
+        T extract_column_data(sqlite3_stmt* stmt){
+            T ret;
+            indexed_apply(
+                [stmt]<typename... Attrs>(Attrs... attrs){
+                    return (set_column_data(stmt, attrs.first, attrs.second) && ...);
+                },
+                ret
             );
-            for(int n = 0; n < col_number; ++n){
-                attribute_string_convertors[col_names[n]].from_string((col_texts[n] == nullptr) ? "null" : col_texts[n]);
-            }
-            return SQLITE_OK;
-        }
-        template<Container T>
-        requires std::derived_from<typename T::value_type, model<typename T::value_type>>
-        static int callback(void* res, int col_number, char** col_texts, char** col_names){
-            auto result = reinterpret_cast<T*>(res);
-            typename T::value_type val;
-            auto attribute_string_convertors = val.get_attribute_string_convertors();
-            for(int n = 0; n < col_number; ++n) {
-                attribute_string_convertors[col_names[n]].from_string((col_texts[n] == nullptr) ? "null" : col_texts[n]);
-            }
-            result->push_back(val);
-            return SQLITE_OK;
-        }
-        template<Container T>
-        requires Tuple<typename T::value_type>
-        static int callback(void* res, int col_number, char** col_texts, char** col_names){
-            auto result = reinterpret_cast<T*>(res);
-            typename T::value_type val;
-            auto attribute_string_convertors = std::apply(
-                []<typename... Attrs>(Attrs&... attrs){ std::unordered_map<active_record::string_view, attribute_string_convertor>{{attrs.column_name, attrs.get_string_convertor()}...}; },
-                val
-            );
-            for(int n = 0; n < col_number; ++n){
-                attribute_string_convertors[col_names[n]].from_string((col_texts[n] == nullptr) ? "null" : col_texts[n]);
-            }
-            result->push_back(val);
-            return SQLITE_OK;
+            return ret;
         }
 
         namespace {
@@ -196,6 +247,9 @@ namespace active_record {
                 return sqlite3_bind_blob(stmt, index + 1, attr.value().data(), attr.value().size(), SQLITE_STATIC);
             }
         }
+        template<Attribute Attr>
+        requires std::same_as<Attr, void_attribute>
+        int bind_variable(sqlite3_stmt* stmt, const size_t index, const Attr& attr);
     }
 
     class sqlite3_adaptor : public adaptor {
@@ -240,10 +294,10 @@ namespace active_record {
             sqlite3_close(db_obj);
         }
 
-        active_record::string_view version(){
+        static active_record::string_view version(){
             return sqlite3_version;
         }
-        int version_number(){
+        static int version_number(){
             return sqlite3_libversion_number();
         }
 
@@ -256,39 +310,100 @@ namespace active_record {
         template<typename T, Tuple BindAttrs>
         [[nodiscard]] std::pair<std::optional<active_record::string>, T> exec(query_relation<T, BindAttrs> query){
             T result;
-            char* errmsg_ptr = nullptr;
-            const auto result_code = sqlite3_exec(db_obj,
-                query.template to_sql<sqlite3_adaptor>().c_str(),
-                &sqlite3::callback<T>,
-                &result,
-                &errmsg_ptr
-            );
+            const char* errmsg_ptr = nullptr;
+            const auto result_code = [this, &query, &errmsg_ptr, &result](){
+                const auto sql = query.template to_sql<sqlite3_adaptor>();
+                sqlite3_stmt* stmt = nullptr;
+                auto result_code = sqlite3_prepare_v2(
+                    db_obj,
+                    sql.c_str(),
+                    sql.size(),
+                    &stmt,
+                    nullptr
+                );
+                if(result_code != SQLITE_OK) return result_code;
+                
+                if constexpr(query.bind_attrs_count() != 0) {
+                    result_code = indexed_apply(
+                        [stmt]<typename... Attrs>(const Attrs&... attr_ptrs){ return (active_record::sqlite3::bind_variable(stmt, attr_ptrs.first, *(attr_ptrs.second)) + ...);},
+                        query.bind_attrs
+                    );
+                    if(result_code != SQLITE_OK) return result_code;
+                }
+
+                while(true){
+                    const auto status = sqlite3_step(stmt);
+                    if(status == SQLITE_ROW){
+                        if constexpr (Container<T>) {
+                            result.push_back(active_record::sqlite3::extract_column_data<typename T::value_type>(stmt));
+                        }
+                        else {
+                            result = active_record::sqlite3::extract_column_data<T>(stmt);
+                        }
+                    }
+                    else if (status == SQLITE_DONE) {
+                        break;
+                    }
+                    else {
+                        errmsg_ptr = sqlite3_errmsg(db_obj);
+                        return status;
+                    }
+                }
+                result_code = sqlite3_finalize(stmt);
+                return result_code;
+            }();
+
             const auto errmsg = get_error_msg(result_code, errmsg_ptr);
             error_msg = errmsg;
-            if(errmsg_ptr != nullptr){
-                sqlite3_free(errmsg_ptr);
-            }
             return {errmsg, result};
         }
         template<Tuple BindAttrs>
         std::optional<active_record::string> exec(query_relation<bool, BindAttrs> query){
-            char* errmsg_ptr = nullptr;
-            auto result_code = sqlite3_exec(db_obj,
-                query.template to_sql<sqlite3_adaptor>().c_str(),
-                nullptr,
-                nullptr,
-                &errmsg_ptr
-            );
-            const auto errmsg = get_error_msg(result_code, errmsg_ptr);
-            error_msg = errmsg;
-            if(errmsg_ptr != nullptr){
-                sqlite3_free(errmsg_ptr);
+            if constexpr(query.bind_attrs_count() == 0){ // no bind variable
+                char* errmsg_ptr = nullptr;
+                auto result_code = sqlite3_exec(db_obj,
+                    query.template to_sql<sqlite3_adaptor>().c_str(),
+                    nullptr,
+                    nullptr,
+                    &errmsg_ptr
+                );
+                const auto errmsg = get_error_msg(result_code, errmsg_ptr);
+                error_msg = errmsg;
+                if(errmsg_ptr != nullptr){
+                    sqlite3_free(errmsg_ptr);
+                }
+                return errmsg;
             }
-            return errmsg;
+            else{
+                const auto sql = query.template to_sql<sqlite3_adaptor>();
+                sqlite3_stmt* stmt = nullptr;
+                auto result_code = sqlite3_prepare_v2(
+                    db_obj,
+                    sql.c_str(),
+                    sql.size(),
+                    &stmt,
+                    nullptr
+                );
+                if(result_code != SQLITE_OK) return (error_msg = get_error_msg(result_code, nullptr));
+                
+                if constexpr(query.bind_attrs_count() != 0) {
+                    result_code = indexed_apply(
+                        [stmt]<typename... Attrs>(const Attrs&... attr_ptrs){ return (active_record::sqlite3::bind_variable(stmt, attr_ptrs.first, *(attr_ptrs.second)) + ...);},
+                        query.bind_attrs
+                    );
+                }
+                if(result_code != SQLITE_OK) return (error_msg = get_error_msg(result_code, nullptr));
+
+                result_code = sqlite3_step(stmt);
+                if(result_code != SQLITE_DONE) return (error_msg = get_error_msg(result_code, nullptr));
+
+                result_code = sqlite3_finalize(stmt);
+                return (error_msg = get_error_msg(result_code, nullptr));
+            }
         }
 
         template<Model Mod>
-        std::optional<active_record::string> create_table(const Mod::schema&){
+        std::optional<active_record::string> create_table(){
             char* errmsg_ptr = nullptr;
             auto result_code = sqlite3_exec(db_obj,
                 Mod::schema::template to_sql<sqlite3_adaptor>().c_str(),

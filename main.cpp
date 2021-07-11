@@ -61,10 +61,10 @@ int main() {
     const auto creata_table_transaction = [](auto& connection){
         using namespace active_record;
         using transaction = active_record::sqlite3::transaction;
-        if(const auto error = connection.exec(Member::table_definition<sqlite3_adaptor>()); error){
+        if(const auto error = connection.create_table<Member>(); error){
             return transaction::rollback;
         }
-        if(const auto error = connection.exec(EnteringLog::table_definition<sqlite3_adaptor>()); error){
+        if(const auto error = connection.create_table<EnteringLog>(); error){
             return transaction::rollback;
         }
         return transaction::commit;
