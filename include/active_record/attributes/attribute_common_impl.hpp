@@ -20,12 +20,18 @@ namespace active_record {
             static constexpr bool value = decltype(check(std::declval<Attribute>()))::value;
         };
 
-        static constexpr active_record::string attribute_values_to_string(const Attribute& attr){
-            return attr.to_string();
+        template<std::size_t I, typename Condition, std::convertible_to<Attribute> Last>
+        static void copy_and_set_attrs_to_condition(Condition& ret, const Last& last){
+            ret.temporary_attrs.push_back(Attribute{ last });
+            std::get<I>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
+            ret.condition.push_back(I);
         }
-        template<std::same_as<Attribute>... Tail>
-        static constexpr active_record::string attribute_values_to_string(const Attribute& head, const Tail&... tail){
-            return attribute_values_to_string(head) + "," + attribute_values_to_string(tail...);
+
+        template<std::size_t I, typename Condition, std::convertible_to<Attribute> Head, std::convertible_to<Attribute>... Tails>
+        static void copy_and_set_attrs_to_condition(Condition& ret, const Head& head, const Tails&... tails){
+            copy_and_set_attrs_to_condition<I+1>(ret, head);
+            ret.condition.push_back(",");
+            copy_and_set_attrs_to_condition<I+1>(ret, tails...);
         }
     protected:
         std::optional<Type> data;
@@ -100,24 +106,16 @@ namespace active_record {
         [[nodiscard]] const Type&& value() const&& { return std::move(data.value()); }
         [[nodiscard]] Type&& value()&& { return std::move(data.value()); }
 
-        template<std::derived_from<adaptor> Adaptor = common_adaptor>
-        attribute_string_convertor get_string_convertor() {
-            return attribute_string_convertor{
-                [this](){
-                    return dynamic_cast<Attribute*>(this)->template to_string<Adaptor>();
-                },
-                [this](const active_record::string_view str){
-                    return dynamic_cast<Attribute*>(this)->template from_string<Adaptor>(str);
-                }
-            };
-        }
-
         template<std::convertible_to<Attribute>... Attrs>
-        static constexpr query_condition in(const Attrs&... values) {
-            return query_condition{
-                active_record::string{ "\"" } + Model::table_name + "\".\"" + Attribute::column_name
-                + "\" in (" + attribute_values_to_string(Attribute{ values }...) + ")"
-            };
+        static auto in(const Attrs&... values) {
+            query_condition<std::tuple<const decltype(values, std::declval<Attribute>())*...>> ret;
+            ret.condition.push_back(
+                active_record::string{ "\"" } + Model::table_name + "\".\""
+                + Attribute::column_name + "\" in ("
+            );
+            copy_and_set_attrs_to_condition(ret, values...);
+            ret.condition.push_back(")");
+            return ret;
         }
     };
 }

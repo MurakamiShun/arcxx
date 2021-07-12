@@ -2,8 +2,7 @@
 #include "query_impl.hpp"
 
 namespace active_record {
-     namespace {
-
+     namespace detail {
         template<Attribute Last>
         constexpr active_record::string column_full_names_to_string([[maybe_unused]]const Last&){
             constexpr auto full_name = Last::column_full_name();
@@ -25,20 +24,6 @@ namespace active_record {
             }
             return columns;
         }
-
-        template<Attribute Attr>
-        constexpr active_record::string attributes_to_condition_string(const Attr& attr){
-            return column_full_names_to_string(attr) + " = " + attr.to_string();
-        }
-        
-        template<std::same_as<query_condition> Condition>
-        constexpr active_record::string attributes_to_condition_string(const Condition& cond){
-            return cond.str;
-        }
-        template<Attribute Head, Attribute... Tail>
-        constexpr active_record::string attributes_to_condition_string(const Head& head, const Tail&... tail){
-            return attributes_to_condition_string(head) + " AND " + attributes_to_condition_string(tail...);
-        }
     }
 
     template<typename Derived>
@@ -46,7 +31,7 @@ namespace active_record {
         query_relation<std::vector<Derived>, std::tuple<>> ret;
         
         ret.operation = query_operation::select;
-        ret.query_op_arg.push_back(model_column_full_names_to_string<Derived>());
+        ret.query_op_arg.push_back(detail::model_column_full_names_to_string<Derived>());
         ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
 
         return ret;    
@@ -58,7 +43,7 @@ namespace active_record {
         query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> ret;
         
         ret.operation = query_operation::select;
-        ret.query_op_arg.push_back(column_full_names_to_string(attrs...));
+        ret.query_op_arg.push_back(detail::column_full_names_to_string(attrs...));
         ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
         return ret;
     }
@@ -69,21 +54,36 @@ namespace active_record {
         query_relation<std::vector<Attr>, std::tuple<>> ret;
         
         ret.operation = query_operation::select;
-        ret.query_op_arg.push_back(column_full_names_to_string(attr));
+        ret.query_op_arg.push_back(detail::column_full_names_to_string(attr));
         ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
         return ret;
     }
 
+    namespace detail {
+        template<std::size_t I, typename Query, Attribute Attr>
+        void attributes_to_condition_string(Query& query, const Attr& attr){
+            query.temporary_attrs.push_back(attr);
+            std::get<I>(query.bind_attrs) = std::any_cast<Attr>(&query.temporary_attrs.back());
+            query.query_condition.push_back(column_full_names_to_string(attr) + " = ");
+            query.query_condition.push_back(I);
+        }
+        template<std::size_t I, typename Query, Attribute Head, Attribute... Tail>
+        void attributes_to_condition_string(Query& query, const Head& head, const Tail&... tail){
+            attributes_to_condition_string<I>(query, head);
+            query.query_condition.push_back(" AND ");
+            attributes_to_condition_string<I + 1>(query, tail...);
+        }
+    }
+
     template<typename Derived>
     template<Attribute... Attrs>
-    inline query_relation<std::vector<Derived>, std::tuple<Attrs*...>> model<Derived>::where(const Attrs... attrs) {
-        query_relation<std::vector<Derived>, std::tuple<Attrs*...>> ret;
+    inline query_relation<std::vector<Derived>, std::tuple<const Attrs*...>> model<Derived>::where(const Attrs... attrs) {
+        query_relation<std::vector<Derived>, std::tuple<const Attrs*...>> ret;
         
         ret.operation = query_operation::condition;
-        ret.query_op_arg.push_back(model_column_full_names_to_string<Derived>());
+        ret.query_op_arg.push_back(detail::model_column_full_names_to_string<Derived>());
         ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\""),
-        ret.query_condition.push_back(attributes_to_condition_string(attrs...));
-        
+        detail::attributes_to_condition_string<0>(ret, attrs...);
         return ret;
     }
 

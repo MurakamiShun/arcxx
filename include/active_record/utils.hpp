@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <chrono>
 #include <tuple>
+#include <functional>
 
 namespace active_record{
     using string = std::string;
@@ -51,20 +52,20 @@ namespace active_record{
         }(std::make_index_sequence<to-from>());
     }
     
-    namespace {
+    namespace detail {
         // non const
         template<std::size_t I>
-        constexpr auto indexed_apply_aux(std::tuple<>&& l){
+        constexpr auto indexed_apply_aux(std::tuple<>&&){
             return std::make_tuple();
         }
         template<std::size_t I>
-        constexpr auto indexed_apply_aux(std::tuple<>& l){
+        constexpr auto indexed_apply_aux(std::tuple<>&){
             return std::make_tuple();
         }
         template<std::size_t I, class Head, class... Tail>
         constexpr auto indexed_apply_aux(std::tuple<Head&, Tail&...>&& t){
             return std::tuple_cat(
-                std::make_tuple<std::pair<std::size_t, Head&>>({ I, std::get<0>(t) }),
+                std::make_tuple(std::make_pair(I, std::ref(std::get<0>(t)))),
                 indexed_apply_aux<I+1>(tuple_slice(
                     t,
                     make_index_sequence_between<1, sizeof...(Tail)+1>()
@@ -74,7 +75,7 @@ namespace active_record{
         template<std::size_t I, class Head, class... Tail>
         constexpr auto indexed_apply_aux(std::tuple<Head, Tail...>& t){
             return std::tuple_cat(
-                std::make_tuple<std::pair<std::size_t, Head&>>({ I, std::get<0>(t) }),
+                std::make_tuple(std::make_pair(I, std::ref(std::get<0>(t)))),
                 indexed_apply_aux<I+1>(tuple_slice(
                     t,
                     make_index_sequence_between<1, sizeof...(Tail)+1>()
@@ -83,17 +84,17 @@ namespace active_record{
         }
         // const overload
         template<std::size_t I>
-        constexpr auto indexed_apply_aux(const std::tuple<>&& l){
+        constexpr auto indexed_apply_aux(const std::tuple<>&&){
             return std::make_tuple();
         }
         template<std::size_t I>
-        constexpr auto indexed_apply_aux(const std::tuple<>& l){
+        constexpr auto indexed_apply_aux(const std::tuple<>&){
             return std::make_tuple();
         }
         template<std::size_t I, class Head, class... Tail>
         constexpr auto indexed_apply_aux(const std::tuple<const Head&, const Tail&...>&& t){
             return std::tuple_cat(
-                std::make_tuple<std::pair<std::size_t, const Head&>>({ I, std::get<0>(t) }),
+                std::make_tuple(std::make_pair(I, std::cref(std::get<0>(t)))),
                 indexed_apply_aux<I+1>(tuple_slice(
                     t,
                     make_index_sequence_between<1, sizeof...(Tail)+1>()
@@ -103,7 +104,7 @@ namespace active_record{
         template<std::size_t I, class Head, class... Tail>
         constexpr auto indexed_apply_aux(const std::tuple<Head, Tail...>& t){
             return std::tuple_cat(
-                std::make_tuple<std::pair<std::size_t, const Head&>>({ I, std::get<0>(t) }),
+                std::make_tuple(std::make_pair(I, std::cref(std::get<0>(t)))),
                 indexed_apply_aux<I+1>(tuple_slice(
                     t,
                     make_index_sequence_between<1, sizeof...(Tail)+1>()
@@ -120,7 +121,7 @@ namespace active_record{
 
     template<class F, class Tuple>
     constexpr decltype(auto) indexed_apply(F&& f, Tuple&& t){
-        return std::apply(f, indexed_apply_aux<0>(t));
+        return std::apply(f, detail::indexed_apply_aux<0>(t));
     }
 
     active_record::string sanitize(const active_record::string& src) {

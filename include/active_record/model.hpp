@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include <type_traits>
+#include <any>
 #include "query.hpp"
 #include "attribute.hpp"
 
@@ -60,47 +61,7 @@ namespace active_record {
             );
         }
 
-        constexpr auto get_attribute_strings() const {
-            return std::apply(
-                []<typename... Attrs>(const Attrs&... attrs){ return std::array<const active_record::string, sizeof...(Attrs)>{attrs.to_string()...}; },
-                dynamic_cast<const Derived*>(this)->attributes
-            );
-        }
-
-        template<std::derived_from<adaptor> Adaptor = common_adaptor>
-        auto get_attribute_string_convertors() {
-            return std::apply(
-                []<typename... Attrs>(Attrs&... attrs){
-                    return std::unordered_map<active_record::string_view, attribute_string_convertor>{
-                        {attrs.column_name, attrs.template get_string_convertor<Adaptor>()}...
-                    };
-                },
-                dynamic_cast<Derived*>(this)->attributes
-            );
-        }
-        template<std::derived_from<adaptor> Adaptor = common_adaptor>
-        const auto get_attribute_string_convertors() const {
-            return std::apply(
-                []<typename... Attrs>(const Attrs&... attrs){
-                    return std::unordered_map<active_record::string_view, const attribute_string_convertor>{
-                        {attrs.column_name, attrs.template get_string_convertor<Adaptor>()}...
-                    };
-                },
-                dynamic_cast<const Derived*>(this)->attributes
-            );
-        }
-        attribute_string_convertor operator[](const active_record::string_view col_name) {
-            return get_attribute_string_convertors()[col_name];
-        }
-        const attribute_string_convertor operator[](const active_record::string_view col_name) const {
-            return get_attribute_string_convertors()[col_name];
-        }
-
         constexpr virtual ~model() {}
-
-        /* 
-         * Implementations are query_impl/model_queries.hpp
-         */
 
         static auto insert(const Derived& model) {
             query_relation<bool, decltype(reference_tuple_to_ptr_tuple(model.attributes))> ret;
@@ -113,7 +74,7 @@ namespace active_record {
             ret.query_table.push_back(insert_column_names_to_string<Derived>());
             // insert values
             ret.query_op_arg.push_back("(");
-            for(size_t i = 0; i < std::tuple_size_v<decltype(model.attributes)>; ++i){
+            for(std::size_t i = 0; i < std::tuple_size_v<decltype(model.attributes)>; ++i){
                 if (i != 0) ret.query_op_arg.push_back(",");
                 ret.query_op_arg.push_back(i);
             }
@@ -128,7 +89,7 @@ namespace active_record {
             // get attribute pointers in temporary model
             ret.bind_attrs = std::apply(
                 []<Attribute... Attrs>(const Attrs&... attrs){ return std::make_tuple(&attrs...); },
-                ret.temporary_attrs[0]
+                std::any_cast<Derived>(ret.temporary_attrs[0]).attributes
             );
             ret.query_table.push_back(insert_column_names_to_string<Derived>());
             // insert values
@@ -140,7 +101,9 @@ namespace active_record {
             ret.query_op_arg.push_back(")");
             return ret;
         }
-
+        /*
+         * Implementations are query_impl/model_queries.hpp
+         */
         static query_relation<std::vector<Derived>, std::tuple<>> all();
 
         template<Attribute... Attrs>
@@ -150,7 +113,7 @@ namespace active_record {
         static query_relation<std::vector<Attr>, std::tuple<>> pluck(const Attr);
         
         template<Attribute... Attrs>
-        static query_relation<std::vector<Derived>, std::tuple<Attrs*...>> where(const Attrs...);
+        static query_relation<std::vector<Derived>, std::tuple<const Attrs*...>> where(const Attrs...);
     };
 
     template<typename T>

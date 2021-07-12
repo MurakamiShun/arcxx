@@ -126,7 +126,7 @@ namespace active_record {
 
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type>
-        int bind_variable(sqlite3_stmt* stmt, const size_t index, const Attr& attr) {
+        int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
             if(!attr) {
                 return sqlite3_bind_null(stmt, index + 1);
             }
@@ -142,7 +142,7 @@ namespace active_record {
 
         template<Attribute Attr>
         requires std::floating_point<typename Attr::value_type>
-        int bind_variable(sqlite3_stmt* stmt, const size_t index, const Attr& attr) {
+        int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
             if(!attr) {
                 return sqlite3_bind_null(stmt, index + 1);
             }
@@ -153,7 +153,7 @@ namespace active_record {
 
         template<Attribute Attr>
         requires std::same_as<typename Attr::value_type, active_record::string>
-        int bind_variable(sqlite3_stmt* stmt, const size_t index, const Attr& attr) {
+        int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
             if(!attr) {
                 return sqlite3_bind_null(stmt, index + 1);
             }
@@ -164,7 +164,7 @@ namespace active_record {
         }
         template<Attribute Attr>
         requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
-        int bind_variable(sqlite3_stmt* stmt, const size_t index, const Attr& attr) {
+        int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
             if(!attr) {
                 return sqlite3_bind_null(stmt, index + 1);
             }
@@ -219,7 +219,7 @@ namespace active_record {
         }
 
         static constexpr bool bindable = true;
-        static active_record::string bind_variable_str(const size_t idx) {
+        static active_record::string bind_variable_str(const std::size_t idx) {
             // variable number must be between ?1 and ?250000
             return active_record::string{ "?" } + std::to_string(idx + 1);
         }
@@ -268,47 +268,30 @@ namespace active_record {
         }
         template<Tuple BindAttrs>
         std::optional<active_record::string> exec(const query_relation<bool, BindAttrs>& query){
-            if constexpr(query.bind_attrs_count() == 0){ // no bind variable
-                char* errmsg_ptr = nullptr;
-                auto result_code = sqlite3_exec(db_obj,
-                    query.template to_sql<sqlite3_adaptor>().c_str(),
-                    nullptr,
-                    nullptr,
-                    &errmsg_ptr
+            const auto sql = query.template to_sql<sqlite3_adaptor>();
+            sqlite3_stmt* stmt = nullptr;
+            auto result_code = sqlite3_prepare_v2(
+                db_obj,
+                sql.c_str(),
+                sql.size(),
+                &stmt,
+                nullptr
+            );
+            if(result_code != SQLITE_OK) return error_msg = get_error_msg(result_code);
+            
+            if constexpr(query.bind_attrs_count() != 0) {
+                result_code = indexed_apply(
+                    [stmt]<typename... Attrs>(const Attrs&... attr_ptrs){ return (active_record::sqlite3::bind_variable(stmt, attr_ptrs.first, *(attr_ptrs.second)) + ...);},
+                    query.bind_attrs
                 );
-                if(errmsg_ptr != nullptr){
-                    error_msg = get_error_msg(errmsg_ptr);
-                    sqlite3_free(errmsg_ptr);
-                    return error_msg;
-                }
-                return error_msg = get_error_msg(result_code);
             }
-            else{
-                const auto sql = query.template to_sql<sqlite3_adaptor>();
-                sqlite3_stmt* stmt = nullptr;
-                auto result_code = sqlite3_prepare_v2(
-                    db_obj,
-                    sql.c_str(),
-                    sql.size(),
-                    &stmt,
-                    nullptr
-                );
-                if(result_code != SQLITE_OK) return error_msg = get_error_msg(result_code);
-                
-                if constexpr(query.bind_attrs_count() != 0) {
-                    result_code = indexed_apply(
-                        [stmt]<typename... Attrs>(const Attrs&... attr_ptrs){ return (active_record::sqlite3::bind_variable(stmt, attr_ptrs.first, *(attr_ptrs.second)) + ...);},
-                        query.bind_attrs
-                    );
-                }
-                if(result_code != SQLITE_OK) return error_msg = get_error_msg(result_code);
+            if(result_code != SQLITE_OK) return error_msg = get_error_msg(result_code);
 
-                result_code = sqlite3_step(stmt);
-                if(result_code != SQLITE_OK) return error_msg = get_error_msg(result_code);
+            result_code = sqlite3_step(stmt);
+            if(result_code != SQLITE_DONE) return error_msg = get_error_msg(result_code);
 
-                result_code = sqlite3_finalize(stmt);
-                return error_msg = get_error_msg(result_code);
-            }
+            result_code = sqlite3_finalize(stmt);
+            return error_msg = get_error_msg(result_code);
         }
         template<typename T, Tuple BindAttrs>
         auto exec(const query_relation<T, BindAttrs>&& query){
@@ -316,10 +299,10 @@ namespace active_record {
         }
 
         template<Model Mod>
-        std::optional<active_record::string> create_table(){
+        std::optional<active_record::string> create_table(bool create_if_not_exist = false){
             char* errmsg_ptr = nullptr;
             auto result_code = sqlite3_exec(db_obj,
-                Mod::schema::template to_sql<sqlite3_adaptor>().c_str(),
+                Mod::schema::template to_sql<sqlite3_adaptor>(create_if_not_exist).c_str(),
                 nullptr,
                 nullptr,
                 &errmsg_ptr

@@ -105,6 +105,18 @@ int main() {
         }
     }
 
+    std::cout << "\033[33m[execution] \033[m" << Member::where(Member::ID{123}).to_sql<active_record::sqlite3_adaptor>() << std::endl;
+    
+    if(const auto [error, find_members] = Member::where(Member::ID{123}).exec(con); error){
+        std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
+    }
+    else {
+        std::cout << "\033[32m done! \033[m" << std::endl;
+        for(const auto& m : find_members){
+            std::cout << "id:" << m.id.to_string() << "\tname:" << m.name.to_string() << std::endl;
+        }
+    }
+
     con.close();
     
     return 0;

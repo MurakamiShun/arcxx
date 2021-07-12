@@ -24,23 +24,26 @@ namespace active_record {
         constexpr attribute(const StringType& default_value) : attribute_common<Model, Attribute, active_record::string>(active_record::string{ default_value }) {}
 
         struct constraint_length_impl {
-            const size_t length;
+            const std::size_t length;
             constexpr bool operator()(const std::optional<active_record::string>& t) {
                 return static_cast<bool>(t) && t.value().length() <= length;
             }
         };
-        static const attribute_common<Model, Attribute, active_record::string>::constraint length(const size_t len) noexcept {
+        static const attribute_common<Model, Attribute, active_record::string>::constraint length(const std::size_t len) noexcept {
             return constraint_length_impl{ len };
         };
 
         template<std::convertible_to<active_record::string> StringType>
-        static constexpr query_condition like(const StringType& value){
-            // require sanitize
-            constexpr auto names = Attribute::column_full_name();
-            return query_condition {
-                active_record::string{ "\"" } + active_record::string{ names.first } + "\".\"" + active_record::string{ names.second }
-                    + "\" LIKE \'" + active_record::sanitize(value) + "\'"
-            };
+        static constexpr query_condition<std::tuple<const Attribute*>> like(const StringType& value){
+            query_condition<std::tuple<const Attribute*>> ret;
+            ret.temporary_attrs.push_back(Attribute{ value });
+            std::get<0>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
+            ret.condition.push_back(
+                active_record::string{ "\"" } + Model::table_name + "\".\""
+                + Attribute::column_name + "\" LIKE "
+            );
+            ret.condition.push_back(0);
+            return ret;
         }
 
         template<std::derived_from<adaptor> Adaptor = common_adaptor>

@@ -2,7 +2,7 @@
 #include "../../attributes/attributes.hpp"
 
 namespace active_record::sqlite3 {
-    namespace {
+    namespace detail {
         template<Attribute T>
         struct is_reference {
             template<typename S>
@@ -38,7 +38,7 @@ namespace active_record::sqlite3 {
                 active_record::string{ " CHECK(length(" } + active_record::string{ T::column_name }
                 + ")<=" + std::to_string(T::get_constraint(typename T::constraint_length_impl{})->template target<typename T::constraint_length_impl>()->length) + ")"
                 : "")
-            + reference_definition<T>();
+            + detail::reference_definition<T>();
     }
 
     template<Attribute T>
@@ -53,7 +53,7 @@ namespace active_record::sqlite3 {
                 active_record::string{ (T::has_constraint(T::not_null) ? " ON CONFLICT REPLACE" : "") } + " DEFAULT "
                 + std::to_string(T::get_constraint(typename T::constraint_default_value_impl{})->template target<typename T::constraint_default_value_impl>()->default_value)
                 : "")
-            + reference_definition<T>();
+            + detail::reference_definition<T>();
     }
     
     template<Attribute T>
@@ -68,6 +68,6 @@ namespace active_record::sqlite3 {
                 active_record::string{ (T::has_constraint(T::not_null) ? " ON CONFLICT REPLACE" : "") } + " DEFAULT "
                 + std::to_string(T::get_constraint(typename T::constraint_default_value_impl{})->template target<typename T::constraint_default_value_impl>()->default_value)
                 : "")
-            + reference_definition<T>();
+            + detail::reference_definition<T>();
     }
 }

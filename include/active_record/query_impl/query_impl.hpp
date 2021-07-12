@@ -4,14 +4,12 @@
 #include "../attribute.hpp"
 #include "../adaptor.hpp"
 #include "../utils.hpp"
-#include <variant>
-#include <any>
 
 namespace active_record {
     template<Tuple BindAttrs>
     struct query_relation_common {
     public:
-        using str_or_bind = std::variant<active_record::string, size_t>;
+        using str_or_bind = std::variant<active_record::string, std::size_t>;
     private:
         template<std::derived_from<adaptor> Adaptor>
         struct str_or_bind_visitor {
@@ -19,7 +17,7 @@ namespace active_record {
             active_record::string operator()(const active_record::string& str) const {
                 return str;
             }
-            active_record::string operator()(const size_t idx) const {
+            active_record::string operator()(const std::size_t idx) const {
                 if constexpr (Adaptor::bindable) return Adaptor::bind_variable_str(idx);
                 else {
                     return std::apply(
@@ -51,7 +49,7 @@ namespace active_record {
         BindAttrs bind_attrs;
         std::vector<std::any> temporary_attrs;
 
-        static constexpr size_t bind_attrs_count() {
+        static constexpr std::size_t bind_attrs_count() {
             return std::tuple_size_v<BindAttrs>;
         }
 
@@ -60,11 +58,7 @@ namespace active_record {
 
         template<std::derived_from<adaptor> Adaptor = common_adaptor>
         [[nodiscard]] const active_record::string to_sql() const {
-            if (operation == query_operation::create_table) {
-                return active_record::string{"CREATE TABLE IF NOT EXISTS "} + sob_to_string<Adaptor>(query_table)
-                    + "(" + sob_to_string<Adaptor>(query_op_arg) + ");";
-            }
-            else if (operation == query_operation::select) {
+            if (operation == query_operation::select) {
                 return active_record::string{"SELECT "} + sob_to_string<Adaptor>(query_op_arg)
                     + " FROM " + sob_to_string<Adaptor>(query_table)
                     + (query_condition.empty() ? "": (active_record::string{" WHERE "} + sob_to_string<Adaptor>(query_condition)))

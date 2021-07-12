@@ -9,11 +9,6 @@ namespace active_record {
     template<typename Model, typename Attribute, typename Type>
     struct attribute;
 
-    struct attribute_string_convertor {
-        const std::function<active_record::string()> to_string;
-        const std::function<void(const active_record::string_view)> from_string;
-    };
-
     template<typename Model, typename Attribute, typename Type>
     class attribute_common;
 
