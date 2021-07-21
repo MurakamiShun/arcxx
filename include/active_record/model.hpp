@@ -2,8 +2,6 @@
 #include <array>
 #include <utility>
 #include <vector>
-#include <algorithm>
-#include <unordered_map>
 #include <type_traits>
 #include <any>
 #include "query.hpp"
@@ -108,12 +106,26 @@ namespace active_record {
 
         template<Attribute... Attrs>
         static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> select(const Attrs...);
+        template<Attribute... Attrs>
+        static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> select();
 
         template<Attribute Attr>
         static query_relation<std::vector<Attr>, std::tuple<>> pluck(const Attr);
+        template<Attribute Attr>
+        static query_relation<std::vector<Attr>, std::tuple<>> pluck();
         
         template<Attribute... Attrs>
         static query_relation<std::vector<Derived>, std::tuple<const Attrs*...>> where(const Attrs...);
+
+        static query_relation<std::vector<Derived>, std::tuple<>> limit(const std::size_t);
+
+        template<Attribute Attr>
+        static query_relation<std::vector<Derived>, std::tuple<>> order_by(const active_record::order = active_record::order::asc);
+
+        template<typename Relation>
+        static query_relation<std::vector<Derived>, std::tuple<>> join(const Relation);
+        template<typename Relation>
+        static query_relation<std::vector<Derived>, std::tuple<>> join();
     };
 
     template<typename T>

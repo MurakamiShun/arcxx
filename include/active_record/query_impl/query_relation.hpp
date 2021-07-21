@@ -61,8 +61,8 @@ namespace active_record {
             if (operation == query_operation::select) {
                 return active_record::string{"SELECT "} + sob_to_string<Adaptor>(query_op_arg)
                     + " FROM " + sob_to_string<Adaptor>(query_table)
-                    + (query_condition.empty() ? "": (active_record::string{" WHERE "} + sob_to_string<Adaptor>(query_condition)))
-                    + sob_to_string<Adaptor>(query_options) + ";";
+                    + (query_condition.empty() ? "" : (active_record::string{" WHERE "} + sob_to_string<Adaptor>(query_condition)))
+                    + " " + sob_to_string<Adaptor>(query_options) + ";";
             }
             else if (operation == query_operation::insert) {
                 return active_record::string{"INSERT INTO "} + sob_to_string<Adaptor>(query_table)
@@ -106,29 +106,20 @@ namespace active_record {
         decltype(auto) exec(Adaptor& adapt) const {
             return adapt.exec(*this);
         }
-        /*
-        query_relation<bool> update();
-        query_relation<bool> destroy();
-
-        query_relation<bool> count() {
-            return query_relation<bool>();
-        }
-        template<Attribute... Cols>
-        query_relation<std::tuple<Cols...>> sum([[maybe_unused]] Cols... cols);
-
-        template<Attribute... Col>
-        static query_relation<std::vector<std::tuple<Col...>>> select([[maybe_unused]] Col... cols);
         
-        template<Attribute Col>
-        static query_relation<std::vector<Col>> pluck([[maybe_unused]] Col);
+        template<Attribute... Attrs>
+        static query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> select();
 
-        template<Attribute Col>
-        query_relation<Result> order([[maybe_unused]] Col, active_record::order);
-        query_relation<Result> limit(std::size_t);
+        template<Attribute Attr>
+        static query_relation<std::vector<Attr>, BindAttrs> pluck();
+        
+        template<Attribute... Attrs>
+        static query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>)>> where(const Attrs...);
 
-        template<Attribute... Cols>
-        query_relation<Result> where([[maybe_unused]] Cols... cols);
-        */
+        static query_relation<Result, BindAttrs> limit(const std::size_t);
+
+        template<Attribute Attr>
+        static query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc);
     };
 
     template<Container Result, Tuple BindAttrs>
@@ -139,17 +130,20 @@ namespace active_record {
         decltype(auto) exec(Adaptor& adapt) const {
             return adapt.exec(*this);
         }
-        /*
-        template<typename Relation>
-        query_relation<Result> join([[maybe_unused]] Relation);
-        
-        template<Attribute Col>
-        query_relation<Result> order([[maybe_unused]] Col, active_record::order);
-        query_relation<Result> limit(std::size_t);
 
-        template<std::derived_from<query_relation_common>... Relations>
-        query_relation<Result> where([[maybe_unused]] Relations... relations);
-        */
+        template<Attribute... Attrs>
+        static query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> select();
+
+        template<Attribute Attr>
+        static query_relation<std::vector<Attr>, BindAttrs> pluck();
+        
+        template<Attribute... Attrs>
+        static query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>)>> where(const Attrs...);
+
+        static query_relation<Result, BindAttrs> limit(const std::size_t);
+
+        template<Attribute Attr>
+        static query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc);
     };
 
     template<typename T>

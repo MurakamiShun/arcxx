@@ -27,15 +27,14 @@ struct EnteringLog : public active_record::model<EnteringLog> {
         static constexpr auto column_name = "id";
         inline static const auto constraints = { primary_key };
     } id;
-    struct MemberID : public active_record::relation::reference_to<Member::ID, EnteringLog, MemberID> {
-        using active_record::relation::reference_to<Member::ID, EnteringLog, MemberID>::reference_to;
+    struct MemberID : public active_record::relation::reference_to<EnteringLog, MemberID, Member::ID> {
+        using active_record::relation::reference_to<EnteringLog, MemberID, Member::ID>::reference_to;
         static constexpr auto column_name = "member_id";
     } member_id;
     std::tuple<ID&, MemberID&> attributes = std::tie(id, member_id);
 };
 
 int main() {
-    
     constexpr Member::ID id = 10;
     Member::Name name = "test";
     Member member;
@@ -116,6 +115,46 @@ int main() {
             std::cout << "id:" << m.id.to_string() << "\tname:" << m.name.to_string() << std::endl;
         }
     }
+
+    std::cout << "\033[33m[execution] \033[m" << Member::limit(2).to_sql<active_record::sqlite3_adaptor>() << std::endl;
+    
+    if(const auto [error, find_members] = Member::limit(2).exec(con); error){
+        std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
+    }
+    else {
+        std::cout << "\033[32m done! \033[m" << std::endl;
+        for(const auto& m : find_members){
+            std::cout << "id:" << m.id.to_string() << "\tname:" << m.name.to_string() << std::endl;
+        }
+    }
+
+    std::cout << "\033[33m[execution] \033[m" << Member::order_by<Member::ID>(active_record::order::desc).to_sql<active_record::sqlite3_adaptor>() << std::endl;
+    
+    if(const auto [error, find_members] = Member::order_by<Member::ID>(active_record::order::desc).exec(con); error){
+        std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
+    }
+    else {
+        std::cout << "\033[32m done! \033[m" << std::endl;
+        for(const auto& m : find_members){
+            std::cout << "id:" << m.id.to_string() << "\tname:" << m.name.to_string() << std::endl;
+        }
+    }
+
+    EnteringLog log;
+    log.member_id = member;
+
+    std::cout << "\033[33m[execution] \033[m" << EnteringLog::join<EnteringLog::MemberID>().to_sql<active_record::sqlite3_adaptor>() << std::endl;
+    if(const auto [error, logs] = EnteringLog::join<EnteringLog::MemberID>().exec(con); error){
+        std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
+    }
+    else {
+        std::cout << "\033[32m done! \033[m" << std::endl;
+        for(const auto& log : logs){
+            std::cout << "id:" << log.id.to_string() << "\tname:" << log.member_id.to_string() << std::endl;
+        }
+    }
+    EnteringLog::insert(log).exec(con);
+
 
     con.close();
     

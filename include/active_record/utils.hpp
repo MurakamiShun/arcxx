@@ -124,7 +124,7 @@ namespace active_record{
         return std::apply(f, detail::indexed_apply_aux<0>(t));
     }
 
-    active_record::string sanitize(const active_record::string& src) {
+    inline active_record::string sanitize(const active_record::string& src) {
         active_record::string result;
         for(const auto& c : src) {
             switch(c){

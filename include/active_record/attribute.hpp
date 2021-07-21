@@ -1,7 +1,6 @@
 #pragma once
 #include <optional>
 #include <utility>
-#include <typeinfo>
 #include "utils.hpp"
 #include "adaptor.hpp"
 
