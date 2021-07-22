@@ -108,18 +108,27 @@ namespace active_record {
         }
         
         template<Attribute... Attrs>
-        static query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> select();
+        query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> select() &&;
+        template<Attribute... Attrs>
+        query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> select() const &;
 
         template<Attribute Attr>
-        static query_relation<std::vector<Attr>, BindAttrs> pluck();
+        query_relation<std::vector<Attr>, BindAttrs> pluck() &&;
+        template<Attribute Attr>
+        query_relation<std::vector<Attr>, BindAttrs> pluck() const &;
         
         template<Attribute... Attrs>
-        static query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>)>> where(const Attrs...);
+        query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>)>> where(const Attrs...) &&;
+        template<Attribute... Attrs>
+        query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>)>> where(const Attrs...) const &;
 
-        static query_relation<Result, BindAttrs> limit(const std::size_t);
+        query_relation<Result, BindAttrs>& limit(const std::size_t) &&;
+        query_relation<Result, BindAttrs> limit(const std::size_t) const &;
 
         template<Attribute Attr>
-        static query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc);
+        query_relation<Result, BindAttrs>& order_by(const active_record::order = active_record::order::asc) &&;
+        template<Attribute Attr>
+        query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc) const &;
     };
 
     template<Container Result, Tuple BindAttrs>
@@ -132,26 +141,17 @@ namespace active_record {
         }
 
         template<Attribute... Attrs>
-        static query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> select();
+        query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> select();
 
         template<Attribute Attr>
-        static query_relation<std::vector<Attr>, BindAttrs> pluck();
+        query_relation<std::vector<Attr>, BindAttrs> pluck();
         
         template<Attribute... Attrs>
-        static query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>)>> where(const Attrs...);
+        query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>)>> where(const Attrs...);
 
-        static query_relation<Result, BindAttrs> limit(const std::size_t);
+        query_relation<Result, BindAttrs> limit(const std::size_t);
 
         template<Attribute Attr>
-        static query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc);
+        query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc);
     };
-
-    template<typename T>
-    query_relation<T, std::tuple<>> raw_query(const active_record::string_view query_str) {
-        query_relation<T, std::tuple<>> ret;
-        ret.operation     = query_operation::unspecified,
-        ret.query_op_arg.push_back(active_record::string{ query_str });
-
-        return ret;
-    }
 }

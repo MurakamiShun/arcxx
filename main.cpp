@@ -1,4 +1,5 @@
 #include "include/active_record.hpp"
+#include "include/active_record.hpp" // reimplementation testing
 #include <string>
 #include <iostream>
 
