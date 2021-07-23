@@ -99,7 +99,6 @@ namespace active_record {
     };
 
     template<Container Result, Tuple BindAttrs>
-    requires std::derived_from<typename Result::value_type, model<typename Result::value_type>>
     struct query_relation<Result, BindAttrs> : public query_relation_common<BindAttrs> {
         using query_relation_common<BindAttrs>::query_relation_common;
         template<std::derived_from<adaptor> Adaptor>
@@ -129,29 +128,5 @@ namespace active_record {
         query_relation<Result, BindAttrs>& order_by(const active_record::order = active_record::order::asc) &&;
         template<Attribute Attr>
         query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc) const &;
-    };
-
-    template<Container Result, Tuple BindAttrs>
-    requires Tuple<typename Result::value_type>
-    struct query_relation<Result, BindAttrs> : public query_relation_common<BindAttrs> {
-        using query_relation_common<BindAttrs>::query_relation_common;
-        template<std::derived_from<adaptor> Adaptor>
-        decltype(auto) exec(Adaptor& adapt) const {
-            return adapt.exec(*this);
-        }
-
-        template<Attribute... Attrs>
-        query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> select();
-
-        template<Attribute Attr>
-        query_relation<std::vector<Attr>, BindAttrs> pluck();
-        
-        template<Attribute... Attrs>
-        query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>)>> where(const Attrs...);
-
-        query_relation<Result, BindAttrs> limit(const std::size_t);
-
-        template<Attribute Attr>
-        query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc);
     };
 }
