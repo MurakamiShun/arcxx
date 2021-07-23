@@ -111,6 +111,34 @@ namespace active_record {
     }
 
     template<typename Derived>
+    inline query_relation<aggregate_attribute<std::size_t>, std::tuple<>> model<Derived>::count() {
+        query_relation<aggregate_attribute<std::size_t>, std::tuple<>> ret;
+
+        ret.operation = query_operation::select;
+        ret.query_op_arg.push_back("count(*)");
+        ret.query_table.push_back(
+            active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\""
+        );
+        
+        return ret;  
+    }
+
+    template<typename Derived>
+    template<Attribute Attr>
+    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+    inline query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> model<Derived>::sum(){
+        query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> ret;
+
+        ret.operation = query_operation::select;
+        ret.query_op_arg.push_back("sum(" + detail::column_full_names_to_string<Attr>() +")");
+        ret.query_table.push_back(
+            active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\""
+        );
+        
+        return ret;  
+    }
+
+    template<typename Derived>
     template<std::derived_from<adaptor> Adaptor>
     inline active_record::string model<Derived>::schema::to_sql(bool create_if_not_exist) {
         const auto column_definitions = std::apply(

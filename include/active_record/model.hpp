@@ -10,8 +10,14 @@
 namespace active_record {
     struct void_model;
 
+    template<typename Value>
+    struct aggregate_attribute : public attribute<void_model, aggregate_attribute<Value>, Value>{
+        constexpr static auto column_name = "aggregation function()";
+        using attribute<void_model, aggregate_attribute<Value>, Value>::attribute;
+    };
+
     template<typename... T>
-    auto reference_tuple_to_ptr_tuple(std::tuple<T&...>){
+    auto reference_tuple_to_ptr_tuple([[maybe_unused]]std::tuple<T&...>){
         return std::tuple<const T*...>{};
     }
 
@@ -43,7 +49,7 @@ namespace active_record {
             table += ")";
             return table;
         }
-        
+
     public:
         struct schema {
             template<std::derived_from<adaptor> Adaptor>
@@ -126,6 +132,12 @@ namespace active_record {
         static query_relation<std::vector<Derived>, std::tuple<>> join(const Relation);
         template<typename Relation>
         static query_relation<std::vector<Derived>, std::tuple<>> join();
+
+        static query_relation<aggregate_attribute<std::size_t>, std::tuple<>> count();
+
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        static query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> sum();
     };
 
     template<typename T>

@@ -119,6 +119,12 @@ namespace active_record {
             );
             return ret;
         }
+        template<typename T>
+        T extract_column_data(sqlite3_stmt* stmt){
+            T ret;
+            set_column_data(stmt, 0, ret);
+            return ret;
+        }
 
         /* 
          * variable binders 

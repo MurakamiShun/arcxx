@@ -144,18 +144,28 @@ int main() {
     EnteringLog log;
     log.member_id = member;
 
-    std::cout << "\033[33m[execution] \033[m" << EnteringLog::join<EnteringLog::MemberID>().to_sql<active_record::sqlite3_adaptor>() << std::endl;
-    if(const auto [error, logs] = EnteringLog::join<EnteringLog::MemberID>().exec(con); error){
+    std::cout << "\033[33m[execution] \033[m" << EnteringLog::join<EnteringLog::MemberID>().select<EnteringLog::ID, Member::Name>().to_sql<active_record::sqlite3_adaptor>() << std::endl;
+    if(const auto [error, logs] = EnteringLog::join<EnteringLog::MemberID>().select<EnteringLog::ID, Member::Name>().exec(con); error){
         std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
     }
     else {
         std::cout << "\033[32m done! \033[m" << std::endl;
         for(const auto& log : logs){
-            std::cout << "id:" << log.id.to_string() << "\tname:" << log.member_id.to_string() << std::endl;
+            std::cout << "id:" << std::get<0>(log).to_string() << "\tname:" << std::get<1>(log).to_string() << std::endl;
         }
     }
     EnteringLog::insert(log).exec(con);
 
+
+    std::cout << "\033[33m[execution] \033[m" << Member::where(Member::ID{128}).count().to_sql<active_record::sqlite3_adaptor>() << std::endl;
+    
+    if(const auto [error, count] = Member::where(Member::ID{128} || Member::ID{123}).count().exec(con); error){
+        std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
+    }
+    else {
+        std::cout << "\033[32m done! \033[m" << std::endl;
+        std::cout << "member count:" << count.value() << std::endl;
+    }
 
     con.close();
     

@@ -128,5 +128,11 @@ namespace active_record {
         query_relation<Result, BindAttrs>& order_by(const active_record::order = active_record::order::asc) &&;
         template<Attribute Attr>
         query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc) const &;
+
+        query_relation<aggregate_attribute<std::size_t>, std::tuple<>> count() const;
+
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> sum() const;
     };
 }

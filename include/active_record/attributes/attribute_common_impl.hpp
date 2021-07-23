@@ -1,6 +1,6 @@
 #pragma once
 #include "../attribute.hpp"
-#include "../query.hpp"
+#include "../query_impl/query_condition.hpp"
 
 namespace active_record {
     template<typename Model, typename Attribute, typename Type>
@@ -116,6 +116,38 @@ namespace active_record {
             copy_and_set_attrs_to_condition(ret, values...);
             ret.condition.push_back(")");
             return ret;
+        }
+
+        query_condition<std::tuple<const Attribute*>> to_equ_condition() const {
+            query_condition<std::tuple<const Attribute*>> ret;
+            ret.condition.push_back(
+                active_record::string{ "\"" } + Model::table_name + "\".\""
+                + Attribute::column_name + "\" = "
+            );
+            ret.condition.push_back(0);
+            ret.condition.push_back(")");
+            ret.temporary_attrs.push_back(*this);
+            std::get<0>(ret.bind_attrs) = std::any_cast<const Attribute>(&(ret.temporary_attrs.back()));
+            return ret;
+        }
+
+        template<Tuple BindAttrs>
+        auto operator&&(query_condition<BindAttrs>&& cond) const {
+            return this->to_equ_condition() && cond;
+        }
+        template<Tuple BindAttrs>
+        auto operator||(query_condition<BindAttrs>&& cond) const {
+            return this->to_equ_condition() || cond;
+        }
+        template<typename Attr>
+        requires std::derived_from<Attr, attribute_common<typename Attr::model_type, typename Attr::attribute_type, typename Attr::value_type>>
+        auto operator&&(const Attr& attr) const {
+            return this->to_equ_condition() && attr.to_equ_condition();
+        }
+        template<typename Attr>
+        requires std::derived_from<Attr, attribute_common<typename Attr::model_type, typename Attr::attribute_type, typename Attr::value_type>>
+        auto operator||(const Attr& attr) const {
+            return this->to_equ_condition() || attr.to_equ_condition();
         }
     };
 }
