@@ -3,8 +3,6 @@
 #include <string>
 #include <iostream>
 
-struct EnteringLog;
-
 struct Member : public active_record::model<Member> {
     static constexpr auto table_name = "members_table";
     struct ID : public active_record::attributes::integer<Member, ID> {

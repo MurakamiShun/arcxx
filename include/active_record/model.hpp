@@ -140,6 +140,18 @@ namespace active_record {
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
         static query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> sum();
+
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        static query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> avg();
+
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        static query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> max();
+
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        static query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> min();
     };
 
     template<typename T>

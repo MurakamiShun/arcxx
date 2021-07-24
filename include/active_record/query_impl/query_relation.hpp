@@ -23,7 +23,7 @@ namespace active_record {
                 else {
                     return std::apply(
                         []<typename... Attrs>(const Attrs*... attrs){
-                            return std::array<active_record::string, std::tuple_size_v<decltype(bind_attrs)>>{ to_string<Adaptor>(*attrs)... };
+                            return std::array<active_record::string, std::tuple_size_v<BindAttrs>>{ active_record::to_string<Adaptor>(*attrs)... };
                         },
                         bind_attrs
                     )[idx];
@@ -135,10 +135,22 @@ namespace active_record {
         template<Attribute Attr>
         query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc) const &;
 
-        query_relation<aggregate_attribute<std::size_t>, std::tuple<>> count() const;
+        query_relation<aggregate_attribute<std::size_t>, BindAttrs> count() const;
 
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> sum() const;
+        query_relation<aggregate_attribute<typename Attr::value_type>, BindAttrs> sum() const;
+
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        query_relation<aggregate_attribute<typename Attr::value_type>, BindAttrs> avg() const;
+
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        query_relation<aggregate_attribute<typename Attr::value_type>, BindAttrs> max() const;
+
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        query_relation<aggregate_attribute<typename Attr::value_type>, BindAttrs> min() const;
     };
 }

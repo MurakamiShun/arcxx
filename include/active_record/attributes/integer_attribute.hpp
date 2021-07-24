@@ -36,17 +36,17 @@ namespace active_record {
         template<std::convertible_to<Integer> IntType>
         static constexpr query_condition<std::tuple<const Attribute*, const Attribute*>> between(const IntType value1, const IntType value2){
             query_condition<std::tuple<const Attribute*, const Attribute*>> ret;
-            ret.temporary_attrs.push_back(Attribute{ Integer{ value1 } });
+            ret.temporary_attrs.push_back(static_cast<Attribute>(value1));
             std::get<0>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
-            ret.temporary_attrs.push_back(Attribute{ Integer{ value2 } });
+            ret.temporary_attrs.push_back(static_cast<Attribute>(value2));
             std::get<1>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
             ret.condition.push_back(
                 active_record::string{ "\"" } + Model::table_name + "\".\""
                 + Attribute::column_name + "\" BETWEEN "
             );
-            ret.condition.push_back(0);
+            ret.condition.push_back(0UL);
             ret.condition.push_back(" AND ");
-            ret.condition.push_back(1);
+            ret.condition.push_back(1UL);
             return ret;
         }
     };

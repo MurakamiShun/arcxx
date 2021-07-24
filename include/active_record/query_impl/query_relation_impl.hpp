@@ -84,23 +84,54 @@ namespace active_record {
 
     template<Container Result, Tuple BindAttrs>
     template<Tuple SrcBindAttrs>
-    query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&&) &&{
+    query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) &&{
         query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> ret;
         
         ret.operation = query_operation::condition;
-        ret.query_op_arg = this->query_op_arg;
-        ret.query_table = this->query_table;
-        ret.query_condition = this->query_condition;
-        ret.query_options = this->query_options;
-        ret.temporary_attrs = this->temporary_attrs;
+        ret.query_op_arg = std::move(this->query_op_arg);
+        ret.query_table = std::move(this->query_table);
+        ret.query_condition = std::move(this->query_condition);
+        ret.query_condition.push_back(" AND ");
+        ret.query_condition.insert(
+            ret.query_condition.end(),
+            std::make_move_iterator(cond.condition.begin()),
+            std::make_move_iterator(cond.condition.end())
+        );
+        ret.query_options = std::move(this->query_options);
+        ret.temporary_attrs = std::move(this->temporary_attrs);
+        ret.temporary_attrs.insert(
+            ret.temporary_attrs.end(),
+            std::make_move_iterator(cond.temporary_attrs.begin()),
+            std::make_move_iterator(cond.temporary_attrs.end())
+        );
         detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
         return ret;
     }
     
     template<Container Result, Tuple BindAttrs>
     template<Tuple SrcBindAttrs>
-    query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&&) const&{
-
+    query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) const&{
+        query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> ret;
+        
+        ret.operation = query_operation::condition;
+        ret.query_op_arg = this->query_op_arg;
+        ret.query_table = this->query_table;
+        ret.query_condition = this->query_condition;
+        ret.query_condition.push_back(" AND ");
+        ret.query_condition.insert(
+            ret.query_condition.end(),
+            std::make_move_iterator(cond.condition.begin()),
+            std::make_move_iterator(cond.condition.end())
+        );
+        ret.query_options = this->query_options;
+        ret.temporary_attrs = this->temporary_attrs;
+        ret.temporary_attrs.insert(
+            ret.temporary_attrs.end(),
+            std::make_move_iterator(cond.temporary_attrs.begin()),
+            std::make_move_iterator(cond.temporary_attrs.end())
+        );
+        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        return ret;
     }
 
     template<Container Result, Tuple BindAttrs>
@@ -158,8 +189,8 @@ namespace active_record {
     }
 
     template<Container Result, Tuple BindAttrs>
-    query_relation<aggregate_attribute<std::size_t>, std::tuple<>> query_relation<Result, BindAttrs>::count() const {
-        query_relation<aggregate_attribute<std::size_t>, std::tuple<>> ret;
+    query_relation<aggregate_attribute<std::size_t>, BindAttrs> query_relation<Result, BindAttrs>::count() const {
+        query_relation<aggregate_attribute<std::size_t>, BindAttrs> ret;
 
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back("count(*)");
@@ -175,8 +206,8 @@ namespace active_record {
     template<Container Result, Tuple BindAttrs>
     template<Attribute Attr>
     requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-    query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> query_relation<Result, BindAttrs>::sum() const {
-        query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> ret;
+    query_relation<aggregate_attribute<typename Attr::value_type>, BindAttrs> query_relation<Result, BindAttrs>::sum() const {
+        query_relation<aggregate_attribute<typename Attr::value_type>, BindAttrs> ret;
 
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back("sum(" + detail::column_full_names_to_string<Attr>() +")");
