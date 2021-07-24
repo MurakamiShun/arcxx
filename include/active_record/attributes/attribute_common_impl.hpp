@@ -124,10 +124,9 @@ namespace active_record {
                 active_record::string{ "\"" } + Model::table_name + "\".\""
                 + Attribute::column_name + "\" = "
             );
-            ret.condition.push_back(0);
-            ret.condition.push_back(")");
-            ret.temporary_attrs.push_back(*this);
-            std::get<0>(ret.bind_attrs) = std::any_cast<const Attribute>(&(ret.temporary_attrs.back()));
+            ret.condition.push_back(0UL);
+            ret.temporary_attrs.push_back(*(dynamic_cast<const Attribute*>(this)));
+            std::get<0>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
             return ret;
         }
 

@@ -11,8 +11,8 @@ namespace active_record {
             OR
         };
         
-        template<Tuple DestBindAttrs>
-        query_condition<std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, DestBindAttrs>)>> concat_conditions(query_condition<DestBindAttrs>&& cond, const conjunction);
+        template<Tuple SrcBindAttrs>
+        query_condition<std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> concat_conditions(query_condition<SrcBindAttrs>&&, const conjunction);
     public:
         using str_or_bind = std::variant<active_record::string, std::size_t>;
         std::vector<str_or_bind> condition;
@@ -24,20 +24,20 @@ namespace active_record {
         }
 
         template<Tuple DestBindAttrs>
-        query_condition<std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, DestBindAttrs>)>> operator||(query_condition<DestBindAttrs>&& cond) && {
-            return concat_conditions(std::forward(cond), conjunction::OR);
+        auto operator&&(query_condition<DestBindAttrs>&& cond) && {
+            return concat_conditions(std::move(cond), conjunction::AND);
         }
         template<Tuple DestBindAttrs>
-        query_condition<std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, DestBindAttrs>)>> operator&&(query_condition<DestBindAttrs>&& cond) && {
-            return concat_conditions(std::forward(cond), conjunction::AND);
+        auto operator||(query_condition<DestBindAttrs>&& cond) && {
+            return concat_conditions(std::move(cond), conjunction::OR);
         }
 
         template<Attribute Attr>
-        auto operator&&(const Attr& cond){
+        auto operator&&(const Attr& cond) && {
             return this->operator&&(cond.to_equ_condition());
         }
         template<Attribute Attr>
-        auto operator||(const Attr& cond){
+        auto operator||(const Attr& cond) && {
             return this->operator||(cond.to_equ_condition());
         }
     };

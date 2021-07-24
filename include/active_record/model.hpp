@@ -120,8 +120,10 @@ namespace active_record {
         template<Attribute Attr>
         static query_relation<std::vector<Attr>, std::tuple<>> pluck();
         
-        template<Attribute... Attrs>
-        static query_relation<std::vector<Derived>, std::tuple<const Attrs*...>> where(const Attrs...);
+        template<Attribute Attr>
+        static query_relation<std::vector<Derived>, std::tuple<const Attr*>> where(const Attr&&);
+        template<Tuple SrcBindAttrs>
+        static query_relation<std::vector<Derived>, SrcBindAttrs> where(query_condition<SrcBindAttrs>&&);
 
         static query_relation<std::vector<Derived>, std::tuple<>> limit(const std::size_t);
 

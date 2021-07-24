@@ -4,6 +4,7 @@
 #include "../attribute.hpp"
 #include "../adaptor.hpp"
 #include "../utils.hpp"
+#include "query_condition.hpp"
 
 namespace active_record {
     template<Tuple BindAttrs>
@@ -116,10 +117,15 @@ namespace active_record {
         template<Attribute Attr>
         query_relation<std::vector<Attr>, BindAttrs> pluck() const &;
         
-        template<Attribute... Attrs>
-        query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>)>> where(const Attrs...) &&;
-        template<Attribute... Attrs>
-        query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>)>> where(const Attrs...) const &;
+        template<Attribute Attr>
+        query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> where(const Attr&&) &&;
+        template<Attribute Attr>
+        query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> where(const Attr&&) const &;
+
+        template<Tuple SrcBindAttrs>
+        query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
+        template<Tuple SrcBindAttrs>
+        query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const&;
 
         query_relation<Result, BindAttrs>& limit(const std::size_t) &&;
         query_relation<Result, BindAttrs> limit(const std::size_t) const &;

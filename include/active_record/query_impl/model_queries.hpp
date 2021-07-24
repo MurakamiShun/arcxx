@@ -46,14 +46,23 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<Attribute... Attrs>
-    inline query_relation<std::vector<Derived>, std::tuple<const Attrs*...>> model<Derived>::where(const Attrs... attrs) {
-        query_relation<std::vector<Derived>, std::tuple<const Attrs*...>> ret;
+    template<Attribute Attr>
+    inline query_relation<std::vector<Derived>, std::tuple<const Attr*>> model<Derived>::where(const Attr&& attr) {
+        return where(attr.to_equ_condition());
+    }
+
+    template<typename Derived>
+    template<Tuple SrcBindAttrs>
+    inline query_relation<std::vector<Derived>, SrcBindAttrs> model<Derived>::where(query_condition<SrcBindAttrs>&& cond) {
+        query_relation<std::vector<Derived>, SrcBindAttrs> ret;
         
         ret.operation = query_operation::condition;
         ret.query_op_arg.push_back(detail::model_column_full_names_to_string<Derived>());
         ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
-        detail::attributes_to_condition_string<0>(ret, attrs...);
+        ret.query_condition = std::move(cond.condition);
+        ret.temporary_attrs = std::move(cond.temporary_attrs);
+        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+
         return ret;
     }
 

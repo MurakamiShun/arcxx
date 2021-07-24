@@ -157,17 +157,18 @@ int main() {
     EnteringLog::insert(log).exec(con);
 
 
-    std::cout << "\033[33m[execution] \033[m" << Member::where(Member::ID{128}).count().to_sql<active_record::sqlite3_adaptor>() << std::endl;
+    std::cout << "\033[33m[execution] \033[m" << Member::where(Member::ID{123}).count().to_sql<active_record::sqlite3_adaptor>() << std::endl;
     
-    if(const auto [error, count] = Member::where(Member::ID{128} || Member::ID{123}).count().exec(con); error){
+    if(const auto [error, find_members] = Member::where(Member::ID{128} || Member::ID{123}).exec(con); error){
         std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
     }
     else {
         std::cout << "\033[32m done! \033[m" << std::endl;
-        std::cout << "member count:" << count.value() << std::endl;
+        for(const auto& m : find_members){
+            std::cout << "id:" << m.id.to_string() << "\tname:" << m.name.to_string() << std::endl;
+        }
     }
 
     con.close();
-    
     return 0;
 }
