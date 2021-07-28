@@ -33,11 +33,15 @@ jobs:
 
       - name: deploy
         working-directory: docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ls build/html/* -d -1 | xargs rm -rf
           make html
           cd build/html
           touch .nojekyll
+          git config --global user.name "github-actions"
+          git config --global user.email "<>"
           git add -A
           git commit -m "deploy documents by github-actions"
-          git push git@github.com:${GITHUB_REPOSITORY}.git main:gh-pages
+          git push
