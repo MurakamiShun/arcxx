@@ -10,12 +10,6 @@
 namespace active_record {
     struct void_model;
 
-    template<typename Value>
-    struct aggregate_attribute : public attribute<void_model, aggregate_attribute<Value>, Value>{
-        constexpr static auto column_name = "aggregation function()";
-        using attribute<void_model, aggregate_attribute<Value>, Value>::attribute;
-    };
-
     template<typename... T>
     auto reference_tuple_to_ptr_tuple([[maybe_unused]]std::tuple<T&...>){
         return std::tuple<const T*...>{};
@@ -119,7 +113,13 @@ namespace active_record {
         static query_relation<std::vector<Attr>, std::tuple<>> pluck(const Attr);
         template<Attribute Attr>
         static query_relation<std::vector<Attr>, std::tuple<>> pluck();
+
+        template<Attribute... Attrs>
+        static query_relation<std::size_t, std::tuple<const Attrs*...>> update(const Attrs...);
         
+        // delete is identifier word
+        static query_relation<std::size_t, std::tuple<>> destroy();
+
         template<Attribute Attr>
         static query_relation<std::vector<Derived>, std::tuple<const Attr*>> where(const Attr&&);
         template<Tuple SrcBindAttrs>
@@ -135,23 +135,23 @@ namespace active_record {
         template<typename Relation>
         static query_relation<std::vector<Derived>, std::tuple<>> join();
 
-        static query_relation<aggregate_attribute<std::size_t>, std::tuple<>> count();
+        static query_relation<std::size_t, std::tuple<>> count();
 
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        static query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> sum();
+        static query_relation<typename Attr::value_type, std::tuple<>> sum();
 
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        static query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> avg();
+        static query_relation<typename Attr::value_type, std::tuple<>> avg();
 
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        static query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> max();
+        static query_relation<typename Attr::value_type, std::tuple<>> max();
 
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        static query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> min();
+        static query_relation<typename Attr::value_type, std::tuple<>> min();
     };
 
     template<typename T>

@@ -89,9 +89,7 @@ namespace active_record {
         constexpr attribute_common(const Type& default_value) : data(default_value) {}
         constexpr attribute_common(Type&& default_value) : data(std::move(default_value)) {}
         constexpr virtual ~attribute_common() {}
-
-        static active_record::string column_statement_on_create_table(const adaptor&);
-        
+ 
         [[nodiscard]] constexpr bool is_valid() const {
             if constexpr (has_constraints) {
                 for (const auto& val : Attribute::constraints) {
@@ -103,7 +101,6 @@ namespace active_record {
         constexpr operator bool() const noexcept { return static_cast<bool>(data); }
         [[nodiscard]] const Type& value() const& { return data.value(); }
         [[nodiscard]] Type& value()& { return data.value(); }
-        [[nodiscard]] const Type&& value() const&& { return std::move(data.value()); }
         [[nodiscard]] Type&& value()&& { return std::move(data.value()); }
 
         template<std::convertible_to<Attribute>... Attrs>

@@ -188,36 +188,121 @@ namespace active_record {
         return ret;
     }
 
-    template<Container Result, Tuple BindAttrs>
-    query_relation<aggregate_attribute<std::size_t>, BindAttrs> query_relation<Result, BindAttrs>::count() const {
-        query_relation<aggregate_attribute<std::size_t>, BindAttrs> ret;
+    namespace detail {
+        template<typename T, typename Result, Tuple BindAttrs>
+        query_relation<T, BindAttrs> aggregate_query(const query_relation<Result, BindAttrs>& src, active_record::string&& aggregation_op) {
+            query_relation<T, BindAttrs> ret;
 
-        ret.operation = query_operation::select;
-        ret.query_op_arg.push_back("count(*)");
-        ret.query_table = this->query_table;
-        ret.query_condition = this->query_condition;
-        ret.temporary_attrs = this->temporary_attrs;
-        ret.query_options = this->query_options;
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
-        
-        return ret;  
+            ret.operation = query_operation::select;
+            ret.query_op_arg.push_back(std::move(aggregation_op));
+            ret.query_table = src.query_table;
+            ret.query_condition = src.query_condition;
+            ret.temporary_attrs = src.temporary_attrs;
+            ret.query_options = src.query_options;
+            set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+            
+            return ret;
+        }
+
+        template<typename T, typename Result, Tuple BindAttrs>
+        query_relation<T, BindAttrs> aggregate_query(query_relation<Result, BindAttrs>&& src, active_record::string&& aggregation_op) {
+            query_relation<T, BindAttrs> ret;
+
+            ret.operation = query_operation::select;
+            ret.query_op_arg.push_back(std::move(aggregation_op));
+            ret.query_table = std::move(src.query_table);
+            ret.query_condition = std::move(src.query_condition);
+            ret.temporary_attrs = std::move(src.temporary_attrs);
+            ret.query_options = std::move(src.query_options);
+            set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+            
+            return ret;
+        }
+    }
+
+    template<Container Result, Tuple BindAttrs>
+    query_relation<std::size_t, BindAttrs> query_relation<Result, BindAttrs>::count() && {
+        return detail::aggregate_query<std::size_t>(std::move(*this), "count(*)");
+    }
+    template<Container Result, Tuple BindAttrs>
+    query_relation<std::size_t, BindAttrs> query_relation<Result, BindAttrs>::count() const& {
+        return detail::aggregate_query<std::size_t>(*this, "count(*)");
     }
 
     template<Container Result, Tuple BindAttrs>
     template<Attribute Attr>
     requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-    query_relation<aggregate_attribute<typename Attr::value_type>, BindAttrs> query_relation<Result, BindAttrs>::sum() const {
-        query_relation<aggregate_attribute<typename Attr::value_type>, BindAttrs> ret;
+    query_relation<typename Attr::value_type, BindAttrs> query_relation<Result, BindAttrs>::sum() && {
+        return detail::aggregate_query<typename Attr::value_type>(
+            std::move(*this),
+            active_record::string{ "sum(" } + detail::column_full_names_to_string<Attr>() +")"
+        );
+    }
+    template<Container Result, Tuple BindAttrs>
+    template<Attribute Attr>
+    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+    query_relation<typename Attr::value_type, BindAttrs> query_relation<Result, BindAttrs>::sum() const& {
+        return detail::aggregate_query<typename Attr::value_type>(
+            *this,
+            active_record::string{ "sum(" } + detail::column_full_names_to_string<Attr>() +")"
+        );
+    }
 
-        ret.operation = query_operation::select;
-        ret.query_op_arg.push_back("sum(" + detail::column_full_names_to_string<Attr>() +")");
-        ret.query_table = this->query_table;
-        ret.query_condition = this->query_condition;
-        ret.temporary_attrs = this->temporary_attrs;
-        ret.query_options = this->query_options;
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
-        
-        return ret;  
+    template<Container Result, Tuple BindAttrs>
+    template<Attribute Attr>
+    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+    query_relation<typename Attr::value_type, BindAttrs> query_relation<Result, BindAttrs>::avg() && {
+        return detail::aggregate_query<typename Attr::value_type>(
+            std::move(*this),
+            active_record::string{ "avg(" } + detail::column_full_names_to_string<Attr>() +")"
+        );
+    }
+    template<Container Result, Tuple BindAttrs>
+    template<Attribute Attr>
+    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+    query_relation<typename Attr::value_type, BindAttrs> query_relation<Result, BindAttrs>::avg() const& {
+        return detail::aggregate_query<typename Attr::value_type>(
+            *this,
+            active_record::string{ "avg(" } + detail::column_full_names_to_string<Attr>() +")"
+        );
+    }
+
+    template<Container Result, Tuple BindAttrs>
+    template<Attribute Attr>
+    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+    query_relation<typename Attr::value_type, BindAttrs> query_relation<Result, BindAttrs>::max() && {
+        return detail::aggregate_query<typename Attr::value_type>(
+            std::move(*this),
+            active_record::string{ "max(" } + detail::column_full_names_to_string<Attr>() +")"
+        );
+    }
+    template<Container Result, Tuple BindAttrs>
+    template<Attribute Attr>
+    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+    query_relation<typename Attr::value_type, BindAttrs> query_relation<Result, BindAttrs>::max() const& {
+        return detail::aggregate_query<typename Attr::value_type>(
+            *this,
+            active_record::string{ "max(" } + detail::column_full_names_to_string<Attr>() +")"
+        );
+    }
+
+    template<Container Result, Tuple BindAttrs>
+    template<Attribute Attr>
+    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+    query_relation<typename Attr::value_type, BindAttrs> query_relation<Result, BindAttrs>::min() && {
+        return detail::aggregate_query<typename Attr::value_type>(
+            std::move(*this),
+            active_record::string{ "min(" } + detail::column_full_names_to_string<Attr>() +")"
+        );
+    }
+    template<Container Result, Tuple BindAttrs>
+    template<Attribute Attr>
+    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+    query_relation<typename Attr::value_type, BindAttrs> query_relation<Result, BindAttrs>::min() const& {
+        return detail::aggregate_query<typename Attr::value_type>(
+            *this,
+            active_record::string{ "min(" } + detail::column_full_names_to_string<Attr>() +")"
+        );
     }
 
     /*

@@ -30,6 +30,23 @@ namespace active_record {
         void from_string(const active_record::string_view str) {
             active_record::from_string<Adaptor>(*dynamic_cast<Attribute*>(this), str);
         }
+
+        template<std::convertible_to<FP> ArgType1, std::convertible_to<FP> ArgType2>
+        static auto between(const ArgType1 value1, const ArgType2 value2){
+            query_condition<std::tuple<const Attribute*, const Attribute*>> ret;
+            ret.temporary_attrs.push_back(static_cast<Attribute>(value1));
+            std::get<0>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
+            ret.temporary_attrs.push_back(static_cast<Attribute>(value2));
+            std::get<1>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
+            ret.condition.push_back(
+                active_record::string{ "\"" } + Model::table_name + "\".\""
+                + Attribute::column_name + "\" BETWEEN "
+            );
+            ret.condition.push_back(0UL);
+            ret.condition.push_back(" AND ");
+            ret.condition.push_back(1UL);
+            return ret;
+        }
     };
 
     namespace attributes {

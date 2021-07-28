@@ -25,20 +25,6 @@ namespace active_record::detail {
         }
         return columns;
     }
-    
-    template<std::size_t I, typename Query, Attribute Attr>
-    void attributes_to_condition_string(Query& query, const Attr& attr){
-        if (!query.query_condition.empty()) query.query_condition.push_back(" AND ");
-        query.temporary_attrs.push_back(attr);
-        std::get<I>(query.bind_attrs) = std::any_cast<Attr>(&query.temporary_attrs.back());
-        query.query_condition.push_back(detail::column_full_names_to_string<Attr>() + " = ");
-        query.query_condition.push_back(I);
-    }
-    template<std::size_t I, typename Query, Attribute Head, Attribute... Tail>
-    void attributes_to_condition_string(Query& query, const Head& head, const Tail&... tail){
-        attributes_to_condition_string<I>(query, head);
-        attributes_to_condition_string<I + 1>(query, tail...);
-    }
 
     template<std::size_t I, typename BindAttr>
     void set_bind_attrs_ptr(BindAttr& bind_attrs, const std::vector<std::any>& temp_attr){

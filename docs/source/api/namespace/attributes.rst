@@ -1,8 +1,13 @@
-attributes
-==========
+=========================
+active_record::attributes
+=========================
 
-Objects
--------
+.. toctree::
+   :maxdepth: 1
+   :caption: Attributes
+   :glob:
+
+   attributes/*
 
 .. list-table::
 

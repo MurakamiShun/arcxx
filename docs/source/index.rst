@@ -20,8 +20,8 @@ Active Record C++ Documentation
    /tutorial/table_creation
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: api
+   :glob:
 
-   /namespaces/active_record
-   /namespaces/attributes
+   api/namespace/*

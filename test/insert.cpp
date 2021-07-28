@@ -60,8 +60,18 @@ int main(){
         assert(!error);
     }
     else{
-        std::cout << "User count:" << count.value() << std::endl;
-        assert(count.value() == 10);
+        std::cout << "User count:" << count << std::endl;
+        assert(count == 10);
+    }
+
+    std::cout << User::sum<User::ID>().to_sql() << std::endl;
+    if(const auto [error, total] = User::sum<User::ID>().exec(connection); error){
+        std::cout << "Error:" << error.value() << std::endl;
+        assert(!error);
+    }
+    else{
+        std::cout << "User sum(id):" << total << std::endl;
+        assert(total == 45);
     }
 
 
@@ -71,8 +81,8 @@ int main(){
         assert(!error);
     }
     else{
-        std::cout << "User count:" << count.value() << std::endl;
-        assert(count.value() == 5);
+        std::cout << "User count:" << count << std::endl;
+        assert(count == 5);
     }
     
     return 0;

@@ -95,6 +95,29 @@ namespace active_record {
                 return false;
             }
         }
+        template<typename T>
+        requires (!Attribute<T>)
+        bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, T& attr){
+            const auto type = sqlite3_column_type(stmt, idx);
+            if constexpr(std::is_floating_point_v<T>){
+                if(type == SQLITE_FLOAT) {
+                    attr = sqlite3_column_double(stmt, idx);
+                    return true;
+                }
+            }
+            else if constexpr(std::is_integral_v<T>){
+                if(type == SQLITE_INTEGER) {
+                    if constexpr(sizeof(T) == sizeof(int64_t)){
+                        attr = sqlite3_column_int64(stmt, idx);
+                    }
+                    else{
+                        attr = sqlite3_column_int(stmt, idx);
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
 
         template<typename T>
         requires std::derived_from<T, model<T>>

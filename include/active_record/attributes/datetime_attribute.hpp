@@ -21,6 +21,9 @@ namespace active_record {
     struct attribute<Model, Attribute, active_record::datetime> : public attribute_common<Model, Attribute, active_record::datetime> {
         using attribute_common<Model, Attribute, active_record::datetime>::attribute_common;
 
+        // gcc-11 has not implemented utc_clock yet
+        //inline static const attribute_common<Model, Attribute, active_record::datetime>::constraint timestamp = [](const std::optional<active_record::datetime>& t) constexpr { return static_cast<bool>(t); };
+
         template<std::derived_from<adaptor> Adaptor = common_adaptor>
         [[nodiscard]] constexpr active_record::string to_string() const {
             return active_record::to_string<Adaptor>(*dynamic_cast<const Attribute*>(this));

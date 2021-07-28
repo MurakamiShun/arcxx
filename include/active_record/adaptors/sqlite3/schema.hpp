@@ -70,4 +70,19 @@ namespace active_record::sqlite3 {
                 : "")
             + detail::reference_definition<T>();
     }
+
+    template<Attribute T>
+    requires std::same_as<typename T::value_type, active_record::datetime>
+    active_record::string column_definition() {
+        return active_record::string{ T::column_name }
+            + active_record::string{ " TEXT CHECK(" } + active_record::string{ T::column_name } + " LIKE '____-__-__ __:__:__')"
+            + (T::has_constraint(T::unique) ? " UNIQUE" : "")
+            + (T::has_constraint(T::primary_key) ? " PRIMARY KEY" : "")
+            + (T::has_constraint(T::not_null) ? " NOT NULL" : "")
+            + (T::has_constraint(typename T::constraint_default_value_impl{}) ?
+                active_record::string{ (T::has_constraint(T::not_null) ? " ON CONFLICT REPLACE" : "") } + " DEFAULT "
+                + std::to_string(T::get_constraint(typename T::constraint_default_value_impl{})->template target<typename T::constraint_default_value_impl>()->default_value)
+                : "")
+            + detail::reference_definition<T>();
+    }
 }

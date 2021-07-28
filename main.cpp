@@ -38,7 +38,6 @@ int main() {
     Member::Name name = "test";
     Member member;
     member.id = 123;
-    member.name = "nkodice";
 
     std::array<Member, 4> members;
     members[0].name = "satou";

@@ -45,6 +45,41 @@ namespace active_record {
         return model<Derived>::pluck<Attr>();
     }
 
+    namespace detail {
+        template<std::size_t N, typename Query, Attribute Last>
+        void set_update_op_args(Query& query, Last&& last) {
+            query.query_op_arg.push_back(column_full_names_to_string<Last>());
+            query.temporary_attrs.push_back(std::move(last));
+            std::get<N>(query.bind_attrs) = std::any_cast<const Last>(&query.temporary_attrs.back());
+        }
+        template<std::size_t N, typename Query, Attribute Head, Attribute... Tails>
+        void set_update_op_args(Query& query, Head&& head, Tails&&... tails) {
+            set_update_op_args<N>(query, std::move(head));
+            query.query_op_arg.push_back(",");
+            set_update_op_args<N + 1>(query, std::move(tails)...);
+        }
+    }
+
+    template<typename Derived>
+    template<Attribute... Attrs>
+    inline query_relation<std::size_t, std::tuple<const Attrs*...>> model<Derived>::update(const Attrs... attrs) {
+        query_relation<std::size_t, std::tuple<const Attrs*...>> ret;
+
+        ret.operation = query_operation::update;
+        ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
+        detail::set_update_op_args<0>(ret, std::move(attrs)...);
+        return ret;
+    }
+    
+    template<typename Derived>
+    inline query_relation<std::size_t, std::tuple<>> model<Derived>::destroy() {
+        query_relation<std::size_t, std::tuple<>> ret;
+
+        ret.operation = query_operation::destroy;
+        ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
+        return ret;
+    }
+
     template<typename Derived>
     template<Attribute Attr>
     inline query_relation<std::vector<Derived>, std::tuple<const Attr*>> model<Derived>::where(const Attr&& attr) {
@@ -120,8 +155,8 @@ namespace active_record {
     }
 
     template<typename Derived>
-    inline query_relation<aggregate_attribute<std::size_t>, std::tuple<>> model<Derived>::count() {
-        query_relation<aggregate_attribute<std::size_t>, std::tuple<>> ret;
+    inline query_relation<std::size_t, std::tuple<>> model<Derived>::count() {
+        query_relation<std::size_t, std::tuple<>> ret;
 
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back("count(*)");
@@ -135,11 +170,56 @@ namespace active_record {
     template<typename Derived>
     template<Attribute Attr>
     requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-    inline query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> model<Derived>::sum(){
-        query_relation<aggregate_attribute<typename Attr::value_type>, std::tuple<>> ret;
+    inline query_relation<typename Attr::value_type, std::tuple<>> model<Derived>::sum(){
+        query_relation<typename Attr::value_type, std::tuple<>> ret;
 
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back("sum(" + detail::column_full_names_to_string<Attr>() +")");
+        ret.query_table.push_back(
+            active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\""
+        );
+        
+        return ret;  
+    }
+
+    template<typename Derived>
+    template<Attribute Attr>
+    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+    inline query_relation<typename Attr::value_type, std::tuple<>> model<Derived>::avg(){
+        query_relation<typename Attr::value_type, std::tuple<>> ret;
+
+        ret.operation = query_operation::select;
+        ret.query_op_arg.push_back("avg(" + detail::column_full_names_to_string<Attr>() +")");
+        ret.query_table.push_back(
+            active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\""
+        );
+        
+        return ret;  
+    }
+
+    template<typename Derived>
+    template<Attribute Attr>
+    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+    inline query_relation<typename Attr::value_type, std::tuple<>> model<Derived>::max(){
+        query_relation<typename Attr::value_type, std::tuple<>> ret;
+
+        ret.operation = query_operation::select;
+        ret.query_op_arg.push_back("max(" + detail::column_full_names_to_string<Attr>() +")");
+        ret.query_table.push_back(
+            active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\""
+        );
+        
+        return ret;  
+    }
+
+    template<typename Derived>
+    template<Attribute Attr>
+    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+    inline query_relation<typename Attr::value_type, std::tuple<>> model<Derived>::min(){
+        query_relation<typename Attr::value_type, std::tuple<>> ret;
+
+        ret.operation = query_operation::select;
+        ret.query_op_arg.push_back("min(" + detail::column_full_names_to_string<Attr>() +")");
         ret.query_table.push_back(
             active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\""
         );
