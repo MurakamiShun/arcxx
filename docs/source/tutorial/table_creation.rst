@@ -1,6 +1,6 @@
-##############
+==============
 Table Creation
-##############
+==============
 
 
 Table Definition
@@ -47,7 +47,7 @@ base classes, "active_record::model" and "active_record::attribute" are using CR
         std::tuple<ID&, Name&> attributes = std::tie(id, name);
     };
 
-Attribute details are wirtten in :doc:`/namespaces/attributes`.
+Attribute details are wirtten in :doc:`/api/attributes`.
 
 Table Creation
 ==============

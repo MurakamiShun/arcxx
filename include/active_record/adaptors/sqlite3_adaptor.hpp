@@ -383,4 +383,8 @@ namespace active_record {
             return active_record::sqlite3::column_definition<T>();
         }
     };
+
+    namespace sqlite3 {
+        using adaptor = sqlite3_adaptor;
+    }
 }

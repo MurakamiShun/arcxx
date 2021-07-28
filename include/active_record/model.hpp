@@ -59,8 +59,6 @@ namespace active_record {
             );
         }
 
-        constexpr virtual ~model() {}
-
         static auto insert(const Derived& model) {
             query_relation<bool, decltype(reference_tuple_to_ptr_tuple(model.attributes))> ret;
             ret.operation = query_operation::insert;

@@ -1,30 +1,33 @@
-=========================
-active_record::attributes
-=========================
+===================================
+namespace active_record::attributes
+===================================
 
 .. toctree::
    :maxdepth: 1
-   :caption: Attributes
+   :hidden:
    :glob:
 
-   attributes/*
+   /api/attributes/*
+
+Attributes
+==========
 
 .. list-table::
 
-   * - `active_record::attributes::string`
+   * - :doc:`/api/attributes/string`
      - String attribute.
 
-   * - `active_record::attributes::integer`
+   * - :doc:`/api/attributes/integer`
      - Integer attribute. (default is `int32_t`)
 
-   * - `active_record::attributes::decimal`
+   * - :doc:`/api/attributes/decimal`
      - Decimal attribute. (default is `float`)
 
-   * - `active_record::attributes::boolean`
+   * - :doc:`/api/attributes/boolean`
      - boolean attribute.
 
-   * - `active_record::attributes::datetime`
+   * - :doc:`/api/attributes/datetime`
      - Datetime attribute. The value type is `std::utc_clock`.
 
-   * - `active_record::attributes::binary`
+   * - :doc:`/api/attributes/binary`
      - Datetime attribute. The value type is `std::vector<std::byte>`.
