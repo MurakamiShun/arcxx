@@ -10,7 +10,7 @@ namespace active_record
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: namesapces
 
    /api/namespace/attributes
