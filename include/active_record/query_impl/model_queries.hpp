@@ -132,26 +132,74 @@ namespace active_record {
         return ret;   
     }
 
+    namespace detail {
+        template<Model ReferModel>
+        struct get_reference_attr{
+            template<Attribute Attr>
+            requires std::same_as<typename Attr::foreign_key_type::model_type, ReferModel>
+            auto operator()([[maybe_unused]]std::tuple<Attr&>) {
+                return Attr{};
+            }
+            template<Attribute Attr>
+            auto operator()([[maybe_unused]]std::tuple<Attr&>) {
+                return std::false_type{};
+            }
+            template<Attribute Head, Attribute... Tail>
+            auto operator()([[maybe_unused]]std::tuple<Head&, Tail&...>) {
+                using head_type = std::invoke_result_t<get_reference_attr<ReferModel>, std::tuple<Head&>>;
+                if constexpr(std::is_same_v<head_type, std::false_type>) {
+                    using tail_type = std::invoke_result_t<get_reference_attr<ReferModel>, std::tuple<Tail&...>>;
+                    return tail_type{};
+                }
+                else {
+                    return head_type{};
+                }
+            }
+        };
+    }
+
     template<typename Derived>
-    template<typename Relation>
+    template<typename ReferModel>
+    requires std::derived_from<ReferModel, model<ReferModel>>
     inline query_relation<std::vector<Derived>, std::tuple<>> model<Derived>::join() {
         query_relation<std::vector<Derived>, std::tuple<>> ret;
+
+        using ReferenceAttribute = std::invoke_result_t<detail::get_reference_attr<ReferModel>, decltype(Derived{}.attributes)>;
+
+        static_assert(!std::is_same_v<ReferenceAttribute, std::false_type>, "Derived model does not have reference to given model");
         
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::model_column_full_names_to_string<Derived>());
         ret.query_table.push_back(
             active_record::string{ "\"" } + active_record::string{ Derived::table_name }
-            + "\" JOIN \"" + active_record::string{ Relation::foreign_key_type::model_type::table_name }
-            + "\" ON " + detail::column_full_names_to_string<typename Relation::foreign_key_type>()
-            + " = " + detail::column_full_names_to_string<Relation>()
+            + "\" INNER JOIN \"" + active_record::string{ ReferenceAttribute::foreign_key_type::model_type::table_name }
+            + "\" ON " + detail::column_full_names_to_string<typename ReferenceAttribute::foreign_key_type>()
+            + " = " + detail::column_full_names_to_string<ReferenceAttribute>()
         );
         
         return ret;  
     }
+
     template<typename Derived>
-    template<typename Relation>
-    inline query_relation<std::vector<Derived>, std::tuple<>> model<Derived>::join([[maybe_unused]]const Relation) {
-        return model<Derived>::join<Relation>();
+    template<typename ReferModel>
+    requires std::derived_from<ReferModel, model<ReferModel>>
+    inline query_relation<std::vector<Derived>, std::tuple<>> model<Derived>::left_join() {
+        query_relation<std::vector<Derived>, std::tuple<>> ret;
+
+        using ReferenceAttribute = std::invoke_result_t<detail::get_reference_attr<ReferModel>, decltype(Derived{}.attributes)>;
+
+        static_assert(!std::is_same_v<ReferenceAttribute, std::false_type>, "Derived model does not have reference to given model");
+        
+        ret.operation = query_operation::select;
+        ret.query_op_arg.push_back(detail::model_column_full_names_to_string<Derived>());
+        ret.query_table.push_back(
+            active_record::string{ "\"" } + active_record::string{ Derived::table_name }
+            + "\" LEFT OUTER JOIN \"" + active_record::string{ ReferenceAttribute::foreign_key_type::model_type::table_name }
+            + "\" ON " + detail::column_full_names_to_string<typename ReferenceAttribute::foreign_key_type>()
+            + " = " + detail::column_full_names_to_string<ReferenceAttribute>()
+        );
+        
+        return ret;  
     }
 
     template<typename Derived>

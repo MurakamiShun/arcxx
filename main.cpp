@@ -26,8 +26,8 @@ struct EnteringLog : public active_record::model<EnteringLog> {
         static constexpr auto column_name = "id";
         inline static const auto constraints = { primary_key };
     } id;
-    struct MemberID : public active_record::relation::reference_to<EnteringLog, MemberID, Member::ID> {
-        using active_record::relation::reference_to<EnteringLog, MemberID, Member::ID>::reference_to;
+    struct MemberID : public active_record::attributes::reference_to<EnteringLog, MemberID, Member::ID> {
+        using active_record::attributes::reference_to<EnteringLog, MemberID, Member::ID>::reference_to;
         static constexpr auto column_name = "member_id";
     } member_id;
     std::tuple<ID&, MemberID&> attributes = std::tie(id, member_id);
@@ -141,8 +141,8 @@ int main() {
     EnteringLog log;
     log.member_id = member;
 
-    std::cout << "\033[33m[execution] \033[m" << EnteringLog::join<EnteringLog::MemberID>().select<EnteringLog::ID, Member::Name>().to_sql<active_record::sqlite3_adaptor>() << std::endl;
-    if(const auto [error, logs] = EnteringLog::join<EnteringLog::MemberID>().select<EnteringLog::ID, Member::Name>().exec(con); error){
+    std::cout << "\033[33m[execution] \033[m" << EnteringLog::join<Member>().select<EnteringLog::ID, Member::Name>().to_sql<active_record::sqlite3_adaptor>() << std::endl;
+    if(const auto [error, logs] = EnteringLog::join<Member>().select<EnteringLog::ID, Member::Name>().exec(con); error){
         std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
     }
     else {

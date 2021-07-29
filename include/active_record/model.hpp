@@ -8,8 +8,6 @@
 #include "attribute.hpp"
 
 namespace active_record {
-    struct void_model;
-
     template<typename... T>
     auto reference_tuple_to_ptr_tuple([[maybe_unused]]std::tuple<T&...>){
         return std::tuple<const T*...>{};
@@ -128,10 +126,13 @@ namespace active_record {
         template<Attribute Attr>
         static query_relation<std::vector<Derived>, std::tuple<>> order_by(const active_record::order = active_record::order::asc);
 
-        template<typename Relation>
-        static query_relation<std::vector<Derived>, std::tuple<>> join(const Relation);
-        template<typename Relation>
+        template<typename ReferModel>
+        requires std::derived_from<ReferModel, model<ReferModel>>
         static query_relation<std::vector<Derived>, std::tuple<>> join();
+
+        template<typename ReferModel>
+        requires std::derived_from<ReferModel, model<ReferModel>>
+        static query_relation<std::vector<Derived>, std::tuple<>> left_join();
 
         static query_relation<std::size_t, std::tuple<>> count();
 
