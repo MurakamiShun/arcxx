@@ -96,20 +96,24 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">namespace</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api/namespace/active_record.html">namespace active_record</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/namespace/attributes.html">namespace active_record::attributes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/namespace/sqlite3.html">namespace active_record::sqlite3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/active_record.html">namespace active_record</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/active_record/attributes.html">namespace active_record::attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/active_record/sqlite3.html">namespace active_record::sqlite3</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">class</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/active_record/model.html">active_record::model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/attributes/binary.html">active_record::attributes::binary</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/attributes/boolean.html">active_record::attributes::boolean</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/attributes/datetime.html">active_record::attributes::datetime</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/attributes/decimal.html">active_record::attributes::decimal</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/attributes/integer.html">active_record::attributes::integer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/attributes/reference_to.html">active_record::attributes::reference_to</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/attributes/string.html">active_record::attributes::string</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/active_record/query_condition.html">active_record::query_condition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/active_record/query_relation.html">active_record::query_relation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/active_record/attributes/binary.html">active_record::attributes::binary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/active_record/attributes/boolean.html">active_record::attributes::boolean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/active_record/attributes/datetime.html">active_record::attributes::datetime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/active_record/attributes/decimal.html">active_record::attributes::decimal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/active_record/attributes/integer.html">active_record::attributes::integer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/active_record/attributes/reference_to.html">active_record::attributes::reference_to</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/active_record/attributes/string.html">active_record::attributes::string</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/adaptors/postgresql_adaptor.html">[WIP] active_record::postgresql_adaptor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/adaptors/sqlite3_adaptor.html">active_record::sqlite3_adaptor</a></li>
 </ul>
 
             
@@ -185,13 +189,15 @@
  | <a href="#I"><strong>I</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#P"><strong>P</strong></a>
+ | <a href="#Q"><strong>Q</strong></a>
+ | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  
 </div>
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/namespace/sqlite3.html#_CPPv4N13active_record7sqlite37adaptorE">active_record::sqlite3::adaptor (C++ struct)</a>
+      <li><a href="api/active_record/sqlite3.html#_CPPv4N13active_record7sqlite37adaptorE">active_record::sqlite3::adaptor (C++ struct)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -199,55 +205,55 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/attributes/binary.html#_CPPv4I00E6binary">binary (C++ struct)</a>
+      <li><a href="api/active_record/attributes/binary.html#_CPPv4I00E6binary">binary (C++ struct)</a>
 </li>
-      <li><a href="api/attributes/binary.html#_CPPv4N6binary7betweenEv">binary::between (C++ function)</a>
+      <li><a href="api/active_record/attributes/binary.html#_CPPv4N6binary7betweenEv">binary::between (C++ function)</a>
 </li>
-      <li><a href="api/attributes/binary.html#_CPPv4N6binary6binaryEv">binary::binary (C++ function)</a>
+      <li><a href="api/active_record/attributes/binary.html#_CPPv4N6binary6binaryEv">binary::binary (C++ function)</a>
 </li>
-      <li><a href="api/attributes/binary.html#_CPPv4N6binary11from_stringEv">binary::from_string (C++ function)</a>
+      <li><a href="api/active_record/attributes/binary.html#_CPPv4N6binary11from_stringEv">binary::from_string (C++ function)</a>
 </li>
-      <li><a href="api/attributes/binary.html#_CPPv4N6binary2inEv">binary::in (C++ function)</a>
+      <li><a href="api/active_record/attributes/binary.html#_CPPv4N6binary2inEv">binary::in (C++ function)</a>
 </li>
-      <li><a href="api/attributes/binary.html#_CPPv4N6binarycvbEv">binary::operator bool (C++ function)</a>
+      <li><a href="api/active_record/attributes/binary.html#_CPPv4N6binarycvbEv">binary::operator bool (C++ function)</a>
 </li>
-      <li><a href="api/attributes/binary.html#_CPPv4N6binaryaaEv">binary::operator&amp;&amp; (C++ function)</a>
+      <li><a href="api/active_record/attributes/binary.html#_CPPv4N6binaryaaEv">binary::operator&amp;&amp; (C++ function)</a>
 </li>
-      <li><a href="api/attributes/binary.html#_CPPv4N6binaryaSEv">binary::operator= (C++ function)</a>
+      <li><a href="api/active_record/attributes/binary.html#_CPPv4N6binaryaSEv">binary::operator= (C++ function)</a>
 </li>
-      <li><a href="api/attributes/binary.html#_CPPv4N6binaryooEv">binary::operator|| (C++ function)</a>
+      <li><a href="api/active_record/attributes/binary.html#_CPPv4N6binaryooEv">binary::operator|| (C++ function)</a>
 </li>
-      <li><a href="api/attributes/binary.html#_CPPv4N6binary9to_stringEv">binary::to_string (C++ function)</a>
+      <li><a href="api/active_record/attributes/binary.html#_CPPv4N6binary9to_stringEv">binary::to_string (C++ function)</a>
 </li>
-      <li><a href="api/attributes/binary.html#_CPPv4N6binary5valueEv">binary::value (C++ function)</a>
+      <li><a href="api/active_record/attributes/binary.html#_CPPv4N6binary5valueEv">binary::value (C++ function)</a>
 </li>
-      <li><a href="api/attributes/binary.html#_CPPv4N6binaryD0Ev">binary::~binary (C++ function)</a>
+      <li><a href="api/active_record/attributes/binary.html#_CPPv4N6binaryD0Ev">binary::~binary (C++ function)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/attributes/boolean.html#_CPPv4I00E7boolean">boolean (C++ struct)</a>
+      <li><a href="api/active_record/attributes/boolean.html#_CPPv4I00E7boolean">boolean (C++ struct)</a>
 </li>
-      <li><a href="api/attributes/boolean.html#_CPPv4N7boolean7betweenEv">boolean::between (C++ function)</a>
+      <li><a href="api/active_record/attributes/boolean.html#_CPPv4N7boolean7betweenEv">boolean::between (C++ function)</a>
 </li>
-      <li><a href="api/attributes/boolean.html#_CPPv4N7boolean7booleanEv">boolean::boolean (C++ function)</a>
+      <li><a href="api/active_record/attributes/boolean.html#_CPPv4N7boolean7booleanEv">boolean::boolean (C++ function)</a>
 </li>
-      <li><a href="api/attributes/boolean.html#_CPPv4N7boolean11from_stringEv">boolean::from_string (C++ function)</a>
+      <li><a href="api/active_record/attributes/boolean.html#_CPPv4N7boolean11from_stringEv">boolean::from_string (C++ function)</a>
 </li>
-      <li><a href="api/attributes/boolean.html#_CPPv4N7boolean2inEv">boolean::in (C++ function)</a>
+      <li><a href="api/active_record/attributes/boolean.html#_CPPv4N7boolean2inEv">boolean::in (C++ function)</a>
 </li>
-      <li><a href="api/attributes/boolean.html#_CPPv4N7booleancvbEv">boolean::operator bool (C++ function)</a>
+      <li><a href="api/active_record/attributes/boolean.html#_CPPv4N7booleancvbEv">boolean::operator bool (C++ function)</a>
 </li>
-      <li><a href="api/attributes/boolean.html#_CPPv4N7booleanaaEv">boolean::operator&amp;&amp; (C++ function)</a>
+      <li><a href="api/active_record/attributes/boolean.html#_CPPv4N7booleanaaEv">boolean::operator&amp;&amp; (C++ function)</a>
 </li>
-      <li><a href="api/attributes/boolean.html#_CPPv4N7booleanaSEv">boolean::operator= (C++ function)</a>
+      <li><a href="api/active_record/attributes/boolean.html#_CPPv4N7booleanaSEv">boolean::operator= (C++ function)</a>
 </li>
-      <li><a href="api/attributes/boolean.html#_CPPv4N7booleanooEv">boolean::operator|| (C++ function)</a>
+      <li><a href="api/active_record/attributes/boolean.html#_CPPv4N7booleanooEv">boolean::operator|| (C++ function)</a>
 </li>
-      <li><a href="api/attributes/boolean.html#_CPPv4N7boolean9to_stringEv">boolean::to_string (C++ function)</a>
+      <li><a href="api/active_record/attributes/boolean.html#_CPPv4N7boolean9to_stringEv">boolean::to_string (C++ function)</a>
 </li>
-      <li><a href="api/attributes/boolean.html#_CPPv4N7boolean5valueEv">boolean::value (C++ function)</a>
+      <li><a href="api/active_record/attributes/boolean.html#_CPPv4N7boolean5valueEv">boolean::value (C++ function)</a>
 </li>
-      <li><a href="api/attributes/boolean.html#_CPPv4N7booleanD0Ev">boolean::~boolean (C++ function)</a>
+      <li><a href="api/active_record/attributes/boolean.html#_CPPv4N7booleanD0Ev">boolean::~boolean (C++ function)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -255,55 +261,55 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/attributes/datetime.html#_CPPv4I00E8datetime">datetime (C++ struct)</a>
+      <li><a href="api/active_record/attributes/datetime.html#_CPPv4I00E8datetime">datetime (C++ struct)</a>
 </li>
-      <li><a href="api/attributes/datetime.html#_CPPv4N8datetime7betweenEv">datetime::between (C++ function)</a>
+      <li><a href="api/active_record/attributes/datetime.html#_CPPv4N8datetime7betweenEv">datetime::between (C++ function)</a>
 </li>
-      <li><a href="api/attributes/datetime.html#_CPPv4N8datetime8datetimeEv">datetime::datetime (C++ function)</a>
+      <li><a href="api/active_record/attributes/datetime.html#_CPPv4N8datetime8datetimeEv">datetime::datetime (C++ function)</a>
 </li>
-      <li><a href="api/attributes/datetime.html#_CPPv4N8datetime11from_stringEv">datetime::from_string (C++ function)</a>
+      <li><a href="api/active_record/attributes/datetime.html#_CPPv4N8datetime11from_stringEv">datetime::from_string (C++ function)</a>
 </li>
-      <li><a href="api/attributes/datetime.html#_CPPv4N8datetime2inEv">datetime::in (C++ function)</a>
+      <li><a href="api/active_record/attributes/datetime.html#_CPPv4N8datetime2inEv">datetime::in (C++ function)</a>
 </li>
-      <li><a href="api/attributes/datetime.html#_CPPv4N8datetimecvbEv">datetime::operator bool (C++ function)</a>
+      <li><a href="api/active_record/attributes/datetime.html#_CPPv4N8datetimecvbEv">datetime::operator bool (C++ function)</a>
 </li>
-      <li><a href="api/attributes/datetime.html#_CPPv4N8datetimeaaEv">datetime::operator&amp;&amp; (C++ function)</a>
+      <li><a href="api/active_record/attributes/datetime.html#_CPPv4N8datetimeaaEv">datetime::operator&amp;&amp; (C++ function)</a>
 </li>
-      <li><a href="api/attributes/datetime.html#_CPPv4N8datetimeaSEv">datetime::operator= (C++ function)</a>
+      <li><a href="api/active_record/attributes/datetime.html#_CPPv4N8datetimeaSEv">datetime::operator= (C++ function)</a>
 </li>
-      <li><a href="api/attributes/datetime.html#_CPPv4N8datetimeooEv">datetime::operator|| (C++ function)</a>
+      <li><a href="api/active_record/attributes/datetime.html#_CPPv4N8datetimeooEv">datetime::operator|| (C++ function)</a>
 </li>
-      <li><a href="api/attributes/datetime.html#_CPPv4N8datetime9to_stringEv">datetime::to_string (C++ function)</a>
+      <li><a href="api/active_record/attributes/datetime.html#_CPPv4N8datetime9to_stringEv">datetime::to_string (C++ function)</a>
 </li>
-      <li><a href="api/attributes/datetime.html#_CPPv4N8datetime5valueEv">datetime::value (C++ function)</a>
+      <li><a href="api/active_record/attributes/datetime.html#_CPPv4N8datetime5valueEv">datetime::value (C++ function)</a>
 </li>
-      <li><a href="api/attributes/datetime.html#_CPPv4N8datetimeD0Ev">datetime::~datetime (C++ function)</a>
+      <li><a href="api/active_record/attributes/datetime.html#_CPPv4N8datetimeD0Ev">datetime::~datetime (C++ function)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/attributes/decimal.html#_CPPv4I00_NSt14floating_pointEE7decimal">decimal (C++ struct)</a>
+      <li><a href="api/active_record/attributes/decimal.html#_CPPv4I00_NSt14floating_pointEE7decimal">decimal (C++ struct)</a>
 </li>
-      <li><a href="api/attributes/decimal.html#_CPPv4N7decimal7betweenEv">decimal::between (C++ function)</a>
+      <li><a href="api/active_record/attributes/decimal.html#_CPPv4N7decimal7betweenEv">decimal::between (C++ function)</a>
 </li>
-      <li><a href="api/attributes/decimal.html#_CPPv4N7decimal7decimalEv">decimal::decimal (C++ function)</a>
+      <li><a href="api/active_record/attributes/decimal.html#_CPPv4N7decimal7decimalEv">decimal::decimal (C++ function)</a>
 </li>
-      <li><a href="api/attributes/decimal.html#_CPPv4N7decimal11from_stringEv">decimal::from_string (C++ function)</a>
+      <li><a href="api/active_record/attributes/decimal.html#_CPPv4N7decimal11from_stringEv">decimal::from_string (C++ function)</a>
 </li>
-      <li><a href="api/attributes/decimal.html#_CPPv4N7decimal2inEv">decimal::in (C++ function)</a>
+      <li><a href="api/active_record/attributes/decimal.html#_CPPv4N7decimal2inEv">decimal::in (C++ function)</a>
 </li>
-      <li><a href="api/attributes/decimal.html#_CPPv4N7decimalcvbEv">decimal::operator bool (C++ function)</a>
+      <li><a href="api/active_record/attributes/decimal.html#_CPPv4N7decimalcvbEv">decimal::operator bool (C++ function)</a>
 </li>
-      <li><a href="api/attributes/decimal.html#_CPPv4N7decimalaaEv">decimal::operator&amp;&amp; (C++ function)</a>
+      <li><a href="api/active_record/attributes/decimal.html#_CPPv4N7decimalaaEv">decimal::operator&amp;&amp; (C++ function)</a>
 </li>
-      <li><a href="api/attributes/decimal.html#_CPPv4N7decimalaSEv">decimal::operator= (C++ function)</a>
+      <li><a href="api/active_record/attributes/decimal.html#_CPPv4N7decimalaSEv">decimal::operator= (C++ function)</a>
 </li>
-      <li><a href="api/attributes/decimal.html#_CPPv4N7decimalooEv">decimal::operator|| (C++ function)</a>
+      <li><a href="api/active_record/attributes/decimal.html#_CPPv4N7decimalooEv">decimal::operator|| (C++ function)</a>
 </li>
-      <li><a href="api/attributes/decimal.html#_CPPv4N7decimal9to_stringEv">decimal::to_string (C++ function)</a>
+      <li><a href="api/active_record/attributes/decimal.html#_CPPv4N7decimal9to_stringEv">decimal::to_string (C++ function)</a>
 </li>
-      <li><a href="api/attributes/decimal.html#_CPPv4N7decimal5valueEv">decimal::value (C++ function)</a>
+      <li><a href="api/active_record/attributes/decimal.html#_CPPv4N7decimal5valueEv">decimal::value (C++ function)</a>
 </li>
-      <li><a href="api/attributes/decimal.html#_CPPv4N7decimalD0Ev">decimal::~decimal (C++ function)</a>
+      <li><a href="api/active_record/attributes/decimal.html#_CPPv4N7decimalD0Ev">decimal::~decimal (C++ function)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -311,31 +317,31 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/attributes/integer.html#_CPPv4I00_NSt8integralEE7integer">integer (C++ struct)</a>
+      <li><a href="api/active_record/attributes/integer.html#_CPPv4I00_NSt8integralEE7integer">integer (C++ struct)</a>
 </li>
-      <li><a href="api/attributes/integer.html#_CPPv4N7integer7betweenEv">integer::between (C++ function)</a>
+      <li><a href="api/active_record/attributes/integer.html#_CPPv4N7integer7betweenEv">integer::between (C++ function)</a>
 </li>
-      <li><a href="api/attributes/integer.html#_CPPv4N7integer11from_stringEv">integer::from_string (C++ function)</a>
+      <li><a href="api/active_record/attributes/integer.html#_CPPv4N7integer11from_stringEv">integer::from_string (C++ function)</a>
 </li>
-      <li><a href="api/attributes/integer.html#_CPPv4N7integer2inEv">integer::in (C++ function)</a>
+      <li><a href="api/active_record/attributes/integer.html#_CPPv4N7integer2inEv">integer::in (C++ function)</a>
 </li>
-      <li><a href="api/attributes/integer.html#_CPPv4N7integer7integerEv">integer::integer (C++ function)</a>
+      <li><a href="api/active_record/attributes/integer.html#_CPPv4N7integer7integerEv">integer::integer (C++ function)</a>
 </li>
-      <li><a href="api/attributes/integer.html#_CPPv4N7integercvbEv">integer::operator bool (C++ function)</a>
+      <li><a href="api/active_record/attributes/integer.html#_CPPv4N7integercvbEv">integer::operator bool (C++ function)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/attributes/integer.html#_CPPv4N7integeraaEv">integer::operator&amp;&amp; (C++ function)</a>
+      <li><a href="api/active_record/attributes/integer.html#_CPPv4N7integeraaEv">integer::operator&amp;&amp; (C++ function)</a>
 </li>
-      <li><a href="api/attributes/integer.html#_CPPv4N7integeraSEv">integer::operator= (C++ function)</a>
+      <li><a href="api/active_record/attributes/integer.html#_CPPv4N7integeraSEv">integer::operator= (C++ function)</a>
 </li>
-      <li><a href="api/attributes/integer.html#_CPPv4N7integerooEv">integer::operator|| (C++ function)</a>
+      <li><a href="api/active_record/attributes/integer.html#_CPPv4N7integerooEv">integer::operator|| (C++ function)</a>
 </li>
-      <li><a href="api/attributes/integer.html#_CPPv4N7integer9to_stringEv">integer::to_string (C++ function)</a>
+      <li><a href="api/active_record/attributes/integer.html#_CPPv4N7integer9to_stringEv">integer::to_string (C++ function)</a>
 </li>
-      <li><a href="api/attributes/integer.html#_CPPv4N7integer5valueEv">integer::value (C++ function)</a>
+      <li><a href="api/active_record/attributes/integer.html#_CPPv4N7integer5valueEv">integer::value (C++ function)</a>
 </li>
-      <li><a href="api/attributes/integer.html#_CPPv4N7integerD0Ev">integer::~integer (C++ function)</a>
+      <li><a href="api/active_record/attributes/integer.html#_CPPv4N7integerD0Ev">integer::~integer (C++ function)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -392,6 +398,50 @@
   </ul></td>
 </tr></table>
 
+<h2 id="Q">Q</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/active_record/query_condition.html#_CPPv4I_5TupleE15query_condition">query_condition (C++ struct)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/active_record/query_condition.html#_CPPv4N15query_conditionaaEv">query_condition::operator&amp;&amp; (C++ function)</a>
+</li>
+      <li><a href="api/active_record/query_condition.html#_CPPv4N15query_conditionooEv">query_condition::operator|| (C++ function)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/active_record/attributes/reference_to.html#_CPPv4I00_NSt8integralEE12reference_to">reference_to (C++ struct)</a>
+</li>
+      <li><a href="api/active_record/attributes/reference_to.html#_CPPv4N12reference_to11from_stringEv">reference_to::from_string (C++ function)</a>
+</li>
+      <li><a href="api/active_record/attributes/reference_to.html#_CPPv4N12reference_to2inEv">reference_to::in (C++ function)</a>
+</li>
+      <li><a href="api/active_record/attributes/reference_to.html#_CPPv4N12reference_tocvbEv">reference_to::operator bool (C++ function)</a>
+</li>
+      <li><a href="api/active_record/attributes/reference_to.html#_CPPv4N12reference_toaaEv">reference_to::operator&amp;&amp; (C++ function)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/active_record/attributes/reference_to.html#_CPPv4N12reference_toaSEv">reference_to::operator= (C++ function)</a>
+</li>
+      <li><a href="api/active_record/attributes/reference_to.html#_CPPv4N12reference_toooEv">reference_to::operator|| (C++ function)</a>
+</li>
+      <li><a href="api/active_record/attributes/reference_to.html#_CPPv4N12reference_to12reference_toEv">reference_to::reference_to (C++ function)</a>
+</li>
+      <li><a href="api/active_record/attributes/reference_to.html#_CPPv4N12reference_to9to_stringEv">reference_to::to_string (C++ function)</a>
+</li>
+      <li><a href="api/active_record/attributes/reference_to.html#_CPPv4N12reference_to5valueEv">reference_to::value (C++ function)</a>
+</li>
+      <li><a href="api/active_record/attributes/reference_to.html#_CPPv4N12reference_toD0Ev">reference_to::~reference_to (C++ function)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -411,33 +461,33 @@
 </li>
       <li><a href="api/adaptors/sqlite3_adaptor.html#_CPPv4N15sqlite3_adaptor7versionEv">sqlite3_adaptor::version (C++ function)</a>
 </li>
-      <li><a href="api/attributes/string.html#_CPPv4I00E6string">string (C++ struct)</a>
+      <li><a href="api/active_record/attributes/string.html#_CPPv4I00E6string">string (C++ struct)</a>
 </li>
-      <li><a href="api/attributes/string.html#_CPPv4N6string7betweenEv">string::between (C++ function)</a>
+      <li><a href="api/active_record/attributes/string.html#_CPPv4N6string7betweenEv">string::between (C++ function)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/attributes/string.html#_CPPv4N6string11from_stringEv">string::from_string (C++ function)</a>
+      <li><a href="api/active_record/attributes/string.html#_CPPv4N6string11from_stringEv">string::from_string (C++ function)</a>
 </li>
-      <li><a href="api/attributes/string.html#_CPPv4N6string2inEv">string::in (C++ function)</a>
+      <li><a href="api/active_record/attributes/string.html#_CPPv4N6string2inEv">string::in (C++ function)</a>
 </li>
-      <li><a href="api/attributes/string.html#_CPPv4N6string4likeEv">string::like (C++ function)</a>
+      <li><a href="api/active_record/attributes/string.html#_CPPv4N6string4likeEv">string::like (C++ function)</a>
 </li>
-      <li><a href="api/attributes/string.html#_CPPv4N6stringcvbEv">string::operator bool (C++ function)</a>
+      <li><a href="api/active_record/attributes/string.html#_CPPv4N6stringcvbEv">string::operator bool (C++ function)</a>
 </li>
-      <li><a href="api/attributes/string.html#_CPPv4N6stringaaEv">string::operator&amp;&amp; (C++ function)</a>
+      <li><a href="api/active_record/attributes/string.html#_CPPv4N6stringaaEv">string::operator&amp;&amp; (C++ function)</a>
 </li>
-      <li><a href="api/attributes/string.html#_CPPv4N6stringaSEv">string::operator= (C++ function)</a>
+      <li><a href="api/active_record/attributes/string.html#_CPPv4N6stringaSEv">string::operator= (C++ function)</a>
 </li>
-      <li><a href="api/attributes/string.html#_CPPv4N6stringooEv">string::operator|| (C++ function)</a>
+      <li><a href="api/active_record/attributes/string.html#_CPPv4N6stringooEv">string::operator|| (C++ function)</a>
 </li>
-      <li><a href="api/attributes/string.html#_CPPv4N6string6stringEv">string::string (C++ function)</a>
+      <li><a href="api/active_record/attributes/string.html#_CPPv4N6string6stringEv">string::string (C++ function)</a>
 </li>
-      <li><a href="api/attributes/string.html#_CPPv4N6string9to_stringEv">string::to_string (C++ function)</a>
+      <li><a href="api/active_record/attributes/string.html#_CPPv4N6string9to_stringEv">string::to_string (C++ function)</a>
 </li>
-      <li><a href="api/attributes/string.html#_CPPv4N6string5valueEv">string::value (C++ function)</a>
+      <li><a href="api/active_record/attributes/string.html#_CPPv4N6string5valueEv">string::value (C++ function)</a>
 </li>
-      <li><a href="api/attributes/string.html#_CPPv4N6stringD0Ev">string::~string (C++ function)</a>
+      <li><a href="api/active_record/attributes/string.html#_CPPv4N6stringD0Ev">string::~string (C++ function)</a>
 </li>
   </ul></td>
 </tr></table>

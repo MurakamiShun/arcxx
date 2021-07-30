@@ -28,13 +28,18 @@ API
    :caption: namespace
    :glob:
 
-   api/namespace/*
+   /api/active_record
+   /api/active_record/attributes
+   /api/active_record/sqlite3
 
 .. toctree::
    :maxdepth: 1
    :caption: class
    :glob:
 
-   api/active_record/*
-   api/attributes/*
+   api/active_record/model
+   api/active_record/query_condition
+   api/active_record/query_relation
+   api/active_record/attributes/*
+   api/adaptors/*
 

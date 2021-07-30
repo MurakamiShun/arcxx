@@ -1,29 +1,42 @@
 ==================================
-active_record::attributes::binary
+active_record::attributes::boolean
 ==================================
 
 .. cpp:struct:: template<typename Model, typename Attribute> \
-                binary
+                boolean
 
-    binary attribute.
+    boolean attribute.
 
     .. list-table:: Member functions
 
-        * - :ref:`(constructor) <binary_constructors>`
-          - constructs the binary attribute
-
+        * - :ref:`(constructor) <boolean_constructors>`
+          - constructs the boolean attribute
         * - :cpp:func:`operator=`
           - 
-
-        * - :ref:`(destructor) <binary_destructors>`
+        * - :ref:`(destructor) <boolean_destructors>`
           - destroy the attribute
+
+    .. list-table:: Member variables
+
+        * - :cpp:var:`data`
+          - :code:`std::optional<bool>`
+
+    .. list-table:: Member types
+
+        * - :cpp:type:`model_type`
+          - :code:`Model`
+        * - :cpp:type:`attribute_type`
+          - :code:`Attribute`
+        * - :cpp:type:`value_type`
+          - :code:`bool`
+        * - :cpp:type:`constraint`
+          - :code:`std::function<bool(const std::optional<bool>&)>`
 
 
     .. list-table:: Observers
 
         * - :cpp:func:`operator bool`
           - check whether null
-
         * - :cpp:func:`value`
           - returns the contained value
         
@@ -31,13 +44,10 @@ active_record::attributes::binary
         
         * - :cpp:func:`in`
           - generate in condition
-
         * - :cpp:func:`between`
           - generate between condition
-
         * - :cpp:func:`operator&&`
           - 
-        
         * - :cpp:func:`operator||`
           -
 
@@ -45,22 +55,21 @@ active_record::attributes::binary
 
         * - :cpp:func:`to_string`
           - converts to string
-
         * - :cpp:func:`from_string`
           - converts from string
 
-    .. _binary_constructors:
-    .. cpp:function:: binary()
+    .. _boolean_constructors:
+    .. cpp:function:: boolean()
 
         .. code-block:: cpp
 
-            constexpr binary();
-            constexpr binary(const std::optional<std::vector<std::byte>>&);
-            constexpr binary(const std::optional<std::vector<std::byte>>&&);
-            constexpr binary(std::nullopt_t);
+            constexpr boolean();
+            constexpr boolean(const std::optional<bool>&);
+            constexpr boolean(const std::optional<bool>&&);
+            constexpr boolean(std::nullopt_t);
 
-            constexpr binary(const std::vector<std::byte>&);
-            constexpr binary(const std::vector<std::byte>&&);
+            constexpr boolean(const bool&);
+            constexpr boolean(const bool&&);
         
     .. cpp:function:: operator=()
     
@@ -69,19 +78,19 @@ active_record::attributes::binary
             Attribute& operator=(const Attribute&);
             Attribute& operator=(Attribute&&);
 
-            Attribute& operator=(const std::optional<std::vector<std::byte>>&);
-            Attribute& operator=(const std::optional<std::vector<std::byte>>&&);
+            Attribute& operator=(const std::optional<bool>&);
+            Attribute& operator=(const std::optional<bool>&&);
             Attribute& operator=(std::nullopt_t);
 
-            Attribute& operator=(const std::vector<std::byte>&);
-            Attribute& operator=(const std::vector<std::byte>&&);
+            Attribute& operator=(const bool&);
+            Attribute& operator=(const bool&&);
 
-    .. _binary_destructors:
-    .. cpp:function:: ~binary()
+    .. _boolean_destructors:
+    .. cpp:function:: ~boolean()
         
         .. code-block:: cpp
 
-            constexpr virtual ~binary();
+            constexpr virtual ~boolean();
 
     .. cpp:function:: operator bool()
 
@@ -96,9 +105,9 @@ active_record::attributes::binary
 
         .. code-block:: cpp
 
-            [[nodiscard]] std::vector<std::byte>& value() &;
-            [[nodiscard]] const std::vector<std::byte>& value() const&;
-            [[nodiscard]] std::vector<std::byte>&& value() &&;
+            [[nodiscard]] bool& value() &;
+            [[nodiscard]] const bool& value() const&;
+            [[nodiscard]] bool&& value() &&;
 
         Return attribute value.
         If the value is null, throw :code:`std::bad_optional_access`.
@@ -118,7 +127,7 @@ active_record::attributes::binary
     
         .. code-block:: cpp
 
-            query_condition between(std::convertible_to<std::vector<std::byte>> arg1, std::convertible_to<std::vector<std::byte>> arg2);
+            query_condition between(std::convertible_to<bool> arg1, std::convertible_to<bool> arg2);
 
         The returned object will generate
         :code:`Attribute::column_name BETWEEN arg1 AND arg2`

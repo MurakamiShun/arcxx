@@ -47,6 +47,8 @@ active_record::model
           - 
         * - :cpp:func:`join`
           - 
+        * - :cpp:func:`left_join`
+          - 
         * - :cpp:func:`count`
           - 
         * - :cpp:func:`sum`

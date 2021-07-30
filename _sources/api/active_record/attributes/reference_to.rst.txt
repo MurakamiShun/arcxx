@@ -1,29 +1,43 @@
-==================================
-active_record::attributes::integer
-==================================
+=======================================
+active_record::attributes::reference_to
+=======================================
 
-.. cpp:struct:: template<typename Model, typename Attribute, std::integral Integer=uint32_t> \
-                integer
+.. cpp:struct:: template<typename Model, typename Attribute, std::integral ForeignKey=uint32_t> \
+                reference_to
 
-    Integer attribute.
+    Reference attribute.
 
     .. list-table:: Member functions
 
-        * - :ref:`(constructor) <integer_constructors>`
-          - constructs the integer attribute
-
+        * - :ref:`(constructor) <reference_to_constructors>`
+          - constructs the reference_to attribute
         * - :cpp:func:`operator=`
           - 
-
-        * - :ref:`(destructor) <integer_destructors>`
+        * - :ref:`(destructor) <reference_to_destructors>`
           - destroy the attribute
 
+    .. list-table:: Member variables
+
+        * - :cpp:var:`data`
+          - :code:`std::optional<ForeignKey::value_type>`
+
+    .. list-table:: Member types
+
+        * - :cpp:type:`model_type`
+          - :code:`Model`
+        * - :cpp:type:`attribute_type`
+          - :code:`Attribute`
+        * - :cpp:type:`value_type`
+          - :code:`ForeignKey::value_type`
+        * - :cpp:type:`foreign_key_type`
+          - :code:`ForeignKey`
+        * - :cpp:type:`constraint`
+          - :code:`std::function<bool(const std::optional<ForeignKey::value_type>&)>`
 
     .. list-table:: Observers
 
         * - :cpp:func:`operator bool`
           - check whether null
-
         * - :cpp:func:`value`
           - returns the contained value
         
@@ -31,13 +45,8 @@ active_record::attributes::integer
         
         * - :cpp:func:`in`
           - generate in condition
-
-        * - :cpp:func:`between`
-          - generate between condition
-
         * - :cpp:func:`operator&&`
           - 
-        
         * - :cpp:func:`operator||`
           -
 
@@ -45,22 +54,23 @@ active_record::attributes::integer
 
         * - :cpp:func:`to_string`
           - converts to string
-
         * - :cpp:func:`from_string`
           - converts from string
 
-    .. _integer_constructors:
-    .. cpp:function:: integer()
+    .. _reference_to_constructors:
+    .. cpp:function:: reference_to()
 
         .. code-block:: cpp
 
-            constexpr integer();
-            constexpr integer(const std::optional<Integer>&);
-            constexpr integer(const std::optional<Integer>&&);
-            constexpr integer(std::nullopt_t);
+            constexpr reference_to();
+            constexpr reference_to(const std::optional<ForeignKey::value_type>&);
+            constexpr reference_to(const std::optional<ForeignKey::value_type>&&);
+            constexpr reference_to(std::nullopt_t);
 
-            constexpr integer(const Integer&);
-            constexpr integer(const Integer&&);
+            constexpr reference_to(const ForeignKey::value_type&);
+            constexpr reference_to(const ForeignKey::value_type&&);
+
+            constexpr reference_to(const ForeignKey&);
         
     .. cpp:function:: operator=()
     
@@ -69,19 +79,21 @@ active_record::attributes::integer
             Attribute& operator=(const Attribute&);
             Attribute& operator=(Attribute&&);
 
-            Attribute& operator=(const std::optional<Integer>&);
-            Attribute& operator=(const std::optional<Integer>&&);
+            Attribute& operator=(const std::optional<ForeignKey::value_type>&);
+            Attribute& operator=(const std::optional<ForeignKey::value_type>&&);
             Attribute& operator=(std::nullopt_t);
 
-            Attribute& operator=(const Integer&);
-            Attribute& operator=(const Integer&&);
+            Attribute& operator=(const ForeignKey::value_type&);
+            Attribute& operator=(const ForeignKey::value_type&&);
 
-    .. _integer_destructors:
-    .. cpp:function:: ~integer()
+            Attribute& operator=(const ForeignKey&);
+
+    .. _reference_to_destructors:
+    .. cpp:function:: ~reference_to()
         
         .. code-block:: cpp
 
-            constexpr virtual ~integer();
+            constexpr virtual ~reference_to();
 
     .. cpp:function:: operator bool()
 
@@ -96,9 +108,9 @@ active_record::attributes::integer
 
         .. code-block:: cpp
 
-            [[nodiscard]] Integer& value() &;
-            [[nodiscard]] const Integer& value() const&;
-            [[nodiscard]] Integer&& value() &&;
+            [[nodiscard]] ForeignKey& value() &;
+            [[nodiscard]] const ForeignKey& value() const&;
+            [[nodiscard]] ForeignKey&& value() &&;
 
         Return attribute value.
         If the value is null, throw :code:`std::bad_optional_access`.
@@ -112,16 +124,6 @@ active_record::attributes::integer
 
         The returned object will generate
         :code:`Attribute::column_name IN (args...)`
-    
-
-    .. cpp:function:: between()
-    
-        .. code-block:: cpp
-
-            query_condition between(std::convertible_to<Integer> arg1, std::convertible_to<Integer> arg2);
-
-        The returned object will generate
-        :code:`Attribute::column_name BETWEEN arg1 AND arg2`
 
     .. cpp:function:: operator&&()
     
