@@ -1,29 +1,41 @@
-=================================
-active_record::attributes::string
-=================================
+==================================
+active_record::attributes::binary
+==================================
 
 .. cpp:struct:: template<typename Model, typename Attribute> \
-                string
+                binary
 
-    active_record::string attribute.
+    binary attribute.
 
     .. list-table:: Member functions
 
-        * - :ref:`(constructor) <string_constructors>`
-          - constructs the string attribute
-
+        * - :ref:`(constructor) <binary_constructors>`
+          - constructs the binary attribute
         * - :cpp:func:`operator=`
           - 
-
-        * - :ref:`(destructor) <string_destructors>`
+        * - :ref:`(destructor) <binary_destructors>`
           - destroy the attribute
 
+    .. list-table:: Member variables
+
+        * - :cpp:var:`data`
+          - :code:`std::optional<std::vector<std::byte>>`
+
+    .. list-table:: Member types
+
+        * - :cpp:type:`model_type`
+          - :code:`Model`
+        * - :cpp:type:`attribute_type`
+          - :code:`Attribute`
+        * - :cpp:type:`value_type`
+          - :code:`std::vector<std::byte>`
+        * - :cpp:type:`constraint`
+          - :code:`std::function<bool(const std::optional<std::vector<std::byte>>&)>`
 
     .. list-table:: Observers
 
         * - :cpp:func:`operator bool`
           - check whether null
-
         * - :cpp:func:`value`
           - returns the contained value
         
@@ -31,16 +43,10 @@ active_record::attributes::string
         
         * - :cpp:func:`in`
           - generate in condition
-
         * - :cpp:func:`between`
           - generate between condition
-
-        * - :cpp:func:`like`
-          - generate like condition
-
         * - :cpp:func:`operator&&`
           - 
-        
         * - :cpp:func:`operator||`
           -
 
@@ -48,22 +54,21 @@ active_record::attributes::string
 
         * - :cpp:func:`to_string`
           - converts to string
-
         * - :cpp:func:`from_string`
           - converts from string
 
-    .. _string_constructors:
-    .. cpp:function:: string()
+    .. _binary_constructors:
+    .. cpp:function:: binary()
 
         .. code-block:: cpp
 
-            constexpr string();
-            constexpr string(const std::optional<active_record::string>&);
-            constexpr string(const std::optional<active_record::string>&&);
-            constexpr string(std::nullopt_t);
+            constexpr binary();
+            constexpr binary(const std::optional<std::vector<std::byte>>&);
+            constexpr binary(const std::optional<std::vector<std::byte>>&&);
+            constexpr binary(std::nullopt_t);
 
-            constexpr string(const active_record::string&);
-            constexpr string(const active_record::string&&);
+            constexpr binary(const std::vector<std::byte>&);
+            constexpr binary(const std::vector<std::byte>&&);
         
     .. cpp:function:: operator=()
     
@@ -72,19 +77,19 @@ active_record::attributes::string
             Attribute& operator=(const Attribute&);
             Attribute& operator=(Attribute&&);
 
-            Attribute& operator=(const std::optional<active_record::string>&);
-            Attribute& operator=(const std::optional<active_record::string>&&);
+            Attribute& operator=(const std::optional<std::vector<std::byte>>&);
+            Attribute& operator=(const std::optional<std::vector<std::byte>>&&);
             Attribute& operator=(std::nullopt_t);
 
-            Attribute& operator=(const active_record::string&);
-            Attribute& operator=(const active_record::string&&);
+            Attribute& operator=(const std::vector<std::byte>&);
+            Attribute& operator=(const std::vector<std::byte>&&);
 
-    .. _string_destructors:
-    .. cpp:function:: ~string()
+    .. _binary_destructors:
+    .. cpp:function:: ~binary()
         
         .. code-block:: cpp
 
-            constexpr virtual ~string();
+            constexpr virtual ~binary();
 
     .. cpp:function:: operator bool()
 
@@ -99,9 +104,9 @@ active_record::attributes::string
 
         .. code-block:: cpp
 
-            [[nodiscard]] active_record::string& value() &;
-            [[nodiscard]] const active_record::string& value() const&;
-            [[nodiscard]] active_record::string&& value() &&;
+            [[nodiscard]] std::vector<std::byte>& value() &;
+            [[nodiscard]] const std::vector<std::byte>& value() const&;
+            [[nodiscard]] std::vector<std::byte>&& value() &&;
 
         Return attribute value.
         If the value is null, throw :code:`std::bad_optional_access`.
@@ -121,19 +126,10 @@ active_record::attributes::string
     
         .. code-block:: cpp
 
-            query_condition between(std::convertible_to<active_record::string> arg1, std::convertible_to<active_record::string> arg2);
+            query_condition between(std::convertible_to<std::vector<std::byte>> arg1, std::convertible_to<std::vector<std::byte>> arg2);
 
         The returned object will generate
         :code:`Attribute::column_name BETWEEN arg1 AND arg2`
-
-    .. cpp:function:: like()
-    
-        .. code-block:: cpp
-
-            query_condition like(std::convertible_to<active_record::string> arg);
-
-        The returned object will generate
-        :code:`Attribute::column_name LIKE arg`
 
     .. cpp:function:: operator&&()
     

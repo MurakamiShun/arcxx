@@ -1,29 +1,41 @@
-==================================
-active_record::attributes::decimal
-==================================
+=================================
+active_record::attributes::string
+=================================
 
-.. cpp:struct:: template<typename Model, typename Attribute, std::floating_point FP = float> \
-                decimal
+.. cpp:struct:: template<typename Model, typename Attribute> \
+                string
 
-    FP attribute.
+    String attribute.
 
     .. list-table:: Member functions
 
-        * - :ref:`(constructor) <decimal_constructors>`
-          - constructs the decimal attribute
-
+        * - :ref:`(constructor) <string_constructors>`
+          - constructs the string attribute
         * - :cpp:func:`operator=`
           - 
-
-        * - :ref:`(destructor) <decimal_destructors>`
+        * - :ref:`(destructor) <string_destructors>`
           - destroy the attribute
 
+    .. list-table:: Member variables
+
+        * - :cpp:var:`data`
+          - :code:`std::optional<active_record::string>`
+
+    .. list-table:: Member types
+
+        * - :cpp:type:`model_type`
+          - :code:`Model`
+        * - :cpp:type:`attribute_type`
+          - :code:`Attribute`
+        * - :cpp:type:`value_type`
+          - :code:`active_record::string`
+        * - :cpp:type:`constraint`
+          - :code:`std::function<bool(const std::optional<active_record::string>&)>`
 
     .. list-table:: Observers
 
         * - :cpp:func:`operator bool`
           - check whether null
-
         * - :cpp:func:`value`
           - returns the contained value
         
@@ -31,13 +43,12 @@ active_record::attributes::decimal
         
         * - :cpp:func:`in`
           - generate in condition
-
         * - :cpp:func:`between`
           - generate between condition
-
+        * - :cpp:func:`like`
+          - generate like condition
         * - :cpp:func:`operator&&`
           - 
-        
         * - :cpp:func:`operator||`
           -
 
@@ -45,22 +56,21 @@ active_record::attributes::decimal
 
         * - :cpp:func:`to_string`
           - converts to string
-
         * - :cpp:func:`from_string`
           - converts from string
 
-    .. _decimal_constructors:
-    .. cpp:function:: decimal()
+    .. _string_constructors:
+    .. cpp:function:: string()
 
         .. code-block:: cpp
 
-            constexpr decimal();
-            constexpr decimal(const std::optional<FP>&);
-            constexpr decimal(const std::optional<FP>&&);
-            constexpr decimal(std::nullopt_t);
+            constexpr string();
+            constexpr string(const std::optional<active_record::string>&);
+            constexpr string(const std::optional<active_record::string>&&);
+            constexpr string(std::nullopt_t);
 
-            constexpr decimal(const FP&);
-            constexpr decimal(const FP&&);
+            constexpr string(const active_record::string&);
+            constexpr string(const active_record::string&&);
         
     .. cpp:function:: operator=()
     
@@ -69,19 +79,19 @@ active_record::attributes::decimal
             Attribute& operator=(const Attribute&);
             Attribute& operator=(Attribute&&);
 
-            Attribute& operator=(const std::optional<FP>&);
-            Attribute& operator=(const std::optional<FP>&&);
+            Attribute& operator=(const std::optional<active_record::string>&);
+            Attribute& operator=(const std::optional<active_record::string>&&);
             Attribute& operator=(std::nullopt_t);
 
-            Attribute& operator=(const FP&);
-            Attribute& operator=(const FP&&);
+            Attribute& operator=(const active_record::string&);
+            Attribute& operator=(const active_record::string&&);
 
-    .. _decimal_destructors:
-    .. cpp:function:: ~decimal()
+    .. _string_destructors:
+    .. cpp:function:: ~string()
         
         .. code-block:: cpp
 
-            constexpr virtual ~decimal();
+            constexpr virtual ~string();
 
     .. cpp:function:: operator bool()
 
@@ -96,9 +106,9 @@ active_record::attributes::decimal
 
         .. code-block:: cpp
 
-            [[nodiscard]] FP& value() &;
-            [[nodiscard]] const FP& value() const&;
-            [[nodiscard]] FP&& value() &&;
+            [[nodiscard]] active_record::string& value() &;
+            [[nodiscard]] const active_record::string& value() const&;
+            [[nodiscard]] active_record::string&& value() &&;
 
         Return attribute value.
         If the value is null, throw :code:`std::bad_optional_access`.
@@ -118,10 +128,19 @@ active_record::attributes::decimal
     
         .. code-block:: cpp
 
-            query_condition between(std::convertible_to<FP> arg1, std::convertible_to<FP> arg2);
+            query_condition between(std::convertible_to<active_record::string> arg1, std::convertible_to<active_record::string> arg2);
 
         The returned object will generate
         :code:`Attribute::column_name BETWEEN arg1 AND arg2`
+
+    .. cpp:function:: like()
+    
+        .. code-block:: cpp
+
+            query_condition like(std::convertible_to<active_record::string> arg);
+
+        The returned object will generate
+        :code:`Attribute::column_name LIKE arg`
 
     .. cpp:function:: operator&&()
     

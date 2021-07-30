@@ -21,7 +21,7 @@ active_record::sqlite3_adaptor
                 const int flags = active_record::sqlite3::options::readwrite
             );
 
-        Flags is under :doc:`/api/namespace/sqlite3`
+        Flags is under :doc:`/api/active_record/sqlite3`
 
     .. cpp:function:: close()
 

@@ -7,30 +7,30 @@ namespace active_record::attributes
    :hidden:
    :glob:
 
-   /api/attributes/*
+   /api/active_record/attributes/*
 
 Attributes
 ==========
 
 .. list-table::
 
-    * - :doc:`/api/attributes/string`
+    * - :doc:`attributes/string`
       - String attribute.
 
-    * - :doc:`/api/attributes/integer`
+    * - :doc:`attributes/integer`
       - Integer attribute. (default is `int32_t`)
 
-    * - :doc:`/api/attributes/decimal`
+    * - :doc:`attributes/decimal`
       - Decimal attribute. (default is `float`)
 
-    * - :doc:`/api/attributes/boolean`
+    * - :doc:`attributes/boolean`
       - boolean attribute.
 
-    * - :doc:`/api/attributes/datetime`
+    * - :doc:`attributes/datetime`
       - Datetime attribute. The value type is `std::utc_clock`.
 
-    * - :doc:`/api/attributes/binary`
+    * - :doc:`attributes/binary`
       - Datetime attribute. The value type is `std::vector<std::byte>`.
 
-    * - :doc:`/api/attributes/reference_to`
+    * - :doc:`attributes/reference_to`
       - Relation attribute.

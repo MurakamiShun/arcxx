@@ -1,29 +1,41 @@
-==================================
-active_record::attributes::boolean
-==================================
+===================================
+active_record::attributes::datetime
+===================================
 
 .. cpp:struct:: template<typename Model, typename Attribute> \
-                boolean
+                datetime
 
-    boolean attribute.
+    datetime attribute.
 
     .. list-table:: Member functions
 
-        * - :ref:`(constructor) <boolean_constructors>`
-          - constructs the boolean attribute
-
+        * - :ref:`(constructor) <datetime_constructors>`
+          - constructs the datetime attribute
         * - :cpp:func:`operator=`
           - 
-
-        * - :ref:`(destructor) <boolean_destructors>`
+        * - :ref:`(destructor) <datetime_destructors>`
           - destroy the attribute
 
+    .. list-table:: Member variables
+
+        * - :cpp:var:`data`
+          - :code:`std::optional<active_record::datetime>`
+
+    .. list-table:: Member types
+
+        * - :cpp:type:`model_type`
+          - :code:`Model`
+        * - :cpp:type:`attribute_type`
+          - :code:`Attribute`
+        * - :cpp:type:`value_type`
+          - :code:`active_record::datetime`
+        * - :cpp:type:`constraint`
+          - :code:`std::function<bool(const std::optional<active_record::datetime>&)>`
 
     .. list-table:: Observers
 
         * - :cpp:func:`operator bool`
           - check whether null
-
         * - :cpp:func:`value`
           - returns the contained value
         
@@ -31,13 +43,10 @@ active_record::attributes::boolean
         
         * - :cpp:func:`in`
           - generate in condition
-
         * - :cpp:func:`between`
           - generate between condition
-
         * - :cpp:func:`operator&&`
           - 
-        
         * - :cpp:func:`operator||`
           -
 
@@ -45,22 +54,21 @@ active_record::attributes::boolean
 
         * - :cpp:func:`to_string`
           - converts to string
-
         * - :cpp:func:`from_string`
           - converts from string
 
-    .. _boolean_constructors:
-    .. cpp:function:: boolean()
+    .. _datetime_constructors:
+    .. cpp:function:: datetime()
 
         .. code-block:: cpp
 
-            constexpr boolean();
-            constexpr boolean(const std::optional<bool>&);
-            constexpr boolean(const std::optional<bool>&&);
-            constexpr boolean(std::nullopt_t);
+            constexpr datetime();
+            constexpr datetime(const std::optional<active_record::datetime>&);
+            constexpr datetime(const std::optional<active_record::datetime>&&);
+            constexpr datetime(std::nullopt_t);
 
-            constexpr boolean(const bool&);
-            constexpr boolean(const bool&&);
+            constexpr datetime(const active_record::datetime&);
+            constexpr datetime(const active_record::datetime&&);
         
     .. cpp:function:: operator=()
     
@@ -69,19 +77,19 @@ active_record::attributes::boolean
             Attribute& operator=(const Attribute&);
             Attribute& operator=(Attribute&&);
 
-            Attribute& operator=(const std::optional<bool>&);
-            Attribute& operator=(const std::optional<bool>&&);
+            Attribute& operator=(const std::optional<active_record::datetime>&);
+            Attribute& operator=(const std::optional<active_record::datetime>&&);
             Attribute& operator=(std::nullopt_t);
 
-            Attribute& operator=(const bool&);
-            Attribute& operator=(const bool&&);
+            Attribute& operator=(const active_record::datetime&);
+            Attribute& operator=(const active_record::datetime&&);
 
-    .. _boolean_destructors:
-    .. cpp:function:: ~boolean()
+    .. _datetime_destructors:
+    .. cpp:function:: ~datetime()
         
         .. code-block:: cpp
 
-            constexpr virtual ~boolean();
+            constexpr virtual ~datetime();
 
     .. cpp:function:: operator bool()
 
@@ -96,9 +104,9 @@ active_record::attributes::boolean
 
         .. code-block:: cpp
 
-            [[nodiscard]] bool& value() &;
-            [[nodiscard]] const bool& value() const&;
-            [[nodiscard]] bool&& value() &&;
+            [[nodiscard]] active_record::datetime& value() &;
+            [[nodiscard]] const active_record::datetime& value() const&;
+            [[nodiscard]] active_record::datetime&& value() &&;
 
         Return attribute value.
         If the value is null, throw :code:`std::bad_optional_access`.
@@ -118,7 +126,7 @@ active_record::attributes::boolean
     
         .. code-block:: cpp
 
-            query_condition between(std::convertible_to<bool> arg1, std::convertible_to<bool> arg2);
+            query_condition between(std::convertible_to<active_record::datetime> arg1, std::convertible_to<active_record::datetime> arg2);
 
         The returned object will generate
         :code:`Attribute::column_name BETWEEN arg1 AND arg2`
