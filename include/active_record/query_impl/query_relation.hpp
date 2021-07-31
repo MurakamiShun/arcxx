@@ -137,6 +137,10 @@ namespace active_record {
         query_relation<std::vector<Attr>, BindAttrs> pluck() &&;
         template<Attribute Attr>
         query_relation<std::vector<Attr>, BindAttrs> pluck() const &;
+
+        template<Attribute... Attrs>
+        requires Model<typename Result::value_type>
+        query_relation<bool, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>), BindAttrs, std::tuple<const Attrs*...>>> update(const Attrs...);
         
         template<Attribute Attr>
         query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> where(const Attr&&) &&;

@@ -33,9 +33,8 @@ namespace active_record {
             ret.condition.push_back(",");
             copy_and_set_attrs_to_condition<I+1>(ret, tails...);
         }
-    protected:
-        std::optional<Type> data;
     public:
+        std::optional<Type> data;
         using constraint = std::function<bool(const std::optional<Type>&)>;
         using model_type = Model;
         using attribute_type = Attribute;

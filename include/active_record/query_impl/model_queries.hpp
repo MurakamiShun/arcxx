@@ -44,39 +44,23 @@ namespace active_record {
     inline query_relation<std::vector<Attr>, std::tuple<>> model<Derived>::pluck([[maybe_unused]]const Attr attr) {
         return model<Derived>::pluck<Attr>();
     }
-
-    namespace detail {
-        template<std::size_t N, typename Query, Attribute Last>
-        void set_update_op_args(Query& query, Last&& last) {
-            query.query_op_arg.push_back(column_full_names_to_string<Last>());
-            query.temporary_attrs.push_back(std::move(last));
-            std::get<N>(query.bind_attrs) = std::any_cast<const Last>(&query.temporary_attrs.back());
-        }
-        template<std::size_t N, typename Query, Attribute Head, Attribute... Tails>
-        void set_update_op_args(Query& query, Head&& head, Tails&&... tails) {
-            set_update_op_args<N>(query, std::move(head));
-            query.query_op_arg.push_back(",");
-            set_update_op_args<N + 1>(query, std::move(tails)...);
-        }
-    }
-
-    template<typename Derived>
-    template<Attribute... Attrs>
-    inline query_relation<std::size_t, std::tuple<const Attrs*...>> model<Derived>::update(const Attrs... attrs) {
-        query_relation<std::size_t, std::tuple<const Attrs*...>> ret;
-
-        ret.operation = query_operation::update;
-        ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
-        detail::set_update_op_args<0>(ret, std::move(attrs)...);
-        return ret;
-    }
     
     template<typename Derived>
-    inline query_relation<std::size_t, std::tuple<>> model<Derived>::destroy() {
-        query_relation<std::size_t, std::tuple<>> ret;
+    template<Attribute Attr>
+    inline query_relation<bool, std::tuple<const Attr*>> model<Derived>::destroy(const Attr&& attr){
+        return destory(attr.to_equ_condition());
+    }
+
+    template<typename Derived>
+    template<Tuple SrcBindAttrs>
+    inline query_relation<bool, SrcBindAttrs> model<Derived>::destroy(query_condition<SrcBindAttrs>&& cond) {
+        query_relation<bool, SrcBindAttrs> ret;
 
         ret.operation = query_operation::destroy;
         ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
+        ret.query_condition = std::move(cond.condition);
+        ret.temporary_attrs = std::move(cond.temporary_attrs);
+        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
         return ret;
     }
 

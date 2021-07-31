@@ -1,13 +1,16 @@
-#include "../include/active_record.hpp"
+//#include "../include/active_record.hpp"
 #include "user_model.hpp"
 #include <iostream>
 #include <cassert>
 
+
 int main(){
-    auto connection = active_record::sqlite3_adaptor::open("insert_test.sqlite3", active_record::sqlite3::options::create);
+    auto connection = active_record::sqlite3_adaptor::open("delete_test.sqlite3", active_record::sqlite3::options::create);
     
+    // create table
     connection.create_table<User>();
 
+    // insert test users
     const auto insert_transaction = [](auto& connection){
         using namespace active_record;
         using transaction = active_record::transaction;
@@ -33,6 +36,7 @@ int main(){
         assert(false);
     }
 
+    // get users count will be 10
     std::cout << User::count().to_sql() << std::endl;
     if(const auto [error, count] = User::count().exec(connection); error){
         std::cout << "Error:" << error.value() << std::endl;
@@ -43,25 +47,26 @@ int main(){
         assert(count == 10);
     }
 
-    std::cout << User::sum<User::ID>().to_sql() << std::endl;
-    if(const auto [error, total] = User::sum<User::ID>().exec(connection); error){
+    // delete users whose ids are 0 to 3
+    std::cout << User::destroy(User::ID::between(0,3)).to_sql() << std::endl;
+    if(const auto error = User::destroy(User::ID::between(0,3)).exec(connection); error){
         std::cout << "Error:" << error.value() << std::endl;
         assert(!error);
     }
     else{
-        std::cout << "User sum(id):" << total << std::endl;
-        assert(total == 45);
+        std::cout << "Deleted!" << std::endl;
+        //assert(count == 4);
     }
 
-
-    std::cout << User::where(User::ID::between(0,4)).count().to_sql() << std::endl;
-    if(const auto [error, count] = User::where(User::ID::between(0,4)).count().exec(connection); error){
+    // Remaining users count will be 5.
+    std::cout << User::count().to_sql() << std::endl;
+    if(const auto [error, count] = User::count().exec(connection); error){
         std::cout << "Error:" << error.value() << std::endl;
         assert(!error);
     }
     else{
-        std::cout << "User count:" << count << std::endl;
-        assert(count == 5);
+        std::cout << "Remaining count:" << count << std::endl;
+        assert(count == 6);
     }
     
     return 0;

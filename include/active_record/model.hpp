@@ -109,12 +109,12 @@ namespace active_record {
         static query_relation<std::vector<Attr>, std::tuple<>> pluck(const Attr);
         template<Attribute Attr>
         static query_relation<std::vector<Attr>, std::tuple<>> pluck();
-
-        template<Attribute... Attrs>
-        static query_relation<std::size_t, std::tuple<const Attrs*...>> update(const Attrs...);
         
         // delete is identifier word
-        static query_relation<std::size_t, std::tuple<>> destroy();
+        template<Attribute Attr>
+        static query_relation<bool, std::tuple<const Attr*>> destroy(const Attr&&);
+        template<Tuple SrcBindAttrs>
+        static query_relation<bool, SrcBindAttrs> destroy(query_condition<SrcBindAttrs>&&);
 
         template<Attribute Attr>
         static query_relation<std::vector<Derived>, std::tuple<const Attr*>> where(const Attr&&);

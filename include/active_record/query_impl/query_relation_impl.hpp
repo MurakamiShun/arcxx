@@ -70,6 +70,36 @@ namespace active_record {
         return ret;
     }
 
+    namespace detail {
+        template<std::size_t N, typename Query, Attribute Last>
+        void set_update_op_args(Query& query, Last&& last) {
+            query.query_op_arg.push_back(active_record::string{"\""} + active_record::string{ Last::column_name } + "\" = ");
+            query.query_op_arg.push_back(N);
+            query.temporary_attrs.push_back(std::move(last));
+        }
+        template<std::size_t N, typename Query, Attribute Head, Attribute... Tails>
+        void set_update_op_args(Query& query, Head&& head, Tails&&... tails) {
+            set_update_op_args<N>(query, std::move(head));
+            query.query_op_arg.push_back(",");
+            set_update_op_args<N + 1>(query, std::move(tails)...);
+        }
+    }
+
+    template<Container Result, Tuple BindAttrs>
+    template<Attribute... Attrs>
+    requires Model<typename Result::value_type>
+    query_relation<bool, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>), BindAttrs, std::tuple<const Attrs*...>>> query_relation<Result, BindAttrs>::update(const Attrs... attrs) {
+        query_relation<bool, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>), BindAttrs, std::tuple<const Attrs*...>>> ret;
+
+        ret.operation = query_operation::update;
+        ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Result::value_type::table_name } + "\"");
+        ret.query_condition = std::move(this->query_condition);
+        ret.query_options = std::move(this->query_options);
+        ret.temporary_attrs = std::move(this->temporary_attrs);
+        detail::set_update_op_args<std::tuple_size_v<BindAttrs>>(ret, std::move(attrs)...);
+        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        return ret;
+    }
 
     template<Container Result, Tuple BindAttrs>
     template<Attribute Attr>
@@ -87,16 +117,25 @@ namespace active_record {
     query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) &&{
         query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> ret;
         
-        ret.operation = query_operation::condition;
+        ret.operation = this->operation;
         ret.query_op_arg = std::move(this->query_op_arg);
         ret.query_table = std::move(this->query_table);
-        ret.query_condition = std::move(this->query_condition);
-        ret.query_condition.push_back(" AND ");
-        ret.query_condition.insert(
-            ret.query_condition.end(),
-            std::make_move_iterator(cond.condition.begin()),
-            std::make_move_iterator(cond.condition.end())
-        );
+
+        if(!this->query_condition.empty()){
+            ret.query_condition = std::move(this->query_condition);
+            ret.query_condition.push_back(" AND ");
+        }
+        for(auto& cond : cond.condition){
+            struct {
+                std::variant<active_record::string, std::size_t> operator()(active_record::string&& str){ return std::move(str); }
+                std::variant<active_record::string, std::size_t> operator()(std::size_t idx){ return idx + std::tuple_size_v<BindAttrs>; }
+            } visitor;
+            
+            ret.query_condition.push_back(
+                std::visit(visitor, std::move(cond))
+            );
+        }
+
         ret.query_options = std::move(this->query_options);
         ret.temporary_attrs = std::move(this->temporary_attrs);
         ret.temporary_attrs.insert(
@@ -113,16 +152,23 @@ namespace active_record {
     query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) const&{
         query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> ret;
         
-        ret.operation = query_operation::condition;
+        ret.operation = this->operation;
         ret.query_op_arg = this->query_op_arg;
         ret.query_table = this->query_table;
-        ret.query_condition = this->query_condition;
-        ret.query_condition.push_back(" AND ");
-        ret.query_condition.insert(
-            ret.query_condition.end(),
-            std::make_move_iterator(cond.condition.begin()),
-            std::make_move_iterator(cond.condition.end())
-        );
+        if(!this->query_condition.empty()){
+            ret.query_condition = this->query_condition;
+            ret.query_condition.push_back(" AND ");
+        }
+        for(auto& cond : cond.condition){
+            struct {
+                std::variant<active_record::string, std::size_t> operator()(active_record::string&& str){ return std::move(str); }
+                std::variant<active_record::string, std::size_t> operator()(std::size_t idx){ return idx + std::tuple_size_v<BindAttrs>; }
+            } visitor;
+            
+            ret.query_condition.push_back(
+                std::visit(visitor, std::move(cond))
+            );
+        }
         ret.query_options = this->query_options;
         ret.temporary_attrs = this->temporary_attrs;
         ret.temporary_attrs.insert(
@@ -303,6 +349,91 @@ namespace active_record {
             *this,
             active_record::string{ "min(" } + detail::column_full_names_to_string<Attr>() +")"
         );
+    }
+
+    /*
+     * return type == Scalar
+     */
+
+    template<typename Result, Tuple BindAttrs>
+    template<Attribute Attr>
+    query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> query_relation<Result, BindAttrs>::where(const Attr&& attr) && {
+        return std::move(*this).where(attr.to_equ_condition());
+    }
+    template<typename Result, Tuple BindAttrs>
+    template<Attribute Attr>
+    query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> query_relation<Result, BindAttrs>::where(const Attr&& attr) const& {
+        return this->where(attr.to_equ_condition());
+    }
+
+    template<typename Result, Tuple BindAttrs>
+    template<Tuple SrcBindAttrs>
+    query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) &&{
+        query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> ret;
+        
+        ret.operation = this->operation;
+        ret.query_op_arg = std::move(this->query_op_arg);
+        ret.query_table = std::move(this->query_table);
+
+        if(!this->query_condition.empty()){
+            ret.query_condition = std::move(this->query_condition);
+            ret.query_condition.push_back(" AND ");
+        }
+        for(auto& cond : cond.condition){
+            struct {
+                std::variant<active_record::string, std::size_t> operator()(active_record::string&& str){ return std::move(str); }
+                std::variant<active_record::string, std::size_t> operator()(std::size_t idx){ return idx + std::tuple_size_v<BindAttrs>; }
+            } visitor;
+            
+            ret.query_condition.push_back(
+                std::visit(visitor, std::move(cond))
+            );
+        }
+
+        ret.query_options = std::move(this->query_options);
+        ret.temporary_attrs = std::move(this->temporary_attrs);
+        ret.temporary_attrs.insert(
+            ret.temporary_attrs.end(),
+            std::make_move_iterator(cond.temporary_attrs.begin()),
+            std::make_move_iterator(cond.temporary_attrs.end())
+        );
+        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        return ret;
+    }
+    
+    template<typename Result, Tuple BindAttrs>
+    template<Tuple SrcBindAttrs>
+    query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) const&{
+        query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> ret;
+        
+        ret.operation = this->operation;
+        ret.query_op_arg = this->query_op_arg;
+        ret.query_table = this->query_table;
+        
+        if(!this->query_condition.empty()){
+            ret.query_condition = this->query_condition;
+            ret.query_condition.push_back(" AND ");
+        }
+        for(auto& cond : cond.condition){
+            struct {
+                std::variant<active_record::string, std::size_t> operator()(active_record::string&& str){ return std::move(str); }
+                std::variant<active_record::string, std::size_t> operator()(std::size_t idx){ return idx + std::tuple_size_v<BindAttrs>; }
+            } visitor;
+            
+            ret.query_condition.push_back(
+                std::visit(visitor, std::move(cond))
+            );
+        }
+
+        ret.query_options = this->query_options;
+        ret.temporary_attrs = this->temporary_attrs;
+        ret.temporary_attrs.insert(
+            ret.temporary_attrs.end(),
+            std::make_move_iterator(cond.temporary_attrs.begin()),
+            std::make_move_iterator(cond.temporary_attrs.end())
+        );
+        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        return ret;
     }
 
     /*
