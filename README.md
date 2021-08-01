@@ -1,6 +1,6 @@
-# active_record_cpp
+# active_record_cpp ![Test](https://github.com/akisute514/active_record_cpp/actions/workflows/test.yml/badge.svg)
 
-[documents](https://akisute514.github.io/active_record_cpp/)
+[Documents](https://akisute514.github.io/active_record_cpp/)
 
 # License
 This software is released under the Apache-2.0 License, see [LICENSE](LICENSE).
