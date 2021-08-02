@@ -4,7 +4,7 @@ project(active_record_cpp VERSION 0.1 LANGUAGES CXX)
 
 include(GNUInstallDirs)
 
-add_library(${PROJECT_NAME}, INTERFACE)
+add_library(${PROJECT_NAME} INTERFACE)
 
 target_include_directories(
     ${PROJECT_NAME}
@@ -20,7 +20,7 @@ install(
     EXPORT ${PROJECT_NAME}Targets
 )
 install(
-    FILES "active_record.hpp"
+    FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/active_record.hpp
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 install(
