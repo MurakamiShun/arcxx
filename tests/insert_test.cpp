@@ -40,4 +40,6 @@ TEST_CASE("Insert query tests", "[active_record::model][insert]") {
     else{
         REQUIRE(total == 45);
     }
+    connection.close();
+    std::filesystem::remove("insert_test.sqlite3");
 }
