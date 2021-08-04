@@ -13,11 +13,16 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Catch2)
 
 
-add_executable(delete_test delete_test.cpp)
-target_link_libraries(delete_test PRIVATE Catch2::Catch2 sqlite3)
+add_executable(active_record_test
+    main.cpp
+    insert_test.cpp
+    delete_test.cpp
+    update_test.cpp
+)
+target_link_libraries(active_record_test PRIVATE Catch2::Catch2 sqlite3)
 
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
 include(CTest)
 include(Catch)
 
-catch_discover_tests(delete_test)
+catch_discover_tests(active_record_test)

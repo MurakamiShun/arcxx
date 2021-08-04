@@ -48,7 +48,7 @@ namespace active_record {
     template<typename Derived>
     template<Attribute Attr>
     inline query_relation<bool, std::tuple<const Attr*>> model<Derived>::destroy(const Attr&& attr){
-        return destory(attr.to_equ_condition());
+        return destroy(attr.to_equ_condition());
     }
 
     template<typename Derived>

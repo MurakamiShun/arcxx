@@ -1,40 +1,52 @@
-#define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp>
-#include <filesystem>
-
 #include "user_model.hpp"
 
-TEST_CASE( "delete query tests", "[active_record::model]" ) {
-    // Create test data
-    auto connection = active_record::sqlite3_adaptor::open("delete_test.sqlite3", active_record::sqlite3::options::create);
-    if(const auto error = connection.create_table<User>(); error) {
-        FAIL(error.value());
-    }
-    const auto insert_transaction = [](auto& connection){
-        using transaction = active_record::transaction;
-
-        for(auto i = 0; i < 10; ++i){
-            User user;
-            user.id = i;
-            user.name = std::string{ "user" } + std::to_string(i);
-            if(const auto error = User::insert(user).exec(connection); error) {
-                FAIL(error.value());
-                return transaction::rollback;
-            }
+TEST_CASE_METHOD(UserModelTestsFixture, "Delete query tests", "[active_record::model][delete]") {
+    SECTION("Delete users whose ids are 0 to 3.") {
+        INFO(User::destroy(User::ID::between(0,3)).to_sql());
+        
+        std::size_t data_count_before_delete = get_data_count();
+        REQUIRE(data_count_before_delete > 0);
+        
+        std::size_t expect_delete_count;
+        if(const auto [error, data_count] = User::where(User::ID::between(0,3)).count().exec(conn); error){
+            FAIL(error.value());
         }
-        return transaction::commit;
-    };
+        else expect_delete_count = data_count;
+        REQUIRE(expect_delete_count > 0);
 
-    if(const auto [error, trans_result] = connection.transaction(insert_transaction); error) {
-        FAIL(error.value());
-    }    
-    else if(trans_result == active_record::transaction::rollback) {
-        FAIL("insert error happned!!");
+        if(const auto error = User::destroy(User::ID::between(0,3)).exec(conn); error){
+            FAIL(error.value());
+        }
+
+        // Remaining users count will be data_count_before_delete - expect_delete_count.
+        REQUIRE(get_data_count() == data_count_before_delete - expect_delete_count);
     }
 
-    SECTION("") {
+    SECTION("Delete a user.") {
+        INFO(User::destroy(User::ID{7}).to_sql());
+        
+        std::size_t data_count_before_delete = get_data_count();
+        REQUIRE(data_count_before_delete > 0);
+        
+        if(const auto error = User::destroy(User::ID{7}).exec(conn); error){
+            FAIL(error.value());
+        }
 
+        // Remaining users count will be data_count_before_delete - 1.
+        REQUIRE(get_data_count() == data_count_before_delete - 1);
     }
 
-    std::filesystem::remove("delete_test.sqlite3");
+    SECTION("Delete users whose names are like 'user_'.") {
+        INFO(User::destroy(User::Name::like("user_")).to_sql());
+        
+        std::size_t data_count_before_delete = get_data_count();
+        REQUIRE(data_count_before_delete > 0);
+        
+        if(const auto error = User::destroy(User::Name::like("user_")).exec(conn); error){
+            FAIL(error.value());
+        }
+
+        // Remaining users count will be data_count_before_delete - 1.
+        REQUIRE(get_data_count() == 0);
+    }
 }

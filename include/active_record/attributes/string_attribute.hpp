@@ -42,7 +42,7 @@ namespace active_record {
                 active_record::string{ "\"" } + Model::table_name + "\".\""
                 + Attribute::column_name + "\" LIKE "
             );
-            ret.condition.push_back(0);
+            ret.condition.push_back(static_cast<std::size_t>(0));
             return ret;
         }
 
