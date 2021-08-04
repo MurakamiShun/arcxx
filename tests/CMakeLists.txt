@@ -1,29 +1,28 @@
-cmake_minimum_required(VERSION 3.9)
-enable_testing()
+cmake_minimum_required(VERSION 3.11)
 
-project(active_record_test)
+project(tests LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 
-# insert test
-add_executable(insert_test insert.cpp)
-target_link_libraries(insert_test sqlite3)
-add_test(
-    NAME insert_test
-    COMMAND $<TARGET_FILE:insert_test>
+include(FetchContent)
+FetchContent_Declare(
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG        v2.13.7
 )
 
-# delete test
-add_executable(delete_test delete.cpp)
-target_link_libraries(delete_test sqlite3)
-add_test(
-    NAME delete_test
-    COMMAND $<TARGET_FILE:delete_test>
-)
+FetchContent_MakeAvailable(Catch2)
 
-# update test
-add_executable(update_test update.cpp)
-target_link_libraries(update_test sqlite3)
-add_test(
-    NAME update_test
-    COMMAND $<TARGET_FILE:update_test>
+
+add_executable(active_record_test
+    main.cpp
+    insert_test.cpp
+    delete_test.cpp
+    update_test.cpp
 )
+target_link_libraries(active_record_test PRIVATE Catch2::Catch2 sqlite3)
+
+list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
+include(CTest)
+include(Catch)
+
+catch_discover_tests(active_record_test)
