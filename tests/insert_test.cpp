@@ -1,6 +1,6 @@
 #include "user_model.hpp"
 
-TEST_CASE("Insert query tests", "[active_record::model][insert]") {
+TEST_CASE("Insert query tests", "[model][query_relation][insert][select]") {
     auto connection = active_record::sqlite3_adaptor::open("insert_test.sqlite3", active_record::sqlite3::options::create);
     
     connection.create_table<User>();

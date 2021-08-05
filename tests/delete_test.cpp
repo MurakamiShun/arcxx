@@ -1,6 +1,6 @@
 #include "user_model.hpp"
 
-TEST_CASE_METHOD(UserModelTestsFixture, "Delete query tests", "[active_record::model][delete]") {
+TEST_CASE_METHOD(UserModelTestsFixture, "Delete query tests", "[model][query_relation][delete][select]") {
     SECTION("Delete users whose ids are 0 to 3.") {
         INFO(User::destroy(User::ID::between(0,3)).to_sql());
         

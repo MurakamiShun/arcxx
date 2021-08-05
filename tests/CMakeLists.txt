@@ -15,6 +15,7 @@ FetchContent_MakeAvailable(Catch2)
 
 add_executable(active_record_test
     main.cpp
+    select_test.cpp
     insert_test.cpp
     delete_test.cpp
     update_test.cpp
