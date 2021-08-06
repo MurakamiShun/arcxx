@@ -10,7 +10,7 @@ active_record::model
     CRTP(Curiously Recurring Template Pattern).
 
     .. code-block:: cpp
-        :caption: Minimum model define code
+        :caption: A Minimum model define code
 
         struct ExampleTable : public active_record::model<ExampleTable> {
             static constexpr auto table_name = "example_table";

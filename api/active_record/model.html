@@ -194,7 +194,7 @@
 <code class="code docutils literal notranslate"><span class="pre">active_record::model</span></code> is designed using
 CRTP(Curiously Recurring Template Pattern).</p>
 <div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">Minimum model define code</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">A Minimum model define code</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="nc">ExampleTable</span> <span class="o">:</span> <span class="k">public</span> <span class="n">active_record</span><span class="o">::</span><span class="n">model</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span> <span class="p">{</span>
     <span class="k">static</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">table_name</span> <span class="o">=</span> <span class="s">&quot;example_table&quot;</span><span class="p">;</span>
 
