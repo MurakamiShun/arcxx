@@ -1,0 +1,44 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, MurakamiShun
+# This file is distributed under the same license as the Active Record C++
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Active Record C++ \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-08-05 08:48+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/index.rst:9
+msgid "Installation"
+msgstr "インストール"
+
+#: ../../source/index.rst:15
+msgid "Tutorial"
+msgstr "チュートリアル"
+
+#: ../../source/index.rst:26
+msgid "namespace"
+msgstr "namespace"
+
+#: ../../source/index.rst:35
+msgid "class"
+msgstr "class"
+
+#: ../../source/index.rst:7
+msgid "Active Record C++ Documentation"
+msgstr "Active Record C++ ドキュメント"
+
+#: ../../source/index.rst:24
+msgid "API"
+msgstr "API"
+

@@ -20,3 +20,5 @@ namespace active_record::sqlite3
         constexpr auto memory     = SQLITE_OPEN_MEMORY;
         constexpr auto no_mutex   = SQLITE_OPEN_NOMUTEX;
         constexpr auto full_mutex = SQLITE_OPEN_FULLMUTEX;
+
+    Flag explanations are https://www.sqlite.org/c3ref/open.html 

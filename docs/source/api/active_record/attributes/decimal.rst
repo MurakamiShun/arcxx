@@ -5,7 +5,7 @@ active_record::attributes::decimal
 .. cpp:struct:: template<typename Model, typename Attribute, std::floating_point FP = float> \
                 decimal
 
-    FP attribute.
+    Floating point attribute.
 
     .. list-table:: Member functions
 

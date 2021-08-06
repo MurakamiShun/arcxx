@@ -3,13 +3,13 @@ Table Creation
 ==============
 
 
-Table Definition
+Model Definition
 ================
 
-"table_name" and "attributes" are required in model struct definition.
-And column struct requires "column_name" and inheriting constructors in definition.
+:code:`table_name` and :doc:`attributes </api/active_record/attributes>` are required in model struct definition.
+And column struct requires :code:`column_name` and inheriting constructors in the definition.
 
-base classes, "active_record::model" and "active_record::attribute" are using CRTP(Curiously Recurring Template Pattern).
+base classes, :doc:`active_record::model </api/active_record/model>` and :doc:`active_record::attribute </api/active_record/attributes>` are using CRTP(Curiously Recurring Template Pattern).
 
 .. list-table:: example_table
 
@@ -47,13 +47,13 @@ base classes, "active_record::model" and "active_record::attribute" are using CR
         std::tuple<ID&, Name&> attributes = std::tie(id, name);
     };
 
-Attribute details are wirtten in :doc:`/api/attributes`.
+Attribute details are written in :doc:`/api/active_record/attributes`.
 
 Table Creation
 ==============
 
 .. code-block:: cpp
-    :caption: Generate table creation sql code (SQLite3)
+    :caption: Generate table creation SQL code (SQLite3)
 
     ExampleTable::schema::to_sql<active_record::sqlite3_adaptor>()
 

@@ -1,0 +1,209 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, MurakamiShun
+# This file is distributed under the same license as the Active Record C++
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Active Record C++ \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-08-06 00:33+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/api/active_record/attributes/decimal.rst:3
+msgid "active_record::attributes::decimal"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:8
+msgid "Floating point attribute."
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:10
+msgid "Member functions"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:12
+msgid ":ref:`(constructor) <decimal_constructors>`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:13
+msgid "constructs the decimal attribute"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:14
+msgid ":cpp:func:`operator=`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:16
+msgid ":ref:`(destructor) <decimal_destructors>`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:17
+msgid "destroy the attribute"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:19
+msgid "Member variables"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:21
+msgid ":cpp:var:`data`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:22
+msgid ":code:`std::optional<FP>`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:24
+msgid "Member types"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:26
+msgid ":cpp:type:`model_type`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:27
+msgid ":code:`Model`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:28
+msgid ":cpp:type:`attribute_type`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:29
+msgid ":code:`Attribute`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:30
+msgid ":cpp:type:`value_type`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:31
+msgid ":code:`FP`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:32
+msgid ":cpp:type:`constraint`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:33
+msgid ":code:`std::function<bool(const std::optional<FP>&)>`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:35
+msgid "Observers"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:37
+msgid ":cpp:func:`operator bool`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:38
+msgid "check whether null"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:39
+msgid ":cpp:func:`value`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:40
+msgid "returns the contained value"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:42
+msgid "Condition Queries"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:44
+msgid ":cpp:func:`in`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:45
+msgid "generate in condition"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:46
+msgid ":cpp:func:`between`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:47
+msgid "generate between condition"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:48
+msgid ":cpp:func:`operator&&`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:50
+msgid ":cpp:func:`operator||`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:53
+msgid "String mutual converts"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:55
+msgid ":cpp:func:`to_string`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:56
+msgid "converts to string"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:57
+msgid ":cpp:func:`from_string`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:58
+msgid "converts from string"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:100
+msgid "Return false if attribute value is null."
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:111
+msgid ""
+"Return attribute value. If the value is null, throw "
+":code:`std::bad_optional_access`."
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:121
+msgid ""
+"The returned object will generate :code:`Attribute::column_name IN "
+"(args...)`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:131
+msgid ""
+"The returned object will generate :code:`Attribute::column_name BETWEEN "
+"arg1 AND arg2`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:143
+msgid "The returned object will generate \"AND condition SQL\"."
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:159
+msgid "The returned object will generate \"OR condition SQL\"."
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:173
+msgid "Converts attribute value to string."
+msgstr ""
+
+#: ../../source/api/active_record/attributes/decimal.rst:181
+msgid "Converts string to attribute value."
+msgstr ""
+
+#~ msgid "FP attribute."
+#~ msgstr ""
+

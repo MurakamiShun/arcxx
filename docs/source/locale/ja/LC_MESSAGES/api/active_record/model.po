@@ -1,0 +1,131 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, MurakamiShun
+# This file is distributed under the same license as the Active Record C++
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Active Record C++ \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-08-06 00:33+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/api/active_record/model.rst:3
+msgid "active_record::model"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:8
+msgid ""
+":code:`table_name` and :code:`attributes` are required in model struct "
+"definition. :code:`active_record::model` is designed using CRTP(Curiously"
+" Recurring Template Pattern)."
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:12
+msgid "A Minimum model define code"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:21
+msgid "Member functions"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:23
+msgid "(constructor)"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:24
+#: ../../source/api/active_record/model.rst:26
+msgid ":code:`model` has no internal state"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:25
+msgid "(destructor)"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:28
+msgid "Generates query functions"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:30
+msgid ":cpp:func:`insert`"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:32
+msgid ":cpp:func:`all`"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:34
+msgid ":cpp:func:`select`"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:36
+msgid ":cpp:func:`pluck`"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:38
+msgid ":cpp:func:`update`"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:40
+msgid ":cpp:func:`destroy`"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:42
+msgid ":cpp:func:`where`"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:44
+msgid ":cpp:func:`limit`"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:46
+msgid ":cpp:func:`order_by`"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:48
+msgid ":cpp:func:`join`"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:50
+msgid ":cpp:func:`left_join`"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:52
+msgid ":cpp:func:`count`"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:54
+msgid ":cpp:func:`sum`"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:56
+msgid ":cpp:func:`avg`"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:58
+msgid ":cpp:func:`max`"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:60
+msgid ":cpp:func:`min`"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:63
+msgid "Member structures"
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:65
+msgid ":cpp:struct:`schema`"
+msgstr ""
+
+#~ msgid "Minimum model define code"
+#~ msgstr ""
+

@@ -7,7 +7,7 @@ TEST_CASE_METHOD(UserModelTestsFixture, "Select query tests", "[model][query_rel
             FAIL(error.value());
         }
         else {
-            STATIC_REQUIRE(std::is_same_v<decltype(user_names), std::vector<std::tuple<User::Name>>>);
+            REQUIRE(typeid(user_names).name() == typeid(std::vector<std::tuple<User::Name>>).name());
             REQUIRE(user_names.size() == 1);
             REQUIRE(std::get<0>(user_names[0]).value() == active_record::string{ "user1" });
         }
@@ -19,7 +19,7 @@ TEST_CASE_METHOD(UserModelTestsFixture, "Select query tests", "[model][query_rel
             FAIL(error.value());
         }
         else {
-            STATIC_REQUIRE(std::is_same_v<decltype(user_names), std::vector<User::Name>>);
+            REQUIRE(typeid(user_names).name() == typeid(std::vector<User::Name>).name());
             REQUIRE(user_names.size() == 1);
             REQUIRE(user_names[0].value() == active_record::string{ "user1" });
         }
@@ -31,9 +31,10 @@ TEST_CASE_METHOD(UserModelTestsFixture, "Select query tests", "[model][query_rel
             FAIL(error.value());
         }
         else {
-            STATIC_REQUIRE(std::is_same_v<decltype(user_names), std::vector<User::Name>>);
-            REQUIRE(user_names.size() == 1);
-            REQUIRE(user_names[0].value() == active_record::string{ "user1" });
+            REQUIRE(typeid(users).name() == typeid(std::vector<User>).name());
+            //STATIC_REQUIRE(std::is_same_v<decltype(users), std::vector<User::Name>>);
+            REQUIRE(users.size() == 1);
+            REQUIRE(users[0].name.value() == active_record::string{ "user1" });
         }
     }
 

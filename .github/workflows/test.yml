@@ -23,6 +23,10 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}}/tests/build --config ${{env.BUILD_TYPE}} -j2
 
-      - name: Run tests
+      - name: Run integrated tests
         working-directory: ${{github.workspace}}/tests/build
-        run: ./active_record_test
+        run: ./active_record_IT
+
+      - name: Run unit tests
+        working-directory: ${{github.workspace}}/tests/build
+        run: ./active_record_UT

@@ -1,0 +1,51 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, MurakamiShun
+# This file is distributed under the same license as the Active Record C++
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Active Record C++ \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-08-06 00:33+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/api/adaptors/sqlite3_adaptor.rst:3
+msgid "active_record::sqlite3_adaptor"
+msgstr ""
+
+#: ../../source/api/adaptors/sqlite3_adaptor.rst:12
+msgid ""
+"Database connector class for SQLite3. \"libsqlite3\" is required to use "
+"this class."
+msgstr ""
+
+#: ../../source/api/adaptors/sqlite3_adaptor.rst:24
+msgid ""
+"Flags are :doc:`active_record::sqlite3::options "
+"</api/active_record/sqlite3>`"
+msgstr ""
+
+#: ../../source/api/adaptors/sqlite3_adaptor.rst:32
+msgid "Close sqlite3 connection."
+msgstr ""
+
+#: ../../source/api/adaptors/sqlite3_adaptor.rst:40
+msgid "Returns libsqlite3 version string."
+msgstr ""
+
+#: ../../source/api/adaptors/sqlite3_adaptor.rst:48
+msgid "Returns libsqlite3 version number."
+msgstr ""
+
+#~ msgid "Flags is under :doc:`/api/active_record/sqlite3`"
+#~ msgstr ""
+

@@ -1,0 +1,84 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, MurakamiShun
+# This file is distributed under the same license as the Active Record C++
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Active Record C++ \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-08-05 08:51+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/api/active_record/attributes.rst:3
+msgid "namespace active_record::attributes"
+msgstr ""
+
+#: ../../source/api/active_record/attributes.rst:13
+msgid "Attributes"
+msgstr ""
+
+#: ../../source/api/active_record/attributes.rst:17
+msgid ":doc:`attributes/string`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes.rst:18
+msgid "String attribute."
+msgstr ""
+
+#: ../../source/api/active_record/attributes.rst:20
+msgid ":doc:`attributes/integer`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes.rst:21
+msgid "Integer attribute. (default is `int32_t`)"
+msgstr ""
+
+#: ../../source/api/active_record/attributes.rst:23
+msgid ":doc:`attributes/decimal`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes.rst:24
+msgid "Decimal attribute. (default is `float`)"
+msgstr ""
+
+#: ../../source/api/active_record/attributes.rst:26
+msgid ":doc:`attributes/boolean`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes.rst:27
+msgid "boolean attribute."
+msgstr ""
+
+#: ../../source/api/active_record/attributes.rst:29
+msgid ":doc:`attributes/datetime`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes.rst:30
+msgid "Datetime attribute. The value type is `std::utc_clock`."
+msgstr ""
+
+#: ../../source/api/active_record/attributes.rst:32
+msgid ":doc:`attributes/binary`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes.rst:33
+msgid "Datetime attribute. The value type is `std::vector<std::byte>`."
+msgstr ""
+
+#: ../../source/api/active_record/attributes.rst:35
+msgid ":doc:`attributes/reference_to`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes.rst:36
+msgid "Relation attribute."
+msgstr ""
+
