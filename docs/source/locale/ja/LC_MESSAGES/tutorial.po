@@ -47,6 +47,8 @@ msgid ""
 "base classes, \"active_record::model\" and \"active_record::attribute\" "
 "are using CRTP(Curiously Recurring Template Pattern)."
 msgstr ""
+"\"active_record::model\"と\"active_record::attribute\"は"
+"CRTP(奇妙に再帰したテンプレートパターン)を使用した基底クラスを使用しています。"
 
 #: ../../source/tutorial/table_creation.rst:14
 msgid "example_table"

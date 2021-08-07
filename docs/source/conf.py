@@ -44,6 +44,13 @@ exclude_patterns = []
 locale_dirs = ['locale/']
 gettext_compact = False
 
+html_context = {
+    'support_languages' : {
+        'en': 'Engligh',
+        'ja': '日本語'
+    }
+}
+
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
