@@ -33,6 +33,8 @@ Example Table
 Data Inserting
 ==============
 
+This example will insert the below values.
+
 .. list-table:: example data
 
     * - column name
