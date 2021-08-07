@@ -19,7 +19,8 @@ Active Record C++ Documentation
    /tutorial/database_connection
    /tutorial/table_creation
    /tutorial/inserting
-
+   /tutorial/find_columns
+   /tutorial/aggregation
 
 API
 ===
