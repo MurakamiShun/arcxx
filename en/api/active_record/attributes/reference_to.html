@@ -1,0 +1,483 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>active_record::attributes::reference_to &mdash; Active Record C++  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="active_record::attributes::string" href="string.html" />
+    <link rel="prev" title="active_record::attributes::integer" href="integer.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Active Record C++
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/cmake.html">Installation with CMake</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/database_connection.html">Database Connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/table_creation.html">Table Creation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/inserting.html">Data Inserting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">namespace</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../active_record.html">namespace active_record</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attributes.html">namespace active_record::attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sqlite3.html">namespace active_record::sqlite3</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">class</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../model.html">active_record::model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../query_condition.html">active_record::query_condition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../query_relation.html">active_record::query_relation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="binary.html">active_record::attributes::binary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="boolean.html">active_record::attributes::boolean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datetime.html">active_record::attributes::datetime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decimal.html">active_record::attributes::decimal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integer.html">active_record::attributes::integer</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">active_record::attributes::reference_to</a></li>
+<li class="toctree-l1"><a class="reference internal" href="string.html">active_record::attributes::string</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../adaptors/postgresql_adaptor.html">[WIP] active_record::postgresql_adaptor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../adaptors/sqlite3_adaptor.html">active_record::sqlite3_adaptor</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Active Record C++</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../active_record.html">namespace active_record</a> &raquo;</li>
+        
+          <li><a href="../attributes.html">namespace active_record::attributes</a> &raquo;</li>
+        
+      <li>active_record::attributes::reference_to</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/api/active_record/attributes/reference_to.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="active-record-attributes-reference-to">
+<h1>active_record::attributes::reference_to<a class="headerlink" href="#active-record-attributes-reference-to" title="Permalink to this headline">¶</a></h1>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4I00_NSt8integralEE12reference_to">
+<span id="_CPPv3I00_NSt8integralEE12reference_to"></span><span id="_CPPv2I00_NSt8integralEE12reference_to"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Model</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Attribute</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">integral</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ForeignKey</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reference_to</span></span></span><a class="headerlink" href="#_CPPv4I00_NSt8integralEE12reference_to" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Reference attribute.</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Member functions</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#reference-to-constructors"><span class="std std-ref">(constructor)</span></a></p></td>
+<td><p>constructs the reference_to attribute</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#_CPPv4N12reference_toaSEv" title="reference_to::operator="><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">operator=()</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#reference-to-destructors"><span class="std std-ref">(destructor)</span></a></p></td>
+<td><p>destroy the attribute</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">Member variables</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref cpp cpp-var docutils literal notranslate"><span class="pre">data</span></code></p></td>
+<td><p><code class="code docutils literal notranslate"><span class="pre">std::optional&lt;ForeignKey::value_type&gt;</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">Member types</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">model_type</span></code></p></td>
+<td><p><code class="code docutils literal notranslate"><span class="pre">Model</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">attribute_type</span></code></p></td>
+<td><p><code class="code docutils literal notranslate"><span class="pre">Attribute</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">value_type</span></code></p></td>
+<td><p><code class="code docutils literal notranslate"><span class="pre">ForeignKey::value_type</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">foreign_key_type</span></code></p></td>
+<td><p><code class="code docutils literal notranslate"><span class="pre">ForeignKey</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref cpp cpp-type docutils literal notranslate"><span class="pre">constraint</span></code></p></td>
+<td><p><code class="code docutils literal notranslate"><span class="pre">std::function&lt;bool(const</span> <span class="pre">std::optional&lt;ForeignKey::value_type&gt;&amp;)&gt;</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text">Observers</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#_CPPv4N12reference_tocvbEv" title="reference_to::operator bool"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">operator</span> <span class="pre">bool()</span></code></a></p></td>
+<td><p>check whether null</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#_CPPv4N12reference_to5valueEv" title="reference_to::value"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">value()</span></code></a></p></td>
+<td><p>returns the contained value</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-text">Condition Queries</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#_CPPv4N12reference_to2inEv" title="reference_to::in"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">in()</span></code></a></p></td>
+<td><p>generate in condition</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#_CPPv4N12reference_toaaEv" title="reference_to::operator&amp;&amp;"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">operator&amp;&amp;()</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#_CPPv4N12reference_toooEv" title="reference_to::operator||"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">operator||()</span></code></a></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" id="id6">
+<caption><span class="caption-text">String mutual converts</span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#_CPPv4N12reference_to9to_stringEv" title="reference_to::to_string"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">to_string()</span></code></a></p></td>
+<td><p>converts to string</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#_CPPv4N12reference_to11from_stringEv" title="reference_to::from_string"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">from_string()</span></code></a></p></td>
+<td><p>converts from string</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="reference-to-constructors"></span><dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12reference_to12reference_toEv">
+<span id="_CPPv3N12reference_to12reference_toEv"></span><span id="_CPPv2N12reference_to12reference_toEv"></span><span id="reference_to::reference_to"></span><span class="sig-name descname"><span class="n"><span class="pre">reference_to</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12reference_to12reference_toEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span> <span class="n">reference_to</span><span class="p">();</span>
+<span class="k">constexpr</span> <span class="n">reference_to</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">ForeignKey</span><span class="o">::</span><span class="n">value_type</span><span class="o">&gt;&amp;</span><span class="p">);</span>
+<span class="k">constexpr</span> <span class="n">reference_to</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">ForeignKey</span><span class="o">::</span><span class="n">value_type</span><span class="o">&gt;&amp;&amp;</span><span class="p">);</span>
+<span class="k">constexpr</span> <span class="n">reference_to</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nullopt_t</span><span class="p">);</span>
+
+<span class="k">constexpr</span> <span class="n">reference_to</span><span class="p">(</span><span class="k">const</span> <span class="n">ForeignKey</span><span class="o">::</span><span class="n">value_type</span><span class="o">&amp;</span><span class="p">);</span>
+<span class="k">constexpr</span> <span class="n">reference_to</span><span class="p">(</span><span class="k">const</span> <span class="n">ForeignKey</span><span class="o">::</span><span class="n">value_type</span><span class="o">&amp;&amp;</span><span class="p">);</span>
+
+<span class="k">constexpr</span> <span class="n">reference_to</span><span class="p">(</span><span class="k">const</span> <span class="n">ForeignKey</span><span class="o">&amp;</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12reference_toaSEv">
+<span id="_CPPv3N12reference_toaSEv"></span><span id="_CPPv2N12reference_toaSEv"></span><span id="reference_to::assign-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12reference_toaSEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Attribute</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Attribute</span><span class="o">&amp;</span><span class="p">);</span>
+<span class="n">Attribute</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">Attribute</span><span class="o">&amp;&amp;</span><span class="p">);</span>
+
+<span class="n">Attribute</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">ForeignKey</span><span class="o">::</span><span class="n">value_type</span><span class="o">&gt;&amp;</span><span class="p">);</span>
+<span class="n">Attribute</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">ForeignKey</span><span class="o">::</span><span class="n">value_type</span><span class="o">&gt;&amp;&amp;</span><span class="p">);</span>
+<span class="n">Attribute</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nullopt_t</span><span class="p">);</span>
+
+<span class="n">Attribute</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">ForeignKey</span><span class="o">::</span><span class="n">value_type</span><span class="o">&amp;</span><span class="p">);</span>
+<span class="n">Attribute</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">ForeignKey</span><span class="o">::</span><span class="n">value_type</span><span class="o">&amp;&amp;</span><span class="p">);</span>
+
+<span class="n">Attribute</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">ForeignKey</span><span class="o">&amp;</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<span class="target" id="reference-to-destructors"></span><dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12reference_toD0Ev">
+<span id="_CPPv3N12reference_toD0Ev"></span><span id="_CPPv2N12reference_toD0Ev"></span><span id="reference_to::~reference_to"></span><span class="sig-name descname"><span class="n"><span class="pre">~reference_to</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12reference_toD0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span> <span class="k">virtual</span> <span class="o">~</span><span class="n">reference_to</span><span class="p">();</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12reference_tocvbEv">
+<span id="_CPPv3N12reference_tocvbEv"></span><span id="_CPPv2N12reference_tocvbEv"></span><span id="reference_to::castto-b-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12reference_tocvbEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span> <span class="k">operator</span> <span class="kt">bool</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Return false if attribute value is null.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12reference_to5valueEv">
+<span id="_CPPv3N12reference_to5valueEv"></span><span id="_CPPv2N12reference_to5valueEv"></span><span id="reference_to::value"></span><span class="sig-name descname"><span class="n"><span class="pre">value</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12reference_to5valueEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="n">ForeignKey</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span><span class="p">;</span>
+<span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="k">const</span> <span class="n">ForeignKey</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">()</span> <span class="k">const</span><span class="o">&amp;</span><span class="p">;</span>
+<span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="n">ForeignKey</span><span class="o">&amp;&amp;</span> <span class="n">value</span><span class="p">()</span> <span class="o">&amp;&amp;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Return attribute value.
+If the value is null, throw <code class="code docutils literal notranslate"><span class="pre">std::bad_optional_access</span></code>.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12reference_to2inEv">
+<span id="_CPPv3N12reference_to2inEv"></span><span id="_CPPv2N12reference_to2inEv"></span><span id="reference_to::in"></span><span class="sig-name descname"><span class="n"><span class="pre">in</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12reference_to2inEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">Attrs</span><span class="o">&gt;</span>
+<span class="n">query_condition</span> <span class="n">in</span><span class="p">(</span><span class="k">const</span> <span class="n">Attrs</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">args</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The returned object will generate
+<code class="code docutils literal notranslate"><span class="pre">Attribute::column_name</span> <span class="pre">IN</span> <span class="pre">(args...)</span></code></p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12reference_toaaEv">
+<span id="_CPPv3N12reference_toaaEv"></span><span id="_CPPv2N12reference_toaaEv"></span><span id="reference_to::sand-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&amp;&amp;</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12reference_toaaEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">query_condition</span> <span class="k">operator</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="k">const</span> <span class="n">query_condition</span><span class="o">&amp;</span> <span class="n">condition</span><span class="p">);</span> <span class="c1">// (1)</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Arg</span><span class="o">&gt;</span>
+<span class="n">query_condition</span> <span class="k">operator</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="k">const</span> <span class="n">Arg</span><span class="o">&amp;</span> <span class="n">arg</span><span class="p">);</span> <span class="c1">// (2)</span>
+</pre></div>
+</div>
+<p>The returned object will generate “AND condition SQL”.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">Attribute</span><span class="p">::</span><span class="k">column_name</span> <span class="o">=</span> <span class="n">this</span> <span class="k">AND</span> <span class="n">condition</span><span class="p">)</span> <span class="c1">-- (1)</span>
+<span class="p">(</span><span class="n">Attribute</span><span class="p">::</span><span class="k">column_name</span> <span class="o">=</span> <span class="n">this</span> <span class="k">AND</span> <span class="n">Attr</span><span class="p">::</span><span class="k">column_name</span> <span class="o">=</span> <span class="n">arg</span><span class="p">)</span> <span class="c1">-- (2)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12reference_toooEv">
+<span id="_CPPv3N12reference_toooEv"></span><span id="_CPPv2N12reference_toooEv"></span><span id="reference_to::sor-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">||</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12reference_toooEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">query_condition</span> <span class="k">operator</span><span class="o">||</span><span class="p">(</span><span class="k">const</span> <span class="n">query_condition</span><span class="o">&amp;</span> <span class="n">condition</span><span class="p">);</span> <span class="c1">// (1)</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Arg</span><span class="o">&gt;</span>
+<span class="n">query_condition</span> <span class="k">operator</span><span class="o">||</span><span class="p">(</span><span class="k">const</span> <span class="n">Arg</span><span class="o">&amp;</span> <span class="n">arg</span><span class="p">);</span> <span class="c1">// (2)</span>
+</pre></div>
+</div>
+<p>The returned object will generate “OR condition SQL”.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">Attribute</span><span class="p">::</span><span class="k">column_name</span> <span class="o">=</span> <span class="n">this</span> <span class="k">OR</span> <span class="n">condition</span><span class="p">)</span> <span class="c1">-- (1)</span>
+<span class="p">(</span><span class="n">Attribute</span><span class="p">::</span><span class="k">column_name</span> <span class="o">=</span> <span class="n">this</span> <span class="k">OR</span> <span class="n">Attr</span><span class="p">::</span><span class="k">column_name</span> <span class="o">=</span> <span class="n">arg</span><span class="p">)</span> <span class="c1">-- (2)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12reference_to9to_stringEv">
+<span id="_CPPv3N12reference_to9to_stringEv"></span><span id="_CPPv2N12reference_to9to_stringEv"></span><span id="reference_to::to_string"></span><span class="sig-name descname"><span class="n"><span class="pre">to_string</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12reference_to9to_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="n">active_record</span><span class="o">::</span><span class="n">string</span> <span class="n">to_string</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Converts attribute value to string.</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12reference_to11from_stringEv">
+<span id="_CPPv3N12reference_to11from_stringEv"></span><span id="_CPPv2N12reference_to11from_stringEv"></span><span id="reference_to::from_string"></span><span class="sig-name descname"><span class="n"><span class="pre">from_string</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12reference_to11from_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">from_string</span><span class="p">(</span><span class="k">const</span> <span class="n">active_record</span><span class="o">::</span><span class="n">string_view</span> <span class="n">str</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Converts string to attribute value.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="string.html" class="btn btn-neutral float-right" title="active_record::attributes::string" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="integer.html" class="btn btn-neutral float-left" title="active_record::attributes::integer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, MurakamiShun.
+
+    <select name="lang" onchange="location.href=value;">
+    <option value="../../../../en/api/active_record/attributes/reference_to.html"
+        selected
+    >Engligh</option>
+    <option value="../../../../ja/api/active_record/attributes/reference_to.html"
+    >日本語</option>
+</select>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

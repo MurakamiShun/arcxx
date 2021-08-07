@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>namespace active_record::sqlite3 &mdash; Active Record C++  ドキュメント</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="検索" href="../../search.html" />
+    <link rel="next" title="active_record::model" href="model.html" />
+    <link rel="prev" title="active_record::attributes::string" href="attributes/string.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Active Record C++
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">インストール</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/cmake.html">Installation with CMake</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">チュートリアル</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/database_connection.html">Database Connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/table_creation.html">Table Creation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/inserting.html">Data Inserting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">namespace</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../active_record.html">namespace active_record</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attributes.html">namespace active_record::attributes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">namespace active_record::sqlite3</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">class</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="model.html">active_record::model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query_condition.html">active_record::query_condition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query_relation.html">active_record::query_relation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attributes/binary.html">active_record::attributes::binary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attributes/boolean.html">active_record::attributes::boolean</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attributes/datetime.html">active_record::attributes::datetime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attributes/decimal.html">active_record::attributes::decimal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attributes/integer.html">active_record::attributes::integer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attributes/reference_to.html">active_record::attributes::reference_to</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attributes/string.html">active_record::attributes::string</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../adaptors/postgresql_adaptor.html">[WIP] active_record::postgresql_adaptor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../adaptors/sqlite3_adaptor.html">active_record::sqlite3_adaptor</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Active Record C++</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../active_record.html">namespace active_record</a> &raquo;</li>
+        
+      <li>namespace active_record::sqlite3</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/api/active_record/sqlite3.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="namespace-active-record-sqlite3">
+<h1>namespace active_record::sqlite3<a class="headerlink" href="#namespace-active-record-sqlite3" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N13active_record7sqlite37adaptorE">
+<span id="_CPPv3N13active_record7sqlite37adaptorE"></span><span id="_CPPv2N13active_record7sqlite37adaptorE"></span><span id="active_record::sqlite3::adaptor"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">sqlite3</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">adaptor</span></span></span><a class="headerlink" href="#_CPPv4N13active_record7sqlite37adaptorE" title="この定義へのパーマリンク">¶</a><br /></dt>
+<dd><p>Details are <a class="reference internal" href="../adaptors/sqlite3_adaptor.html"><span class="doc">active_record::sqlite3_adaptor</span></a></p>
+</dd></dl>
+
+<dl class="object">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">namespace</span> <span class="pre">active_record::sqlite3::options</span></span></dt>
+<dd><p><a class="reference internal" href="../adaptors/sqlite3_adaptor.html#_CPPv4N15sqlite3_adaptor4openEv" title="sqlite3_adaptor::open"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">sqlite3_adaptor::open()</span></code></a> flags are hear.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span> <span class="k">auto</span> <span class="n">readonly</span>   <span class="o">=</span> <span class="n">SQLITE_OPEN_READONLY</span><span class="p">;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">readwrite</span>  <span class="o">=</span> <span class="n">SQLITE_OPEN_READWRITE</span><span class="p">;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">create</span>     <span class="o">=</span> <span class="n">SQLITE_OPEN_CREATE</span> <span class="o">|</span> <span class="n">SQLITE_OPEN_READWRITE</span><span class="p">;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">uri</span>        <span class="o">=</span> <span class="n">SQLITE_OPEN_URI</span><span class="p">;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">memory</span>     <span class="o">=</span> <span class="n">SQLITE_OPEN_MEMORY</span><span class="p">;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">no_mutex</span>   <span class="o">=</span> <span class="n">SQLITE_OPEN_NOMUTEX</span><span class="p">;</span>
+<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">full_mutex</span> <span class="o">=</span> <span class="n">SQLITE_OPEN_FULLMUTEX</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Flag explanations are <a class="reference external" href="https://www.sqlite.org/c3ref/open.html">https://www.sqlite.org/c3ref/open.html</a></p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="model.html" class="btn btn-neutral float-right" title="active_record::model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="attributes/string.html" class="btn btn-neutral float-left" title="active_record::attributes::string" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, MurakamiShun.
+
+    <select name="lang" onchange="location.href=value;">
+    <option value="../../../en/api/active_record/sqlite3.html"
+    >Engligh</option>
+    <option value="../../../ja/api/active_record/sqlite3.html"
+        selected
+    >日本語</option>
+</select>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
