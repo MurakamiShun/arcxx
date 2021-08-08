@@ -46,7 +46,7 @@ namespace active_record {
         
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<Attr>());
-        ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Result::value_type::table_name } + "\"");
+        ret.query_table = this->query_table;
 
         ret.query_condition = this->query_condition;
         ret.query_options = this->query_options;
@@ -61,7 +61,7 @@ namespace active_record {
         
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<Attr>());
-        ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Result::value_type::table_name } + "\"");
+        ret.query_table = std::move(this->query_table);
 
         ret.query_condition = std::move(this->query_condition);
         ret.query_options = std::move(this->query_options);
@@ -103,12 +103,12 @@ namespace active_record {
 
     template<Container Result, Tuple BindAttrs>
     template<Attribute Attr>
-    query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> query_relation<Result, BindAttrs>::where(const Attr&& attr) && {
+    query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> query_relation<Result, BindAttrs>::where(const Attr& attr) && {
         return std::move(*this).where(attr.to_equ_condition());
     }
     template<Container Result, Tuple BindAttrs>
     template<Attribute Attr>
-    query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> query_relation<Result, BindAttrs>::where(const Attr&& attr) const& {
+    query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> query_relation<Result, BindAttrs>::where(const Attr& attr) const& {
         return this->where(attr.to_equ_condition());
     }
 

@@ -66,7 +66,7 @@ namespace active_record {
 
     template<typename Derived>
     template<Attribute Attr>
-    inline query_relation<std::vector<Derived>, std::tuple<const Attr*>> model<Derived>::where(const Attr&& attr) {
+    inline query_relation<std::vector<Derived>, std::tuple<const Attr*>> model<Derived>::where(const Attr& attr) {
         return where(attr.to_equ_condition());
     }
 

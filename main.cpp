@@ -139,7 +139,7 @@ int main() {
     }
 
     EnteringLog log;
-    log.member_id = member;
+    log.member_id = member.id;
 
     std::cout << "\033[33m[execution] \033[m" << EnteringLog::join<Member>().select<EnteringLog::ID, Member::Name>().to_sql<active_record::sqlite3_adaptor>() << std::endl;
     if(const auto [error, logs] = EnteringLog::join<Member>().select<EnteringLog::ID, Member::Name>().exec(con); error){

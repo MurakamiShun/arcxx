@@ -117,7 +117,7 @@ namespace active_record {
         static query_relation<bool, SrcBindAttrs> destroy(query_condition<SrcBindAttrs>&&);
 
         template<Attribute Attr>
-        static query_relation<std::vector<Derived>, std::tuple<const Attr*>> where(const Attr&&);
+        static query_relation<std::vector<Derived>, std::tuple<const Attr*>> where(const Attr&);
         template<Tuple SrcBindAttrs>
         static query_relation<std::vector<Derived>, SrcBindAttrs> where(query_condition<SrcBindAttrs>&&);
 

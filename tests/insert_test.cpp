@@ -10,10 +10,10 @@ TEST_CASE("Insert query tests", "[model][query_relation][insert][select]") {
         using transaction = active_record::transaction;
 
         for(auto i = 0; i < 10; ++i){
-            User user = {
-                .id = i,
-                .name = std::string{ "user" } + std::to_string(i)
-            };
+            User user;
+            user.id = i;
+            user.name = std::string{ "user" } + std::to_string(i);
+
             if(const auto error = User::insert(user).exec(connection); error){
                 FAIL(error.value());
                 return transaction::rollback;

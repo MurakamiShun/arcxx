@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.11)
 
 project(tests LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
+add_compile_options(-Wall -Wextra -pedantic -Werror)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -20,6 +21,7 @@ add_executable(active_record_IT
     insert_test.cpp
     delete_test.cpp
     update_test.cpp
+    join_test.cpp
 )
 target_link_libraries(active_record_IT PRIVATE Catch2::Catch2 sqlite3)
 

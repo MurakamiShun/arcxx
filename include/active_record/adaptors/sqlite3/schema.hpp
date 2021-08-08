@@ -14,8 +14,7 @@ namespace active_record::sqlite3 {
         template<Attribute T>
         static active_record::string reference_definition(){
             if constexpr(is_reference<T>::value){
-                return active_record::string{ ",FOREIGN KEY(" }
-                    + active_record::string{ T::column_name } + ") REFERENCES "
+                    return active_record::string{ " REFERENCES " } 
                     + active_record::string{ T::foreign_key_type::model_type::table_name } + "("
                     + active_record::string{ T::foreign_key_type::column_name } + ")";
             }
