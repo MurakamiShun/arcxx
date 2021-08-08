@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Active Record C++ \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-06 00:33+0000\n"
+"POT-Creation-Date: 2021-08-07 23:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,18 +21,22 @@ msgstr ""
 #: ../../source/tutorial/table_creation.rst:3
 #: ../../source/tutorial/table_creation.rst:53
 msgid "Table Creation"
-msgstr ""
+msgstr "テーブルの作成"
 
 #: ../../source/tutorial/table_creation.rst:7
 msgid "Model Definition"
-msgstr ""
+msgstr "モデル定義"
 
 #: ../../source/tutorial/table_creation.rst:9
 msgid ""
-":code:`table_name` and :doc:`attributes </api/active_record/attributes>` "
-"are required in model struct definition. And column struct requires "
-":code:`column_name` and inheriting constructors in the definition."
+":code:`table_name` and tuple of :doc:`attributes "
+"</api/active_record/attributes>` reference are required in model struct "
+"definition. And column struct requires :code:`column_name` and inheriting"
+" constructors in the definition."
 msgstr ""
+"モデルの定義には、その構造体中に :code:`table_name` および :doc:`attributes "
+"</api/active_record/attributes>` への参照のtupleが必要です。加えて、カラムの定義には "
+":code:`column_name` と継承コンストラクタが必要です。"
 
 #: ../../source/tutorial/table_creation.rst:12
 msgid ""
@@ -40,6 +44,9 @@ msgid ""
 ":doc:`active_record::attribute </api/active_record/attributes>` are using"
 " CRTP(Curiously Recurring Template Pattern)."
 msgstr ""
+"基底クラスである :doc:`active_record::model </api/active_record/model>` および "
+":doc:`active_record::attribute </api/active_record/attributes>` "
+"はCRTP(奇妙に再帰したテンプレートパターン)を使用しています。"
 
 #: ../../source/tutorial/table_creation.rst:14
 msgid "example_table"
@@ -83,39 +90,17 @@ msgstr ""
 
 #: ../../source/tutorial/table_creation.rst:50
 msgid "Attribute details are written in :doc:`/api/active_record/attributes`."
-msgstr ""
+msgstr "Attributeの詳細は :doc:`/api/active_record/attributes` に書いてあります。"
 
 #: ../../source/tutorial/table_creation.rst:55
 msgid "Generate table creation SQL code (SQLite3)"
-msgstr ""
+msgstr "テーブル作成のSQL文の生成 (SQLite3)"
 
 #: ../../source/tutorial/table_creation.rst:60
-msgid "Created SQL code (SQLite3)"
-msgstr ""
+msgid "Generated SQL code (SQLite3)"
+msgstr "生成されたSQL文"
 
 #: ../../source/tutorial/table_creation.rst:68
-msgid "Create table into sql file."
-msgstr ""
-
-#~ msgid "Table Definition"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "\"table_name\" and \"attributes\" are required"
-#~ " in model struct definition. And "
-#~ "column struct requires \"column_name\" and "
-#~ "inheriting constructors in definition."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "base classes, \"active_record::model\" and "
-#~ "\"active_record::attribute\" are using "
-#~ "CRTP(Curiously Recurring Template Pattern)."
-#~ msgstr ""
-
-#~ msgid "Attribute details are wirtten in :doc:`/api/active_record/attributes`."
-#~ msgstr ""
-
-#~ msgid "Generate table creation sql code (SQLite3)"
-#~ msgstr ""
+msgid "Create table into Database file."
+msgstr "データベースファイルへのテーブルの作成"
 

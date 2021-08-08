@@ -1,0 +1,72 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, MurakamiShun
+# This file is distributed under the same license as the Active Record C++
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Active Record C++ \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-08-07 12:07+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/tutorial/inserting.rst:3 ../../source/tutorial/inserting.rst:34
+msgid "Data Inserting"
+msgstr "データの挿入"
+
+#: ../../source/tutorial/inserting.rst:7
+msgid "Example Table"
+msgstr ""
+
+#: ../../source/tutorial/inserting.rst:9
+msgid "example_table code"
+msgstr ""
+
+#: ../../source/tutorial/inserting.rst:36
+msgid "This example will insert the below values."
+msgstr "この例では以下の値を挿入します。"
+
+#: ../../source/tutorial/inserting.rst:38
+msgid "example data"
+msgstr ""
+
+#: ../../source/tutorial/inserting.rst:40
+msgid "column name"
+msgstr ""
+
+#: ../../source/tutorial/inserting.rst:41
+msgid "data value"
+msgstr ""
+
+#: ../../source/tutorial/inserting.rst:42
+msgid "example_table.id"
+msgstr ""
+
+#: ../../source/tutorial/inserting.rst:43
+msgid ":code:`1`"
+msgstr ""
+
+#: ../../source/tutorial/inserting.rst:44
+msgid "example_table.name"
+msgstr ""
+
+#: ../../source/tutorial/inserting.rst:45
+msgid ":code:`unknown`"
+msgstr ""
+
+#: ../../source/tutorial/inserting.rst:47
+msgid "Data inserting code."
+msgstr ""
+
+#: ../../source/tutorial/inserting.rst:49
+msgid "inserting example code"
+msgstr ""
+

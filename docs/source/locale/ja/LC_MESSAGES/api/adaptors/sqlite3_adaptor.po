@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Active Record C++ \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-06 00:33+0000\n"
+"POT-Creation-Date: 2021-08-08 02:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,28 +24,26 @@ msgstr ""
 
 #: ../../source/api/adaptors/sqlite3_adaptor.rst:12
 msgid ""
-"Database connector class for SQLite3. \"libsqlite3\" is required to use "
-"this class."
-msgstr ""
+"This class is database connector class for SQLite3. \"libsqlite3\" is "
+"required to use this class."
+msgstr "このクラスはSQLite3の接続のためのクラスです。このクラスの仕様には「libsqlite3」が必要です。"
 
 #: ../../source/api/adaptors/sqlite3_adaptor.rst:24
 msgid ""
-"Flags are :doc:`active_record::sqlite3::options "
+"The flag details are on :doc:`active_record::sqlite3::options "
 "</api/active_record/sqlite3>`"
 msgstr ""
+"各フラグの詳細は :doc:`active_record::sqlite3::options "
+"</api/active_record/sqlite3>` にあります。"
 
 #: ../../source/api/adaptors/sqlite3_adaptor.rst:32
-msgid "Close sqlite3 connection."
-msgstr ""
+msgid "Close SQLite3 connection."
+msgstr "SQLite3の接続を閉じます。"
 
 #: ../../source/api/adaptors/sqlite3_adaptor.rst:40
 msgid "Returns libsqlite3 version string."
-msgstr ""
+msgstr "libsqlite3のバージョン文字列を返します。"
 
 #: ../../source/api/adaptors/sqlite3_adaptor.rst:48
 msgid "Returns libsqlite3 version number."
-msgstr ""
-
-#~ msgid "Flags is under :doc:`/api/active_record/sqlite3`"
-#~ msgstr ""
-
+msgstr "libsqlite3のバージョン番号を返します。"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Active Record C++ \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-05 08:51+0000\n"
+"POT-Creation-Date: 2021-08-07 12:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,27 +20,27 @@ msgstr ""
 
 #: ../../source/installation/cmake.rst:3
 msgid "Installation with CMake"
-msgstr ""
+msgstr "CMakeを利用したライブラリの導入"
 
 #: ../../source/installation/cmake.rst:7
 msgid "Installation"
-msgstr ""
+msgstr "インストール"
 
 #: ../../source/installation/cmake.rst:9
 msgid "We can use CMake to install active_record_cpp package."
-msgstr ""
+msgstr "ライブラリの導入にCMakeを使用することができます"
 
 #: ../../source/installation/cmake.rst:21
 msgid "Quick Start"
-msgstr ""
+msgstr "クイックスタート"
 
 #: ../../source/installation/cmake.rst:23
 msgid ""
-"Make your project folder and source files. And make CMakeLists.txt to "
-"build our source under under your project folder."
-msgstr ""
+"Make your project folder and source files. And make CMakeLists.txt under "
+"your project folder."
+msgstr "main.cppの存在するフォルダ内に、以下のCMakeLists.txtを作成してください。"
 
 #: ../../source/installation/cmake.rst:36
-msgid "Type commands to build."
-msgstr ""
+msgid "Type below commands to build your project."
+msgstr "以下のコマンドを実行し、プロジェクトをビルドしてください。"
 

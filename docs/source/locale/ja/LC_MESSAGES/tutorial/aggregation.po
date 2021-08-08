@@ -18,27 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: ../../source/index.rst:9
-msgid "Installation"
-msgstr "インストール"
-
-#: ../../source/index.rst:15
-msgid "Tutorial"
-msgstr "チュートリアル"
-
-#: ../../source/index.rst:28
-msgid "namespace"
+#: ../../source/tutorial/aggregation.rst:3
+msgid "Aggregation"
 msgstr ""
 
-#: ../../source/index.rst:37
-msgid "class"
+#: ../../source/tutorial/aggregation.rst:7
+msgid "Columns count"
 msgstr ""
 
-#: ../../source/index.rst:7
-msgid "Active Record C++ Documentation"
-msgstr "Active Record C++ ドキュメント"
-
-#: ../../source/index.rst:26
-msgid "API"
+#: ../../source/tutorial/aggregation.rst:9
+msgid "To count columns, use :code:`count()`."
 msgstr ""
 

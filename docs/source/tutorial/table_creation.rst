@@ -6,7 +6,7 @@ Table Creation
 Model Definition
 ================
 
-:code:`table_name` and :doc:`attributes </api/active_record/attributes>` are required in model struct definition.
+:code:`table_name` and tuple of :doc:`attributes </api/active_record/attributes>` reference are required in model struct definition.
 And column struct requires :code:`column_name` and inheriting constructors in the definition.
 
 base classes, :doc:`active_record::model </api/active_record/model>` and :doc:`active_record::attribute </api/active_record/attributes>` are using CRTP(Curiously Recurring Template Pattern).
@@ -58,7 +58,7 @@ Table Creation
     ExampleTable::schema::to_sql<active_record::sqlite3_adaptor>()
 
 .. code-block:: sql
-    :caption: Created SQL code (SQLite3)
+    :caption: Generated SQL code (SQLite3)
 
     CREATE TABLE example_table(
         id INTEGER PRIMARY KEY,
@@ -66,7 +66,7 @@ Table Creation
     );
 
 .. code-block:: cpp
-    :caption: Create table into sql file.
+    :caption: Create table into Database file.
 
     auto connection = active_record::sqlite3_adaptor::open("example.sqlite3", active_record::sqlite3::options::create);
     connection.create_table<ExampleTable>();

@@ -19,6 +19,7 @@ To count columns, use :code:`count()`.
     // Execute data counting
     const auto [error, count] = sql_stmt.exec(connection);
 
+    // decltype(error) == std::optional<active_record::string>
     if(error){
         // error handling
     }

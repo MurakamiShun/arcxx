@@ -20,15 +20,16 @@ msgstr ""
 
 #: ../../source/tutorial/database_connection.rst:8
 msgid "Adaptor list"
-msgstr ""
+msgstr "Adaptor一覧"
 
 #: ../../source/tutorial/database_connection.rst:3
 msgid "Database Connection"
-msgstr ""
+msgstr "データベースへの接続"
 
 #: ../../source/tutorial/database_connection.rst:5
 msgid ""
 "Use :code:`open` method on adaptors to make a database connection. The "
 "method detail is different between each adaptor. See adaptor details."
 msgstr ""
-
+"データベースへのコネクションを作成するにはadaptorの :code:`open` 関数を使用してください。"
+"関数の詳細は各adaptorごとに異なるため、adaptorの詳細を参照してください。"

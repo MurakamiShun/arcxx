@@ -1,0 +1,52 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, MurakamiShun
+# This file is distributed under the same license as the Active Record C++
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Active Record C++ \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-08-08 03:59+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/tutorial/select_columns.rst:3
+msgid "Select columns"
+msgstr ""
+
+#: ../../source/tutorial/select_columns.rst:6
+msgid "Select function"
+msgstr ""
+
+#: ../../source/tutorial/select_columns.rst:8
+msgid ""
+":code:`select` function generate SQL statement which return selected "
+"columns as :code:`std::tuple<selected columns...>`."
+msgstr ""
+
+#: ../../source/tutorial/select_columns.rst:11
+msgid "select example code"
+msgstr ""
+
+#: ../../source/tutorial/select_columns.rst:32
+msgid "Pluck function"
+msgstr ""
+
+#: ../../source/tutorial/select_columns.rst:34
+msgid ""
+":code:`pluck` function generate SQL statement which return only selected "
+"column."
+msgstr ""
+
+#: ../../source/tutorial/select_columns.rst:37
+msgid "pluck example code"
+msgstr ""
+

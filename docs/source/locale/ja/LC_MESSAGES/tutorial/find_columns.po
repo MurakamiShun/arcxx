@@ -18,27 +18,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: ../../source/index.rst:9
-msgid "Installation"
-msgstr "インストール"
-
-#: ../../source/index.rst:15
-msgid "Tutorial"
-msgstr "チュートリアル"
-
-#: ../../source/index.rst:28
-msgid "namespace"
+#: ../../source/tutorial/find_columns.rst:3
+msgid "Find columns"
 msgstr ""
 
-#: ../../source/index.rst:37
-msgid "class"
+#: ../../source/tutorial/find_columns.rst:7
+msgid "Where clause"
 msgstr ""
 
-#: ../../source/index.rst:7
-msgid "Active Record C++ Documentation"
-msgstr "Active Record C++ ドキュメント"
+#: ../../source/tutorial/find_columns.rst:9
+msgid "To find and get columns, use :code:`where()`."
+msgstr ""
 
-#: ../../source/index.rst:26
-msgid "API"
+#: ../../source/tutorial/find_columns.rst:32
+msgid ""
+"Where clause can chain the conditions. The conditions will join with AND."
+" The below codes will be the same result."
 msgstr ""
 

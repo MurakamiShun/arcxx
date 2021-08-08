@@ -204,6 +204,3 @@ msgstr ""
 msgid "Converts string to attribute value."
 msgstr ""
 
-#~ msgid "FP attribute."
-#~ msgstr ""
-

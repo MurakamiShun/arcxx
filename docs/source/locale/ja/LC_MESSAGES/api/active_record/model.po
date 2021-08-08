@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Active Record C++ \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-06 00:33+0000\n"
+"POT-Creation-Date: 2021-08-08 07:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,7 +71,7 @@ msgid ":cpp:func:`pluck`"
 msgstr ""
 
 #: ../../source/api/active_record/model.rst:38
-msgid ":cpp:func:`update`"
+msgid ":cpp:func:`where`"
 msgstr ""
 
 #: ../../source/api/active_record/model.rst:40
@@ -79,53 +79,77 @@ msgid ":cpp:func:`destroy`"
 msgstr ""
 
 #: ../../source/api/active_record/model.rst:42
-msgid ":cpp:func:`where`"
-msgstr ""
-
-#: ../../source/api/active_record/model.rst:44
 msgid ":cpp:func:`limit`"
 msgstr ""
 
-#: ../../source/api/active_record/model.rst:46
+#: ../../source/api/active_record/model.rst:44
 msgid ":cpp:func:`order_by`"
 msgstr ""
 
-#: ../../source/api/active_record/model.rst:48
+#: ../../source/api/active_record/model.rst:46
 msgid ":cpp:func:`join`"
 msgstr ""
 
-#: ../../source/api/active_record/model.rst:50
+#: ../../source/api/active_record/model.rst:48
 msgid ":cpp:func:`left_join`"
 msgstr ""
 
-#: ../../source/api/active_record/model.rst:52
+#: ../../source/api/active_record/model.rst:50
 msgid ":cpp:func:`count`"
 msgstr ""
 
-#: ../../source/api/active_record/model.rst:54
+#: ../../source/api/active_record/model.rst:52
 msgid ":cpp:func:`sum`"
 msgstr ""
 
-#: ../../source/api/active_record/model.rst:56
+#: ../../source/api/active_record/model.rst:54
 msgid ":cpp:func:`avg`"
 msgstr ""
 
-#: ../../source/api/active_record/model.rst:58
+#: ../../source/api/active_record/model.rst:56
 msgid ":cpp:func:`max`"
 msgstr ""
 
-#: ../../source/api/active_record/model.rst:60
+#: ../../source/api/active_record/model.rst:58
 msgid ":cpp:func:`min`"
 msgstr ""
 
-#: ../../source/api/active_record/model.rst:63
+#: ../../source/api/active_record/model.rst:61
 msgid "Member structures"
 msgstr ""
 
-#: ../../source/api/active_record/model.rst:65
+#: ../../source/api/active_record/model.rst:63
 msgid ":cpp:struct:`schema`"
 msgstr ""
 
-#~ msgid "Minimum model define code"
+#: ../../source/api/active_record/model.rst:77
+msgid "The data inserting example is :doc:`here </tutorial/inserting>`."
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:86
+msgid "Get all model data in database."
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:94
+msgid "The select function example is :doc:`here </tutorial/select_columns>`."
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:106
+msgid "The pluck function example is :doc:`here </tutorial/select_columns>`."
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:118
+msgid "The example is :doc:`here </tutorial/find_columns>`."
+msgstr ""
+
+#: ../../source/api/active_record/model.rst:168
+#: ../../source/api/active_record/model.rst:176
+#: ../../source/api/active_record/model.rst:186
+#: ../../source/api/active_record/model.rst:196
+#: ../../source/api/active_record/model.rst:206
+msgid "The aggregation examples is :doc:`here </tutorial/aggregation>`."
+msgstr ""
+
+#~ msgid ":cpp:func:`update`"
 #~ msgstr ""
 
