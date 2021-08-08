@@ -62,7 +62,8 @@ Data inserting code.
 
     // Execute data inserting
     const auto error = sql_stmt.exec(connection);
-
+    
+    // decltype(error) == std::optional<active_record::string>
     if(error){
         // error handling
     }

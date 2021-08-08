@@ -101,6 +101,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/table_creation.html">Table Creation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/inserting.html">Data Inserting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/find_columns.html">Find columns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/select_columns.html">Select columns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/aggregation.html">Aggregation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">namespace</span></p>
@@ -206,7 +207,7 @@ $ cmake --install build
 <div class="section" id="quick-start">
 <h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
 <p>Make your project folder and source files.
-And make CMakeLists.txt to build our source under under your project folder.</p>
+And make CMakeLists.txt under your project folder.</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.9</span><span class="p">)</span>
 
 <span class="nb">project</span><span class="p">(</span><span class="s">your_prject_name</span> <span class="s">LANGUAGES</span> <span class="s">CXX</span><span class="p">)</span>
@@ -216,7 +217,7 @@ And make CMakeLists.txt to build our source under under your project folder.</p>
 <span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span> <span class="s">PRIVATE</span> <span class="s">active_record_cpp</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Type commands to build.</p>
+<p>Type below commands to build your project.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ cmake -S . -B build
 $ cmake --build build
 </pre></div>

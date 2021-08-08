@@ -20,6 +20,7 @@ Active Record C++ Documentation
    /tutorial/table_creation
    /tutorial/inserting
    /tutorial/find_columns
+   /tutorial/select_columns
    /tutorial/aggregation
 
 API

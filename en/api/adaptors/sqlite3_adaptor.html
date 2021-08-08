@@ -101,6 +101,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/table_creation.html">Table Creation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/inserting.html">Data Inserting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/find_columns.html">Find columns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/select_columns.html">Select columns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/aggregation.html">Aggregation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">namespace</span></p>
@@ -200,7 +201,7 @@
 <dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">sqlite3_adaptor</span> <span class="o">:</span> <span class="k">public</span> <span class="n">adaptor</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>Database connector class for SQLite3.
+<p>This class is database connector class for SQLite3.
 “libsqlite3” is required to use this class.</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N15sqlite3_adaptor4openEv">
@@ -211,7 +212,7 @@
 <span class="p">);</span>
 </pre></div>
 </div>
-<p>Flags are <a class="reference internal" href="../active_record/sqlite3.html"><span class="doc">active_record::sqlite3::options</span></a></p>
+<p>The flag details are on <a class="reference internal" href="../active_record/sqlite3.html"><span class="doc">active_record::sqlite3::options</span></a></p>
 </dd></dl>
 
 <dl class="cpp function">
@@ -220,7 +221,7 @@
 <dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">bool</span> <span class="nf">close</span><span class="p">();</span>
 </pre></div>
 </div>
-<p>Close sqlite3 connection.</p>
+<p>Close SQLite3 connection.</p>
 </dd></dl>
 
 <dl class="cpp function">

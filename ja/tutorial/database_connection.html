@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Database Connection &mdash; Active Record C++  ドキュメント</title>
+  <title>データベースへの接続 &mdash; Active Record C++  ドキュメント</title>
   
 
   
@@ -43,7 +43,7 @@
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="検索" href="../search.html" />
     <link rel="next" title="[WIP] active_record::postgresql_adaptor" href="../api/adaptors/postgresql_adaptor.html" />
-    <link rel="prev" title="Installation with CMake" href="../installation/cmake.html" /> 
+    <link rel="prev" title="CMakeを利用したライブラリの導入" href="../installation/cmake.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -90,18 +90,19 @@
             
               <p class="caption" role="heading"><span class="caption-text">インストール</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../installation/cmake.html">Installation with CMake</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/cmake.html">CMakeを利用したライブラリの導入</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">チュートリアル</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Database Connection</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">データベースへの接続</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/adaptors/postgresql_adaptor.html">[WIP] active_record::postgresql_adaptor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/adaptors/sqlite3_adaptor.html">active_record::sqlite3_adaptor</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="table_creation.html">Table Creation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="inserting.html">Data Inserting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="table_creation.html">テーブルの作成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inserting.html">データの挿入</a></li>
 <li class="toctree-l1"><a class="reference internal" href="find_columns.html">Find columns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="select_columns.html">Select columns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="aggregation.html">Aggregation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">namespace</span></p>
@@ -172,7 +173,7 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Database Connection</li>
+      <li>データベースへの接続</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -192,11 +193,10 @@
            <div itemprop="articleBody">
             
   <div class="section" id="database-connection">
-<h1>Database Connection<a class="headerlink" href="#database-connection" title="このヘッドラインへのパーマリンク">¶</a></h1>
-<p>Use <code class="code docutils literal notranslate"><span class="pre">open</span></code> method on adaptors to make a database connection.
-The method detail is different between each adaptor. See adaptor details.</p>
+<h1>データベースへの接続<a class="headerlink" href="#database-connection" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>データベースへのコネクションを作成するにはadaptorの <code class="code docutils literal notranslate"><span class="pre">open</span></code> 関数を使用してください。関数の詳細は各adaptorごとに異なるため、adaptorの詳細を参照してください。</p>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Adaptor list</span></p>
+<p class="caption" role="heading"><span class="caption-text">Adaptor一覧</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/adaptors/postgresql_adaptor.html">[WIP] active_record::postgresql_adaptor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/adaptors/sqlite3_adaptor.html">active_record::sqlite3_adaptor</a></li>
@@ -211,7 +211,7 @@ The method detail is different between each adaptor. See adaptor details.</p>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="../api/adaptors/postgresql_adaptor.html" class="btn btn-neutral float-right" title="[WIP] active_record::postgresql_adaptor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../installation/cmake.html" class="btn btn-neutral float-left" title="Installation with CMake" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../installation/cmake.html" class="btn btn-neutral float-left" title="CMakeを利用したライブラリの導入" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

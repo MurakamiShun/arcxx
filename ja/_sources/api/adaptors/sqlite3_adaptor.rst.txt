@@ -9,7 +9,7 @@ active_record::sqlite3_adaptor
 
         class sqlite3_adaptor : public adaptor;
 
-    Database connector class for SQLite3.
+    This class is database connector class for SQLite3.
     "libsqlite3" is required to use this class.
 
     .. cpp:function:: open()
@@ -21,7 +21,7 @@ active_record::sqlite3_adaptor
                 const int flags = active_record::sqlite3::options::readwrite
             );
 
-        Flags are :doc:`active_record::sqlite3::options </api/active_record/sqlite3>`
+        The flag details are on :doc:`active_record::sqlite3::options </api/active_record/sqlite3>`
 
     .. cpp:function:: close()
 
@@ -29,7 +29,7 @@ active_record::sqlite3_adaptor
 
             bool close();
 
-        Close sqlite3 connection.
+        Close SQLite3 connection.
 
     .. cpp:function:: version()
 

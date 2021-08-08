@@ -21,7 +21,7 @@ Quick Start
 ===========
 
 Make your project folder and source files.
-And make CMakeLists.txt to build our source under under your project folder.
+And make CMakeLists.txt under your project folder.
 
 .. code-block:: cmake
 
@@ -33,7 +33,7 @@ And make CMakeLists.txt to build our source under under your project folder.
     add_executable(${PROJECT_NAME} main.cpp)
     target_link_libraries(${PROJECT_NAME} PRIVATE active_record_cpp)
 
-Type commands to build.
+Type below commands to build your project.
 
 .. code-block:: bash
 

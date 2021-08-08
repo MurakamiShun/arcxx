@@ -41,7 +41,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Aggregation" href="aggregation.html" />
+    <link rel="next" title="Select columns" href="select_columns.html" />
     <link rel="prev" title="Data Inserting" href="inserting.html" /> 
 </head>
 
@@ -100,6 +100,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#where-clause">Where clause</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="select_columns.html">Select columns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="aggregation.html">Aggregation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">namespace</span></p>
@@ -204,6 +205,7 @@
 <span class="c1">// Execute data finding</span>
 <span class="k">const</span> <span class="k">auto</span> <span class="p">[</span><span class="n">error</span><span class="p">,</span> <span class="n">columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span>
 
+<span class="c1">// decltype(error) == std::optional&lt;active_record::string&gt;</span>
 <span class="k">if</span><span class="p">(</span><span class="n">error</span><span class="p">){</span>
     <span class="c1">// error handling</span>
 <span class="p">}</span>
@@ -229,7 +231,7 @@ The below codes will be the same result.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="aggregation.html" class="btn btn-neutral float-right" title="Aggregation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="select_columns.html" class="btn btn-neutral float-right" title="Select columns" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="inserting.html" class="btn btn-neutral float-left" title="Data Inserting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

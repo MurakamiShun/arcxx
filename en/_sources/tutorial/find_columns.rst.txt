@@ -20,6 +20,7 @@ To find and get columns, use :code:`where()`.
     // Execute data finding
     const auto [error, columns] = sql_stmt.exec(connection);
 
+    // decltype(error) == std::optional<active_record::string>
     if(error){
         // error handling
     }
