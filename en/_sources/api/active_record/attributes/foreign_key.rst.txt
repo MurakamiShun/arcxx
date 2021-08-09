@@ -1,19 +1,19 @@
 =======================================
-active_record::attributes::reference_to
+active_record::attributes::foreign_key
 =======================================
 
 .. cpp:struct:: template<typename Model, typename Attribute, std::integral ForeignKey=uint32_t> \
-                reference_to
+                foreign_key
 
     Reference attribute.
 
     .. list-table:: Member functions
 
-        * - :ref:`(constructor) <reference_to_constructors>`
-          - constructs the reference_to attribute
+        * - :ref:`(constructor) <foreign_key_constructors>`
+          - constructs the foreign_key attribute
         * - :cpp:func:`operator=`
           - 
-        * - :ref:`(destructor) <reference_to_destructors>`
+        * - :ref:`(destructor) <foreign_key_destructors>`
           - destroy the attribute
 
     .. list-table:: Member variables
@@ -57,20 +57,20 @@ active_record::attributes::reference_to
         * - :cpp:func:`from_string`
           - converts from string
 
-    .. _reference_to_constructors:
-    .. cpp:function:: reference_to()
+    .. _foreign_key_constructors:
+    .. cpp:function:: foreign_key()
 
         .. code-block:: cpp
 
-            constexpr reference_to();
-            constexpr reference_to(const std::optional<ForeignKey::value_type>&);
-            constexpr reference_to(const std::optional<ForeignKey::value_type>&&);
-            constexpr reference_to(std::nullopt_t);
+            constexpr foreign_key();
+            constexpr foreign_key(const std::optional<ForeignKey::value_type>&);
+            constexpr foreign_key(const std::optional<ForeignKey::value_type>&&);
+            constexpr foreign_key(std::nullopt_t);
 
-            constexpr reference_to(const ForeignKey::value_type&);
-            constexpr reference_to(const ForeignKey::value_type&&);
+            constexpr foreign_key(const ForeignKey::value_type&);
+            constexpr foreign_key(const ForeignKey::value_type&&);
 
-            constexpr reference_to(const ForeignKey&);
+            constexpr foreign_key(const ForeignKey&);
         
     .. cpp:function:: operator=()
     
@@ -88,12 +88,12 @@ active_record::attributes::reference_to
 
             Attribute& operator=(const ForeignKey&);
 
-    .. _reference_to_destructors:
-    .. cpp:function:: ~reference_to()
+    .. _foreign_key_destructors:
+    .. cpp:function:: ~foreign_key()
         
         .. code-block:: cpp
 
-            constexpr virtual ~reference_to();
+            constexpr virtual ~foreign_key();
 
     .. cpp:function:: operator bool()
 

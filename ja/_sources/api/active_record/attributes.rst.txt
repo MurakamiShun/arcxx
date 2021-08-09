@@ -32,5 +32,5 @@ Attributes
     * - :doc:`attributes/binary`
       - Datetime attribute. The value type is `std::vector<std::byte>`.
 
-    * - :doc:`attributes/reference_to`
-      - Relation attribute.
+    * - :doc:`attributes/foreign_key`
+      - Foreign key attribute.
