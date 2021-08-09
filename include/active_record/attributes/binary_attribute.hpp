@@ -1,6 +1,5 @@
 #pragma once
 #include "attribute_common_impl.hpp"
-#include <vector>
 
 namespace active_record {
     template<std::same_as<common_adaptor> Adaptor, Attribute Attr>

@@ -4,7 +4,7 @@
 namespace active_record{
     struct adaptor {
         //static constexpr bool bindable = false;
-        static active_record::string bind_variable_str(const std::size_t idx);
+        //static active_record::string bind_variable_str(const std::size_t idx);
     };
 
     struct common_adaptor : public adaptor{

@@ -7,4 +7,4 @@
 #include "datetime_attribute.hpp"
 #include "binary_attribute.hpp"
 
-#include "reference_to.hpp"
+#include "foreign_key.hpp"

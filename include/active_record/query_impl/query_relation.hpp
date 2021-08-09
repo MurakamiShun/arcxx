@@ -32,7 +32,7 @@ namespace active_record {
         };
 
         template<std::derived_from<adaptor> Adaptor>
-        active_record::string sob_to_string(const std::vector<str_or_bind>& sobs) const {
+        [[nodiscard]] active_record::string sob_to_string(const std::vector<str_or_bind>& sobs) const {
             active_record::string result;
             str_or_bind_visitor<Adaptor> visitor{ bind_attrs };
             for(const auto& sob : sobs) {
@@ -50,7 +50,7 @@ namespace active_record {
         BindAttrs bind_attrs;
         std::vector<std::any> temporary_attrs;
 
-        static constexpr std::size_t bind_attrs_count() {
+        [[nodiscard]] static constexpr std::size_t bind_attrs_count() noexcept {
             return std::tuple_size_v<BindAttrs>;
         }
 

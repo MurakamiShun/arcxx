@@ -6,6 +6,13 @@
 #include <chrono>
 #include <tuple>
 #include <functional>
+#include <variant>
+#include <any>
+#include <vector>
+#include <array>
+#include <utility>
+#include <optional>
+#include <charconv>
 
 namespace active_record{
     using string = std::string;
@@ -39,16 +46,16 @@ namespace active_record{
     };
 
     template<class Tuple, std::size_t... I>
-    constexpr auto tuple_slice(Tuple& t, std::index_sequence<I...>&&){
+    [[nodiscard]] constexpr auto tuple_slice(Tuple& t, std::index_sequence<I...>&&) noexcept {
         return std::tie(std::get<I>(t)...);
     }
     template<class Tuple, std::size_t... I>
-    constexpr auto tuple_slice(Tuple&& t, std::index_sequence<I...>&&){
+    [[nodiscard]] constexpr auto tuple_slice(Tuple&& t, std::index_sequence<I...>&&) {
         return std::make_tuple(std::get<I>(t)...);
     }
 
     template<std::size_t from, std::size_t to>
-    constexpr auto make_index_sequence_between(){
+    [[nodiscard]] constexpr auto make_index_sequence_between() noexcept {
         return []<std::size_t... I>(std::index_sequence<I...>&&){
             return std::index_sequence<(I + from)...>{};
         }(std::make_index_sequence<to-from>());
@@ -57,15 +64,15 @@ namespace active_record{
     namespace detail {
         // non const
         template<std::size_t I>
-        constexpr auto indexed_apply_aux(std::tuple<>&&){
+        [[nodiscard]] constexpr auto indexed_apply_aux(std::tuple<>&&) noexcept {
             return std::make_tuple();
         }
         template<std::size_t I>
-        constexpr auto indexed_apply_aux(std::tuple<>&){
+        [[nodiscard]] constexpr auto indexed_apply_aux(std::tuple<>&) noexcept {
             return std::make_tuple();
         }
         template<std::size_t I, class Head, class... Tail>
-        constexpr auto indexed_apply_aux(std::tuple<Head&, Tail&...>&& t){
+        [[nodiscard]] constexpr auto indexed_apply_aux(std::tuple<Head&, Tail&...>&& t) noexcept {
             return std::tuple_cat(
                 std::make_tuple(std::make_pair(I, std::ref(std::get<0>(t)))),
                 indexed_apply_aux<I+1>(tuple_slice(
@@ -75,7 +82,7 @@ namespace active_record{
             );
         }
         template<std::size_t I, class Head, class... Tail>
-        constexpr auto indexed_apply_aux(std::tuple<Head, Tail...>& t){
+        [[nodiscard]] constexpr auto indexed_apply_aux(std::tuple<Head, Tail...>& t) noexcept {
             return std::tuple_cat(
                 std::make_tuple(std::make_pair(I, std::ref(std::get<0>(t)))),
                 indexed_apply_aux<I+1>(tuple_slice(
@@ -86,15 +93,11 @@ namespace active_record{
         }
         // const overload
         template<std::size_t I>
-        constexpr auto indexed_apply_aux(const std::tuple<>&&){
-            return std::make_tuple();
-        }
-        template<std::size_t I>
-        constexpr auto indexed_apply_aux(const std::tuple<>&){
+        [[nodiscard]] constexpr auto indexed_apply_aux(const std::tuple<>&) noexcept {
             return std::make_tuple();
         }
         template<std::size_t I, class Head, class... Tail>
-        constexpr auto indexed_apply_aux(const std::tuple<const Head&, const Tail&...>&& t){
+        [[nodiscard]] constexpr auto indexed_apply_aux(const std::tuple<const Head&, const Tail&...>&& t) noexcept {
             return std::tuple_cat(
                 std::make_tuple(std::make_pair(I, std::cref(std::get<0>(t)))),
                 indexed_apply_aux<I+1>(tuple_slice(
@@ -104,7 +107,7 @@ namespace active_record{
             );
         }
         template<std::size_t I, class Head, class... Tail>
-        constexpr auto indexed_apply_aux(const std::tuple<Head, Tail...>& t){
+        [[nodiscard]] constexpr auto indexed_apply_aux(const std::tuple<Head, Tail...>& t) noexcept {
             return std::tuple_cat(
                 std::make_tuple(std::make_pair(I, std::cref(std::get<0>(t)))),
                 indexed_apply_aux<I+1>(tuple_slice(
@@ -126,7 +129,7 @@ namespace active_record{
         return std::apply(f, detail::indexed_apply_aux<0>(t));
     }
 
-    inline active_record::string sanitize(const active_record::string& src) {
+    [[nodiscard]] inline active_record::string sanitize(const active_record::string& src) {
         active_record::string result;
         for(const auto& c : src) {
             switch(c){

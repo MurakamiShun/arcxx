@@ -1,17 +1,10 @@
 #pragma once
-#include <array>
-#include <utility>
-#include <vector>
-#include <type_traits>
-#include <any>
 #include "query.hpp"
 #include "attribute.hpp"
 
 namespace active_record {
     template<typename... T>
-    auto reference_tuple_to_ptr_tuple([[maybe_unused]]std::tuple<T&...>){
-        return std::tuple<const T*...>{};
-    }
+    auto reference_tuple_to_ptr_tuple([[maybe_unused]]std::tuple<T&...>) -> std::tuple<const T*...>;
 
     template<typename Derived>
     class model {
@@ -45,19 +38,19 @@ namespace active_record {
     public:
         struct schema {
             template<std::derived_from<adaptor> Adaptor>
-            static active_record::string to_sql(bool create_if_not_exist = false);
+            [[nodiscard]] static active_record::string to_sql(bool create_if_not_exist = false);
         };
 
         static constexpr bool has_table_name = has_table_name_impl::value;
         static constexpr bool has_attributes = has_attributes_impl::value;
-        static constexpr auto column_names() noexcept {
+        [[nodiscard]] static constexpr auto column_names() noexcept {
             return std::apply(
                 []<typename... Attrs>(Attrs...){ return std::array<const active_record::string_view, sizeof...(Attrs)>{(Attrs::column_name)...}; },
                 Derived{}.attributes
             );
         }
 
-        static auto insert(const Derived& model) {
+        [[nodiscard]] static auto insert(const Derived& model) {
             query_relation<bool, decltype(reference_tuple_to_ptr_tuple(model.attributes))> ret;
             ret.operation = query_operation::insert;
             // get attribute pointers in model
@@ -75,7 +68,7 @@ namespace active_record {
             ret.query_op_arg.push_back(")");
             return ret;
         }
-        static auto insert(Derived&& model){
+        [[nodiscard]] static auto insert(Derived&& model) {
             query_relation<bool, decltype(reference_tuple_to_ptr_tuple(model.attributes))> ret;
             ret.operation = query_operation::insert;
             // copy to temporary
@@ -98,59 +91,59 @@ namespace active_record {
         /*
          * Implementations are query_impl/model_queries.hpp
          */
-        static query_relation<std::vector<Derived>, std::tuple<>> all();
+        [[nodiscard]] static query_relation<std::vector<Derived>, std::tuple<>> all();
 
         template<Attribute... Attrs>
-        static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> select(const Attrs...);
+        [[nodiscard]] static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> select(const Attrs...);
         template<Attribute... Attrs>
-        static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> select();
+        [[nodiscard]] static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> select();
 
         template<Attribute Attr>
-        static query_relation<std::vector<Attr>, std::tuple<>> pluck(const Attr);
+        [[nodiscard]] static query_relation<std::vector<Attr>, std::tuple<>> pluck(const Attr);
         template<Attribute Attr>
-        static query_relation<std::vector<Attr>, std::tuple<>> pluck();
+        [[nodiscard]] static query_relation<std::vector<Attr>, std::tuple<>> pluck();
         
         // delete is identifier word
         template<Attribute Attr>
-        static query_relation<bool, std::tuple<const Attr*>> destroy(const Attr&&);
+        [[nodiscard]] static query_relation<bool, std::tuple<const Attr*>> destroy(const Attr&&);
         template<Tuple SrcBindAttrs>
-        static query_relation<bool, SrcBindAttrs> destroy(query_condition<SrcBindAttrs>&&);
+        [[nodiscard]] static query_relation<bool, SrcBindAttrs> destroy(query_condition<SrcBindAttrs>&&);
 
         template<Attribute Attr>
-        static query_relation<std::vector<Derived>, std::tuple<const Attr*>> where(const Attr&);
+        [[nodiscard]] static query_relation<std::vector<Derived>, std::tuple<const Attr*>> where(const Attr&);
         template<Tuple SrcBindAttrs>
-        static query_relation<std::vector<Derived>, SrcBindAttrs> where(query_condition<SrcBindAttrs>&&);
+        [[nodiscard]] static query_relation<std::vector<Derived>, SrcBindAttrs> where(query_condition<SrcBindAttrs>&&);
 
-        static query_relation<std::vector<Derived>, std::tuple<>> limit(const std::size_t);
+        [[nodiscard]] static query_relation<std::vector<Derived>, std::tuple<>> limit(const std::size_t);
 
         template<Attribute Attr>
-        static query_relation<std::vector<Derived>, std::tuple<>> order_by(const active_record::order = active_record::order::asc);
+        [[nodiscard]] static query_relation<std::vector<Derived>, std::tuple<>> order_by(const active_record::order = active_record::order::asc);
 
         template<typename ReferModel>
         requires std::derived_from<ReferModel, model<ReferModel>>
-        static query_relation<std::vector<Derived>, std::tuple<>> join();
+        [[nodiscard]] static query_relation<std::vector<Derived>, std::tuple<>> join();
 
         template<typename ReferModel>
         requires std::derived_from<ReferModel, model<ReferModel>>
-        static query_relation<std::vector<Derived>, std::tuple<>> left_join();
+        [[nodiscard]] static query_relation<std::vector<Derived>, std::tuple<>> left_join();
 
-        static query_relation<std::size_t, std::tuple<>> count();
-
-        template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        static query_relation<typename Attr::value_type, std::tuple<>> sum();
+        [[nodiscard]] static query_relation<std::size_t, std::tuple<>> count();
 
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        static query_relation<typename Attr::value_type, std::tuple<>> avg();
+        [[nodiscard]] static query_relation<typename Attr::value_type, std::tuple<>> sum();
 
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        static query_relation<typename Attr::value_type, std::tuple<>> max();
+        [[nodiscard]] static query_relation<typename Attr::value_type, std::tuple<>> avg();
 
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        static query_relation<typename Attr::value_type, std::tuple<>> min();
+        [[nodiscard]] static query_relation<typename Attr::value_type, std::tuple<>> max();
+
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        [[nodiscard]] static query_relation<typename Attr::value_type, std::tuple<>> min();
     };
 
     template<typename T>

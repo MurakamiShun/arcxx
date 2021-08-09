@@ -29,12 +29,12 @@ namespace active_record {
                 return static_cast<bool>(t) && t.value().length() <= length;
             }
         };
-        static const attribute_common<Model, Attribute, active_record::string>::constraint length(const std::size_t len) noexcept {
+        [[nodiscard]] static const attribute_common<Model, Attribute, active_record::string>::constraint length(const std::size_t len) noexcept {
             return constraint_length_impl{ len };
         };
 
         template<std::convertible_to<active_record::string> StringType>
-        static constexpr query_condition<std::tuple<const Attribute*>> like(const StringType& value){
+        [[nodiscard]] static constexpr query_condition<std::tuple<const Attribute*>> like(const StringType& value){
             query_condition<std::tuple<const Attribute*>> ret;
             ret.temporary_attrs.push_back(Attribute{ value });
             std::get<0>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));

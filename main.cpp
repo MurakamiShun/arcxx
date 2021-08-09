@@ -26,8 +26,8 @@ struct EnteringLog : public active_record::model<EnteringLog> {
         static constexpr auto column_name = "id";
         inline static const auto constraints = { primary_key };
     } id;
-    struct MemberID : public active_record::attributes::reference_to<EnteringLog, MemberID, Member::ID> {
-        using active_record::attributes::reference_to<EnteringLog, MemberID, Member::ID>::reference_to;
+    struct MemberID : public active_record::attributes::foreign_key<EnteringLog, MemberID, Member::ID> {
+        using active_record::attributes::foreign_key<EnteringLog, MemberID, Member::ID>::foreign_key;
         static constexpr auto column_name = "member_id";
     } member_id;
     std::tuple<ID&, MemberID&> attributes = std::tie(id, member_id);

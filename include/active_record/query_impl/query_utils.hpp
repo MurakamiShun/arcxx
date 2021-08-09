@@ -4,18 +4,18 @@
 
 namespace active_record::detail {
     template<Attribute Last>
-    constexpr active_record::string column_full_names_to_string(){
+    [[nodiscard]] constexpr active_record::string column_full_names_to_string(){
         constexpr auto full_name = Last::column_full_name();
         return active_record::string{ "\"" } + active_record::string{ full_name.first } + "\".\"" + active_record::string{ full_name.second } + "\"";
     }
     template<Attribute Head, Attribute... Tail>
     requires (sizeof...(Tail) > 0)
-    constexpr active_record::string column_full_names_to_string(){
+    [[nodiscard]] constexpr active_record::string column_full_names_to_string(){
         return column_full_names_to_string<Head>() + "," + column_full_names_to_string<Tail...>();
     }
 
     template<Model Mod>
-    constexpr active_record::string model_column_full_names_to_string(){
+    [[nodiscard]] constexpr active_record::string model_column_full_names_to_string(){
         auto column_names = Mod::column_names();
         active_record::string columns = "";
         active_record::string delimiter = "";

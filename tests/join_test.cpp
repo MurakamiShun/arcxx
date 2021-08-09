@@ -1,5 +1,4 @@
 #include "user_model.hpp"
-#include <iostream>
 
 struct UserLog : public active_record::model<UserLog>{
     constexpr static auto table_name = "user_log_table";
@@ -10,9 +9,9 @@ struct UserLog : public active_record::model<UserLog>{
         inline static const auto constraints = { primary_key };
     } id;
 
-    struct UserID : public active_record::attributes::reference_to<UserLog, UserID, User::ID> {
+    struct UserID : public active_record::attributes::foreign_key<UserLog, UserID, User::ID> {
         constexpr static auto column_name = "user_id";
-        using active_record::attributes::reference_to<UserLog, UserID, User::ID>::reference_to;
+        using active_record::attributes::foreign_key<UserLog, UserID, User::ID>::foreign_key;
     } user_id;
 
     struct Comment : public active_record::attributes::string<UserLog, Comment> {

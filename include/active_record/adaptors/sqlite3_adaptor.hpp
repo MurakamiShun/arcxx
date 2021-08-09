@@ -3,7 +3,6 @@
 #include "../utils.hpp"
 #include "../query.hpp"
 #include "../attribute.hpp"
-#include <optional>
 #include <sqlite3.h>
 #include "sqlite3/schema.hpp"
 #include "sqlite3/string_convertors.hpp"
@@ -121,7 +120,7 @@ namespace active_record {
 
         template<typename T>
         requires std::derived_from<T, model<T>>
-        T extract_column_data(sqlite3_stmt* stmt){
+        [[nodiscard]] T extract_column_data(sqlite3_stmt* stmt){
             T ret;
             indexed_apply(
                 [stmt]<typename... Attrs>(Attrs... attrs){
@@ -132,7 +131,7 @@ namespace active_record {
             return ret;
         }
         template<Tuple T>
-        T extract_column_data(sqlite3_stmt* stmt){
+        [[nodiscard]] T extract_column_data(sqlite3_stmt* stmt){
             T ret;
             indexed_apply(
                 [stmt]<typename... Attrs>(Attrs... attrs){
@@ -143,7 +142,7 @@ namespace active_record {
             return ret;
         }
         template<typename T>
-        T extract_column_data(sqlite3_stmt* stmt){
+        [[nodiscard]] T extract_column_data(sqlite3_stmt* stmt){
             T ret;
             set_column_data(stmt, 0, ret);
             return ret;

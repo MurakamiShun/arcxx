@@ -30,7 +30,7 @@ namespace active_record {
 
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<Attrs...>());
-        ret.query_table = this->query_table;
+        ret.query_table = std::move(this->query_table);
 
         ret.query_condition = std::move(this->query_condition);
         ret.query_options = std::move(this->query_options);

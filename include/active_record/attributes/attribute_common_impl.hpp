@@ -23,14 +23,14 @@ namespace active_record {
         };
 
         template<std::size_t I, typename Condition, std::convertible_to<Attribute> Last>
-        static void copy_and_set_attrs_to_condition(Condition& ret, const Last& last){
+        static void copy_and_set_attrs_to_condition(Condition& ret, const Last& last) {
             ret.temporary_attrs.push_back(Attribute{ last });
             std::get<I>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
             ret.condition.push_back(I);
         }
 
         template<std::size_t I, typename Condition, std::convertible_to<Attribute> Head, std::convertible_to<Attribute>... Tails>
-        static void copy_and_set_attrs_to_condition(Condition& ret, const Head& head, const Tails&... tails){
+        static void copy_and_set_attrs_to_condition(Condition& ret, const Head& head, const Tails&... tails) {
             copy_and_set_attrs_to_condition<I+1>(ret, head);
             ret.condition.push_back(",");
             copy_and_set_attrs_to_condition<I+1>(ret, tails...);
@@ -55,11 +55,11 @@ namespace active_record {
             const Type default_value;
             constexpr bool operator()(const std::optional<Type>&){ return true; }
         };
-        static const constraint default_value(const Type& def_val) {
+        [[nodiscard]] static const constraint default_value(const Type& def_val) {
             return constraint_default_value_impl{ def_val };
         }
 
-        static bool has_constraint(const constraint& c){
+        [[nodiscard]] static bool has_constraint(const constraint& c) noexcept{
             if constexpr (!has_constraints) return false;
             else{
                 for(const auto& con : Attribute::constraints){
@@ -68,11 +68,11 @@ namespace active_record {
                 return false;
             }
         }
-        static const std::optional<constraint> get_constraint(const constraint& c){
+        static const std::optional<std::reference_wrapper<const constraint>> get_constraint(const constraint& c){
             if constexpr (!has_constraints) return std::nullopt;
             else{
                 for(const auto& con : Attribute::constraints){
-                    if(con.target_type() == c.target_type()) return con;
+                    if(con.target_type() == c.target_type()) return std::cref(con);
                 }
                 return std::nullopt;
             }
@@ -109,12 +109,12 @@ namespace active_record {
         [[nodiscard]] Type& value()& { return data.value(); }
         [[nodiscard]] Type&& value()&& { return std::move(data.value()); }
 
-        constexpr operator const std::optional<Type>&() const& noexcept { return data; }
-        constexpr operator std::optional<Type>&()& noexcept { return data; }
-        constexpr operator std::optional<Type>()&& noexcept { return std::move(data); }
+        [[nodiscard]] constexpr operator const std::optional<Type>&() const& noexcept { return data; }
+        [[nodiscard]] constexpr operator std::optional<Type>&()& noexcept { return data; }
+        [[nodiscard]] constexpr operator std::optional<Type>()&& noexcept { return std::move(data); }
 
         template<std::convertible_to<std::optional<Type>> T>
-        constexpr bool operator==(const T& cmp) const {
+        [[nodiscard]] constexpr bool operator==(const T& cmp) const {
             return data == static_cast<std::optional<Type>>(cmp);
         }
 
@@ -130,7 +130,7 @@ namespace active_record {
             return ret;
         }
 
-        query_condition<std::tuple<const Attribute*>> to_equ_condition() const {
+        [[nodiscard]] query_condition<std::tuple<const Attribute*>> to_equ_condition() const {
             query_condition<std::tuple<const Attribute*>> ret;
             ret.condition.push_back(
                 active_record::string{ "\"" } + Model::table_name + "\".\""
@@ -143,21 +143,21 @@ namespace active_record {
         }
 
         template<Tuple BindAttrs>
-        auto operator&&(query_condition<BindAttrs>&& cond) const {
+        [[nodiscard]] auto operator&&(query_condition<BindAttrs>&& cond) const {
             return this->to_equ_condition() && cond;
         }
         template<Tuple BindAttrs>
-        auto operator||(query_condition<BindAttrs>&& cond) const {
+        [[nodiscard]] auto operator||(query_condition<BindAttrs>&& cond) const {
             return this->to_equ_condition() || cond;
         }
         template<typename Attr>
         requires std::derived_from<Attr, attribute_common<typename Attr::model_type, typename Attr::attribute_type, typename Attr::value_type>>
-        auto operator&&(const Attr& attr) const {
+        [[nodiscard]] auto operator&&(const Attr& attr) const {
             return this->to_equ_condition() && attr.to_equ_condition();
         }
         template<typename Attr>
         requires std::derived_from<Attr, attribute_common<typename Attr::model_type, typename Attr::attribute_type, typename Attr::value_type>>
-        auto operator||(const Attr& attr) const {
+        [[nodiscard]] auto operator||(const Attr& attr) const {
             return this->to_equ_condition() || attr.to_equ_condition();
         }
     };

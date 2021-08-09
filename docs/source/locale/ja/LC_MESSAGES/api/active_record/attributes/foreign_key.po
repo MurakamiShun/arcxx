@@ -1,0 +1,200 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, MurakamiShun
+# This file is distributed under the same license as the Active Record C++
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Active Record C++ \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-08-09 02:26+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:3
+msgid "active_record::attributes::foreign_key"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:8
+msgid "Reference attribute."
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:10
+msgid "Member functions"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:12
+msgid ":ref:`(constructor) <foreign_key_constructors>`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:13
+msgid "constructs the foreign_key attribute"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:14
+msgid ":cpp:func:`operator=`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:16
+msgid ":ref:`(destructor) <foreign_key_destructors>`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:17
+msgid "destroy the attribute"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:19
+msgid "Member variables"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:21
+msgid ":cpp:var:`data`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:22
+msgid ":code:`std::optional<ForeignKey::value_type>`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:24
+msgid "Member types"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:26
+msgid ":cpp:type:`model_type`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:27
+msgid ":code:`Model`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:28
+msgid ":cpp:type:`attribute_type`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:29
+msgid ":code:`Attribute`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:30
+msgid ":cpp:type:`value_type`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:31
+msgid ":code:`ForeignKey::value_type`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:32
+msgid ":cpp:type:`foreign_key_type`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:33
+msgid ":code:`ForeignKey`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:34
+msgid ":cpp:type:`constraint`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:35
+msgid ":code:`std::function<bool(const std::optional<ForeignKey::value_type>&)>`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:37
+msgid "Observers"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:39
+msgid ":cpp:func:`operator bool`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:40
+msgid "check whether null"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:41
+msgid ":cpp:func:`value`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:42
+msgid "returns the contained value"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:44
+msgid "Condition Queries"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:46
+msgid ":cpp:func:`in`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:47
+msgid "generate in condition"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:48
+msgid ":cpp:func:`operator&&`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:50
+msgid ":cpp:func:`operator||`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:53
+msgid "String mutual converts"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:55
+msgid ":cpp:func:`to_string`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:56
+msgid "converts to string"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:57
+msgid ":cpp:func:`from_string`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:58
+msgid "converts from string"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:104
+msgid "Return false if attribute value is null."
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:115
+msgid ""
+"Return attribute value. If the value is null, throw "
+":code:`std::bad_optional_access`."
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:125
+msgid ""
+"The returned object will generate :code:`Attribute::column_name IN "
+"(args...)`"
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:137
+msgid "The returned object will generate \"AND condition SQL\"."
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:153
+msgid "The returned object will generate \"OR condition SQL\"."
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:167
+msgid "Converts attribute value to string."
+msgstr ""
+
+#: ../../source/api/active_record/attributes/foreign_key.rst:175
+msgid "Converts string to attribute value."
+msgstr ""
+
