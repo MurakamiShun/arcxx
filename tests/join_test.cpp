@@ -80,9 +80,30 @@ TEST_CASE_METHOD(UserModelTestsFixture, "Join query tests", "[model][query_relat
         REQUIRE(find_by_username == find_by_userid);
     }
 
+    SECTION("select multi table columns") {
+        INFO((UserLog::join<User>().select<UserLog::ID, UserLog::Comment, User::Name>().to_sql()));
+        auto [error1, log_with_usernames] = UserLog::join<User>().select<UserLog::ID, UserLog::Comment, User::Name>().exec(conn);
+        if (error1) FAIL(error1.value());
+
+        REQUIRE(log_with_usernames.size() == 10);
+        REQUIRE(typeid(decltype(log_with_usernames)::value_type).name() == typeid(std::tuple<UserLog::ID, UserLog::Comment, User::Name>).name());
+    }
+
     SECTION("finding other table column without join will be error") {
         INFO(UserLog::where(users[1].name).to_sql());
         auto [error, find_by_username] = UserLog::where(users[1].name).exec(conn);
         REQUIRE(error);
+    }
+
+    SECTION("testing left join and outer join"){
+        INFO(UserLog::join<User>().count().to_sql());
+        auto [error1, outer_join_count] = UserLog::UserLog::join<User>().count().exec(conn);
+        if(error1) FAIL(error1.value());
+        REQUIRE(outer_join_count == 10);
+
+        INFO(UserLog::left_join<User>().count().to_sql());
+        auto [error2, left_join_count] = UserLog::UserLog::left_join<User>().count().exec(conn);
+        if(error2) FAIL(error2.value());
+        REQUIRE(left_join_count == 15);
     }
 }
