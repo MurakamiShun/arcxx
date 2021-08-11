@@ -18,11 +18,11 @@ namespace active_record {
 
         template<std::derived_from<adaptor> Adaptor = common_adaptor>
         [[nodiscard]] constexpr active_record::string to_string() const {
-            return active_record::to_string<Adaptor>(*dynamic_cast<const Attribute*>(this));
+            return active_record::to_string<Adaptor>(*this);
         }
         template<std::derived_from<adaptor> Adaptor = common_adaptor>
         void from_string(const active_record::string_view str) {
-            active_record::from_string<Adaptor>(*dynamic_cast<Attribute*>(this), str);
+            active_record::from_string<Adaptor>(*this, str);
         }
     };
 

@@ -15,7 +15,6 @@ struct User : public active_record::model<User> {
         using active_record::attributes::integer<User, ID, size_t>::integer;
 
         inline static const auto constraints = { primary_key };
-        constexpr ~ID(){}
     } id;
 
     struct Name : public active_record::attributes::string<User, Name> {
@@ -23,7 +22,6 @@ struct User : public active_record::model<User> {
         using active_record::attributes::string<User, Name>::string;
 
         inline static const auto constraints = { not_null, default_value("unknow") };
-        constexpr ~Name(){}
     } name;
 
     std::tuple<ID&, Name&> attributes = std::tie(id, name);

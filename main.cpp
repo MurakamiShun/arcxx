@@ -9,7 +9,7 @@ struct Member : public active_record::model<Member> {
         using active_record::attributes::integer<Member, ID>::integer;
         static constexpr auto column_name = "id";
         inline static const auto constraints = { primary_key };
-        constexpr ~ID(){}
+        //constexpr ~ID(){}
     } id;
     struct Name : public active_record::attributes::string<Member, Name> {
         using active_record::attributes::string<Member, Name>::string;
@@ -38,6 +38,9 @@ int main() {
     Member::Name name = "test";
     Member member;
     member.id = 123;
+
+    std::cout << "std::optional<uint32_t> size:" << sizeof(std::optional<uint32_t>)
+    << "\nInteger attribute size:" << sizeof(Member::ID) << std::endl;
 
     std::array<Member, 4> members;
     members[0].name = "satou";

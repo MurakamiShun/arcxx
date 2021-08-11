@@ -94,7 +94,7 @@ namespace active_record {
         constexpr attribute_common(const Type& default_value) : data(default_value) {}
         constexpr attribute_common(Type&& default_value) : data(std::move(default_value)) {}
         */
-        constexpr virtual ~attribute_common() {}
+        //constexpr virtual ~attribute_common() {}
  
         [[nodiscard]] constexpr bool is_valid() const {
             if constexpr (has_constraints) {
@@ -137,7 +137,7 @@ namespace active_record {
                 + Attribute::column_name + "\" = "
             );
             ret.condition.push_back(0UL);
-            ret.temporary_attrs.push_back(*(dynamic_cast<const Attribute*>(this)));
+            ret.temporary_attrs.push_back(*(reinterpret_cast<const Attribute*>(this)));
             std::get<0>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
             return ret;
         }
