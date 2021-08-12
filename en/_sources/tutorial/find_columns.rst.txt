@@ -38,3 +38,26 @@ The below codes will be the same result.
     ExampleTable::where(ExampleTable::ID::between(0,10)).where(ExampleTable::Name::like("user_"));
 
     ExampleTable::where(ExampleTable::ID::between(0,10) && ExampleTable::Name::like("user_"));
+
+
+Between clause
+==============
+
+Between member function in :code:`attributes` generates :code:`LIKE` clause.
+The result type :code:`query_condition` is put into where clause.
+
+.. code-block:: cpp
+    
+    ExampleTable::where(ExampleTable::ID::between(0,10));
+    
+
+
+Like clause
+===========
+
+Like member function in :code:`string attribute` generates :code:`LIKE` clause.
+The result type :code:`query_condition` is put into where clause.
+
+.. code-block:: cpp
+    
+    ExampleTable::where(ExampleTable::Name::like("user_"));
