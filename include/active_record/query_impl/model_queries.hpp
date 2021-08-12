@@ -28,6 +28,16 @@ namespace active_record {
     inline query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> model<Derived>::select([[maybe_unused]]const Attrs... attrs) {
         return model<Derived>::select<Attrs...>();
     }
+    template<typename Derived>
+    template<AttributeAggregator... Aggregators>
+    inline query_relation<std::vector<std::tuple<Aggregators...>>, std::tuple<>> model<Derived>::select() {
+        query_relation<std::vector<std::tuple<Aggregators...>>, std::tuple<>> ret;
+        
+        ret.operation = query_operation::select;
+        ret.query_op_arg.push_back(detail::column_full_names_to_string<Aggregators...>());
+        ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
+        return ret;
+    }
 
     template<typename Derived>
     template<Attribute Attr>

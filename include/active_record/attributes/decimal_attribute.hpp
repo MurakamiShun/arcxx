@@ -46,6 +46,19 @@ namespace active_record {
             ret.condition.push_back(1UL);
             return ret;
         }
+
+        struct sum : public attribute_aggregator<Model, Attribute, sum> {
+            static constexpr auto aggregation_func = "sum";
+        };
+        struct avg : public attribute_aggregator<Model, Attribute, avg> {
+            static constexpr auto aggregation_func = "avg";
+        };
+        struct max : public attribute_aggregator<Model, Attribute, max> {
+            static constexpr auto aggregation_func = "max";
+        };
+        struct min : public attribute_aggregator<Model, Attribute, min> {
+            static constexpr auto aggregation_func = "min";
+        };
     };
 
     namespace attributes {

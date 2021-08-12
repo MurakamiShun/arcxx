@@ -1,6 +1,7 @@
 #pragma once
 #include "../attribute.hpp"
 #include "../query_impl/query_condition.hpp"
+#include "attribute_aggregator.hpp"
 
 namespace active_record {
     template<typename Model, typename Attribute, typename Type>
@@ -43,9 +44,9 @@ namespace active_record {
 
         static constexpr bool has_column_name = has_column_name_impl::value;
         static constexpr bool has_constraints = has_constraints_impl::value;
-        [[nodiscard]] static constexpr std::pair<active_record::string_view, active_record::string_view> column_full_name() noexcept {
-            return { Model::table_name, Attribute::column_name };
-        };
+        [[nodiscard]] static constexpr active_record::string column_full_name() {
+            return active_record::string{ "\"" } + active_record::string{ Model::table_name } + "\".\"" + active_record::string{ Attribute::column_name } + "\"";
+        }
 
         // constexpr std::type_info::operator== is C++23
         inline static const constraint not_null = [](const std::optional<Type>& t) constexpr { return static_cast<bool>(t); };
@@ -55,6 +56,7 @@ namespace active_record {
             const Type default_value;
             constexpr bool operator()(const std::optional<Type>&){ return true; }
         };
+
         [[nodiscard]] static const constraint default_value(const Type& def_val) {
             return constraint_default_value_impl{ def_val };
         }
@@ -160,5 +162,9 @@ namespace active_record {
         [[nodiscard]] auto operator||(const Attr& attr) const {
             return this->to_equ_condition() || attr.to_equ_condition();
         }
+
+        struct count : public attribute_aggregator<Model, Attribute, count>{
+            static constexpr auto aggregation_func = "count";
+        };
     };
 }

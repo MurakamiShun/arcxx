@@ -98,6 +98,9 @@ namespace active_record {
         template<Attribute... Attrs>
         [[nodiscard]] static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> select();
 
+        template<AttributeAggregator... Aggregators>
+        [[nodiscard]] static query_relation<std::vector<std::tuple<Aggregators...>>, std::tuple<>> select();
+
         template<Attribute Attr>
         [[nodiscard]] static query_relation<std::vector<Attr>, std::tuple<>> pluck(const Attr);
         template<Attribute Attr>
@@ -126,6 +129,9 @@ namespace active_record {
         template<typename ReferModel>
         requires std::derived_from<ReferModel, model<ReferModel>>
         [[nodiscard]] static query_relation<std::vector<Derived>, std::tuple<>> left_join();
+
+        template<Attribute Attr>
+        [[nodiscard]] static query_relation<std::unordered_map<Attr, std::tuple<>>, std::tuple<>> group_by();
 
         [[nodiscard]] static query_relation<std::size_t, std::tuple<>> count();
 

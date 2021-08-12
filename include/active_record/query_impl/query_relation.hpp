@@ -120,7 +120,8 @@ namespace active_record {
         [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const&;
     };
 
-    template<Container Result, Tuple BindAttrs>
+    template<typename Result, Tuple BindAttrs>
+    requires std::same_as<Result, std::vector<typename Result::value_type>>
     struct query_relation<Result, BindAttrs> : public query_relation_common<BindAttrs> {
         using query_relation_common<BindAttrs>::query_relation_common;
         template<std::derived_from<adaptor> Adaptor>
@@ -165,30 +166,103 @@ namespace active_record {
 
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<typename Attr::value_type, BindAttrs> sum() &&;
+        [[nodiscard]] query_relation<Attr, BindAttrs> sum() &&;
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<typename Attr::value_type, BindAttrs> sum() const&;
+        [[nodiscard]] query_relation<Attr, BindAttrs> sum() const&;
 
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<typename Attr::value_type, BindAttrs> avg() &&;
+        [[nodiscard]] query_relation<Attr, BindAttrs> avg() &&;
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<typename Attr::value_type, BindAttrs> avg() const&;
+        [[nodiscard]] query_relation<Attr, BindAttrs> avg() const&;
 
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<typename Attr::value_type, BindAttrs> max() &&;
+        [[nodiscard]] query_relation<Attr, BindAttrs> max() &&;
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<typename Attr::value_type, BindAttrs> max() const&;
+        [[nodiscard]] query_relation<Attr, BindAttrs> max() const&;
 
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<typename Attr::value_type, BindAttrs> min() &&;
+        [[nodiscard]] query_relation<Attr, BindAttrs> min() &&;
         template<Attribute Attr>
         requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<typename Attr::value_type, BindAttrs> min() const&;
+        [[nodiscard]] query_relation<Attr, BindAttrs> min() const&;
+    };
+
+
+    template<typename Result, Tuple BindAttrs>
+    requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
+    struct query_relation<Result, BindAttrs> : public query_relation_common<BindAttrs> {
+        using mapped_type = typename Result::mapped_type;
+
+        using query_relation_common<BindAttrs>::query_relation_common;
+        
+        template<std::derived_from<adaptor> Adaptor>
+        [[nodiscard]] auto exec(Adaptor& adapt) const {
+            return adapt.exec(*this);
+        }
+        
+        template<AttributeAggregator... Attrs>
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> select() &&;
+        template<AttributeAggregator... Attrs>
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> select() const &;
+
+        template<AttributeAggregator Attr>
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::attribute_type>, BindAttrs> pluck() &&;
+        template<AttributeAggregator Attr>
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::attribute_type>, BindAttrs> pluck() const &;
+
+        template<Attribute Attr>
+        [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> where(const Attr&) &&;
+        template<Attribute Attr>
+        [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> where(const Attr&) const &;
+
+        template<Tuple SrcBindAttrs>
+        [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
+        template<Tuple SrcBindAttrs>
+        [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const&;
+
+        [[nodiscard]] query_relation<Result, BindAttrs>& limit(const std::size_t) &&;
+        [[nodiscard]] query_relation<Result, BindAttrs> limit(const std::size_t) const &;
+
+        template<Attribute Attr>
+        [[nodiscard]] query_relation<Result, BindAttrs>& order_by(const active_record::order = active_record::order::asc) &&;
+        template<Attribute Attr>
+        [[nodiscard]] query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc) const &;
+
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, std::size_t>, BindAttrs> count() &&;
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, std::size_t>, BindAttrs> count() const&;
+
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, Attr>, BindAttrs> sum() &&;
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, Attr>, BindAttrs> sum() const&;
+
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, Attr>, BindAttrs> avg() &&;
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, Attr>, BindAttrs> avg() const&;
+
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, Attr>, BindAttrs> max() &&;
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, Attr>, BindAttrs> max() const&;
+
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, Attr>, BindAttrs> min() &&;
+        template<Attribute Attr>
+        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, Attr>, BindAttrs> min() const&;
     };
 }

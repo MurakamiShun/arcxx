@@ -32,6 +32,13 @@ namespace active_record {
         void from_string(const active_record::string_view str) {
             active_record::from_string<Adaptor>(*this, str);
         }
+
+        struct max : public attribute_aggregator<Model, Attribute, max> {
+            static constexpr auto aggregation_func = "max";
+        };
+        struct min : public attribute_aggregator<Model, Attribute, min> {
+            static constexpr auto aggregation_func = "min";
+        };
     };
 
     namespace attributes {

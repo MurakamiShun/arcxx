@@ -3,12 +3,11 @@
 #include "../model.hpp"
 
 namespace active_record::detail {
-    template<Attribute Last>
+    template<typename Last>
     [[nodiscard]] constexpr active_record::string column_full_names_to_string(){
-        constexpr auto full_name = Last::column_full_name();
-        return active_record::string{ "\"" } + active_record::string{ full_name.first } + "\".\"" + active_record::string{ full_name.second } + "\"";
+        return Last::column_full_name();
     }
-    template<Attribute Head, Attribute... Tail>
+    template<typename Head, typename... Tail>
     requires (sizeof...(Tail) > 0)
     [[nodiscard]] constexpr active_record::string column_full_names_to_string(){
         return column_full_names_to_string<Head>() + "," + column_full_names_to_string<Tail...>();

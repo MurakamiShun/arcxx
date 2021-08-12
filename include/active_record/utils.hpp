@@ -13,6 +13,7 @@
 #include <utility>
 #include <optional>
 #include <charconv>
+#include <unordered_map>
 
 namespace active_record{
     using string = std::string;
