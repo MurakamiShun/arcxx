@@ -94,15 +94,11 @@ namespace active_record {
         [[nodiscard]] static query_relation<std::vector<Derived>, std::tuple<>> all();
 
         template<Attribute... Attrs>
-        [[nodiscard]] static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> select(const Attrs...);
-        template<Attribute... Attrs>
         [[nodiscard]] static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> select();
 
         template<AttributeAggregator... Aggregators>
-        [[nodiscard]] static query_relation<std::vector<std::tuple<Aggregators...>>, std::tuple<>> select();
+        [[nodiscard]] static query_relation<std::tuple<typename Aggregators::attribute_type...>, std::tuple<>> select();
 
-        template<Attribute Attr>
-        [[nodiscard]] static query_relation<std::vector<Attr>, std::tuple<>> pluck(const Attr);
         template<Attribute Attr>
         [[nodiscard]] static query_relation<std::vector<Attr>, std::tuple<>> pluck();
         
@@ -136,20 +132,20 @@ namespace active_record {
         [[nodiscard]] static query_relation<std::size_t, std::tuple<>> count();
 
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] static query_relation<typename Attr::value_type, std::tuple<>> sum();
+        requires requires{ typename Attr::sum; }
+        [[nodiscard]] static query_relation<typename Attr::sum::attribute_type, std::tuple<>> sum();
 
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] static query_relation<typename Attr::value_type, std::tuple<>> avg();
+        requires requires{ typename Attr::avg; }
+        [[nodiscard]] static query_relation<typename Attr::avg::attribute_type, std::tuple<>> avg();
 
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] static query_relation<typename Attr::value_type, std::tuple<>> max();
+        requires requires{ typename Attr::max; }
+        [[nodiscard]] static query_relation<typename Attr::max::attribute_type, std::tuple<>> max();
 
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] static query_relation<typename Attr::value_type, std::tuple<>> min();
+        requires requires{ typename Attr::min; }
+        [[nodiscard]] static query_relation<typename Attr::min::attribute_type, std::tuple<>> min();
     };
 
     template<typename T>

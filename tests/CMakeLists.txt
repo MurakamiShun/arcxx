@@ -22,6 +22,7 @@ add_executable(active_record_IT
     delete_test.cpp
     update_test.cpp
     join_test.cpp
+    aggregation_test.cpp
 )
 target_link_libraries(active_record_IT PRIVATE Catch2::Catch2 sqlite3)
 

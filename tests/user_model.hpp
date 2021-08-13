@@ -24,7 +24,12 @@ struct User : public active_record::model<User> {
         inline static const auto constraints = { not_null, default_value("unknow") };
     } name;
 
-    std::tuple<ID&, Name&> attributes = std::tie(id, name);
+    struct Height : public active_record::attributes::decimal<User, Height>{
+        static constexpr auto column_name = "height";
+        using active_record::attributes::decimal<User, Height>::decimal;
+    } height;
+
+    std::tuple<ID&, Name&, Height&> attributes = std::tie(id, name, height);
 };
 
 /*
@@ -56,6 +61,7 @@ public:
                 User user;
                 user.id = i;
                 user.name = std::string{ "user" } + std::to_string(i);
+                user.height = 170.0 + i;
                 if(const auto error = User::insert(user).exec(connection); error) {
                     FAIL(error.value());
                     return transaction::rollback;

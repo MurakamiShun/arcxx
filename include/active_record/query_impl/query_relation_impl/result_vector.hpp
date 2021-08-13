@@ -247,13 +247,44 @@ namespace active_record {
         return ret;
     }
 
+    template<typename Result, Tuple BindAttrs>
+    requires std::same_as<Result, std::vector<typename Result::value_type>>
+    query_relation<std::size_t, BindAttrs> query_relation<Result, BindAttrs>::count() && {
+        query_relation<std::size_t, BindAttrs> ret;
+        
+        ret.operation = query_operation::select;
+        ret.query_op_arg.push_back("count(*)");
+        ret.query_table = std::move(this->query_table);
+        ret.query_condition = std::move(this->query_condition);
+        ret.temporary_attrs = std::move(this->temporary_attrs);
+        ret.query_options = std::move(this->query_options);
+        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+
+        return ret;
+    }
+    template<typename Result, Tuple BindAttrs>
+    requires std::same_as<Result, std::vector<typename Result::value_type>>
+    query_relation<std::size_t, BindAttrs> query_relation<Result, BindAttrs>::count() const& {
+        query_relation<std::size_t, BindAttrs> ret;
+
+        ret.operation = query_operation::select;
+        ret.query_op_arg.push_back("count(*)");
+        ret.query_table = this->query_table;
+        ret.query_condition = this->query_condition;
+        ret.temporary_attrs = this->temporary_attrs;
+        ret.query_options = this->query_options;
+        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+
+        return ret;
+    }
+
     namespace detail {
-        template<typename T, typename Result, Tuple BindAttrs>
-        query_relation<T, BindAttrs> aggregate_query(const query_relation<Result, BindAttrs>& src, active_record::string&& aggregation_op) {
-            query_relation<T, BindAttrs> ret;
+        template<AttributeAggregator T, typename Result, Tuple BindAttrs>
+        query_relation<typename T::attribute_type, BindAttrs> vectored_aggregate_query(const query_relation<Result, BindAttrs>& src) {
+            query_relation<typename T::attribute_type, BindAttrs> ret;
 
             ret.operation = query_operation::select;
-            ret.query_op_arg.push_back(std::move(aggregation_op));
+            ret.query_op_arg.push_back(T::column_full_name());
             ret.query_table = src.query_table;
             ret.query_condition = src.query_condition;
             ret.temporary_attrs = src.temporary_attrs;
@@ -263,12 +294,12 @@ namespace active_record {
             return ret;
         }
 
-        template<typename T, typename Result, Tuple BindAttrs>
-        query_relation<T, BindAttrs> aggregate_query(query_relation<Result, BindAttrs>&& src, active_record::string&& aggregation_op) {
-            query_relation<T, BindAttrs> ret;
+        template<AttributeAggregator T, typename Result, Tuple BindAttrs>
+        query_relation<typename T::attribute_type, BindAttrs> vectored_aggregate_query(query_relation<Result, BindAttrs>&& src) {
+            query_relation<typename T::attribute_type, BindAttrs> ret;
 
             ret.operation = query_operation::select;
-            ret.query_op_arg.push_back(std::move(aggregation_op));
+            ret.query_op_arg.push_back(T::column_full_name());
             ret.query_table = std::move(src.query_table);
             ret.query_condition = std::move(src.query_condition);
             ret.temporary_attrs = std::move(src.temporary_attrs);
@@ -281,23 +312,11 @@ namespace active_record {
 
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
-    query_relation<std::size_t, BindAttrs> query_relation<Result, BindAttrs>::count() && {
-        return detail::aggregate_query<std::size_t>(std::move(*this), "count(*)");
-    }
-    template<typename Result, Tuple BindAttrs>
-    requires std::same_as<Result, std::vector<typename Result::value_type>>
-    query_relation<std::size_t, BindAttrs> query_relation<Result, BindAttrs>::count() const& {
-        return detail::aggregate_query<std::size_t>(*this, "count(*)");
-    }
-
-    template<typename Result, Tuple BindAttrs>
-    requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
     query_relation<Attr, BindAttrs> query_relation<Result, BindAttrs>::sum() && {
-        return detail::aggregate_query<Attr>(
-            std::move(*this),
-            active_record::string{ "sum(" } + detail::column_full_names_to_string<Attr>() +")"
+        return detail::vectored_aggregate_query<Attr, Attr::sum>(
+            std::move(*this)
         );
     }
     template<typename Result, Tuple BindAttrs>
@@ -305,10 +324,9 @@ namespace active_record {
     template<Attribute Attr>
     requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
     query_relation<Attr, BindAttrs> query_relation<Result, BindAttrs>::sum() const& {
-        return detail::aggregate_query<Attr>(
-            *this,
-            active_record::string{ "sum(" } + detail::column_full_names_to_string<Attr>() +")"
-        );
+        return detail::vectored_aggregate_query<Attr, Attr::sum>(
+            *this
+        ); 
     }
 
     template<typename Result, Tuple BindAttrs>
@@ -316,9 +334,8 @@ namespace active_record {
     template<Attribute Attr>
     requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
     query_relation<Attr, BindAttrs> query_relation<Result, BindAttrs>::avg() && {
-        return detail::aggregate_query<Attr>(
-            std::move(*this),
-            active_record::string{ "avg(" } + detail::column_full_names_to_string<Attr>() +")"
+        return detail::vectored_aggregate_query<Attr, Attr::avg>(
+            std::move(*this)
         );
     }
     template<typename Result, Tuple BindAttrs>
@@ -326,9 +343,8 @@ namespace active_record {
     template<Attribute Attr>
     requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
     query_relation<Attr, BindAttrs> query_relation<Result, BindAttrs>::avg() const& {
-        return detail::aggregate_query<Attr>(
-            *this,
-            active_record::string{ "avg(" } + detail::column_full_names_to_string<Attr>() +")"
+        return detail::vectored_aggregate_query<Attr, Attr::avg>(
+            *this
         );
     }
 
@@ -337,9 +353,8 @@ namespace active_record {
     template<Attribute Attr>
     requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
     query_relation<Attr, BindAttrs> query_relation<Result, BindAttrs>::max() && {
-        return detail::aggregate_query<Attr>(
-            std::move(*this),
-            active_record::string{ "max(" } + detail::column_full_names_to_string<Attr>() +")"
+        return detail::vectored_aggregate_query<Attr, Attr::max>(
+            std::move(*this)
         );
     }
     template<typename Result, Tuple BindAttrs>
@@ -347,9 +362,8 @@ namespace active_record {
     template<Attribute Attr>
     requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
     query_relation<Attr, BindAttrs> query_relation<Result, BindAttrs>::max() const& {
-        return detail::aggregate_query<Attr>(
-            *this,
-            active_record::string{ "max(" } + detail::column_full_names_to_string<Attr>() +")"
+        return detail::vectored_aggregate_query<Attr, Attr::max>(
+            *this
         );
     }
 
@@ -358,9 +372,8 @@ namespace active_record {
     template<Attribute Attr>
     requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
     query_relation<Attr, BindAttrs> query_relation<Result, BindAttrs>::min() && {
-        return detail::aggregate_query<Attr>(
-            std::move(*this),
-            active_record::string{ "min(" } + detail::column_full_names_to_string<Attr>() +")"
+        return detail::vectored_aggregate_query<Attr, Attr::min>(
+            std::move(*this)
         );
     }
     template<typename Result, Tuple BindAttrs>
@@ -368,9 +381,8 @@ namespace active_record {
     template<Attribute Attr>
     requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
     query_relation<Attr, BindAttrs> query_relation<Result, BindAttrs>::min() const& {
-        return detail::aggregate_query<Attr>(
-            *this,
-            active_record::string{ "min(" } + detail::column_full_names_to_string<Attr>() +")"
+        return detail::vectored_aggregate_query<Attr, Attr::min>(
+            *this
         );
     }
 }
