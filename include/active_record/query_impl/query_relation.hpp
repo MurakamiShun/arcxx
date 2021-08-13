@@ -134,6 +134,11 @@ namespace active_record {
         template<Attribute... Attrs>
         [[nodiscard]] query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> select() const &;
 
+        template<AttributeAggregator... Attrs>
+        [[nodiscard]] query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> select() &&;
+        template<AttributeAggregator... Attrs>
+        [[nodiscard]] query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> select() const &;
+
         template<Attribute Attr>
         [[nodiscard]] query_relation<std::vector<Attr>, BindAttrs> pluck() &&;
         template<Attribute Attr>
@@ -165,32 +170,32 @@ namespace active_record {
         [[nodiscard]] query_relation<std::size_t, BindAttrs> count() const&;
 
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<Attr, BindAttrs> sum() &&;
+        requires requires{ typename Attr::sum; }
+        [[nodiscard]] query_relation<typename Attr::sum::attribute_type, BindAttrs> sum() &&;
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<Attr, BindAttrs> sum() const&;
+        requires requires{ typename Attr::sum; }
+        [[nodiscard]] query_relation<typename Attr::sum::attribute_type, BindAttrs> sum() const&;
 
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<Attr, BindAttrs> avg() &&;
+        requires requires{ typename Attr::avg; }
+        [[nodiscard]] query_relation<typename Attr::avg::attribute_type, BindAttrs> avg() &&;
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<Attr, BindAttrs> avg() const&;
+        requires requires{ typename Attr::avg; }
+        [[nodiscard]] query_relation<typename Attr::avg::attribute_type, BindAttrs> avg() const&;
 
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<Attr, BindAttrs> max() &&;
+        requires requires{ typename Attr::max; }
+        [[nodiscard]] query_relation<typename Attr::max::attribute_type, BindAttrs> max() &&;
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<Attr, BindAttrs> max() const&;
+        requires requires{ typename Attr::max; }
+        [[nodiscard]] query_relation<typename Attr::max::attribute_type, BindAttrs> max() const&;
 
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<Attr, BindAttrs> min() &&;
+        requires requires{ typename Attr::min; }
+        [[nodiscard]] query_relation<typename Attr::min::attribute_type, BindAttrs> min() &&;
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<Attr, BindAttrs> min() const&;
+        requires requires{ typename Attr::min; }
+        [[nodiscard]] query_relation<typename Attr::min::attribute_type, BindAttrs> min() const&;
     };
 
 
@@ -238,31 +243,31 @@ namespace active_record {
         [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, std::size_t>, BindAttrs> count() const&;
 
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, Attr>, BindAttrs> sum() &&;
+        requires requires{ typename Attr::sum; }
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::sum::attribute_type>, BindAttrs> sum() &&;
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, Attr>, BindAttrs> sum() const&;
+        requires requires{ typename Attr::sum; }
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::sum::attribute_type>, BindAttrs> sum() const&;
 
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, Attr>, BindAttrs> avg() &&;
+        requires requires{ typename Attr::avg; }
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::avg::attribute_type>, BindAttrs> avg() &&;
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, Attr>, BindAttrs> avg() const&;
+        requires requires{ typename Attr::avg; }
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::avg::attribute_type>, BindAttrs> avg() const&;
 
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, Attr>, BindAttrs> max() &&;
+        requires requires{ typename Attr::max; }
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::max::attribute_type>, BindAttrs> max() &&;
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, Attr>, BindAttrs> max() const&;
+        requires requires{ typename Attr::max; }
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::max::attribute_type>, BindAttrs> max() const&;
 
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, Attr>, BindAttrs> min() &&;
+        requires requires{ typename Attr::min; }
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::min::attribute_type>, BindAttrs> min() &&;
         template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, Attr>, BindAttrs> min() const&;
+        requires requires{ typename Attr::min; }
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::min::attribute_type>, BindAttrs> min() const&;
     };
 }

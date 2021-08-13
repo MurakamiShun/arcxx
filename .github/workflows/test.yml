@@ -6,7 +6,7 @@ on:
       - gh-pages
 
 env:
-  BUILD_TYPE: Debug
+  BUILD_TYPE: Release
   CC: gcc-10
   CXX: g++-10
 
@@ -23,10 +23,10 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}}/tests/build --config ${{env.BUILD_TYPE}} -j2
 
-      - name: Run integrated tests
-        working-directory: ${{github.workspace}}/tests/build
-        run: ./active_record_IT
-
       - name: Run unit tests
         working-directory: ${{github.workspace}}/tests/build
         run: ./active_record_UT
+
+      - name: Run integrated tests
+        working-directory: ${{github.workspace}}/tests/build
+        run: ./active_record_IT
