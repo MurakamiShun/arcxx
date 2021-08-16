@@ -43,8 +43,8 @@ The below codes will be the same result.
 Between clause
 ==============
 
-Between member function in :code:`attributes` generates :code:`LIKE` clause.
-The result type :code:`query_condition` is put into where clause.
+Between member function in :code:`attributes` generates :code:`Between` clause.
+The result type :code:`query_condition` is used as argument of :code:`where()`.
 
 .. code-block:: cpp
     

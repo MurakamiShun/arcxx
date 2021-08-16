@@ -26,3 +26,11 @@ namespace active_record {
     requires false
     void from_string(Attr& attr, const active_record::string_view str);
 }
+
+template<active_record::Attribute Attr>
+struct std::hash<Attr> {
+    std::hash<std::optional<typename Attr::value_type>> inner_hash;
+    std::size_t operator()(const Attr& key) const {
+        return inner_hash(static_cast<std::optional<typename Attr::value_type>>(key));
+    }
+};

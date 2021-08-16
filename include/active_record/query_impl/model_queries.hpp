@@ -187,6 +187,22 @@ namespace active_record {
     }
 
     template<typename Derived>
+    template<Attribute Attr>
+    inline query_relation<std::unordered_map<Attr, std::tuple<>>, std::tuple<>> model<Derived>::group_by() {
+        query_relation<std::unordered_map<Attr, std::tuple<>>, std::tuple<>> ret;
+
+        ret.operation = query_operation::select;
+        ret.query_op_arg.push_back(detail::column_full_names_to_string<Attr>());
+        ret.query_table.push_back(
+            active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\""
+        );
+        ret.query_options.push_back("GROUP BY" + detail::column_full_names_to_string<Attr>());
+        
+        return ret;
+    }
+
+
+    template<typename Derived>
     inline query_relation<std::size_t, std::tuple<>> model<Derived>::count() {
         query_relation<std::size_t, std::tuple<>> ret;
 

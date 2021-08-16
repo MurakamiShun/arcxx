@@ -20,17 +20,18 @@ msgstr ""
 
 #: ../../source/tutorial/select_columns.rst:3
 msgid "Select columns"
-msgstr ""
+msgstr "カラムの選択"
 
 #: ../../source/tutorial/select_columns.rst:6
 msgid "Select function"
-msgstr ""
+msgstr "Select関数"
 
 #: ../../source/tutorial/select_columns.rst:8
 msgid ""
 ":code:`select` function generate SQL statement which return selected "
 "columns as :code:`std::tuple<selected columns...>`."
 msgstr ""
+":code:`select` 関数は、選択したカラムを :code:`std::tuple<selected columns...>` として返すSQL文を生成します。"
 
 #: ../../source/tutorial/select_columns.rst:11
 msgid "select example code"
@@ -38,13 +39,14 @@ msgstr ""
 
 #: ../../source/tutorial/select_columns.rst:32
 msgid "Pluck function"
-msgstr ""
+msgstr "Pluck関数"
 
 #: ../../source/tutorial/select_columns.rst:34
 msgid ""
 ":code:`pluck` function generate SQL statement which return only selected "
 "column."
 msgstr ""
+":code:`pluck` 関数は、選択したカラムのみを返すSQL文を生成します。"
 
 #: ../../source/tutorial/select_columns.rst:37
 msgid "pluck example code"

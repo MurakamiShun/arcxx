@@ -278,8 +278,22 @@ namespace active_record {
                 while(true){
                     const auto status = sqlite3_step(stmt);
                     if(status == SQLITE_ROW){
-                        if constexpr (Container<T>) {
+                        if constexpr (same_as_vector<T>) {
                             result.push_back(active_record::sqlite3::extract_column_data<typename T::value_type>(stmt));
+                        }
+                        else if constexpr (same_as_unordered_map<T>) {
+                            if constexpr (Tuple<typename T::mapped_type>){
+                                using result_type = decltype(std::tuple_cat(std::declval<std::tuple<typename T::key_type>>(), std::declval<typename T::mapped_type>()));
+                                auto result_column = active_record::sqlite3::extract_column_data<result_type>(stmt);
+                                result.insert(std::make_pair(
+                                    std::get<0>(result_column),
+                                    active_record::tuple_slice(result_column, active_record::make_index_sequence_between<1, std::tuple_size_v<result_type>>())
+                                ));
+                            }
+                            else{
+                                const auto result_column = active_record::sqlite3::extract_column_data<std::tuple<typename T::key_type, typename T::mapped_type>>(stmt);
+                                result.insert(std::make_pair(std::move(std::get<0>(result_column)), std::move(std::get<1>(result_column))));
+                            }
                         }
                         else {
                             result = active_record::sqlite3::extract_column_data<T>(stmt);

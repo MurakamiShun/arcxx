@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Active Record C++ \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-07 12:07+0000\n"
+"POT-Creation-Date: 2021-08-16 05:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,13 +20,28 @@ msgstr ""
 
 #: ../../source/tutorial/aggregation.rst:3
 msgid "Aggregation"
-msgstr ""
+msgstr "集計"
 
 #: ../../source/tutorial/aggregation.rst:7
 msgid "Columns count"
-msgstr ""
+msgstr "カラム数の取得"
 
 #: ../../source/tutorial/aggregation.rst:9
 msgid "To count columns, use :code:`count()`."
+msgstr "カラム数の取得には :code:`count()` を使用してください。"
+
+#: ../../source/tutorial/aggregation.rst:32
+msgid "Column aggregations"
+msgstr "カラムの集計"
+
+#: ../../source/tutorial/aggregation.rst:34
+msgid ""
+"Column aggregation functions, :code:`avg()` and :code:`max` etc... are "
+"used like :code:`count()` function."
 msgstr ""
+" :code:`avg()` や :code:`max()` といった カラム集計関数は :code:`count()` と同じように使用することができます。"
+
+#: ../../source/tutorial/aggregation.rst:50
+msgid "Also, aggregation functions can be used in select."
+msgstr "また、集計関数はselect関数で使うこともできます。"
 

@@ -215,101 +215,99 @@ namespace active_record {
         return ret;
     }
 
-    /*
-
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
     query_relation<std::unordered_map<typename Result::key_type, std::size_t>, BindAttrs> query_relation<Result, BindAttrs>::count() && {
-        return detail::aggregate_query<std::size_t>(std::move(*this), "count(*)");
+        query_relation<std::unordered_map<typename Result::key_type, std::size_t>, BindAttrs> ret;
+        
+        ret.operation = query_operation::select;
+        ret.query_op_arg.push_back(detail::column_full_names_to_string<typename Result::key_type>() + ",count(*)");
+        ret.query_table = std::move(this->query_table);
+
+        ret.query_condition = std::move(this->query_condition);
+        ret.query_options = std::move(this->query_options);
+        ret.temporary_attrs = std::move(this->temporary_attrs);
+        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        return ret;
     }
     template<typename Result, Tuple BindAttrs>
-    requires std::same_as<std::unordered_map<Result::key_type, std::size_t>, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
-    query_relation<std::size_t, BindAttrs> query_relation<Result, BindAttrs>::count() const& {
-        return detail::aggregate_query<std::size_t>(*this, "count(*)");
+    requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
+    query_relation<std::unordered_map<typename Result::key_type, std::size_t>, BindAttrs> query_relation<Result, BindAttrs>::count() const& {
+        query_relation<std::unordered_map<typename Result::key_type, std::size_t>, BindAttrs> ret;
+        
+        ret.operation = query_operation::select;
+        ret.query_op_arg.push_back(detail::column_full_names_to_string<typename Result::key_type>() + ",count(*)");
+        ret.query_table = this->query_table;
+
+        ret.query_condition = this->query_condition;
+        ret.query_options = this->query_options;
+        ret.temporary_attrs = this->temporary_attrs;
+        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        return ret;
     }
 
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
     template<Attribute Attr>
-    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-    query_relation<Attr, BindAttrs> query_relation<Result, BindAttrs>::sum() && {
-        return detail::aggregate_query<Attr>(
-            std::move(*this),
-            active_record::string{ "sum(" } + detail::column_full_names_to_string<Attr>() +")"
-        );
-    }
-    template<typename Result, Tuple BindAttrs>
-    requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
-    template<Attribute Attr>
-    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-    query_relation<Attr, BindAttrs> query_relation<Result, BindAttrs>::sum() const& {
-        return detail::aggregate_query<Attr>(
-            *this,
-            active_record::string{ "sum(" } + detail::column_full_names_to_string<Attr>() +")"
-        );
+    requires requires{ typename Attr::sum; }
+    query_relation<std::unordered_map<typename Result::key_type, typename Attr::sum::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::sum() && {
+        return std::move(*this).template pluck<typename Attr::sum>();
     }
 
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
     template<Attribute Attr>
-    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-    query_relation<Attr, BindAttrs> query_relation<Result, BindAttrs>::avg() && {
-        return detail::aggregate_query<Attr>(
-            std::move(*this),
-            active_record::string{ "avg(" } + detail::column_full_names_to_string<Attr>() +")"
-        );
-    }
-    template<typename Result, Tuple BindAttrs>
-    requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
-    template<Attribute Attr>
-    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-    query_relation<Attr, BindAttrs> query_relation<Result, BindAttrs>::avg() const& {
-        return detail::aggregate_query<Attr>(
-            *this,
-            active_record::string{ "avg(" } + detail::column_full_names_to_string<Attr>() +")"
-        );
+    requires requires{ typename Attr::sum; }
+    query_relation<std::unordered_map<typename Result::key_type, typename Attr::sum::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::sum() const& {
+        return this->pluck<typename Attr::sum>();
     }
 
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
     template<Attribute Attr>
-    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-    query_relation<Attr, BindAttrs> query_relation<Result, BindAttrs>::max() && {
-        return detail::aggregate_query<Attr>(
-            std::move(*this),
-            active_record::string{ "max(" } + detail::column_full_names_to_string<Attr>() +")"
-        );
-    }
-    template<typename Result, Tuple BindAttrs>
-    requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
-    template<Attribute Attr>
-    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-    query_relation<Attr, BindAttrs> query_relation<Result, BindAttrs>::max() const& {
-        return detail::aggregate_query<Attr>(
-            *this,
-            active_record::string{ "max(" } + detail::column_full_names_to_string<Attr>() +")"
-        );
+    requires requires{ typename Attr::avg; }
+    query_relation<std::unordered_map<typename Result::key_type, typename Attr::avg::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::avg() && {
+        return std::move(*this).template pluck<typename Attr::avg>();
     }
 
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
     template<Attribute Attr>
-    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-    query_relation<Attr, BindAttrs> query_relation<Result, BindAttrs>::min() && {
-        return detail::aggregate_query<Attr>(
-            std::move(*this),
-            active_record::string{ "min(" } + detail::column_full_names_to_string<Attr>() +")"
-        );
+    requires requires{ typename Attr::avg; }
+    query_relation<std::unordered_map<typename Result::key_type, typename Attr::avg::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::avg() const& {
+        return this->pluck<typename Attr::avg>();
     }
+
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
     template<Attribute Attr>
-    requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-    query_relation<Attr, BindAttrs> query_relation<Result, BindAttrs>::min() const& {
-        return detail::aggregate_query<Attr>(
-            *this,
-            active_record::string{ "min(" } + detail::column_full_names_to_string<Attr>() +")"
-        );
+    requires requires{ typename Attr::max; }
+    query_relation<std::unordered_map<typename Result::key_type, typename Attr::max::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::max() && {
+        return std::move(*this).template pluck<typename Attr::max>();
     }
-    */
+
+    template<typename Result, Tuple BindAttrs>
+    requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
+    template<Attribute Attr>
+    requires requires{ typename Attr::max; }
+    query_relation<std::unordered_map<typename Result::key_type, typename Attr::max::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::max() const& {
+        return this->pluck<typename Attr::max>();
+    }
+
+    template<typename Result, Tuple BindAttrs>
+    requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
+    template<Attribute Attr>
+    requires requires{ typename Attr::min; }
+    query_relation<std::unordered_map<typename Result::key_type, typename Attr::min::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::min() && {
+        return std::move(*this).template pluck<typename Attr::min>();
+    }
+
+    template<typename Result, Tuple BindAttrs>
+    requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
+    template<Attribute Attr>
+    requires requires{ typename Attr::min; }
+    query_relation<std::unordered_map<typename Result::key_type, typename Attr::min::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::min() const& {
+        return this->pluck<typename Attr::min>();
+    }
+
 }
