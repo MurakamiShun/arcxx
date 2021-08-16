@@ -1,6 +1,34 @@
-# active_record_cpp ![Test](https://github.com/akisute514/active_record_cpp/actions/workflows/test.yml/badge.svg)
+# Active Record C++ [![test](https://github.com/akisute514/active_record_cpp/actions/workflows/test.yml/badge.svg)](https://github.com/akisute514/active_record_cpp/actions/workflows/test.yml) [![doc_build](https://github.com/akisute514/active_record_cpp/actions/workflows/doc_build.yml/badge.svg)](https://github.com/akisute514/active_record_cpp/actions/workflows/doc_build.yml)
 
-[Documents](https://akisute514.github.io/active_record_cpp/en)
+Active Record C++ is an Open Source C++20 O/R mapper of Active Record pattern.
+
+# Install
+
+Have a look at the [Installation document](https://akisute514.github.io/active_record_cpp/en/installation/cmake.html) to build and install Active Record C++.
+
+# Documentation
+
+See below documentation. English is full documentation. Also, Japanese is available.
+
+* [English](https://akisute514.github.io/active_record_cpp/en)
+* [Japanese](https://akisute514.github.io/active_record_cpp/ja)
+
+# Developing Status
+
+Completed
+* SQLite support
+
+WIP
+* PostgreSQL support
+* Documentaion
+* Translation of documents
+* Tests
+
+Waiting
+* MySQL support
+* Example codes
+* Public Relations
+
 
 # License
 This software is released under the Apache-2.0 License, see [LICENSE](LICENSE).
