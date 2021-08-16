@@ -98,8 +98,8 @@ active_record::model
         template<Attribute... Attrs>
         static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> select();
 
-        template<Attribute... Attrs>
-        static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> select(const Attrs...);
+        template<AttributeAggregator... Attrs>
+        static query_relation<std::vector<std::tuple<typename Attrs::attirbute_type...>>, std::tuple<>> select();
 
     .. cpp:function:: pluck()
 
@@ -109,9 +109,8 @@ active_record::model
 
         template<Attribute Attr>
         static query_relation<std::vector<Attr>, std::tuple<>> pluck();
-
-        template<Attribute Attr>
-        static query_relation<std::vector<Attr>, std::tuple<>> pluck(const Attr);
+        template<AttributeAggregator Attr>
+        static query_relation<std::vector<typename Attr::attribute_type>, std::tuple<>> pluck();
 
     .. cpp:function:: where()
 

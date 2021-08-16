@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Select columns &mdash; Active Record C++  ドキュメント</title>
+  <title>カラムの選択 &mdash; Active Record C++  ドキュメント</title>
   
 
   
@@ -42,8 +42,8 @@
     
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="検索" href="../search.html" />
-    <link rel="next" title="Aggregation" href="aggregation.html" />
-    <link rel="prev" title="Find columns" href="find_columns.html" /> 
+    <link rel="next" title="集計" href="aggregation.html" />
+    <link rel="prev" title="カラム検索" href="find_columns.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -97,13 +97,13 @@
 <li class="toctree-l1"><a class="reference internal" href="database_connection.html">データベースへの接続</a></li>
 <li class="toctree-l1"><a class="reference internal" href="table_creation.html">テーブルの作成</a></li>
 <li class="toctree-l1"><a class="reference internal" href="inserting.html">データの挿入</a></li>
-<li class="toctree-l1"><a class="reference internal" href="find_columns.html">Find columns</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Select columns</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#select-function">Select function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pluck-function">Pluck function</a></li>
+<li class="toctree-l1"><a class="reference internal" href="find_columns.html">カラム検索</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">カラムの選択</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#select-function">Select関数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pluck-function">Pluck関数</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="aggregation.html">Aggregation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aggregation.html">集計</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">namespace</span></p>
 <ul>
@@ -173,7 +173,7 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Select columns</li>
+      <li>カラムの選択</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -193,25 +193,24 @@
            <div itemprop="articleBody">
             
   <div class="section" id="select-columns">
-<h1>Select columns<a class="headerlink" href="#select-columns" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<h1>カラムの選択<a class="headerlink" href="#select-columns" title="このヘッドラインへのパーマリンク">¶</a></h1>
 <div class="section" id="select-function">
-<h2>Select function<a class="headerlink" href="#select-function" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p><code class="code docutils literal notranslate"><span class="pre">select</span></code> function generate SQL statement
-which return selected columns as <code class="code docutils literal notranslate"><span class="pre">std::tuple&lt;selected</span> <span class="pre">columns...&gt;</span></code>.</p>
+<h2>Select関数<a class="headerlink" href="#select-function" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p><code class="code docutils literal notranslate"><span class="pre">select</span></code> 関数は、選択したカラムを <code class="code docutils literal notranslate"><span class="pre">std::tuple&lt;selected</span> <span class="pre">columns...&gt;</span></code> として返すSQL文を生成します。</p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">select example code</span><a class="headerlink" href="#id1" title="このコードへのパーマリンク">¶</a></div>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">sql_stmt</span> <span class="o">=</span> <span class="n">ExampleTable</span><span class="o">::</span><span class="n">select</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="p">,</span> <span class="n">ExampleTable</span><span class="o">::</span><span class="n">Name</span><span class="o">&gt;</span><span class="p">();</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">sql_stmt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">select</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="p">,</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">Name</span><span class="o">&gt;</span><span class="p">();</span><span class="w"></span>
 
 <span class="c1">// print SQL code</span>
-<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sql_stmt</span><span class="p">.</span><span class="n">to_sql</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">to_sql</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 
 <span class="c1">// Execute data inserting</span>
-<span class="k">const</span> <span class="k">auto</span> <span class="p">[</span><span class="n">error</span><span class="p">,</span> <span class="n">columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="n">columns</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
 
 <span class="c1">// decltype(error) == std::optional&lt;active_record::string&gt;</span>
-<span class="k">if</span><span class="p">(</span><span class="n">error</span><span class="p">){</span>
-    <span class="c1">// error handling</span>
-<span class="p">}</span>
+<span class="k">if</span><span class="p">(</span><span class="n">error</span><span class="p">){</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// error handling</span>
+<span class="p">}</span><span class="w"></span>
 
 <span class="c1">// decltype(columns) == std::vector&lt;std::tuple&lt;ExampleTable::ID, ExampleTable::Name&gt;&gt;</span>
 </pre></div>
@@ -219,23 +218,22 @@ which return selected columns as <code class="code docutils literal notranslate"
 </div>
 </div>
 <div class="section" id="pluck-function">
-<h2>Pluck function<a class="headerlink" href="#pluck-function" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p><code class="code docutils literal notranslate"><span class="pre">pluck</span></code> function generate SQL statement
-which return only selected column.</p>
+<h2>Pluck関数<a class="headerlink" href="#pluck-function" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p><code class="code docutils literal notranslate"><span class="pre">pluck</span></code> 関数は、選択したカラムのみを返すSQL文を生成します。</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">pluck example code</span><a class="headerlink" href="#id2" title="このコードへのパーマリンク">¶</a></div>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">sql_stmt</span> <span class="o">=</span> <span class="n">ExampleTable</span><span class="o">::</span><span class="n">pluck</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">Name</span><span class="o">&gt;</span><span class="p">();</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">sql_stmt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">pluck</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">Name</span><span class="o">&gt;</span><span class="p">();</span><span class="w"></span>
 
 <span class="c1">// print SQL code</span>
-<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sql_stmt</span><span class="p">.</span><span class="n">to_sql</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">to_sql</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 
 <span class="c1">// Execute data inserting</span>
-<span class="k">const</span> <span class="k">auto</span> <span class="p">[</span><span class="n">error</span><span class="p">,</span> <span class="n">names</span><span class="p">]</span> <span class="o">=</span> <span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="n">names</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
 
 <span class="c1">// decltype(error) == std::optional&lt;active_record::string&gt;</span>
-<span class="k">if</span><span class="p">(</span><span class="n">error</span><span class="p">){</span>
-    <span class="c1">// error handling</span>
-<span class="p">}</span>
+<span class="k">if</span><span class="p">(</span><span class="n">error</span><span class="p">){</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// error handling</span>
+<span class="p">}</span><span class="w"></span>
 
 <span class="c1">// decltype(names) == std::vector&lt;ExampleTable::Name&gt;</span>
 </pre></div>
@@ -250,8 +248,8 @@ which return only selected column.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="aggregation.html" class="btn btn-neutral float-right" title="Aggregation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="find_columns.html" class="btn btn-neutral float-left" title="Find columns" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="aggregation.html" class="btn btn-neutral float-right" title="集計" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="find_columns.html" class="btn btn-neutral float-left" title="カラム検索" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

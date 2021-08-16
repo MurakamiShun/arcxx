@@ -78,6 +78,11 @@ active_record::query_relation
             template<Attribute... Attrs>
             [[nodiscard]] query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> select() const &;
 
+            template<AttributeAggregator... Attrs>
+            [[nodiscard]] query_relation<std::vector<std::tuple<typename Attrs::attribute_type...>>, BindAttrs> select() &&;
+            template<AttributeAggregator... Attrs>
+            [[nodiscard]] query_relation<std::vector<std::tuple<typename Attrs::attribute_type...>>, BindAttrs> select() const &;
+
     .. cpp:function:: pluck()
 
         .. code-block:: cpp
@@ -86,6 +91,11 @@ active_record::query_relation
             [[nodiscard]] query_relation<std::vector<Attr>, BindAttrs> pluck() &&;
             template<Attribute Attr>
             [[nodiscard]] query_relation<std::vector<Attr>, BindAttrs> pluck() const &;
+
+            template<AttributeAggregator Attr>
+            [[nodiscard]] query_relation<std::vector<typename Attr::attribute_type>, BindAttrs> pluck() &&;
+            template<AttributeAggregator Attr>
+            [[nodiscard]] query_relation<std::vector<typename Attr::attribute_type>, BindAttrs> pluck() const &;
 
     .. cpp:function:: update()
 

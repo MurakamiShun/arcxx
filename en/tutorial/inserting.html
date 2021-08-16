@@ -197,26 +197,26 @@
 <h2>Example Table<a class="headerlink" href="#example-table" title="Permalink to this headline">¶</a></h2>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">example_table code</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;active_record.hpp&gt;</span><span class="cp"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;active_record.hpp&gt;</span><span class="cp"></span>
 
-<span class="k">struct</span> <span class="nc">ExampleTable</span> <span class="o">:</span> <span class="k">public</span> <span class="n">active_record</span><span class="o">::</span><span class="n">model</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span> <span class="p">{</span>
-    <span class="k">static</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">table_name</span> <span class="o">=</span> <span class="s">&quot;example_table&quot;</span><span class="p">;</span>
+<span class="k">struct</span> <span class="nc">ExampleTable</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">model</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_table&quot;</span><span class="p">;</span><span class="w"></span>
 
-    <span class="c1">// id column</span>
-    <span class="k">struct</span> <span class="nc">ID</span> <span class="o">:</span> <span class="k">public</span> <span class="n">active_record</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">integer</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span> <span class="n">ID</span><span class="o">&gt;</span> <span class="p">{</span>
-        <span class="k">using</span> <span class="n">active_record</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">integer</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span> <span class="n">ID</span><span class="o">&gt;::</span><span class="n">integer</span><span class="p">;</span>
-        <span class="k">static</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">column_name</span> <span class="o">=</span> <span class="s">&quot;id&quot;</span><span class="p">;</span>
-        <span class="kr">inline</span> <span class="k">static</span> <span class="k">const</span> <span class="k">auto</span> <span class="n">constraints</span> <span class="o">=</span> <span class="p">{</span> <span class="n">primary_key</span> <span class="p">};</span>
-    <span class="p">}</span> <span class="n">id</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// id column</span>
+<span class="w">    </span><span class="k">struct</span> <span class="nc">ID</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">integer</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span><span class="w"> </span><span class="n">ID</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">using</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">integer</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span><span class="w"> </span><span class="n">ID</span><span class="o">&gt;::</span><span class="n">integer</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">column_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;id&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="kr">inline</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">constraints</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">primary_key</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="n">id</span><span class="p">;</span><span class="w"></span>
 
-    <span class="c1">// name column</span>
-    <span class="k">struct</span> <span class="nc">Name</span> <span class="o">:</span> <span class="k">public</span> <span class="n">active_record</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">string</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span> <span class="n">Name</span><span class="o">&gt;</span> <span class="p">{</span>
-        <span class="k">using</span> <span class="n">active_record</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">string</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span> <span class="n">Name</span><span class="o">&gt;::</span><span class="n">string</span><span class="p">;</span>
-        <span class="k">static</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">column_name</span> <span class="o">=</span> <span class="s">&quot;name&quot;</span><span class="p">;</span>
-    <span class="p">}</span> <span class="n">name</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// name column</span>
+<span class="w">    </span><span class="k">struct</span> <span class="nc">Name</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">string</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span><span class="w"> </span><span class="n">Name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">using</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">string</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span><span class="w"> </span><span class="n">Name</span><span class="o">&gt;::</span><span class="n">string</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">column_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w"></span>
 
-    <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">ID</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">Name</span><span class="o">&amp;&gt;</span> <span class="n">attributes</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">tie</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
-<span class="p">};</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">ID</span><span class="o">&amp;</span><span class="p">,</span><span class="w"> </span><span class="n">Name</span><span class="o">&amp;&gt;</span><span class="w"> </span><span class="n">attributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tie</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
@@ -245,24 +245,24 @@
 <p>Data inserting code.</p>
 <div class="literal-block-wrapper docutils container" id="id4">
 <div class="code-block-caption"><span class="caption-text">inserting example code</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">connection</span> <span class="o">=</span> <span class="n">active_record</span><span class="o">::</span><span class="n">sqlite3</span><span class="o">::</span><span class="n">adaptor</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;example.sqlite3&quot;</span><span class="p">);</span>
-<span class="n">ExampleTable</span> <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;unknown&quot;</span>
-<span class="p">};</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">sqlite3</span><span class="o">::</span><span class="n">adaptor</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;example.sqlite3&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="n">ExampleTable</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;unknown&quot;</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
 
-<span class="k">auto</span> <span class="n">sql_stmt</span> <span class="o">=</span> <span class="n">ExampleTable</span><span class="o">::</span><span class="n">insert</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">sql_stmt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">insert</span><span class="p">(</span><span class="n">data</span><span class="p">);</span><span class="w"></span>
 
 <span class="c1">// print SQL code</span>
-<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sql_stmt</span><span class="p">.</span><span class="n">to_sql</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">to_sql</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 
 <span class="c1">// Execute data inserting</span>
-<span class="k">const</span> <span class="k">auto</span> <span class="n">error</span> <span class="o">=</span> <span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
 
 <span class="c1">// decltype(error) == std::optional&lt;active_record::string&gt;</span>
-<span class="k">if</span><span class="p">(</span><span class="n">error</span><span class="p">){</span>
-    <span class="c1">// error handling</span>
-<span class="p">}</span>
+<span class="k">if</span><span class="p">(</span><span class="n">error</span><span class="p">){</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// error handling</span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </div>

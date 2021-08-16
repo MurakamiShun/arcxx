@@ -97,9 +97,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorial/database_connection.html">データベースへの接続</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorial/table_creation.html">テーブルの作成</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorial/inserting.html">データの挿入</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/find_columns.html">Find columns</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/select_columns.html">Select columns</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/aggregation.html">Aggregation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/find_columns.html">カラム検索</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/select_columns.html">カラムの選択</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/aggregation.html">集計</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">namespace</span></p>
 <ul>
@@ -306,13 +306,13 @@
 <span class="target" id="string-constructors"></span><dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6string6stringEv">
 <span id="_CPPv3N6string6stringEv"></span><span id="_CPPv2N6string6stringEv"></span><span id="string::string"></span><span class="sig-name descname"><span class="n"><span class="pre">string</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6string6stringEv" title="この定義へのパーマリンク">¶</a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span> <span class="n">string</span><span class="p">();</span>
-<span class="k">constexpr</span> <span class="n">string</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&amp;</span><span class="p">);</span>
-<span class="k">constexpr</span> <span class="n">string</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&amp;&amp;</span><span class="p">);</span>
-<span class="k">constexpr</span> <span class="n">string</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nullopt_t</span><span class="p">);</span>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span><span class="w"> </span><span class="n">string</span><span class="p">();</span><span class="w"></span>
+<span class="k">constexpr</span><span class="w"> </span><span class="n">string</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&amp;</span><span class="p">);</span><span class="w"></span>
+<span class="k">constexpr</span><span class="w"> </span><span class="n">string</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&amp;&amp;</span><span class="p">);</span><span class="w"></span>
+<span class="k">constexpr</span><span class="w"> </span><span class="n">string</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nullopt_t</span><span class="p">);</span><span class="w"></span>
 
-<span class="k">constexpr</span> <span class="n">string</span><span class="p">(</span><span class="k">const</span> <span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="p">);</span>
-<span class="k">constexpr</span> <span class="n">string</span><span class="p">(</span><span class="k">const</span> <span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;&amp;</span><span class="p">);</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="n">string</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="p">);</span><span class="w"></span>
+<span class="k">constexpr</span><span class="w"> </span><span class="n">string</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;&amp;</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
 </dd></dl>
@@ -320,15 +320,15 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6stringaSEv">
 <span id="_CPPv3N6stringaSEv"></span><span id="_CPPv2N6stringaSEv"></span><span id="string::assign-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6stringaSEv" title="この定義へのパーマリンク">¶</a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Attribute</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Attribute</span><span class="o">&amp;</span><span class="p">);</span>
-<span class="n">Attribute</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">Attribute</span><span class="o">&amp;&amp;</span><span class="p">);</span>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Attribute</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Attribute</span><span class="o">&amp;</span><span class="p">);</span><span class="w"></span>
+<span class="n">Attribute</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">Attribute</span><span class="o">&amp;&amp;</span><span class="p">);</span><span class="w"></span>
 
-<span class="n">Attribute</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&amp;</span><span class="p">);</span>
-<span class="n">Attribute</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&amp;&amp;</span><span class="p">);</span>
-<span class="n">Attribute</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nullopt_t</span><span class="p">);</span>
+<span class="n">Attribute</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&amp;</span><span class="p">);</span><span class="w"></span>
+<span class="n">Attribute</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&amp;&amp;</span><span class="p">);</span><span class="w"></span>
+<span class="n">Attribute</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nullopt_t</span><span class="p">);</span><span class="w"></span>
 
-<span class="n">Attribute</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="p">);</span>
-<span class="n">Attribute</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;&amp;</span><span class="p">);</span>
+<span class="n">Attribute</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="p">);</span><span class="w"></span>
+<span class="n">Attribute</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;&amp;</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
 </dd></dl>
@@ -336,7 +336,7 @@
 <span class="target" id="string-destructors"></span><dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6stringD0Ev">
 <span id="_CPPv3N6stringD0Ev"></span><span id="_CPPv2N6stringD0Ev"></span><span id="string::~string"></span><span class="sig-name descname"><span class="n"><span class="pre">~string</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6stringD0Ev" title="この定義へのパーマリンク">¶</a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span> <span class="k">virtual</span> <span class="o">~</span><span class="n">string</span><span class="p">();</span>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span><span class="w"> </span><span class="k">virtual</span><span class="w"> </span><span class="o">~</span><span class="n">string</span><span class="p">();</span><span class="w"></span>
 </pre></div>
 </div>
 </dd></dl>
@@ -344,7 +344,7 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6stringcvbEv">
 <span id="_CPPv3N6stringcvbEv"></span><span id="_CPPv2N6stringcvbEv"></span><span id="string::castto-b-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6stringcvbEv" title="この定義へのパーマリンク">¶</a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span> <span class="k">operator</span> <span class="kt">bool</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span><span class="p">;</span>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span><span class="w"> </span><span class="k">operator</span><span class="w"> </span><span class="kt">bool</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">noexcept</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Return false if attribute value is null.</p>
@@ -353,9 +353,9 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6string5valueEv">
 <span id="_CPPv3N6string5valueEv"></span><span id="_CPPv2N6string5valueEv"></span><span id="string::value"></span><span class="sig-name descname"><span class="n"><span class="pre">value</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6string5valueEv" title="この定義へのパーマリンク">¶</a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span><span class="p">;</span>
-<span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="k">const</span> <span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">()</span> <span class="k">const</span><span class="o">&amp;</span><span class="p">;</span>
-<span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;&amp;</span> <span class="n">value</span><span class="p">()</span> <span class="o">&amp;&amp;</span><span class="p">;</span>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="p">;</span><span class="w"></span>
+<span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="p">;</span><span class="w"></span>
+<span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Return attribute value.
@@ -365,8 +365,8 @@ If the value is null, throw <code class="code docutils literal notranslate"><spa
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6string2inEv">
 <span id="_CPPv3N6string2inEv"></span><span id="_CPPv2N6string2inEv"></span><span id="string::in"></span><span class="sig-name descname"><span class="n"><span class="pre">in</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6string2inEv" title="この定義へのパーマリンク">¶</a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">Attrs</span><span class="o">&gt;</span>
-<span class="n">query_condition</span> <span class="n">in</span><span class="p">(</span><span class="k">const</span> <span class="n">Attrs</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">args</span><span class="p">);</span>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span><span class="w"> </span><span class="n">Attrs</span><span class="o">&gt;</span><span class="w"></span>
+<span class="n">query_condition</span><span class="w"> </span><span class="n">in</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Attrs</span><span class="o">&amp;&amp;</span><span class="p">...</span><span class="w"> </span><span class="n">args</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The returned object will generate
@@ -376,7 +376,7 @@ If the value is null, throw <code class="code docutils literal notranslate"><spa
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6string7betweenEv">
 <span id="_CPPv3N6string7betweenEv"></span><span id="_CPPv2N6string7betweenEv"></span><span id="string::between"></span><span class="sig-name descname"><span class="n"><span class="pre">between</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6string7betweenEv" title="この定義へのパーマリンク">¶</a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">query_condition</span> <span class="nf">between</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">convertible_to</span><span class="o">&lt;</span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">convertible_to</span><span class="o">&lt;</span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">arg2</span><span class="p">);</span>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">query_condition</span><span class="w"> </span><span class="nf">between</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">convertible_to</span><span class="o">&lt;</span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">arg1</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">convertible_to</span><span class="o">&lt;</span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">arg2</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The returned object will generate
@@ -386,7 +386,7 @@ If the value is null, throw <code class="code docutils literal notranslate"><spa
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6string4likeEv">
 <span id="_CPPv3N6string4likeEv"></span><span id="_CPPv2N6string4likeEv"></span><span id="string::like"></span><span class="sig-name descname"><span class="n"><span class="pre">like</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6string4likeEv" title="この定義へのパーマリンク">¶</a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">query_condition</span> <span class="nf">like</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">convertible_to</span><span class="o">&lt;</span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">arg</span><span class="p">);</span>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">query_condition</span><span class="w"> </span><span class="nf">like</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">convertible_to</span><span class="o">&lt;</span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">arg</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The returned object will generate
@@ -396,10 +396,10 @@ If the value is null, throw <code class="code docutils literal notranslate"><spa
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6stringaaEv">
 <span id="_CPPv3N6stringaaEv"></span><span id="_CPPv2N6stringaaEv"></span><span id="string::sand-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&amp;&amp;</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6stringaaEv" title="この定義へのパーマリンク">¶</a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">query_condition</span> <span class="k">operator</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="k">const</span> <span class="n">query_condition</span><span class="o">&amp;</span> <span class="n">condition</span><span class="p">);</span> <span class="c1">// (1)</span>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">query_condition</span><span class="w"> </span><span class="k">operator</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">query_condition</span><span class="o">&amp;</span><span class="w"> </span><span class="n">condition</span><span class="p">);</span><span class="w"> </span><span class="c1">// (1)</span>
 
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Arg</span><span class="o">&gt;</span>
-<span class="n">query_condition</span> <span class="k">operator</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="k">const</span> <span class="n">Arg</span><span class="o">&amp;</span> <span class="n">arg</span><span class="p">);</span> <span class="c1">// (2)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Arg</span><span class="o">&gt;</span><span class="w"></span>
+<span class="n">query_condition</span><span class="w"> </span><span class="k">operator</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Arg</span><span class="o">&amp;</span><span class="w"> </span><span class="n">arg</span><span class="p">);</span><span class="w"> </span><span class="c1">// (2)</span>
 </pre></div>
 </div>
 <p>The returned object will generate &quot;AND condition SQL&quot;.</p>
@@ -412,10 +412,10 @@ If the value is null, throw <code class="code docutils literal notranslate"><spa
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6stringooEv">
 <span id="_CPPv3N6stringooEv"></span><span id="_CPPv2N6stringooEv"></span><span id="string::sor-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">||</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6stringooEv" title="この定義へのパーマリンク">¶</a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">query_condition</span> <span class="k">operator</span><span class="o">||</span><span class="p">(</span><span class="k">const</span> <span class="n">query_condition</span><span class="o">&amp;</span> <span class="n">condition</span><span class="p">);</span> <span class="c1">// (1)</span>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">query_condition</span><span class="w"> </span><span class="k">operator</span><span class="o">||</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">query_condition</span><span class="o">&amp;</span><span class="w"> </span><span class="n">condition</span><span class="p">);</span><span class="w"> </span><span class="c1">// (1)</span>
 
-<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Arg</span><span class="o">&gt;</span>
-<span class="n">query_condition</span> <span class="k">operator</span><span class="o">||</span><span class="p">(</span><span class="k">const</span> <span class="n">Arg</span><span class="o">&amp;</span> <span class="n">arg</span><span class="p">);</span> <span class="c1">// (2)</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Arg</span><span class="o">&gt;</span><span class="w"></span>
+<span class="n">query_condition</span><span class="w"> </span><span class="k">operator</span><span class="o">||</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Arg</span><span class="o">&amp;</span><span class="w"> </span><span class="n">arg</span><span class="p">);</span><span class="w"> </span><span class="c1">// (2)</span>
 </pre></div>
 </div>
 <p>The returned object will generate &quot;OR condition SQL&quot;.</p>
@@ -428,7 +428,7 @@ If the value is null, throw <code class="code docutils literal notranslate"><spa
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6string9to_stringEv">
 <span id="_CPPv3N6string9to_stringEv"></span><span id="_CPPv2N6string9to_stringEv"></span><span id="string::to_string"></span><span class="sig-name descname"><span class="n"><span class="pre">to_string</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6string9to_stringEv" title="この定義へのパーマリンク">¶</a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="n">active_record</span><span class="o">::</span><span class="n">string</span> <span class="n">to_string</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">to_string</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Converts attribute value to string.</p>
@@ -437,7 +437,7 @@ If the value is null, throw <code class="code docutils literal notranslate"><spa
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6string11from_stringEv">
 <span id="_CPPv3N6string11from_stringEv"></span><span id="_CPPv2N6string11from_stringEv"></span><span id="string::from_string"></span><span class="sig-name descname"><span class="n"><span class="pre">from_string</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6string11from_stringEv" title="この定義へのパーマリンク">¶</a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">from_string</span><span class="p">(</span><span class="k">const</span> <span class="n">active_record</span><span class="o">::</span><span class="n">string_view</span> <span class="n">str</span><span class="p">);</span>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">from_string</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">string_view</span><span class="w"> </span><span class="n">str</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Converts string to attribute value.</p>

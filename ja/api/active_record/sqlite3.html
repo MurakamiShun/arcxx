@@ -97,9 +97,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/database_connection.html">データベースへの接続</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/table_creation.html">テーブルの作成</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/inserting.html">データの挿入</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorial/find_columns.html">Find columns</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorial/select_columns.html">Select columns</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorial/aggregation.html">Aggregation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/find_columns.html">カラム検索</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/select_columns.html">カラムの選択</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/aggregation.html">集計</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">namespace</span></p>
 <ul class="current">
@@ -202,13 +202,13 @@
 <dt class="sig sig-object">
 <span class="sig-name descname"><span class="pre">namespace</span> <span class="pre">active_record::sqlite3::options</span></span></dt>
 <dd><p><a class="reference internal" href="../adaptors/sqlite3_adaptor.html#_CPPv4N15sqlite3_adaptor4openEv" title="sqlite3_adaptor::open"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">sqlite3_adaptor::open()</span></code></a> flags are hear.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span> <span class="k">auto</span> <span class="n">readonly</span>   <span class="o">=</span> <span class="n">SQLITE_OPEN_READONLY</span><span class="p">;</span>
-<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">readwrite</span>  <span class="o">=</span> <span class="n">SQLITE_OPEN_READWRITE</span><span class="p">;</span>
-<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">create</span>     <span class="o">=</span> <span class="n">SQLITE_OPEN_CREATE</span> <span class="o">|</span> <span class="n">SQLITE_OPEN_READWRITE</span><span class="p">;</span>
-<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">uri</span>        <span class="o">=</span> <span class="n">SQLITE_OPEN_URI</span><span class="p">;</span>
-<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">memory</span>     <span class="o">=</span> <span class="n">SQLITE_OPEN_MEMORY</span><span class="p">;</span>
-<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">no_mutex</span>   <span class="o">=</span> <span class="n">SQLITE_OPEN_NOMUTEX</span><span class="p">;</span>
-<span class="k">constexpr</span> <span class="k">auto</span> <span class="n">full_mutex</span> <span class="o">=</span> <span class="n">SQLITE_OPEN_FULLMUTEX</span><span class="p">;</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">readonly</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">SQLITE_OPEN_READONLY</span><span class="p">;</span><span class="w"></span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">readwrite</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">SQLITE_OPEN_READWRITE</span><span class="p">;</span><span class="w"></span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">create</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">SQLITE_OPEN_CREATE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">SQLITE_OPEN_READWRITE</span><span class="p">;</span><span class="w"></span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">uri</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">SQLITE_OPEN_URI</span><span class="p">;</span><span class="w"></span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">memory</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">SQLITE_OPEN_MEMORY</span><span class="p">;</span><span class="w"></span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">no_mutex</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">SQLITE_OPEN_NOMUTEX</span><span class="p">;</span><span class="w"></span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">full_mutex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SQLITE_OPEN_FULLMUTEX</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Flag explanations are <a class="reference external" href="https://www.sqlite.org/c3ref/open.html">https://www.sqlite.org/c3ref/open.html</a></p>

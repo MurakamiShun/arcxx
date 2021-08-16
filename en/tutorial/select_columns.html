@@ -199,18 +199,18 @@
 which return selected columns as <code class="code docutils literal notranslate"><span class="pre">std::tuple&lt;selected</span> <span class="pre">columns...&gt;</span></code>.</p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">select example code</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">sql_stmt</span> <span class="o">=</span> <span class="n">ExampleTable</span><span class="o">::</span><span class="n">select</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="p">,</span> <span class="n">ExampleTable</span><span class="o">::</span><span class="n">Name</span><span class="o">&gt;</span><span class="p">();</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">sql_stmt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">select</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="p">,</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">Name</span><span class="o">&gt;</span><span class="p">();</span><span class="w"></span>
 
 <span class="c1">// print SQL code</span>
-<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sql_stmt</span><span class="p">.</span><span class="n">to_sql</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">to_sql</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 
 <span class="c1">// Execute data inserting</span>
-<span class="k">const</span> <span class="k">auto</span> <span class="p">[</span><span class="n">error</span><span class="p">,</span> <span class="n">columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="n">columns</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
 
 <span class="c1">// decltype(error) == std::optional&lt;active_record::string&gt;</span>
-<span class="k">if</span><span class="p">(</span><span class="n">error</span><span class="p">){</span>
-    <span class="c1">// error handling</span>
-<span class="p">}</span>
+<span class="k">if</span><span class="p">(</span><span class="n">error</span><span class="p">){</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// error handling</span>
+<span class="p">}</span><span class="w"></span>
 
 <span class="c1">// decltype(columns) == std::vector&lt;std::tuple&lt;ExampleTable::ID, ExampleTable::Name&gt;&gt;</span>
 </pre></div>
@@ -223,18 +223,18 @@ which return selected columns as <code class="code docutils literal notranslate"
 which return only selected column.</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">pluck example code</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">sql_stmt</span> <span class="o">=</span> <span class="n">ExampleTable</span><span class="o">::</span><span class="n">pluck</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">Name</span><span class="o">&gt;</span><span class="p">();</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">sql_stmt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">pluck</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">Name</span><span class="o">&gt;</span><span class="p">();</span><span class="w"></span>
 
 <span class="c1">// print SQL code</span>
-<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sql_stmt</span><span class="p">.</span><span class="n">to_sql</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">to_sql</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 
 <span class="c1">// Execute data inserting</span>
-<span class="k">const</span> <span class="k">auto</span> <span class="p">[</span><span class="n">error</span><span class="p">,</span> <span class="n">names</span><span class="p">]</span> <span class="o">=</span> <span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="n">names</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
 
 <span class="c1">// decltype(error) == std::optional&lt;active_record::string&gt;</span>
-<span class="k">if</span><span class="p">(</span><span class="n">error</span><span class="p">){</span>
-    <span class="c1">// error handling</span>
-<span class="p">}</span>
+<span class="k">if</span><span class="p">(</span><span class="n">error</span><span class="p">){</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// error handling</span>
+<span class="p">}</span><span class="w"></span>
 
 <span class="c1">// decltype(names) == std::vector&lt;ExampleTable::Name&gt;</span>
 </pre></div>

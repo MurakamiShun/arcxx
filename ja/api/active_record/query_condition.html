@@ -96,9 +96,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/database_connection.html">データベースへの接続</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/table_creation.html">テーブルの作成</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/inserting.html">データの挿入</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorial/find_columns.html">Find columns</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorial/select_columns.html">Select columns</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorial/aggregation.html">Aggregation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/find_columns.html">カラム検索</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/select_columns.html">カラムの選択</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/aggregation.html">集計</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">namespace</span></p>
 <ul>
@@ -197,9 +197,9 @@
 <dd><dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N15query_conditionaaEv">
 <span id="_CPPv3N15query_conditionaaEv"></span><span id="_CPPv2N15query_conditionaaEv"></span><span id="query_condition::sand-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&amp;&amp;</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15query_conditionaaEv" title="この定義へのパーマリンク">¶</a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">Tuple</span> <span class="n">SrcBindAttrs</span><span class="o">&gt;</span>
-<span class="n">query_condition</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">invoke_result_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">tuple_cat</span><span class="o">&lt;</span><span class="n">BindAttrs</span><span class="p">,</span> <span class="n">SrcBindAttrs</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">BindAttrs</span><span class="p">,</span> <span class="n">SrcBindAttrs</span><span class="o">&gt;&gt;</span>
-<span class="k">operator</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="n">query_condition</span><span class="o">&lt;</span><span class="n">DestBindAttrs</span><span class="o">&gt;&amp;&amp;</span> <span class="n">cond</span><span class="p">)</span> <span class="o">&amp;&amp;</span><span class="p">;</span>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">Tuple</span><span class="w"> </span><span class="n">SrcBindAttrs</span><span class="o">&gt;</span><span class="w"></span>
+<span class="n">query_condition</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">invoke_result_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">tuple_cat</span><span class="o">&lt;</span><span class="n">BindAttrs</span><span class="p">,</span><span class="w"> </span><span class="n">SrcBindAttrs</span><span class="o">&gt;</span><span class="p">),</span><span class="w"> </span><span class="n">BindAttrs</span><span class="p">,</span><span class="w"> </span><span class="n">SrcBindAttrs</span><span class="o">&gt;&gt;</span><span class="w"></span>
+<span class="k">operator</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="n">query_condition</span><span class="o">&lt;</span><span class="n">DestBindAttrs</span><span class="o">&gt;&amp;&amp;</span><span class="w"> </span><span class="n">cond</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 </dd></dl>
@@ -207,9 +207,9 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N15query_conditionooEv">
 <span id="_CPPv3N15query_conditionooEv"></span><span id="_CPPv2N15query_conditionooEv"></span><span id="query_condition::sor-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">||</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15query_conditionooEv" title="この定義へのパーマリンク">¶</a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">Tuple</span> <span class="n">SrcBindAttrs</span><span class="o">&gt;</span>
-<span class="n">query_condition</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">invoke_result_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">tuple_cat</span><span class="o">&lt;</span><span class="n">BindAttrs</span><span class="p">,</span> <span class="n">SrcBindAttrs</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">BindAttrs</span><span class="p">,</span> <span class="n">SrcBindAttrs</span><span class="o">&gt;&gt;</span>
-<span class="k">operator</span><span class="o">||</span><span class="p">(</span><span class="n">query_condition</span><span class="o">&lt;</span><span class="n">DestBindAttrs</span><span class="o">&gt;&amp;&amp;</span> <span class="n">cond</span><span class="p">)</span> <span class="o">&amp;&amp;</span><span class="p">;</span>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">Tuple</span><span class="w"> </span><span class="n">SrcBindAttrs</span><span class="o">&gt;</span><span class="w"></span>
+<span class="n">query_condition</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">invoke_result_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">tuple_cat</span><span class="o">&lt;</span><span class="n">BindAttrs</span><span class="p">,</span><span class="w"> </span><span class="n">SrcBindAttrs</span><span class="o">&gt;</span><span class="p">),</span><span class="w"> </span><span class="n">BindAttrs</span><span class="p">,</span><span class="w"> </span><span class="n">SrcBindAttrs</span><span class="o">&gt;&gt;</span><span class="w"></span>
+<span class="k">operator</span><span class="o">||</span><span class="p">(</span><span class="n">query_condition</span><span class="o">&lt;</span><span class="n">DestBindAttrs</span><span class="o">&gt;&amp;&amp;</span><span class="w"> </span><span class="n">cond</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 </dd></dl>
