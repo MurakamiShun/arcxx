@@ -46,7 +46,7 @@ gettext_compact = False
 
 html_context = {
     'support_languages' : {
-        'en': 'Engligh',
+        'en': 'English',
         'ja': '日本語'
     }
 }

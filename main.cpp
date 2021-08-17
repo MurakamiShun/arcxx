@@ -41,9 +41,6 @@ int main() {
     Member member;
     member.id = 123;
 
-    std::cout << "std::optional<uint32_t> size:" << sizeof(std::optional<uint32_t>)
-    << "\nInteger attribute size:" << sizeof(Member::ID) << std::endl;
-
     std::array<Member, 4> members;
     members[0].name = "satou";
     members[1].name = "sasaki";
@@ -57,8 +54,8 @@ int main() {
     else std::cout << "\033[32m done! \033[m" << std::endl;
     
     std::cout << "\033[33m[transaction]" << std::endl;
-    std::cout << "    \033[33m[query] \033[m" << Member::schema::to_sql<active_record::sqlite3_adaptor>() << std::endl;
-    std::cout << "    \033[33m[query] \033[m" << EnteringLog::schema::to_sql<active_record::sqlite3_adaptor>() << std::endl;
+    std::cout << "    \033[33m[query] \033[m" << Member::schema::to_sql<active_record::pg_adaptor>() << std::endl;
+    std::cout << "    \033[33m[query] \033[m" << EnteringLog::schema::to_sql<active_record::pg_adaptor>() << std::endl;
     
     const auto creata_table_transaction = [](auto& connection){
         using namespace active_record;

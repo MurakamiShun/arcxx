@@ -21,6 +21,7 @@ namespace active_record::sqlite3 {
             else return "";
         }
     }
+    
     template<Attribute T>
     requires std::same_as<typename T::value_type, active_record::string>
     [[nodiscard]] active_record::string column_definition() {

@@ -176,13 +176,13 @@ namespace active_record {
         }
 
         std::optional<active_record::string> begin(const active_record::string_view transaction_name = ""){
-            return exec(raw_query<bool>(active_record::string{ "BEGIN TRANSACTION " } + active_record::string{ transaction_name }));
+            return exec(raw_query<bool>(active_record::string{ "BEGIN TRANSACTION " } + active_record::string{ transaction_name } + ";"));
         }
         std::optional<active_record::string> commit(const active_record::string_view transaction_name = ""){
-            return exec(raw_query<bool>(active_record::string{ "COMMIT TRANSACTION " } + active_record::string{ transaction_name }));
+            return exec(raw_query<bool>(active_record::string{ "COMMIT TRANSACTION " } + active_record::string{ transaction_name } + ";"));
         }
         std::optional<active_record::string> rollback(const active_record::string_view transaction_name = ""){
-            return exec(raw_query<bool>(active_record::string{ "ROLLBACK TRANSACTION " } + active_record::string{ transaction_name }));
+            return exec(raw_query<bool>(active_record::string{ "ROLLBACK TRANSACTION " } + active_record::string{ transaction_name } + ";"));
         }
 
         template<std::convertible_to<std::function<active_record::transaction(void)>> F>
