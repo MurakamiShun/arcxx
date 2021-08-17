@@ -34,6 +34,8 @@ struct EnteringLog : public active_record::model<EnteringLog> {
 };
 
 int main() {
+
+    //active_record::pg_adaptor a;
     constexpr Member::ID id = 10;
     Member::Name name = "test";
     Member member;
