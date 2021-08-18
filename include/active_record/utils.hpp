@@ -46,6 +46,12 @@ namespace active_record{
         { a.empty() } -> std::same_as<bool>;
     };
 
+    template<class TupleType>
+    concept Tuple = requires {
+        std::tuple_size<TupleType>::value;
+        // { std::bool_constant<std::is_standard_layout_v<TupleType>>{} } -> std::same_as<std::bool_constant<false>>;
+    };
+
     template<typename T>
     concept same_as_vector = std::same_as<T, std::vector<typename T::value_type>>;
 
@@ -124,12 +130,6 @@ namespace active_record{
             );
         }
     }
-
-    template<class TupleType>
-    concept Tuple = requires {
-        std::tuple_size<TupleType>::value;
-        // { std::bool_constant<std::is_standard_layout_v<TupleType>>{} } -> std::same_as<std::bool_constant<false>>;
-    };
 
     template<class F, class Tuple>
     constexpr decltype(auto) indexed_apply(F&& f, Tuple&& t){

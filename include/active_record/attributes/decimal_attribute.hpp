@@ -37,10 +37,7 @@ namespace active_record {
             std::get<0>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
             ret.temporary_attrs.push_back(static_cast<Attribute>(value2));
             std::get<1>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
-            ret.condition.push_back(
-                active_record::string{ "\"" } + Model::table_name + "\".\""
-                + Attribute::column_name + "\" BETWEEN "
-            );
+            ret.condition.push_back(Attribute::column_full_name() + "\" BETWEEN ");
             ret.condition.push_back(0UL);
             ret.condition.push_back(" AND ");
             ret.condition.push_back(1UL);

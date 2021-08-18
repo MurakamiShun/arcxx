@@ -132,12 +132,40 @@ namespace active_record {
             return ret;
         }
 
+        constexpr static const struct {
+        private:
+            static auto make_condition(Attribute&& attr, const active_record::string& op){
+                query_condition<std::tuple<const Attribute*>> ret;
+                ret.condition.push_back(Attribute::column_full_name() + op);
+                ret.condition.push_back(0UL);
+                ret.temporary_attrs.push_back(std::move(attr));
+                std::get<0>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
+                return ret;
+            }
+        public:
+            auto operator==(const std::convertible_to<std::optional<Type>> auto& attr) const {
+                return make_condition(Attribute{ static_cast<std::optional<Type>>(attr) }, " = ");
+            }
+            auto operator!=(const std::convertible_to<std::optional<Type>> auto& attr) const {
+                return make_condition(Attribute{ static_cast<std::optional<Type>>(attr) }, " != ");
+            }
+            auto operator<(const std::convertible_to<std::optional<Type>> auto& attr) const {
+                return make_condition(Attribute{ static_cast<std::optional<Type>>(attr) }, " < ");
+            }
+            auto operator<=(const std::convertible_to<std::optional<Type>> auto& attr) const {
+                return make_condition(Attribute{ static_cast<std::optional<Type>>(attr) }, " <= ");
+            }
+            auto operator>(const std::convertible_to<std::optional<Type>> auto& attr) const {
+                return make_condition(Attribute{ static_cast<std::optional<Type>>(attr) }, " > ");
+            }
+            auto operator>=(const std::convertible_to<std::optional<Type>> auto& attr) const {
+                return make_condition(Attribute{ static_cast<std::optional<Type>>(attr) }, " >= ");
+            }
+        } cmp{};
+
         [[nodiscard]] query_condition<std::tuple<const Attribute*>> to_equ_condition() const {
             query_condition<std::tuple<const Attribute*>> ret;
-            ret.condition.push_back(
-                active_record::string{ "\"" } + Model::table_name + "\".\""
-                + Attribute::column_name + "\" = "
-            );
+            ret.condition.push_back(Attribute::column_full_name() + " = ");
             ret.condition.push_back(0UL);
             ret.temporary_attrs.push_back(*(reinterpret_cast<const Attribute*>(this)));
             std::get<0>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
