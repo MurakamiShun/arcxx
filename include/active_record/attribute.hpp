@@ -12,6 +12,12 @@ namespace active_record {
     template<typename T>
     concept Attribute = std::derived_from<T, attribute_common<typename T::model_type, typename T::attribute_type, typename T::value_type>>;
 
+    template<Attribute Attr>
+    constexpr std::size_t attribute_size([[maybe_unused]] const Attr&){ return sizeof(typename Attr::value_type); }
+    template<Attribute Attr>
+    requires std::invocable<typename Attr::value_type::size>
+    constexpr std::size_t attribute_size(const Attr& attr){ return attr ? attr.value().size() : 0; }
+
     template<typename Model, typename Attribute, typename Aggregator>
     struct attribute_aggregator;
 

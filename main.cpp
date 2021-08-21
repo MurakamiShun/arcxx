@@ -35,7 +35,7 @@ struct EnteringLog : public active_record::model<EnteringLog> {
 
 int main() {
 
-    //active_record::pg_adaptor a;
+    //active_record::postgresql_adaptor a;
     constexpr Member::ID id = 10;
     Member::Name name = "test";
     Member member;
@@ -54,8 +54,8 @@ int main() {
     else std::cout << "\033[32m done! \033[m" << std::endl;
     
     std::cout << "\033[33m[transaction]" << std::endl;
-    std::cout << "    \033[33m[query] \033[m" << Member::schema::to_sql<active_record::pg_adaptor>() << std::endl;
-    std::cout << "    \033[33m[query] \033[m" << EnteringLog::schema::to_sql<active_record::pg_adaptor>() << std::endl;
+    std::cout << "    \033[33m[query] \033[m" << Member::schema::to_sql<active_record::postgresql_adaptor>() << std::endl;
+    std::cout << "    \033[33m[query] \033[m" << EnteringLog::schema::to_sql<active_record::postgresql_adaptor>() << std::endl;
     
     const auto creata_table_transaction = [](auto& connection){
         using namespace active_record;
