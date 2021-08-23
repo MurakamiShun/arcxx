@@ -3,6 +3,12 @@
 #include <filesystem>
 #include <catch2/catch.hpp>
 
+#ifdef POSTGRESQL_TEST
+using adaptor = active_record::PostgreSQL::adaptor;
+#else
+using adaptor = active_record::sqlite3::adaptor;
+#endif
+
 /*
  * User model (active record)
  */

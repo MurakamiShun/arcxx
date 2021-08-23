@@ -38,7 +38,7 @@ int main() {
     Member::Name name = "test";
     Member member;
     member.id = 123;
-    member.name = "testuser1";
+    //member.name = "testuser1";
 
     // PostgreSQL
     namespace pg = active_record::PostgreSQL;
@@ -62,6 +62,18 @@ int main() {
         std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
     }
     else std::cout << "\033[32m done! \033[m" << std::endl;
+
+    std::cout << "\033[33m[execution] \033[m" << Member::all().to_sql<active_record::postgresql_adaptor>() << std::endl;
+    
+    if(const auto [error, all_members] = Member::all().exec(pg_conn); error){
+        std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
+    }
+    else {
+        std::cout << "\033[32m done! \033[m" << std::endl;
+        for(const auto& m : all_members){
+            std::cout << "id:" << m.id.to_string() << "\tname:" << m.name.to_string() << std::endl;
+        }
+    }
 
     // SQLite3
     std::array<Member, 4> members;

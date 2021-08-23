@@ -186,14 +186,26 @@ namespace active_record {
                     ret.push_back(PostgreSQL::detail::extract_column_data<typename Result::value_type>(result, col));
                 }
                 else if constexpr(active_record::same_as_unordered_map<Result>){
-
+                    if constexpr (Tuple<typename Result::mapped_type>){
+                        using result_type = active_record::tuple_cat_t<std::tuple<typename Result::key_type>, typename Result::mapped_type>;
+                        auto result_column = active_record::PostgreSQL::detail::extract_column_data<result_type>(result, col);
+                        ret.insert(std::make_pair(
+                            std::get<0>(result_column),
+                            active_record::tuple_slice(result_column, active_record::make_index_sequence_between<1, std::tuple_size_v<result_type>>())
+                        ));
+                    }
+                    else{
+                        auto result_column = active_record::PostgreSQL::detail::extract_column_data<std::tuple<typename Result::key_type, typename Result::mapped_type>>(result, col);
+                        ret.insert(std::make_pair(std::move(std::get<0>(result_column)), std::move(std::get<1>(result_column))));
+                    }
                 }
-                else{
-                    
+                else {
+                    result = active_record::PostgreSQL::detail::extract_column_data<Result>(result, col);
                 }
             }
         
             if(result != nullptr) PQclear(result);
+            error_msg = std::nullopt;
             return std::make_pair(error_msg, ret);
         }
         

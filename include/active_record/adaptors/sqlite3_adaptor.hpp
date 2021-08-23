@@ -109,7 +109,7 @@ namespace active_record {
                                 ));
                             }
                             else{
-                                const auto result_column = active_record::sqlite3::detail::extract_column_data<std::tuple<typename T::key_type, typename T::mapped_type>>(stmt);
+                                auto result_column = active_record::sqlite3::detail::extract_column_data<std::tuple<typename T::key_type, typename T::mapped_type>>(stmt);
                                 result.insert(std::make_pair(std::move(std::get<0>(result_column)), std::move(std::get<1>(result_column))));
                             }
                         }

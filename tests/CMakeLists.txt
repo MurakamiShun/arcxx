@@ -40,6 +40,8 @@ add_executable(active_record_bench
     inserting_benchmark.cpp
 )
 target_link_libraries(active_record_bench PRIVATE Catch2::Catch2 sqlite3)
+target_compile_options(active_record_bench PUBLIC -pg -g)
+target_link_options(active_record_bench PUBLIC -pg)
 
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
 include(CTest)
