@@ -1,4 +1,6 @@
+#define CATCH_CONFIG_ENABLE_BENCHMARKING
 #include "user_model.hpp"
+
 
 TEST_CASE("Insert query tests", "[model][query_relation][insert][select]") {
     auto connection = active_record::sqlite3_adaptor::open("insert_test.sqlite3", active_record::sqlite3::options::create);

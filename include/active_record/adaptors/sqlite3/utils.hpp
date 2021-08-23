@@ -103,8 +103,7 @@ namespace active_record::sqlite3::detail {
         return false;
     }
 
-    template<typename T>
-    requires std::derived_from<T, model<T>>
+    template<Model T>
     [[nodiscard]] T extract_column_data(sqlite3_stmt* stmt){
         T ret;
         indexed_apply(

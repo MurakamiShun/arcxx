@@ -126,7 +126,7 @@ namespace active_record {
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute... Attrs>
     requires Model<typename Result::value_type>
-    query_relation<bool, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>), BindAttrs, std::tuple<const Attrs*...>>> query_relation<Result, BindAttrs>::update(const Attrs... attrs) {
+    query_relation<bool, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attrs*...>>> query_relation<Result, BindAttrs>::update(const Attrs... attrs) {
         query_relation<bool, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>), BindAttrs, std::tuple<const Attrs*...>>> ret;
 
         ret.operation = query_operation::update;
@@ -142,21 +142,21 @@ namespace active_record {
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
-    query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> query_relation<Result, BindAttrs>::where(const Attr& attr) && {
+    query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> query_relation<Result, BindAttrs>::where(const Attr& attr) && {
         return std::move(*this).where(attr.to_equ_condition());
     }
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
-    query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> query_relation<Result, BindAttrs>::where(const Attr& attr) const& {
+    query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> query_relation<Result, BindAttrs>::where(const Attr& attr) const& {
         return this->where(attr.to_equ_condition());
     }
 
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Tuple SrcBindAttrs>
-    query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) &&{
-        query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> ret;
+    query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) &&{
+        query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret;
         
         ret.operation = this->operation;
         ret.query_op_arg = std::move(this->query_op_arg);
@@ -191,8 +191,8 @@ namespace active_record {
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Tuple SrcBindAttrs>
-    query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) const&{
-        query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> ret;
+    query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) const&{
+        query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret;
         
         ret.operation = this->operation;
         ret.query_op_arg = this->query_op_arg;

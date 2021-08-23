@@ -58,6 +58,9 @@ namespace active_record{
     template<typename T>
     concept same_as_unordered_map = std::same_as<T, std::unordered_map<typename T::key_type, typename T::mapped_type>>;
 
+    template<class... Tuples>
+    using tuple_cat_t = decltype(std::tuple_cat(std::declval<Tuples>()...));
+
     template<class Tuple, std::size_t... I>
     [[nodiscard]] constexpr auto tuple_slice(Tuple& t, std::index_sequence<I...>&&) noexcept {
         return std::tie(std::get<I>(t)...);

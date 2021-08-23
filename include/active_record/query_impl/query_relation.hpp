@@ -110,14 +110,14 @@ namespace active_record {
         }
 
         template<Attribute Attr>
-        [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> where(const Attr&&) &&;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> where(const Attr&&) &&;
         template<Attribute Attr>
-        [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> where(const Attr&&) const &;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> where(const Attr&&) const &;
 
         template<Tuple SrcBindAttrs>
-        [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
         template<Tuple SrcBindAttrs>
-        [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const&;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const&;
     };
 
     template<typename Result, Tuple BindAttrs>
@@ -146,17 +146,17 @@ namespace active_record {
 
         template<Attribute... Attrs>
         requires Model<typename Result::value_type>
-        [[nodiscard]] query_relation<bool, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>), BindAttrs, std::tuple<const Attrs*...>>> update(const Attrs...);
+        [[nodiscard]] query_relation<bool, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attrs*...>>> update(const Attrs...);
 
         template<Attribute Attr>
-        [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> where(const Attr&) &&;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> where(const Attr&) &&;
         template<Attribute Attr>
-        [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> where(const Attr&) const &;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> where(const Attr&) const &;
 
         template<Tuple SrcBindAttrs>
-        [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
         template<Tuple SrcBindAttrs>
-        [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const&;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const&;
 
         [[nodiscard]] query_relation<Result, BindAttrs>& limit(const std::size_t) &&;
         [[nodiscard]] query_relation<Result, BindAttrs> limit(const std::size_t) const &;
@@ -222,14 +222,14 @@ namespace active_record {
         [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::attribute_type>, BindAttrs> pluck() const &;
 
         template<Attribute Attr>
-        [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> where(const Attr&) &&;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> where(const Attr&) &&;
         template<Attribute Attr>
-        [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attr*>>), BindAttrs, std::tuple<const Attr*>>> where(const Attr&) const &;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> where(const Attr&) const &;
 
         template<Tuple SrcBindAttrs>
-        [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
         template<Tuple SrcBindAttrs>
-        [[nodiscard]] query_relation<Result, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const&;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const&;
 
         [[nodiscard]] query_relation<Result, BindAttrs>& limit(const std::size_t) &&;
         [[nodiscard]] query_relation<Result, BindAttrs> limit(const std::size_t) const &;

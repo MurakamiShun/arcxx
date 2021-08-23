@@ -2,9 +2,7 @@
 #include "../adaptor.hpp"
 #include <postgresql/libpq-fe.h>
 #include "postgresql/schema.hpp"
-#if !(defined(_WIN32) || defined(_WIN64))
-#include <byteswap.h>
-#endif
+#include "postgresql/utils.hpp"
 
 namespace active_record {
     namespace PostgreSQL {
@@ -28,37 +26,6 @@ namespace active_record {
             const active_record::string option;
             const active_record::string debug_of;
         };
-
-        template<typename T>
-        auto hton(const T h) -> decltype(h) {
-            #if defined(_WIN32) || defined(_WIN64)
-            if constexpr (sizeof(h) == sizeof(uint16_t)) return _byteswap_ushort(h);
-            else if constexpr (sizeof(h) == sizeof(uint32_t)) return _byteswap_ulong(h);
-            else if constexpr (sizeof(h) == sizeof(uint64_t)) return _byteswap_uint64(h);
-            #else
-            if constexpr (__BYTE_ORDER == __LITTLE_ENDIAN) {
-                if constexpr (sizeof(h) == sizeof(uint16_t)) return bswap_16(h);
-                else if constexpr (sizeof(h) == sizeof(uint32_t)) return bswap_32(h);
-                else if constexpr (sizeof(h) == sizeof(uint64_t)) return bswap_64(h);
-            }
-            #endif
-            return h;
-        }
-        template<typename T>
-        auto ntoh(const T n) -> decltype(n) {
-            #if defined(_WIN32) || defined(_WIN64)
-            if constexpr (sizeof(n) == sizeof(uint16_t)) return _byteswap_ushort(n);
-            else if constexpr (sizeof(n) == sizeof(uint32_t)) return _byteswap_ulong(n);
-            else if constexpr (sizeof(n) == sizeof(uint64_t)) return _byteswap_uint64(n);
-            #else
-            if constexpr (__BYTE_ORDER == __LITTLE_ENDIAN) {
-                if constexpr (sizeof(n) == sizeof(uint16_t)) return bswap_16(n);
-                else if constexpr (sizeof(n) == sizeof(uint32_t)) return bswap_32(n);
-                else if constexpr (sizeof(n) == sizeof(uint64_t)) return bswap_64(n);
-            }
-            #endif
-            return n;
-        }
     }
 
     class postgresql_adaptor : public adaptor {
@@ -79,15 +46,74 @@ namespace active_record {
             );
             if (PQstatus(conn) == CONNECTION_BAD){
                 // handle error
+                error_msg = PQerrorMessage(conn);
             }
         }
         postgresql_adaptor(const active_record::string& info){
             conn = PQconnectdb(info.c_str());
             if (PQstatus(conn) == CONNECTION_BAD){
                 // handle error
+                error_msg = PQerrorMessage(conn);
             }
         }
+
+        template<typename Result, Tuple BindAttrs>
+        PGresult* exec_sql(const query_relation<Result, BindAttrs>& query) {
+            const auto sql = query.template to_sql<postgresql_adaptor>();
+
+            PGresult* result = nullptr;
+            if constexpr(query.bind_attrs_count() == 0){
+                result = PQexec(
+                    conn,
+                    sql.c_str()
+                );
+            }
+            else{
+                const auto param_length = std::apply(
+                    []<typename... Attrs>(const Attrs* const... attr_ptrs){
+                        return std::array<int, sizeof...(Attrs)>{ static_cast<int>(attribute_size(*attr_ptrs))... };
+                    },
+                    query.bind_attrs
+                );
+                const auto param_format = std::apply(
+                    []<typename... Attrs>(const Attrs* const... attr_ptrs){
+                        const auto is_not_text_format = []<typename Attr>([[maybe_unused]]const Attr* const){
+                            return static_cast<int>(
+                                !(std::is_same_v<typename Attr::value_type, active_record::string> ||
+                                std::is_same_v<typename Attr::value_type, active_record::datetime>)
+                            );
+                        };
+                        return std::array<int, sizeof...(Attrs)>{ is_not_text_format(attr_ptrs)... };
+                    },
+                    query.bind_attrs
+                );
+
+                std::array<std::any, query.bind_attrs_count()> temporary_values;
+                const auto param_values = active_record::indexed_apply(
+                    [&temporary_values]<typename... Attrs>(std::pair<std::size_t, const Attrs* const&>... attr_ptrs){
+                        return std::array<const char* const, sizeof...(Attrs)>{ PostgreSQL::detail::get_value_ptr(attr_ptrs.second, temporary_values[attr_ptrs.first])... };
+                    },
+                    query.bind_attrs
+                );
+                
+                result = PQexecParams(
+                    conn,
+                    sql.c_str(),
+                    std::tuple_size_v<BindAttrs>, // parameter count
+                    NULL, // parameter types
+                    param_values.data(), // parameter values
+                    param_length.data(), // parameter length
+                    param_format.data(), // parameter formats
+                    0  // result formats(text)
+                );
+            }
+            return result;
+        }
+
     public:
+        bool has_error() const noexcept { return static_cast<bool>(error_msg); }
+        const active_record::string& error_message() const { return error_msg.value(); }
+        
         static postgresql_adaptor open(const PostgreSQL::endpoint endpoint_info, const std::optional<PostgreSQL::auth> auth_info = std::nullopt, const std::optional<PostgreSQL::options> option = std::nullopt){
             return postgresql_adaptor(endpoint_info, auth_info, option);
         }
@@ -133,64 +159,42 @@ namespace active_record {
         }
 
         template<Tuple BindAttrs>
-        std::optional<active_record::string> exec(const query_relation<bool, BindAttrs>& query){
-            const auto sql = query.template to_sql<postgresql_adaptor>();
+        auto exec(const query_relation<bool, BindAttrs>& query){
+            PGresult* result = this->exec_sql(query);
 
-            PGresult* result = nullptr;
-            if constexpr(std::tuple_size_v<BindAttrs> == 0){
-                result = PQexec(
-                    conn,
-                    sql.c_str()
-                );
-            }
-            else{
-                const auto param_length = std::apply(
-                    []<typename... Attrs>(const Attrs* const... attr_ptrs){
-                        return std::array<int, sizeof...(Attrs)>{ static_cast<int>(attribute_size(*attr_ptrs))... };
-                    },
-                    query.bind_attrs
-                );
-                const auto param_format = std::apply(
-                    []<typename... Attrs>(const Attrs* const... attr_ptrs){
-                        const auto is_not_text_format = []<typename Attr>([[maybe_unused]]const Attr* const){
-                            return static_cast<int>(
-                                std::is_same_v<typename Attr::value_type, active_record::string> ||
-                                std::is_same_v<typename Attr::value_type, active_record::datetime>
-                            );
-                        };
-                        return std::array<int, sizeof...(Attrs)>{ is_not_text_format(attr_ptrs)... };
-                    },
-                    query.bind_attrs
-                );
-
-                const auto param_values = std::apply(
-                    []<typename... Attrs>(const Attrs* const... attr_ptrs){
-                        const auto get_value_ptr = []<typename Attr>(const Attr* const attr_ptr){
-                            if (*attr_ptr) static_cast<const char* const>(&(attr_ptr->value()));
-                            else return nullptr;
-                        };
-                        return std::array<const char* const, sizeof...(Attrs)>{ get_value_ptr(attr_ptrs)... };
-                    },
-                    query.bind_attrs
-                );
-                
-                result = PQexecParams(
-                    conn,
-                    sql.c_str(),
-                    std::tuple_size_v<BindAttrs>, // parameter count
-                    NULL, // parameter types
-                    param_values.data(), // parameter values
-                    param_length.data(), // parameter length
-                    param_format.data(), // parameter formats
-                    1  // result formats(binary)
-                );
-            }
             if (PQresultStatus(result) == PGRES_TUPLES_OK) error_msg = std::nullopt;
             else error_msg = PQresultErrorMessage(result);
-            
+
             if(result != nullptr) PQclear(result);
-            
             return error_msg;
+        }
+        template<typename Result, Tuple BindAttrs>
+        auto exec(const query_relation<Result, BindAttrs>& query){
+            PGresult* result = this->exec_sql(query);
+
+            Result ret;
+            // error handling
+            if (PQresultStatus(result) != PGRES_TUPLES_OK) {
+                error_msg = PQresultErrorMessage(result);
+                if(result != nullptr) PQclear(result);
+                return std::make_pair(error_msg, ret);
+            }
+
+            auto col_count = PQntuples(result);
+            for(decltype(col_count) col = 0; col < col_count; ++col){
+                if constexpr(active_record::same_as_vector<Result>) {
+                    ret.push_back(PostgreSQL::detail::extract_column_data<typename Result::value_type>(result, col));
+                }
+                else if constexpr(active_record::same_as_unordered_map<Result>){
+
+                }
+                else{
+                    
+                }
+            }
+        
+            if(result != nullptr) PQclear(result);
+            return std::make_pair(error_msg, ret);
         }
         
         

@@ -32,10 +32,10 @@ namespace active_record::PostgreSQL {
                 : " TEXT")
             + (T::has_constraint(T::unique) ? " UNIQUE" : "")
             + (T::has_constraint(T::primary_key) ? " PRIMARY KEY" : "")
-            + (T::has_constraint(T::not_null) ? " NOT NULL" : "")
             + (T::has_constraint(typename T::constraint_default_value_impl{}) ?
                 " DEFAULT '" + active_record::sanitize(T::get_constraint(typename T::constraint_default_value_impl{})->get().template target<typename T::constraint_default_value_impl>()->default_value) + "'"
                 : "")
+            + (T::has_constraint(T::not_null) ? " NOT NULL" : "")
             + detail::reference_definition<T>();
     }
 
@@ -50,10 +50,10 @@ namespace active_record::PostgreSQL {
             }()
             + (T::has_constraint(T::unique) ? " UNIQUE" : "")
             + (T::has_constraint(T::primary_key) ? " PRIMARY KEY" : "")
-            + (T::has_constraint(T::not_null) ? " NOT NULL" : "")
             + (T::has_constraint(typename T::constraint_default_value_impl{}) ? 
                 " DEFAULT " + std::to_string(T::get_constraint(typename T::constraint_default_value_impl{})->get().template target<typename T::constraint_default_value_impl>()->default_value)
                 : "")
+            + (T::has_constraint(T::not_null) ? " NOT NULL" : "")
             + detail::reference_definition<T>();
     }
     
@@ -67,10 +67,10 @@ namespace active_record::PostgreSQL {
             }()
             + (T::has_constraint(T::unique) ? " UNIQUE" : "")
             + (T::has_constraint(T::primary_key) ? " PRIMARY KEY" : "")
-            + (T::has_constraint(T::not_null) ? " NOT NULL" : "")
             + (T::has_constraint(typename T::constraint_default_value_impl{}) ?
                 " DEFAULT " + std::to_string(T::get_constraint(typename T::constraint_default_value_impl{})->get().template target<typename T::constraint_default_value_impl>()->default_value)
                 : "")
+            + (T::has_constraint(T::not_null) ? " NOT NULL" : "")
             + detail::reference_definition<T>();
     }
 }

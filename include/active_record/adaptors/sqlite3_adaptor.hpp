@@ -101,7 +101,7 @@ namespace active_record {
                         }
                         else if constexpr (same_as_unordered_map<T>) {
                             if constexpr (Tuple<typename T::mapped_type>){
-                                using result_type = decltype(std::tuple_cat(std::declval<std::tuple<typename T::key_type>>(), std::declval<typename T::mapped_type>()));
+                                using result_type = active_record::tuple_cat_t<std::tuple<typename T::key_type>, typename T::mapped_type>;
                                 auto result_column = active_record::sqlite3::detail::extract_column_data<result_type>(stmt);
                                 result.insert(std::make_pair(
                                     std::get<0>(result_column),

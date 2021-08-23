@@ -34,13 +34,36 @@ struct EnteringLog : public active_record::model<EnteringLog> {
 };
 
 int main() {
-
-    //active_record::postgresql_adaptor a;
     constexpr Member::ID id = 10;
     Member::Name name = "test";
     Member member;
     member.id = 123;
+    member.name = "testuser1";
 
+    // PostgreSQL
+    namespace pg = active_record::PostgreSQL;
+    auto pg_conn = pg::adaptor::open(
+        pg::endpoint{.server_name = "postgresql", .db_name = "test_db"},
+        pg::auth{.user = "postgres", .password = "password"}
+    );
+    if(pg_conn.has_error()){
+        std::cout << "\033[31m" << pg_conn.error_message() << "\033[m" << std::endl;
+        return -1;
+    }
+    else std::cout << "\033[32m done! \033[m" << std::endl;
+
+    std::cout << "    \033[33m[query] \033[m" << Member::schema::to_sql<active_record::PostgreSQL::adaptor>() << std::endl;
+    if(const auto error = pg_conn.template create_table<Member>(); error){
+        std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
+    }
+
+    std::cout << "\033[33m[execution] \033[m" << Member::insert(member).to_sql<active_record::postgresql_adaptor>() << std::endl;
+    if(const auto error = Member::insert(member).exec(pg_conn); error){
+        std::cout << "\033[31m" << error.value() << "\033[m" << std::endl;
+    }
+    else std::cout << "\033[32m done! \033[m" << std::endl;
+
+    // SQLite3
     std::array<Member, 4> members;
     members[0].name = "satou";
     members[1].name = "sasaki";
@@ -54,8 +77,8 @@ int main() {
     else std::cout << "\033[32m done! \033[m" << std::endl;
     
     std::cout << "\033[33m[transaction]" << std::endl;
-    std::cout << "    \033[33m[query] \033[m" << Member::schema::to_sql<active_record::postgresql_adaptor>() << std::endl;
-    std::cout << "    \033[33m[query] \033[m" << EnteringLog::schema::to_sql<active_record::postgresql_adaptor>() << std::endl;
+    std::cout << "    \033[33m[query] \033[m" << Member::schema::to_sql<active_record::sqlite3::adaptor>() << std::endl;
+    std::cout << "    \033[33m[query] \033[m" << EnteringLog::schema::to_sql<active_record::sqlite3::adaptor>() << std::endl;
     
     const auto creata_table_transaction = [](auto& connection){
         using namespace active_record;

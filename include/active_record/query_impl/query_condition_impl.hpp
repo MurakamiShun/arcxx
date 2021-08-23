@@ -8,8 +8,8 @@ namespace active_record {
      */
     template<Tuple BindAttrs>
     template<Tuple SrcBindAttrs>
-    query_condition<std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> query_condition<BindAttrs>::concat_conditions(query_condition<SrcBindAttrs>&& cond, const conjunction conjunc) {
-        query_condition<std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, SrcBindAttrs>), BindAttrs, SrcBindAttrs>> ret;
+    query_condition<active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_condition<BindAttrs>::concat_conditions(query_condition<SrcBindAttrs>&& cond, const conjunction conjunc) {
+        query_condition<active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret;
         
         ret.condition.push_back("(");
         ret.condition.insert(
