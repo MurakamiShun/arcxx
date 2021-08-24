@@ -3,7 +3,7 @@
 
 TEST_CASE_METHOD(UserModelTestsFixture, "group_by query tests", "[model][select][aggregation][insert]") {
     if (const auto error = conn.create_table<UserLog>(); error){
-        INFO(UserLog::schema::to_sql<active_record::sqlite3_adaptor>());
+        INFO(UserLog::schema::to_sql<adaptor>());
         FAIL(error.value());
     }
     auto users = User::where(User::ID::between(2,3)).exec(conn).second;
@@ -63,4 +63,6 @@ TEST_CASE_METHOD(UserModelTestsFixture, "group_by query tests", "[model][select]
         REQUIRE(std::get<1>(log_ag.at(UserLog::UserID{2})).value() == 2.0);
         REQUIRE(std::get<1>(log_ag.at(UserLog::UserID{3})).value() == 3.0);
     }
+
+    conn.drop_table<UserLog>();
 }

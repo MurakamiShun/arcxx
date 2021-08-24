@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.11)
 
 project(tests LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
-add_compile_options(-Wall -Wextra -pedantic -Werror)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -13,6 +12,13 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
+if(TARGET_SQL MATCHES "PostgreSQL")
+set(compile_options -Wall -Wextra -pedantic -Werror -DPOSTGRESQL_TEST)
+set(link_library Catch2::Catch2 pq)
+else()
+set(compile_options -Wall -Wextra -pedantic -Werror -DSQLITE_TEST)
+set(link_library Catch2::Catch2 sqlite3)
+endif()
 
 # Integrated Tests
 add_executable(active_record_IT
@@ -26,21 +32,15 @@ add_executable(active_record_IT
     group_test.cpp
     find_test.cpp
 )
-target_link_libraries(active_record_IT PRIVATE Catch2::Catch2 sqlite3)
-
-# Unit Tests
-add_executable(active_record_UT
-    main.cpp
-    model_test.cpp
-)
-target_link_libraries(active_record_UT PRIVATE Catch2::Catch2 sqlite3)
+target_link_libraries(active_record_IT PRIVATE ${link_library})
+target_compile_options(active_record_IT PUBLIC ${compile_options})
 
 # Benchmark
 add_executable(active_record_bench
     inserting_benchmark.cpp
 )
-target_link_libraries(active_record_bench PRIVATE Catch2::Catch2 sqlite3)
-target_compile_options(active_record_bench PUBLIC -pg -g)
+target_link_libraries(active_record_bench PRIVATE ${link_library})
+target_compile_options(active_record_bench PUBLIC ${compile_options} -pg -g)
 target_link_options(active_record_bench PUBLIC -pg)
 
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
@@ -48,5 +48,4 @@ include(CTest)
 include(Catch)
 
 catch_discover_tests(active_record_IT)
-catch_discover_tests(active_record_UT)
 catch_discover_tests(active_record_bench)

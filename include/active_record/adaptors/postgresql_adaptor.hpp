@@ -80,7 +80,8 @@ namespace active_record {
                         const auto is_not_text_format = []<typename Attr>([[maybe_unused]]const Attr* const){
                             return static_cast<int>(
                                 !(std::is_same_v<typename Attr::value_type, active_record::string> ||
-                                std::is_same_v<typename Attr::value_type, active_record::datetime>)
+                                std::is_same_v<typename Attr::value_type, active_record::datetime>) ||
+                                std::floating_point<typename Attr::value_type>
                             );
                         };
                         return std::array<int, sizeof...(Attrs)>{ is_not_text_format(attr_ptrs)... };
@@ -129,7 +130,14 @@ namespace active_record {
         }
 
         ~postgresql_adaptor() {
-            PQfinish(conn);
+            this->close();
+        }
+
+        void close(){
+            if (conn != nullptr){
+                PQfinish(conn);
+                conn = nullptr;
+            }
         }
 
         static constexpr bool bindable = true;
@@ -138,18 +146,13 @@ namespace active_record {
         }
 
         template<Model Mod>
-        std::optional<active_record::string> create_table(bool create_if_not_exist = false){
-            const auto sql = Mod::schema::template to_sql<postgresql_adaptor>(create_if_not_exist);
-            PGresult* result = PQexec(
-                conn,
-                sql.c_str()
-            );
-            if (PQresultStatus(result) == PGRES_TUPLES_OK) error_msg = std::nullopt;
-            else error_msg = PQresultErrorMessage(result);
-            
-            if(result != nullptr) PQclear(result);
-            
-            return error_msg;
+        std::optional<active_record::string> create_table(bool abort_if_exist = true){
+            return exec(raw_query<bool>(Mod::schema::template to_sql<postgresql_adaptor>(abort_if_exist)));
+        }
+
+        template<Model Mod>
+        std::optional<active_record::string> drop_table(){
+            return exec(raw_query<bool>(active_record::string{ "DROP TABLE " } + Mod::table_name + ";"));
         }
 
         
@@ -162,7 +165,9 @@ namespace active_record {
         auto exec(const query_relation<bool, BindAttrs>& query){
             PGresult* result = this->exec_sql(query);
 
-            if (PQresultStatus(result) == PGRES_TUPLES_OK) error_msg = std::nullopt;
+            if (const auto stat = PQresultStatus(result); stat == PGRES_COMMAND_OK || stat == PGRES_NONFATAL_ERROR){
+                error_msg = std::nullopt;
+            }
             else error_msg = PQresultErrorMessage(result);
 
             if(result != nullptr) PQclear(result);
@@ -200,7 +205,7 @@ namespace active_record {
                     }
                 }
                 else {
-                    result = active_record::PostgreSQL::detail::extract_column_data<Result>(result, col);
+                    ret = active_record::PostgreSQL::detail::extract_column_data<Result>(result, col);
                 }
             }
         
@@ -209,15 +214,14 @@ namespace active_record {
             return std::make_pair(error_msg, ret);
         }
         
-        
         std::optional<active_record::string> begin(){
-            return exec(raw_query<bool>(active_record::string{ "BEGIN;" }));
+            return exec(raw_query<bool>(active_record::string{ "BEGIN" }));
         }
         std::optional<active_record::string> commit(){
-            return exec(raw_query<bool>(active_record::string{ "COMMIT;" }));
+            return exec(raw_query<bool>(active_record::string{ "COMMIT" }));
         }
         std::optional<active_record::string> rollback(){
-            return exec(raw_query<bool>(active_record::string{ "ROLLBACK;" }));
+            return exec(raw_query<bool>(active_record::string{ "ROLLBACK" }));
         }
 
         template<std::convertible_to<std::function<active_record::transaction(void)>> F>

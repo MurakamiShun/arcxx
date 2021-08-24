@@ -4,7 +4,7 @@
 
 TEST_CASE_METHOD(UserModelTestsFixture, "Join query tests", "[model][query_relation][select][join][insert]") {
     if (const auto error = conn.create_table<UserLog>(); error){
-        INFO(UserLog::schema::to_sql<active_record::sqlite3_adaptor>());
+        INFO(UserLog::schema::to_sql<adaptor>());
         FAIL(error.value());
     }
     auto users = User::where(User::ID::between(2,3)).exec(conn).second;
@@ -85,4 +85,6 @@ TEST_CASE_METHOD(UserModelTestsFixture, "Join query tests", "[model][query_relat
         if(error2) FAIL(error2.value());
         REQUIRE(left_join_count == 15);
     }
+
+    conn.drop_table<UserLog>();
 }

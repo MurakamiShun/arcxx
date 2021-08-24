@@ -23,7 +23,7 @@ namespace active_record {
 
     class sqlite3_adaptor : public adaptor {
     private:
-        ::sqlite3* db_obj;
+        ::sqlite3* db_obj = nullptr;
         std::optional<active_record::string> error_msg = std::nullopt;
 
         sqlite3_adaptor() = delete;
@@ -50,11 +50,14 @@ namespace active_record {
         static sqlite3_adaptor open(const active_record::string& file_name, const int flags = active_record::sqlite3::options::readwrite){
             return sqlite3_adaptor{ file_name, flags };
         }
-        bool close() {
-            return sqlite3_close(db_obj) == SQLITE_OK;
+        void close() {
+            if (db_obj != nullptr){
+                sqlite3_close(db_obj);
+                db_obj = nullptr;
+            }
         }
         ~sqlite3_adaptor(){
-            sqlite3_close(db_obj);
+            this->close();
         }
 
         static active_record::string_view version(){
@@ -159,10 +162,28 @@ namespace active_record {
         }
 
         template<Model Mod>
-        std::optional<active_record::string> create_table(bool create_if_not_exist = false){
+        std::optional<active_record::string> create_table(bool abort_if_exist = true){
             char* errmsg_ptr = nullptr;
             auto result_code = sqlite3_exec(db_obj,
-                Mod::schema::template to_sql<sqlite3_adaptor>(create_if_not_exist).c_str(),
+                Mod::schema::template to_sql<sqlite3_adaptor>(abort_if_exist).c_str(),
+                nullptr,
+                nullptr,
+                &errmsg_ptr
+            );
+            if(errmsg_ptr != nullptr){
+                error_msg = get_error_msg(errmsg_ptr);
+                sqlite3_free(errmsg_ptr);
+                return error_msg;
+            }
+            return error_msg = get_error_msg(result_code);
+        }
+
+        template<Model Mod>
+        std::optional<active_record::string> drop_table(){
+            char* errmsg_ptr = nullptr;
+            const auto sql = active_record::string{ "DROP TABLE " } + Mod::table_name + ";";
+            auto result_code = sqlite3_exec(db_obj,
+                sql.c_str(),
                 nullptr,
                 nullptr,
                 &errmsg_ptr

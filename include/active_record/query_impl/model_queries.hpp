@@ -277,7 +277,7 @@ namespace active_record {
 
     template<typename Derived>
     template<std::derived_from<adaptor> Adaptor>
-    inline active_record::string model<Derived>::schema::to_sql(bool create_if_not_exist) {
+    inline active_record::string model<Derived>::schema::to_sql(bool abort_if_exist) {
         const auto column_definitions = std::apply(
             []<typename... Attrs>(const Attrs&...){ return std::array<const active_record::string, sizeof...(Attrs)>{(Adaptor::template column_definition<Attrs>())...}; },
             Derived{}.attributes
@@ -289,7 +289,7 @@ namespace active_record {
             delimiter = ",";
         }
 
-        return active_record::string{"CREATE TABLE "} + (create_if_not_exist ? "IF NOT EXISTS " : "")
+        return active_record::string{"CREATE TABLE "} + (abort_if_exist ? "" : "IF NOT EXISTS ")
             + active_record::string{ Derived::table_name }
             + "(" + col_defs + ");";
     }

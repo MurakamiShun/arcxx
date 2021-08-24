@@ -16,7 +16,13 @@ struct Member : public active_record::model<Member> {
         static constexpr auto column_name = "name";
         inline static const auto constraints = { not_null, length(64), default_value("unknown") };
     } name;
-    std::tuple<ID&, Name&> attributes = std::tie(id, name);
+
+    struct Height : public active_record::attributes::decimal<Member, Height> {
+        using active_record::attributes::decimal<Member, Height>::decimal;
+        static constexpr auto column_name = "height";
+        inline static const auto constraints = { default_value(160.0) };
+    } height;
+    std::tuple<ID&, Name&, Height&> attributes = std::tie(id, name, height);
 };
 
 struct EnteringLog : public active_record::model<EnteringLog> {
@@ -38,7 +44,8 @@ int main() {
     Member::Name name = "test";
     Member member;
     member.id = 123;
-    //member.name = "testuser1";
+    member.name = "testuser1";
+    member.height = 170.0;
 
     // PostgreSQL
     namespace pg = active_record::PostgreSQL;
@@ -71,7 +78,7 @@ int main() {
     else {
         std::cout << "\033[32m done! \033[m" << std::endl;
         for(const auto& m : all_members){
-            std::cout << "id:" << m.id.to_string() << "\tname:" << m.name.to_string() << std::endl;
+            std::cout << "id:" << m.id.to_string() << "\tname:" << m.name.to_string() << "\theight:" << m.height.to_string() << std::endl;
         }
     }
 

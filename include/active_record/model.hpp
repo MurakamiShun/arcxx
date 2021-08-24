@@ -38,7 +38,7 @@ namespace active_record {
     public:
         struct schema {
             template<std::derived_from<adaptor> Adaptor>
-            [[nodiscard]] static active_record::string to_sql(bool create_if_not_exist = false);
+            [[nodiscard]] static active_record::string to_sql(bool abort_if_exist = true);
         };
 
         static constexpr bool has_table_name = has_table_name_impl::value;

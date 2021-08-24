@@ -1,13 +1,6 @@
 #pragma once
-#include "../include/active_record.hpp"
-#include <filesystem>
+#include "test_fixtures.hpp"
 #include <catch2/catch.hpp>
-
-#ifdef POSTGRESQL_TEST
-using adaptor = active_record::PostgreSQL::adaptor;
-#else
-using adaptor = active_record::sqlite3::adaptor;
-#endif
 
 /*
  * User model (active record)
@@ -44,7 +37,7 @@ struct User : public active_record::model<User> {
 
 class UserModelTestsFixture {
 protected:
-    active_record::sqlite3::adaptor conn;
+    adaptor conn;
     std::size_t get_data_count(){
         if(const auto [error, data_count] = User::count().exec(conn); error){
             FAIL(error.value());
@@ -55,9 +48,10 @@ protected:
         return -1;
     }
 public:
-    UserModelTestsFixture() : conn(active_record::sqlite3_adaptor::open("user_model_test.sqlite3", active_record::sqlite3::options::create)) {
+    UserModelTestsFixture() : conn(open_testfile()) {
         // Create test data
-        if(const auto error = conn.create_table<User>(); error) {
+        conn.drop_table<User>();
+        if(const auto error = conn.create_table<User>(false); error) {
             FAIL(error.value());
         }
         const auto insert_transaction = [](auto& connection){
@@ -84,7 +78,8 @@ public:
         }
     }
     ~UserModelTestsFixture(){
-        conn.close();
-        std::filesystem::remove("user_model_test.sqlite3");
+        const auto error = conn.drop_table<User>();
+        if(error) FAIL(error.value());
+        close_testfile(conn);
     }
 };

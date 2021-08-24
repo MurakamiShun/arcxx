@@ -3,8 +3,9 @@
 
 
 TEST_CASE("Insert query tests", "[model][query_relation][insert][select]") {
-    auto connection = active_record::sqlite3_adaptor::open("insert_test.sqlite3", active_record::sqlite3::options::create);
+    auto connection = open_testfile();
     
+    connection.drop_table<User>();
     connection.create_table<User>();
 
     const auto insert_transaction = [](auto& connection){
@@ -43,6 +44,7 @@ TEST_CASE("Insert query tests", "[model][query_relation][insert][select]") {
     else{
         REQUIRE(total == 45);
     }
-    connection.close();
-    std::filesystem::remove("insert_test.sqlite3");
+
+    connection.drop_table<User>();
+    close_testfile(connection);
 }

@@ -2,8 +2,7 @@
 #define CATCH_CONFIG_MAIN
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
 #include <catch2/catch.hpp>
-#include "../include/active_record.hpp"
-#include <filesystem>
+#include "test_fixtures.hpp"
 
 struct User : public active_record::model<User> {
     static constexpr auto table_name = "user_table";
@@ -36,7 +35,7 @@ TEST_CASE("User model inserting benchmark"){
     BENCHMARK_ADVANCED("1000 data inserting bench")(Catch::Benchmark::Chronometer meter){
         using namespace active_record;
         // Setup
-        auto conn = sqlite3_adaptor::open("user_model_test.sqlite3", sqlite3::options::create);
+        auto conn = open_testfile();
         if(const auto error = conn.create_table<User>(); error) {
             FAIL(error.value());
         }
@@ -60,9 +59,8 @@ TEST_CASE("User model inserting benchmark"){
             else if(result == transaction::rollback) { FAIL("something happened"); }
         });
 
-
         // Finish
-        conn.close();
-        std::filesystem::remove("user_model_test.sqlite3");
+        conn.drop_table<User>();
+        close_testfile(conn);
     };
 }
