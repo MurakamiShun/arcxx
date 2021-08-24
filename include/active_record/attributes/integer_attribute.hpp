@@ -12,7 +12,7 @@ namespace active_record {
     requires std::integral<typename Attr::value_type>
     void from_string(Attr& attr, const active_record::string_view str) {
         if(str != "null" && str != "NULL"){
-            typename Attr::value_type tmp;
+            typename Attr::value_type tmp = static_cast<typename Attr::value_type>(0);
             std::from_chars(&*str.begin(), &*str.end(), tmp);
             attr = tmp;
         }
