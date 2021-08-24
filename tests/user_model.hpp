@@ -1,6 +1,5 @@
 #pragma once
 #include "test_fixtures.hpp"
-#include <catch2/catch.hpp>
 
 /*
  * User model (active record)

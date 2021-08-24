@@ -1,7 +1,7 @@
 version: '3.1'
 
 services:
-  postgresql:
+  postgres:
     image: postgres:alpine3.14
     ports:
       - 5432:5432
@@ -22,7 +22,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: root@example.com
       PGADMIN_DEFAULT_PASSWORD: password
     depends_on:
-      - postgresql
+      - postgres
 
   gcc:
     build:
@@ -33,5 +33,5 @@ services:
       - .:/workspace
 
     depends_on:
-      - postgresql
+      - postgres
       - pgadmin

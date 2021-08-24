@@ -50,7 +50,7 @@ int main() {
     // PostgreSQL
     namespace pg = active_record::PostgreSQL;
     auto pg_conn = pg::adaptor::open(
-        pg::endpoint{.server_name = "postgresql", .db_name = "test_db"},
+        pg::endpoint{.server_name = "postgres", .db_name = "test_db"},
         pg::auth{.user = "postgres", .password = "password"}
     );
     if(pg_conn.has_error()){

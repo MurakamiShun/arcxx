@@ -40,7 +40,9 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres
+        image: postgres:alpine3.14
+        ports:
+          - 5432:5432
         env:
           POSTGRES_PASSWORD: password
           POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
@@ -69,13 +71,7 @@ jobs:
       - name: Run integrated tests
         working-directory: ${{github.workspace}}/tests/build
         run: ./active_record_IT
-        env:
-          POSTGRES_HOST: postgres
-          POSTGRES_PORT: 5432
 
       - name: Run benchmark
         working-directory: ${{github.workspace}}/tests/build
         run: ./active_record_bench
-        env:
-          POSTGRES_HOST: postgres
-          POSTGRES_PORT: 5432
