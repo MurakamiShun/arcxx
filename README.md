@@ -17,16 +17,15 @@ See below documentation. English is full documentation. Also, Japanese is availa
 
 Completed
 * SQLite support
+* PostgreSQL support
 
 WIP
-* PostgreSQL support
 * Documentaion
 * Translation of documents
 * Tests
+* Example codes
 
 Waiting
-* MySQL support
-* Example codes
 * Public Relations
 
 

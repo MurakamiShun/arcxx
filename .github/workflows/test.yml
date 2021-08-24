@@ -7,16 +7,21 @@ on:
 
 env:
   BUILD_TYPE: Release
-  CC: gcc-10
-  CXX: g++-10
+  CC: gcc-11
+  CXX: g++-11
 
 jobs:
-  build:
+  sqlite3-tests:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
-      
+
+      - name: Install packages
+        run: |
+          sudo apt-get install -y software-properties-common
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+          sudo apt update && sudo apt install gcc-11 g++-11
+
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/tests/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} ${{github.workspace}}/tests
 
@@ -30,3 +35,47 @@ jobs:
       - name: Run benchmark
         working-directory: ${{github.workspace}}/tests/build
         run: ./active_record_bench
+
+  postgresql-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: password
+          POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+          POSTGRES_DB: "test_db"
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install packages
+        run: |
+          sudo apt-get install -y libpq-dev software-properties-common
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+          sudo apt update && sudo apt install gcc-11 g++-11
+
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/tests/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DTARGET_SQL=PostgreSQL ${{github.workspace}}/tests
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/tests/build --config ${{env.BUILD_TYPE}} -j2
+
+      - name: Run integrated tests
+        working-directory: ${{github.workspace}}/tests/build
+        run: ./active_record_IT
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
+
+      - name: Run benchmark
+        working-directory: ${{github.workspace}}/tests/build
+        run: ./active_record_bench
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
