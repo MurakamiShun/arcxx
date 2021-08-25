@@ -10,21 +10,21 @@ struct User : public active_record::model<User> {
 
     struct ID : public active_record::attributes::integer<User, ID, std::size_t> {
         static constexpr auto column_name = "id";
-        using active_record::attributes::integer<User, ID, size_t>::integer;
+        using integer<User, ID, size_t>::integer;
 
         inline static const auto constraints = { primary_key };
     } id;
 
     struct Name : public active_record::attributes::string<User, Name> {
         static constexpr auto column_name = "name";
-        using active_record::attributes::string<User, Name>::string;
+        using string<User, Name>::string;
 
         inline static const auto constraints = { not_null, default_value("unknow") };
     } name;
 
     struct Height : public active_record::attributes::decimal<User, Height>{
         static constexpr auto column_name = "height";
-        using active_record::attributes::decimal<User, Height>::decimal;
+        using decimal<User, Height>::decimal;
     } height;
 
     std::tuple<ID&, Name&, Height&> attributes = std::tie(id, name, height);

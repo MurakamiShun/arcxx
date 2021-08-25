@@ -6,19 +6,19 @@
 struct Member : public active_record::model<Member> {
     static constexpr auto table_name = "members_table";
     struct ID : public active_record::attributes::integer<Member, ID> {
-        using active_record::attributes::integer<Member, ID>::integer;
+        using integer<Member, ID>::integer;
         static constexpr auto column_name = "id";
         inline static const auto constraints = { primary_key };
         //constexpr ~ID(){}
     } id;
     struct Name : public active_record::attributes::string<Member, Name> {
-        using active_record::attributes::string<Member, Name>::string;
+        using string<Member, Name>::string;
         static constexpr auto column_name = "name";
         inline static const auto constraints = { not_null, length(64), default_value("unknown") };
     } name;
 
     struct Height : public active_record::attributes::decimal<Member, Height> {
-        using active_record::attributes::decimal<Member, Height>::decimal;
+        using decimal<Member, Height>::decimal;
         static constexpr auto column_name = "height";
         inline static const auto constraints = { default_value(160.0) };
     } height;
@@ -28,12 +28,12 @@ struct Member : public active_record::model<Member> {
 struct EnteringLog : public active_record::model<EnteringLog> {
     static constexpr auto table_name = "entering_log_table";
     struct ID : public active_record::attributes::integer<EnteringLog, ID> {
-        using active_record::attributes::integer<EnteringLog, ID>::integer;
+        using integer<EnteringLog, ID>::integer;
         static constexpr auto column_name = "id";
         inline static const auto constraints = { primary_key };
     } id;
     struct MemberID : public active_record::attributes::foreign_key<EnteringLog, MemberID, Member::ID> {
-        using active_record::attributes::foreign_key<EnteringLog, MemberID, Member::ID>::foreign_key;
+        using foreign_key<EnteringLog, MemberID, Member::ID>::foreign_key;
         static constexpr auto column_name = "member_id";
     } member_id;
     std::tuple<ID&, MemberID&> attributes = std::tie(id, member_id);
