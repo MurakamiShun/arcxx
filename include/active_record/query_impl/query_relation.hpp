@@ -14,36 +14,54 @@ namespace active_record {
     private:
         template<std::derived_from<adaptor> Adaptor>
         struct sob_to_string_impl {
-            struct visitor_impl{
-                const BindAttrs& bind_attrs;
-                const std::optional<std::array<active_record::string, std::tuple_size_v<BindAttrs>>> attr_strings;
-                
+            struct visitor_impl {
+                const std::array<active_record::string, std::tuple_size_v<BindAttrs>> attr_strings;
+                active_record::string buff;
+
                 visitor_impl(const BindAttrs& ba) :
-                    bind_attrs(ba),
                     attr_strings([&ba](){
-                        if constexpr (Adaptor::bindable) return std::nullopt;
-                        else return std::apply([]<typename... Attrs>(const Attrs*... attrs) {
+                        if constexpr (Adaptor::bindable){
+                            std::array<active_record::string, std::tuple_size_v<BindAttrs>> ret;
+                            for(std::size_t i = 0; i < std::tuple_size_v<BindAttrs>; ++i){
+                                ret[i] = Adaptor::bind_variable_str(i);
+                            }
+                            return ret;
+                        }
+                        else {
+                            return std::apply([]<typename... Attrs>(const Attrs*... attrs) {
                                 return std::array<active_record::string, std::tuple_size_v<BindAttrs>>{ active_record::to_string<Adaptor>(*attrs)... };
                             }, ba);
-                    }()
-                    ){
+                        }
+                    }()){
                 }
 
-                active_record::string operator()(const active_record::string& str) const {
-                    return str;
+                void operator()(const active_record::string& str) {
+                    buff += str;
                 }
-                active_record::string operator()(const std::size_t idx) const {
-                    if constexpr (Adaptor::bindable) return Adaptor::bind_variable_str(idx);
-                    else return attr_strings.value()[idx];
+                void operator()(const std::size_t idx) {
+                    buff += attr_strings[idx];
                 }
             } visitor;
 
-            active_record::string to_string(const std::vector<str_or_bind>& sobs) const {
-                active_record::string result;
-                for(const auto& sob : sobs) {
-                    result += std::visit(visitor, sob);
+            struct lazy_string_view {
+                const active_record::string& str;
+                const active_record::string::difference_type begin; // from begin(str)
+                const active_record::string::difference_type end; // from begin(str)
+                operator active_record::string_view() const {
+                    return active_record::string_view{ str.begin() + begin, str.begin() + end };
                 }
-                return result;
+            };
+
+            lazy_string_view to_string(const std::vector<str_or_bind>& sobs) {
+                const auto begin = std::distance(visitor.buff.cbegin(), visitor.buff.cend());
+                for(const auto& sob : sobs) {
+                    std::visit(visitor, sob);
+                }
+                return lazy_string_view {
+                    .str = visitor.buff,
+                    .begin = begin,
+                    .end = std::distance(visitor.buff.cbegin(), visitor.buff.cend())
+                };
             }
         };
     public:        
@@ -97,7 +115,7 @@ namespace active_record {
                 );
             }
             else {
-                return convertor.to_string(query_op_arg) + ";";
+                return concat_strings(convertor.to_string(query_op_arg), ";");
             }
         }
     };

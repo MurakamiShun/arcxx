@@ -15,6 +15,7 @@
 #include <charconv>
 #include <unordered_map>
 #include <numeric>
+#include <iostream>
 
 namespace active_record{
     using string = std::string;
