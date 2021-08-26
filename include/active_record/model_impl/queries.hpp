@@ -56,9 +56,9 @@ namespace active_record {
         
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::model_column_full_names_to_string<Derived>());
-        ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
+        ret.query_table.push_back(concat_strings("\"", Derived::table_name, "\""));
 
-        return ret;    
+        return ret;
     }
 
     template<typename Derived>
@@ -68,7 +68,7 @@ namespace active_record {
         
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<Attrs...>());
-        ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
+        ret.query_table.push_back(concat_strings("\"", Derived::table_name, "\""));
         return ret;
     }
 
@@ -79,7 +79,7 @@ namespace active_record {
         
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<Aggregators...>());
-        ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
+        ret.query_table.push_back(concat_strings("\"", Derived::table_name, "\""));
         return ret;
     }
     template<typename Derived>
@@ -89,7 +89,7 @@ namespace active_record {
         
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<Attr>());
-        ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
+        ret.query_table.push_back(concat_strings("\"", Derived::table_name, "\""));
         return ret;
     }
     
@@ -105,7 +105,7 @@ namespace active_record {
         query_relation<bool, SrcBindAttrs> ret;
 
         ret.operation = query_operation::destroy;
-        ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
+        ret.query_table.push_back(concat_strings("\"", Derived::table_name, "\""));
         ret.query_condition = std::move(cond.condition);
         ret.temporary_attrs = std::move(cond.temporary_attrs);
         detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
@@ -125,7 +125,7 @@ namespace active_record {
         
         ret.operation = query_operation::condition;
         ret.query_op_arg.push_back(detail::model_column_full_names_to_string<Derived>());
-        ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
+        ret.query_table.push_back(concat_strings("\"", Derived::table_name, "\""));
         ret.query_condition = std::move(cond.condition);
         ret.temporary_attrs = std::move(cond.temporary_attrs);
         detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
@@ -139,8 +139,8 @@ namespace active_record {
         
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::model_column_full_names_to_string<Derived>());
-        ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
-        ret.query_options.push_back(active_record::string{ "LIMIT " } + std::to_string(lim));
+        ret.query_table.push_back(concat_strings("\"", Derived::table_name, "\""));
+        ret.query_options.push_back(concat_strings("LIMIT ", std::to_string(lim)));
 
         return ret;
     }
@@ -152,14 +152,13 @@ namespace active_record {
         
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::model_column_full_names_to_string<Derived>());
-        ret.query_table.push_back(active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\"");
+        ret.query_table.push_back(concat_strings("\"", Derived::table_name, "\""));
 
         
-        ret.query_options.push_back(
-            active_record::string{ "ORDER BY " }
-            + detail::column_full_names_to_string<Attr>()
-            + (order == active_record::order::asc ? " ASC" : " DESC" )
-        );
+        ret.query_options.push_back(concat_strings(
+            "ORDER BY ", detail::column_full_names_to_string<Attr>(),
+            (order == active_record::order::asc ? " ASC" : " DESC" )
+        ));
 
         return ret;   
     }
@@ -202,12 +201,12 @@ namespace active_record {
         
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::model_column_full_names_to_string<Derived>());
-        ret.query_table.push_back(
-            active_record::string{ "\"" } + active_record::string{ Derived::table_name }
-            + "\" INNER JOIN \"" + active_record::string{ ReferenceAttribute::foreign_key_type::model_type::table_name }
-            + "\" ON " + detail::column_full_names_to_string<typename ReferenceAttribute::foreign_key_type>()
-            + " = " + detail::column_full_names_to_string<ReferenceAttribute>()
-        );
+        ret.query_table.push_back(concat_strings(
+            "\"", Derived::table_name, "\" INNER JOIN \"",
+            ReferenceAttribute::foreign_key_type::model_type::table_name,
+            "\" ON ", detail::column_full_names_to_string<typename ReferenceAttribute::foreign_key_type>(),
+            " = ", detail::column_full_names_to_string<ReferenceAttribute>()
+        ));
         
         return ret;  
     }
@@ -224,12 +223,12 @@ namespace active_record {
         
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::model_column_full_names_to_string<Derived>());
-        ret.query_table.push_back(
-            active_record::string{ "\"" } + active_record::string{ Derived::table_name }
-            + "\" LEFT OUTER JOIN \"" + active_record::string{ ReferenceAttribute::foreign_key_type::model_type::table_name }
-            + "\" ON " + detail::column_full_names_to_string<typename ReferenceAttribute::foreign_key_type>()
-            + " = " + detail::column_full_names_to_string<ReferenceAttribute>()
-        );
+        ret.query_table.push_back(concat_strings(
+            "\"", Derived::table_name, "\" LEFT OUTER JOIN \"",
+            ReferenceAttribute::foreign_key_type::model_type::table_name,
+            "\" ON ", detail::column_full_names_to_string<typename ReferenceAttribute::foreign_key_type>(),
+            " = ", detail::column_full_names_to_string<ReferenceAttribute>()
+        ));
         
         return ret;  
     }
@@ -241,10 +240,8 @@ namespace active_record {
 
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<Attr>());
-        ret.query_table.push_back(
-            active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\""
-        );
-        ret.query_options.push_back("GROUP BY" + detail::column_full_names_to_string<Attr>());
+        ret.query_table.push_back(concat_strings("\"", Derived::table_name, "\""));
+        ret.query_options.push_back(concat_strings("GROUP BY", detail::column_full_names_to_string<Attr>()));
         
         return ret;
     }
@@ -256,9 +253,7 @@ namespace active_record {
 
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back("count(*)");
-        ret.query_table.push_back(
-            active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\""
-        );
+        ret.query_table.push_back(concat_strings("\"", Derived::table_name, "\""));
         
         return ret;  
     }
@@ -270,10 +265,8 @@ namespace active_record {
         query_relation<typename Attr::sum::attribute_type, std::tuple<>> ret;
 
         ret.operation = query_operation::select;
-        ret.query_op_arg.push_back("sum(" + detail::column_full_names_to_string<Attr>() +")");
-        ret.query_table.push_back(
-            active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\""
-        );
+        ret.query_op_arg.push_back(Attr::sum::column_full_name());
+        ret.query_table.push_back(concat_strings("\"", Derived::table_name, "\""));
         
         return ret;
     }
@@ -285,10 +278,8 @@ namespace active_record {
         query_relation<typename Attr::avg::attribute_type, std::tuple<>> ret;
 
         ret.operation = query_operation::select;
-        ret.query_op_arg.push_back("avg(" + detail::column_full_names_to_string<Attr>() +")");
-        ret.query_table.push_back(
-            active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\""
-        );
+        ret.query_op_arg.push_back(Attr::avg::column_full_name());
+        ret.query_table.push_back(concat_strings("\"", Derived::table_name, "\""));
         
         return ret;  
     }
@@ -300,10 +291,8 @@ namespace active_record {
         query_relation<typename Attr::max::attribute_type, std::tuple<>> ret;
 
         ret.operation = query_operation::select;
-        ret.query_op_arg.push_back("max(" + detail::column_full_names_to_string<Attr>() +")");
-        ret.query_table.push_back(
-            active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\""
-        );
+        ret.query_op_arg.push_back(Attr::max::column_full_name());
+        ret.query_table.push_back(concat_strings("\"", Derived::table_name, "\""));
         
         return ret;  
     }
@@ -315,10 +304,8 @@ namespace active_record {
         query_relation<typename Attr::min::attribute_type, std::tuple<>> ret;
 
         ret.operation = query_operation::select;
-        ret.query_op_arg.push_back("min(" + detail::column_full_names_to_string<Attr>() +")");
-        ret.query_table.push_back(
-            active_record::string{ "\"" } + active_record::string{ Derived::table_name } + "\""
-        );
+        ret.query_op_arg.push_back(Attr::min::column_full_name());
+        ret.query_table.push_back(concat_strings("\"", Derived::table_name, "\""));
         
         return ret;  
     }
@@ -330,15 +317,18 @@ namespace active_record {
             []<typename... Attrs>(const Attrs&...){ return std::array<const active_record::string, sizeof...(Attrs)>{(Adaptor::template column_definition<Attrs>())...}; },
             Derived{}.attributes
         );
-        active_record::string col_defs = "";
-        active_record::string delimiter = "";
+
+        active_record::string col_defs;
+        active_record::string_view delimiter = "";
         for(const auto& col_def : column_definitions){
-            col_defs += delimiter + col_def;
+            col_defs += delimiter;
+            col_defs += col_def;
             delimiter = ",";
         }
 
-        return active_record::string{"CREATE TABLE "} + (abort_if_exist ? "" : "IF NOT EXISTS ")
-            + active_record::string{ Derived::table_name }
-            + "(" + col_defs + ");";
+        return concat_strings(
+            "CREATE TABLE ", abort_if_exist ? "" : "IF NOT EXISTS ",
+            Derived::table_name, "(", col_defs, ");"
+        );
     }
 }

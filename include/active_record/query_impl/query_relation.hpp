@@ -13,33 +13,39 @@ namespace active_record {
         using str_or_bind = std::variant<active_record::string, std::size_t>;
     private:
         template<std::derived_from<adaptor> Adaptor>
-        struct str_or_bind_visitor {
-            const BindAttrs bind_attrs;
-            active_record::string operator()(const active_record::string& str) const {
-                return str;
-            }
-            active_record::string operator()(const std::size_t idx) const {
-                if constexpr (Adaptor::bindable) return Adaptor::bind_variable_str(idx);
-                else {
-                    return std::apply(
-                        []<typename... Attrs>(const Attrs*... attrs){
-                            return std::array<active_record::string, std::tuple_size_v<BindAttrs>>{ active_record::to_string<Adaptor>(*attrs)... };
-                        },
-                        bind_attrs
-                    )[idx];
+        struct sob_to_string_impl {
+            struct visitor_impl{
+                const BindAttrs& bind_attrs;
+                const std::optional<std::array<active_record::string, std::tuple_size_v<BindAttrs>>> attr_strings;
+                
+                visitor_impl(const BindAttrs& ba) :
+                    bind_attrs(ba),
+                    attr_strings([&ba](){
+                        if constexpr (Adaptor::bindable) return std::nullopt;
+                        else return std::apply([]<typename... Attrs>(const Attrs*... attrs) {
+                                return std::array<active_record::string, std::tuple_size_v<BindAttrs>>{ active_record::to_string<Adaptor>(*attrs)... };
+                            }, ba);
+                    }()
+                    ){
                 }
+
+                active_record::string operator()(const active_record::string& str) const {
+                    return str;
+                }
+                active_record::string operator()(const std::size_t idx) const {
+                    if constexpr (Adaptor::bindable) return Adaptor::bind_variable_str(idx);
+                    else return attr_strings.value()[idx];
+                }
+            } visitor;
+
+            active_record::string to_string(const std::vector<str_or_bind>& sobs) const {
+                active_record::string result;
+                for(const auto& sob : sobs) {
+                    result += std::visit(visitor, sob);
+                }
+                return result;
             }
         };
-
-        template<std::derived_from<adaptor> Adaptor>
-        [[nodiscard]] active_record::string sob_to_string(const std::vector<str_or_bind>& sobs) const {
-            active_record::string result;
-            str_or_bind_visitor<Adaptor> visitor{ bind_attrs };
-            for(const auto& sob : sobs) {
-                result += std::visit(visitor, sob);
-            }
-            return result;
-        }
     public:        
         query_operation operation;
         std::vector<str_or_bind> query_op_arg;
@@ -59,35 +65,39 @@ namespace active_record {
 
         template<std::derived_from<adaptor> Adaptor = common_adaptor>
         [[nodiscard]] const active_record::string to_sql() const {
+            sob_to_string_impl<Adaptor> convertor{ bind_attrs };
             if (operation == query_operation::select) {
-                return active_record::string{"SELECT "} + sob_to_string<Adaptor>(query_op_arg)
-                    + " FROM " + sob_to_string<Adaptor>(query_table)
-                    + (query_condition.empty() ? "" : (active_record::string{" WHERE "} + sob_to_string<Adaptor>(query_condition)))
-                    + " " + sob_to_string<Adaptor>(query_options) + ";";
+                return concat_strings("SELECT ", convertor.to_string(query_op_arg),
+                    " FROM ", convertor.to_string(query_table),
+                    query_condition.empty() ? "" : concat_strings(" WHERE ", convertor.to_string(query_condition)),
+                    " ", convertor.to_string(query_options), ";"
+                );
             }
             else if (operation == query_operation::insert) {
-                return active_record::string{"INSERT INTO "} + sob_to_string<Adaptor>(query_table)
-                    + " VALUES " + sob_to_string<Adaptor>(query_op_arg) + ";";
+                return concat_strings("INSERT INTO ", convertor.to_string(query_table),
+                    " VALUES ", convertor.to_string(query_op_arg), ";"
+                );
             }
             else if (operation == query_operation::destroy) {
-                return active_record::string{"DELETE FROM "} + sob_to_string<Adaptor>(query_table)
-                    + (query_condition.empty() ? "" : (active_record::string{" WHERE "} + sob_to_string<Adaptor>(query_condition)))
-                    + ";";
+                return concat_strings("DELETE FROM ", convertor.to_string(query_table),
+                    query_condition.empty() ? "" : concat_strings(" WHERE ", convertor.to_string(query_condition)), ";"
+                );
             }
             else if (operation == query_operation::update) {
-                return active_record::string{"UPDATE "} + sob_to_string<Adaptor>(query_table)
-                    + " SET " + sob_to_string<Adaptor>(query_op_arg)
-                    + (query_condition.empty() ? "": (active_record::string{" WHERE "} + sob_to_string<Adaptor>(query_condition)))
-                    + ";";
+                return concat_strings("UPDATE ", convertor.to_string(query_table),
+                    " SET ", convertor.to_string(query_op_arg),
+                    query_condition.empty() ? "": concat_strings(" WHERE ", convertor.to_string(query_condition)), ";"
+                );
             }
             else if (operation == query_operation::condition) {
-                return active_record::string{"SELECT "} + sob_to_string<Adaptor>(query_op_arg)
-                    + " FROM " + sob_to_string<Adaptor>(query_table)
-                    + " WHERE " + sob_to_string<Adaptor>(query_condition)
-                    + sob_to_string<Adaptor>(query_options) + ";";
+                return concat_strings("SELECT ", convertor.to_string(query_op_arg),
+                    " FROM ", convertor.to_string(query_table),
+                    " WHERE ", convertor.to_string(query_condition),
+                    convertor.to_string(query_options), ";"
+                );
             }
             else {
-                return sob_to_string<Adaptor>(query_op_arg) + ";";
+                return convertor.to_string(query_op_arg) + ";";
             }
         }
     };

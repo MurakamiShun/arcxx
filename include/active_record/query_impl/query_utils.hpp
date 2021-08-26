@@ -15,19 +15,25 @@ namespace active_record::detail {
 
     template<Model Mod>
     [[nodiscard]] constexpr active_record::string model_column_full_names_to_string(){
-        auto column_names = Mod::column_names();
-        active_record::string columns = "";
+        const auto column_names = Mod::column_names();
+        active_record::string buff;
+        const std::size_t buff_size = std::transform_reduce(
+            column_names.begin(), column_names.end(), static_cast<std::size_t>(0),
+            [](auto acc, const auto len) constexpr { return acc += len; },
+            [](const auto& str) constexpr { return str.length() + static_cast<active_record::string_view>(Mod::table_name).length() + 6; }
+        );
+        buff.reserve(buff_size);
         active_record::string_view delimiter = "";
-        for (auto& col_name : column_names) {
-            columns += delimiter;
-            columns += "\"";
-            columns += Mod::table_name;
-            columns += "\".\"";
-            columns += col_name;
-            columns += "\"";
+        for (const auto& col_name : column_names) {
+            buff += delimiter;
+            buff += "\"";
+            buff += Mod::table_name;
+            buff += "\".\"";
+            buff += col_name;
+            buff += "\"";
             delimiter = ",";
         }
-        return columns;
+        return buff;
     }
 
     template<std::size_t I, typename BindAttr>

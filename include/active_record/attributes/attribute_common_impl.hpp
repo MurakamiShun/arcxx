@@ -45,7 +45,7 @@ namespace active_record {
         static constexpr bool has_column_name = has_column_name_impl::value;
         static constexpr bool has_constraints = has_constraints_impl::value;
         [[nodiscard]] static constexpr active_record::string column_full_name() {
-            return active_record::string{ "\"" } + active_record::string{ Model::table_name } + "\".\"" + active_record::string{ Attribute::column_name } + "\"";
+            return concat_strings("\"", Model::table_name, "\".\"", Attribute::column_name, "\"");
         }
 
         // constexpr std::type_info::operator== is C++23

@@ -14,6 +14,7 @@
 #include <optional>
 #include <charconv>
 #include <unordered_map>
+#include <numeric>
 
 namespace active_record{
     using string = std::string;
@@ -139,10 +140,26 @@ namespace active_record{
         return std::apply(f, detail::indexed_apply_aux<0>(t));
     }
 
+    template<typename... Strings>
+    requires requires (Strings... strs){
+        (std::convertible_to<Strings, active_record::string_view> && ...);
+    }
+    [[nodiscard]] constexpr active_record::string concat_strings(const Strings&... strings) {
+        std::array<active_record::string_view, sizeof...(Strings)> str_views = { static_cast<active_record::string_view>(strings)... };
+        active_record::string buff;
+        buff.reserve(std::transform_reduce(
+            str_views.begin(), str_views.end(), static_cast<std::size_t>(0),
+            [](auto acc, const auto len){ return acc += len; },
+            [](const auto& str){ return str.length(); }
+        ));
+        for(const auto& str : str_views) buff += str;
+        return buff;
+    }
+
     [[nodiscard]] inline active_record::string sanitize(const active_record::string& src) {
         active_record::string result;
         for(const auto& c : src) {
-            switch(c){
+            switch(c) {
                 case '\'':
                     result += "\'\'";
                     break;
