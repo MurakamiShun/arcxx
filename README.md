@@ -2,7 +2,7 @@
 
 Active Record C++ is an Open Source C++20 O/R mapper of Active Record pattern.
 
-Here is a simple Model definition example.
+Here is a simple Model definition example. There are no magic macros in this library.
 
 ```cpp
 struct User : public active_record::model<User> {
@@ -35,6 +35,12 @@ if (connector.has_error()){
     std::cout << connector.error_message() << std::endl;
 }
 
+/*
+ * CREATE TABLE members_table(
+ *   id INTEGER PRIMARY KEY,
+ *   name VARCHAR(128) DEFAULT 'unknown' NOT NULL
+ * );
+ */
 const std::optional<std::string> error = connector.create_table<User>();
 if (error){
     // print error
@@ -77,7 +83,7 @@ See below documentation. English is full documentation. Also, Japanese is availa
 # Developing Status
 
 Completed
-* SQLite support
+* SQLite3 support
 * PostgreSQL support
 
 WIP

@@ -34,11 +34,11 @@ namespace active_record {
 
         template<Attribute Attr>
         auto operator&&(const Attr& cond) && {
-            return this->operator&&(cond.to_equ_condition());
+            return this->operator&&(Attr::cmp == cond);
         }
         template<Attribute Attr>
         auto operator||(const Attr& cond) && {
-            return this->operator||(cond.to_equ_condition());
+            return this->operator||(Attr::cmp == cond);
         }
     };
 }

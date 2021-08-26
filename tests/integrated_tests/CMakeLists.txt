@@ -35,17 +35,8 @@ add_executable(active_record_IT
 target_link_libraries(active_record_IT PRIVATE ${link_library})
 target_compile_options(active_record_IT PUBLIC ${compile_options})
 
-# Benchmark
-add_executable(active_record_bench
-    inserting_benchmark.cpp
-)
-target_link_libraries(active_record_bench PRIVATE ${link_library})
-target_compile_options(active_record_bench PUBLIC ${compile_options} -pg -g)
-target_link_options(active_record_bench PUBLIC -pg)
-
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
 include(CTest)
 include(Catch)
 
 catch_discover_tests(active_record_IT)
-catch_discover_tests(active_record_bench)

@@ -3,9 +3,6 @@
 #include "attribute.hpp"
 
 namespace active_record {
-    template<typename... T>
-    auto reference_tuple_to_ptr_tuple([[maybe_unused]]std::tuple<T&...>) -> std::tuple<const T*...>;
-
     template<typename Derived>
     class model {
     private:
@@ -22,18 +19,7 @@ namespace active_record {
             static constexpr bool value = decltype(check(std::declval<Derived>()))::value;
         };
 
-        template<typename Model>
-        static constexpr active_record::string insert_column_names_to_string() {
-            active_record::string table = active_record::string{ "\"" } + active_record::string{ Model::table_name } + "\"(";
-            active_record::string delimiter = "";
-            const auto column_names = Model::column_names();
-            for (const auto& col_name : column_names) {
-                table += delimiter + "\"" + active_record::string{ col_name } + "\"";
-                delimiter = ",";
-            }
-            table += ")";
-            return table;
-        }
+        [[nodiscard]] static constexpr active_record::string insert_column_names_to_string();
 
     public:
         struct schema {
@@ -43,54 +29,15 @@ namespace active_record {
 
         static constexpr bool has_table_name = has_table_name_impl::value;
         static constexpr bool has_attributes = has_attributes_impl::value;
-        [[nodiscard]] static constexpr auto column_names() noexcept {
-            return std::apply(
-                []<typename... Attrs>(Attrs...){ return std::array<const active_record::string_view, sizeof...(Attrs)>{(Attrs::column_name)...}; },
-                Derived{}.attributes
-            );
-        }
+        [[nodiscard]] static constexpr auto column_names() noexcept;
 
-        [[nodiscard]] static auto insert(const Derived& model) {
-            query_relation<bool, decltype(reference_tuple_to_ptr_tuple(model.attributes))> ret;
-            ret.operation = query_operation::insert;
-            // get attribute pointers in model
-            ret.bind_attrs = std::apply(
-                []<Attribute... Attrs>(const Attrs&... attrs){ return std::make_tuple(&attrs...); },
-                model.attributes
-            );
-            ret.query_table.push_back(insert_column_names_to_string<Derived>());
-            // insert values
-            ret.query_op_arg.push_back("(");
-            for(std::size_t i = 0; i < std::tuple_size_v<decltype(model.attributes)>; ++i){
-                if (i != 0) ret.query_op_arg.push_back(",");
-                ret.query_op_arg.push_back(i);
-            }
-            ret.query_op_arg.push_back(")");
-            return ret;
-        }
-        [[nodiscard]] static auto insert(Derived&& model) {
-            query_relation<bool, decltype(reference_tuple_to_ptr_tuple(model.attributes))> ret;
-            ret.operation = query_operation::insert;
-            // copy to temporary
-            ret.temporary_attrs.push_back(std::move(model));
-            // get attribute pointers in temporary model
-            ret.bind_attrs = std::apply(
-                []<Attribute... Attrs>(const Attrs&... attrs){ return std::make_tuple(&attrs...); },
-                std::any_cast<Derived>(ret.temporary_attrs[0]).attributes
-            );
-            ret.query_table.push_back(insert_column_names_to_string<Derived>());
-            // insert values
-            ret.query_op_arg.push_back("(");
-            for(auto i = 0; i < std::tuple_size_v<decltype(model.attributes)>; ++i){
-                if (i != 0) ret.query_op_arg.push_back(",");
-                ret.query_op_arg.push_back(i);
-            }
-            ret.query_op_arg.push_back(")");
-            return ret;
-        }
         /*
-         * Implementations are query_impl/model_queries.hpp
+         * Implementations are model_impl/queries.hpp
          */
+
+        [[nodiscard]] static auto insert(const Derived& model);
+        [[nodiscard]] static auto insert(Derived&& model);
+ 
         [[nodiscard]] static query_relation<std::vector<Derived>, std::tuple<>> all();
 
         template<Attribute... Attrs>
@@ -149,5 +96,9 @@ namespace active_record {
     };
 
     template<typename T>
-    concept Model = std::derived_from<T, model<T>>;
+    concept Model = requires {
+        std::derived_from<T, model<T>>;
+        T::has_table_name;
+        T::has_attributes;
+    };
 }

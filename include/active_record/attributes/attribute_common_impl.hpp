@@ -163,32 +163,23 @@ namespace active_record {
             }
         } cmp{};
 
-        [[nodiscard]] query_condition<std::tuple<const Attribute*>> to_equ_condition() const {
-            query_condition<std::tuple<const Attribute*>> ret;
-            ret.condition.push_back(Attribute::column_full_name() + " = ");
-            ret.condition.push_back(0UL);
-            ret.temporary_attrs.push_back(*(reinterpret_cast<const Attribute*>(this)));
-            std::get<0>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
-            return ret;
-        }
-
         template<Tuple BindAttrs>
         [[nodiscard]] auto operator&&(query_condition<BindAttrs>&& cond) const {
-            return this->to_equ_condition() && cond;
+            return (cmp == data) && cond;
         }
         template<Tuple BindAttrs>
         [[nodiscard]] auto operator||(query_condition<BindAttrs>&& cond) const {
-            return this->to_equ_condition() || cond;
+            return (cmp == data) || cond;
         }
         template<typename Attr>
         requires std::derived_from<Attr, attribute_common<typename Attr::model_type, typename Attr::attribute_type, typename Attr::value_type>>
         [[nodiscard]] auto operator&&(const Attr& attr) const {
-            return this->to_equ_condition() && attr.to_equ_condition();
+            return (cmp == data) && (Attr::cmp == attr);
         }
         template<typename Attr>
         requires std::derived_from<Attr, attribute_common<typename Attr::model_type, typename Attr::attribute_type, typename Attr::value_type>>
         [[nodiscard]] auto operator||(const Attr& attr) const {
-            return this->to_equ_condition() || attr.to_equ_condition();
+            return (cmp == data) || (Attr::cmp == attr);
         }
 
         struct count : public attribute_aggregator<Model, Attribute, count>{

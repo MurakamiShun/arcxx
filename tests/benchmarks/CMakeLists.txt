@@ -1,0 +1,35 @@
+cmake_minimum_required(VERSION 3.11)
+
+project(tests LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+
+include(FetchContent)
+FetchContent_Declare(
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG        v2.13.7
+)
+
+FetchContent_MakeAvailable(Catch2)
+
+if(TARGET_SQL MATCHES "PostgreSQL")
+set(compile_options -Wall -Wextra -pedantic -Werror -DPOSTGRESQL_TEST)
+set(link_library Catch2::Catch2 pq)
+else()
+set(compile_options -Wall -Wextra -pedantic -Werror -DSQLITE_TEST)
+set(link_library Catch2::Catch2 sqlite3)
+endif()
+
+# Benchmark
+add_executable(active_record_bench
+    inserting_benchmark.cpp
+)
+target_link_libraries(active_record_bench PRIVATE ${link_library})
+target_compile_options(active_record_bench PUBLIC ${compile_options} -pg -g)
+target_link_options(active_record_bench PUBLIC -pg)
+
+list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
+include(CTest)
+include(Catch)
+
+catch_discover_tests(active_record_bench)

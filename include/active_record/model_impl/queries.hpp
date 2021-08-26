@@ -1,7 +1,55 @@
 #pragma once
-#include "query_relation_impl.hpp"
+#include "../model.hpp"
+#include "../query_impl/query_relation_impl.hpp"
 
 namespace active_record {
+    namespace detail {
+        template<typename... T>
+        auto reference_tuple_to_ptr_tuple([[maybe_unused]]std::tuple<T&...>) -> std::tuple<const T*...>;
+    }
+
+    template<typename Derived>
+    inline auto model<Derived>::insert(const Derived& model) {
+        query_relation<bool, decltype(detail::reference_tuple_to_ptr_tuple(std::declval<Derived>().attributes))> ret;
+        ret.operation = query_operation::insert;
+        // get attribute pointers in model
+        ret.bind_attrs = std::apply(
+            []<Attribute... Attrs>(const Attrs&... attrs){ return std::make_tuple(&attrs...); },
+            model.attributes
+        );
+        ret.query_table.push_back(insert_column_names_to_string());
+        // insert values
+        ret.query_op_arg.push_back("(");
+        for(std::size_t i = 0; i < std::tuple_size_v<decltype(model.attributes)>; ++i){
+            if (i != 0) ret.query_op_arg.push_back(",");
+            ret.query_op_arg.push_back(i);
+        }
+        ret.query_op_arg.push_back(")");
+        return ret;
+    }
+
+    template<typename Derived>
+    inline auto model<Derived>::insert(Derived&& model) {
+        query_relation<bool, decltype(detail::reference_tuple_to_ptr_tuple(std::declval<Derived>().attributes))> ret;
+        ret.operation = query_operation::insert;
+        // copy to temporary
+        ret.temporary_attrs.push_back(std::move(model));
+        // get attribute pointers in temporary model
+        ret.bind_attrs = std::apply(
+            []<Attribute... Attrs>(const Attrs&... attrs){ return std::make_tuple(&attrs...); },
+            std::any_cast<Derived>(ret.temporary_attrs[0]).attributes
+        );
+        ret.query_table.push_back(insert_column_names_to_string());
+        // insert values
+        ret.query_op_arg.push_back("(");
+        for(auto i = 0; i < std::tuple_size_v<decltype(model.attributes)>; ++i){
+            if (i != 0) ret.query_op_arg.push_back(",");
+            ret.query_op_arg.push_back(i);
+        }
+        ret.query_op_arg.push_back(")");
+        return ret;
+    }
+
     template<typename Derived>
     inline query_relation<std::vector<Derived>, std::tuple<>> model<Derived>::all() {
         query_relation<std::vector<Derived>, std::tuple<>> ret;
@@ -48,7 +96,7 @@ namespace active_record {
     template<typename Derived>
     template<Attribute Attr>
     inline query_relation<bool, std::tuple<const Attr*>> model<Derived>::destroy(const Attr&& attr){
-        return destroy(attr.to_equ_condition());
+        return destroy(Attr::cmp == attr);
     }
 
     template<typename Derived>
@@ -67,7 +115,7 @@ namespace active_record {
     template<typename Derived>
     template<Attribute Attr>
     inline query_relation<std::vector<Derived>, std::tuple<const Attr*>> model<Derived>::where(const Attr& attr) {
-        return where(attr.to_equ_condition());
+        return where(Attr::cmp == attr);
     }
 
     template<typename Derived>

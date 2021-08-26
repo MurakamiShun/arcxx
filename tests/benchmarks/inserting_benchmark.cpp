@@ -2,7 +2,8 @@
 #define CATCH_CONFIG_MAIN
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
 #include <catch2/catch.hpp>
-#include "test_fixtures.hpp"
+#include <ranges>
+#include "../test_fixtures.hpp"
 
 struct User : public active_record::model<User> {
     static constexpr auto table_name = "user_table";
@@ -34,33 +35,24 @@ TEST_CASE("User model inserting benchmark"){
     // Benchmark
     BENCHMARK_ADVANCED("1000 data inserting bench")(Catch::Benchmark::Chronometer meter){
         using namespace active_record;
-        // Setup
-        auto conn = open_testfile();
-        if(const auto error = conn.create_table<User>(); error) {
-            FAIL(error.value());
-        }
+        namespace ranges = std::ranges;
 
-        meter.measure([&conn](int k){
-            const auto insert_transaction = [k](auto& connection){
-                for(auto i = k*1000; i < (k+1)*1000; ++i){
-                    User user;
-                    user.id = i;
-                    user.name = std::string{ "user" } + std::to_string(i);
-                    user.height = 170.0 + i;
-                    if(const auto error = User::insert(user).exec(connection); error) {
-                        FAIL(error.value());
-                        return transaction::rollback;
-                    }
-                }
-                return transaction::commit;
-            };
-            const auto [error, result] = conn.transaction(insert_transaction);
-            if (error){ FAIL(error.value()); }
-            else if(result == transaction::rollback) { FAIL("something happened"); }
+        const auto users = []{
+            std::array<User, 10000> users;
+            for(auto i : ranges::views::iota(0,10000)){
+                users[i].id = i;
+                users[i].name = std::string{ "user" } + std::to_string(i);
+                users[i].height = 170.0 + i;
+            }
+            return users;
+        }();
+
+        meter.measure([&users](){
+            std::size_t t = 0; // Optimization prevention
+            for(const auto& user : users) {
+                t += User::insert(user).to_sql().length();
+            }
+            return t;
         });
-
-        // Finish
-        conn.drop_table<User>();
-        close_testfile(conn);
     };
 }

@@ -10,7 +10,10 @@ namespace active_record {
     class attribute_common;
 
     template<typename T>
-    concept Attribute = std::derived_from<T, attribute_common<typename T::model_type, typename T::attribute_type, typename T::value_type>>;
+    concept Attribute = requires {
+        std::derived_from<T, attribute_common<typename T::model_type, typename T::attribute_type, typename T::value_type>>;
+        T::has_column_name;
+    };
 
     template<Attribute Attr>
     constexpr std::size_t attribute_size([[maybe_unused]] const Attr&){ return sizeof(typename Attr::value_type); }

@@ -11,12 +11,12 @@ namespace active_record {
     template<typename Result, Tuple BindAttrs>
     template<Attribute Attr>
     query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> query_relation<Result, BindAttrs>::where(const Attr&& attr) && {
-        return std::move(*this).where(attr.to_equ_condition());
+        return std::move(*this).where(Attr::cmp == attr);
     }
     template<typename Result, Tuple BindAttrs>
     template<Attribute Attr>
     query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> query_relation<Result, BindAttrs>::where(const Attr&& attr) const& {
-        return this->where(attr.to_equ_condition());
+        return this->where(Attr::cmp == attr);
     }
 
     template<typename Result, Tuple BindAttrs>
