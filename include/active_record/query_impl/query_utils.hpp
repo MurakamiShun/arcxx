@@ -17,9 +17,14 @@ namespace active_record::detail {
     [[nodiscard]] constexpr active_record::string model_column_full_names_to_string(){
         auto column_names = Mod::column_names();
         active_record::string columns = "";
-        active_record::string delimiter = "";
+        active_record::string_view delimiter = "";
         for (auto& col_name : column_names) {
-            columns += delimiter + "\"" + active_record::string{ Mod::table_name } + "\".\"" + active_record::string{ col_name } + "\"";
+            columns += delimiter;
+            columns += "\"";
+            columns += Mod::table_name;
+            columns += "\".\"";
+            columns += col_name;
+            columns += "\"";
             delimiter = ",";
         }
         return columns;
