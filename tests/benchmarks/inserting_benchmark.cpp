@@ -3,7 +3,7 @@
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
 #include <catch2/catch.hpp>
 #include <ranges>
-#include "../test_fixtures.hpp"
+#include "../../include/active_record.hpp"
 
 struct User : public active_record::model<User> {
     static constexpr auto table_name = "user_table";

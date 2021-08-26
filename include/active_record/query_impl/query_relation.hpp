@@ -32,7 +32,12 @@ namespace active_record {
                                 return std::array<active_record::string, std::tuple_size_v<BindAttrs>>{ active_record::to_string<Adaptor>(*attrs)... };
                             }, ba);
                         }
-                    }()){
+                    }()){/*
+                    buff.reserve(std::transform_reduce(
+                        attr_strings.begin(), attr_strings.end(), static_cast<std::size_t>(0),
+                        [](auto acc, const auto len){ return acc += len; },
+                        [](const auto& str){ return str.length(); }
+                    ));*/
                 }
 
                 void operator()(const active_record::string& str) {

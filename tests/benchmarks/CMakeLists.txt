@@ -12,21 +12,21 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
-if(TARGET_SQL MATCHES "PostgreSQL")
-set(compile_options -Wall -Wextra -pedantic -Werror -DPOSTGRESQL_TEST)
-set(link_library Catch2::Catch2 pq)
+if(ENABLE_PROFILE)
+set(compile_options -Wall -Wextra -pedantic -Werror -pg -g)
+set(link_options -pg)
 else()
-set(compile_options -Wall -Wextra -pedantic -Werror -DSQLITE_TEST)
-set(link_library Catch2::Catch2 sqlite3)
+set(compile_options -Wall -Wextra -pedantic -Werror)
+set(link_options)
 endif()
 
 # Benchmark
 add_executable(active_record_bench
     inserting_benchmark.cpp
 )
-target_link_libraries(active_record_bench PRIVATE ${link_library})
-target_compile_options(active_record_bench PUBLIC ${compile_options} -pg -g)
-target_link_options(active_record_bench PUBLIC -pg)
+target_link_libraries(active_record_bench PRIVATE Catch2::Catch2)
+target_compile_options(active_record_bench PUBLIC ${compile_options})
+target_link_options(active_record_bench PUBLIC ${link_options})
 
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
 include(CTest)

@@ -160,7 +160,7 @@ namespace active_record {
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
     query_relation<Result, BindAttrs>& query_relation<Result, BindAttrs>::limit(const std::size_t lim) && {
-        this->query_options.push_back(active_record::string{ " LIMIT " } + std::to_string(lim));
+        this->query_options.push_back(concat_strings(" LIMIT ", std::to_string(lim)));
         return *this;
     }
     template<typename Result, Tuple BindAttrs>
@@ -173,7 +173,7 @@ namespace active_record {
         ret.query_table = this->query_table;
         ret.query_condition = this->query_condition;
         ret.query_options = this->query_options;
-        ret.query_options.push_back(active_record::string{ " LIMIT " } + std::to_string(lim));
+        ret.query_options.push_back(concat_strings(" LIMIT ", std::to_string(lim)));
         ret.temporary_attrs = this->temporary_attrs;
         detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
 
@@ -184,11 +184,10 @@ namespace active_record {
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
     template<Attribute Attr>
     query_relation<Result, BindAttrs>& query_relation<Result, BindAttrs>::order_by(const active_record::order order) && {
-        this->query_options.push_back(
-            active_record::string{ " ORDER BY " }
-            + detail::column_full_names_to_string<Attr>()
-            + (order == active_record::order::asc ? " ASC" : " DESC" )
-        );
+        this->query_options.push_back(concat_strings(
+            " ORDER BY ", detail::column_full_names_to_string<Attr>(),
+            order == active_record::order::asc ? " ASC" : " DESC"
+        ));
 
         return *this;
     }
@@ -206,11 +205,10 @@ namespace active_record {
         ret.query_options = this->query_options;
         detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
 
-        ret.query_options.push_back(
-            active_record::string{ " ORDER BY " }
-            + detail::column_full_names_to_string<Attr>()
-            + (order == active_record::order::asc ? " ASC" : " DESC" )
-        );
+        ret.query_options.push_back(concat_strings(
+            " ORDER BY ", detail::column_full_names_to_string<Attr>(),
+            order == active_record::order::asc ? " ASC" : " DESC"
+        ));
 
         return ret;
     }
