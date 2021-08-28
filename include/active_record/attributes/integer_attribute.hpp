@@ -23,12 +23,12 @@ namespace active_record {
     private:
         template<typename T>
         struct avg_attribute : public attribute<Model, avg_attribute<T>, T>{
-            static constexpr auto column_name = Attribute::column_name;
+            inline static decltype(auto) column_name = Attribute::column_name;
             using attribute<Model, avg_attribute<T>, T>::attribute;
         };
     public:
         using attribute_common<Model, Attribute, Integer>::attribute_common;
-        
+
         inline static const attribute_common<Model, Attribute, Integer>::constraint auto_increment = [](const std::optional<Integer>& t) constexpr { return not_null(t) && unique(t); };
 
         template<std::derived_from<adaptor> Adaptor = common_adaptor>
@@ -47,7 +47,7 @@ namespace active_record {
             std::get<0>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
             ret.temporary_attrs.push_back(static_cast<Attribute>(value2));
             std::get<1>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
-            ret.condition.push_back(Attribute::column_full_name() + " BETWEEN ");
+            ret.condition.push_back(concat_strings(Attribute::column_full_name(), " BETWEEN "));
             ret.condition.push_back(0UL);
             ret.condition.push_back(" AND ");
             ret.condition.push_back(1UL);
@@ -55,20 +55,20 @@ namespace active_record {
         }
 
         struct sum : public attribute_aggregator<Model, Attribute, sum> {
-            static constexpr auto aggregation_func = "sum";
+            inline static decltype(auto) aggregation_func = "sum";
         };
         struct avg : public attribute_aggregator<Model, avg_attribute<double>, avg> {
-            static constexpr auto aggregation_func = "avg";
+            inline static decltype(auto) aggregation_func = "avg";
         };
         struct max : public attribute_aggregator<Model, Attribute, max> {
-            static constexpr auto aggregation_func = "max";
+            inline static decltype(auto) aggregation_func = "max";
         };
         struct min : public attribute_aggregator<Model, Attribute, min> {
-            static constexpr auto aggregation_func = "min";
+            inline static decltype(auto) aggregation_func = "min";
         };
     };
 
-    namespace attributes {    
+    namespace attributes {
         template<typename Model, typename Attribute, std::integral Integer = int32_t>
         struct integer : public attribute<Model, Attribute, Integer>{
             using attribute<Model, Attribute, Integer>::attribute;

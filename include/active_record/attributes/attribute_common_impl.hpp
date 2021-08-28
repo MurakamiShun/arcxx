@@ -8,7 +8,7 @@ namespace active_record {
     class attribute_common {
     private:
         std::optional<Type> data;
-        
+
         struct has_column_name_impl {
             template<typename S>
             static decltype(S::column_name, std::true_type{}) check(S);
@@ -44,7 +44,7 @@ namespace active_record {
 
         static constexpr bool has_column_name = has_column_name_impl::value;
         static constexpr bool has_constraints = has_constraints_impl::value;
-        [[nodiscard]] static constexpr active_record::string column_full_name() {
+        [[nodiscard]] static constexpr auto column_full_name() {
             return concat_strings("\"", Model::table_name, "\".\"", Attribute::column_name, "\"");
         }
 
@@ -89,15 +89,7 @@ namespace active_record {
         constexpr attribute_common(const T& default_value) : data(static_cast<std::optional<Type>>(default_value)) {}
         template<std::convertible_to<std::optional<Type>> T>
         constexpr attribute_common(T&& default_value) : data(static_cast<std::optional<Type>>(std::move(default_value))) {}
-        /*
-        constexpr attribute_common(const std::optional<Type>& default_value) : data(default_value) {}
-        constexpr attribute_common(std::optional<Type>&& default_value) : data(std::move(default_value)) {}
-        constexpr attribute_common(std::nullopt_t) : data(std::nullopt) {}
-        constexpr attribute_common(const Type& default_value) : data(default_value) {}
-        constexpr attribute_common(Type&& default_value) : data(std::move(default_value)) {}
-        */
-        //constexpr virtual ~attribute_common() {}
- 
+
         [[nodiscard]] constexpr bool is_valid() const {
             if constexpr (has_constraints) {
                 for (const auto& val : Attribute::constraints) {
@@ -123,10 +115,10 @@ namespace active_record {
         template<std::convertible_to<Attribute>... Attrs>
         static auto in(const Attrs&... values) {
             query_condition<std::tuple<const decltype(values, std::declval<Attribute>())*...>> ret;
-            ret.condition.push_back(
-                active_record::string{ "\"" } + Model::table_name + "\".\""
-                + Attribute::column_name + "\" in ("
-            );
+            ret.condition.push_back(concat_strings(
+                "\"", Model::table_name, "\".\"",
+                Attribute::column_name, "\" in ("
+            ));
             copy_and_set_attrs_to_condition(ret, values...);
             ret.condition.push_back(")");
             return ret;
@@ -134,9 +126,10 @@ namespace active_record {
 
         constexpr static const struct {
         private:
-            static auto make_condition(Attribute&& attr, const active_record::string& op){
+            template<std::size_t N>
+            static auto make_condition(Attribute&& attr, built_in_string_literal<N> op){
                 query_condition<std::tuple<const Attribute*>> ret;
-                ret.condition.push_back(Attribute::column_full_name() + op);
+                ret.condition.push_back(concat_strings(Attribute::column_full_name(), op));
                 ret.condition.push_back(0UL);
                 ret.temporary_attrs.push_back(std::move(attr));
                 std::get<0>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));

@@ -10,8 +10,8 @@ namespace active_record {
         using value_type = Attribute::value_type;
 
 
-        static constexpr active_record::string column_full_name() {
-            return active_record::string{ Aggregator::aggregation_func } + "(" + Attribute::column_full_name() + ")";
+        static constexpr auto column_full_name() {
+            return concat_strings(Aggregator::aggregation_func, "(", Attribute::column_full_name(), ")");
         }
     };
 }

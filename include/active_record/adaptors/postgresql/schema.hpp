@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../../attributes/attributes.hpp"
 
 namespace active_record::PostgreSQL {
@@ -11,11 +10,11 @@ namespace active_record::PostgreSQL {
             static std::false_type check(...);
             static constexpr bool value = decltype(check(std::declval<T>()))::value;
         };
-        
+
         template<Attribute T>
         [[nodiscard]] static active_record::string reference_definition(){
             if constexpr(is_reference<T>::value){
-                    return active_record::string{ " REFERENCES " } 
+                    return active_record::string{ " REFERENCES " }
                     + active_record::string{ T::foreign_key_type::model_type::table_name }
                     + "(" + active_record::string{ T::foreign_key_type::column_name } + ")";
             }
@@ -50,13 +49,13 @@ namespace active_record::PostgreSQL {
             }()
             + (T::has_constraint(T::unique) ? " UNIQUE" : "")
             + (T::has_constraint(T::primary_key) ? " PRIMARY KEY" : "")
-            + (T::has_constraint(typename T::constraint_default_value_impl{}) ? 
+            + (T::has_constraint(typename T::constraint_default_value_impl{}) ?
                 " DEFAULT " + std::to_string(T::get_constraint(typename T::constraint_default_value_impl{})->get().template target<typename T::constraint_default_value_impl>()->default_value)
                 : "")
             + (T::has_constraint(T::not_null) ? " NOT NULL" : "")
             + detail::reference_definition<T>();
     }
-    
+
     template<Attribute T>
     requires std::floating_point<typename T::value_type>
     [[nodiscard]] active_record::string column_definition() {

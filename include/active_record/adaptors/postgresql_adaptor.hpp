@@ -32,7 +32,7 @@ namespace active_record {
     private:
         ::PGconn* conn = nullptr;
         std::optional<active_record::string> error_msg = std::nullopt;
-        
+
         postgresql_adaptor() = delete;
         postgresql_adaptor(const PostgreSQL::endpoint& endpoint_info, const std::optional<PostgreSQL::auth>& auth_info, const std::optional<PostgreSQL::options> option) {
             conn = PQsetdbLogin(
@@ -96,7 +96,7 @@ namespace active_record {
                     },
                     query.bind_attrs
                 );
-                
+
                 result = PQexecParams(
                     conn,
                     sql.c_str(),
@@ -114,7 +114,7 @@ namespace active_record {
     public:
         bool has_error() const noexcept { return static_cast<bool>(error_msg); }
         const active_record::string& error_message() const { return error_msg.value(); }
-        
+
         static postgresql_adaptor open(const PostgreSQL::endpoint endpoint_info, const std::optional<PostgreSQL::auth> auth_info = std::nullopt, const std::optional<PostgreSQL::options> option = std::nullopt){
             return postgresql_adaptor(endpoint_info, auth_info, option);
         }
@@ -142,7 +142,7 @@ namespace active_record {
 
         static constexpr bool bindable = true;
         static active_record::string bind_variable_str(const std::size_t idx) {
-            return active_record::string{ "$" } + std::to_string(idx + 1);
+            return concat_strings("$", std::to_string(idx + 1));
         }
 
         template<Model Mod>
@@ -152,10 +152,9 @@ namespace active_record {
 
         template<Model Mod>
         std::optional<active_record::string> drop_table(){
-            return exec(raw_query<bool>(active_record::string{ "DROP TABLE " } + Mod::table_name + ";"));
+            return exec(raw_query<bool>(concat_strings("DROP TABLE ", Mod::table_name,";")));
         }
 
-        
         template<typename T, Tuple BindAttrs>
         auto exec(const query_relation<T, BindAttrs>&& query){
             return exec(query);
@@ -208,12 +207,12 @@ namespace active_record {
                     ret = active_record::PostgreSQL::detail::extract_column_data<Result>(result, col);
                 }
             }
-        
+
             if(result != nullptr) PQclear(result);
             error_msg = std::nullopt;
             return std::make_pair(error_msg, ret);
         }
-        
+
         std::optional<active_record::string> begin(){
             return exec(raw_query<bool>(active_record::string{ "BEGIN" }));
         }
@@ -247,7 +246,6 @@ namespace active_record {
         std::pair<std::optional<active_record::string>, active_record::transaction>  transaction(F&& func) {
             return transaction(func);
         }
-        
 
         template<Attribute T>
         static active_record::string column_definition() {

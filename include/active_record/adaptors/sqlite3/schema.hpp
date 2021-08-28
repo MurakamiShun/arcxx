@@ -10,18 +10,18 @@ namespace active_record::sqlite3 {
             static std::false_type check(...);
             static constexpr bool value = decltype(check(std::declval<T>()))::value;
         };
-        
+
         template<Attribute T>
         [[nodiscard]] static active_record::string reference_definition(){
             if constexpr(is_reference<T>::value){
-                    return active_record::string{ " REFERENCES " } 
+                    return active_record::string{ " REFERENCES " }
                     + active_record::string{ T::foreign_key_type::model_type::table_name } + "("
                     + active_record::string{ T::foreign_key_type::column_name } + ")";
             }
             else return "";
         }
     }
-    
+
     template<Attribute T>
     requires std::same_as<typename T::value_type, active_record::string>
     [[nodiscard]] active_record::string column_definition() {
@@ -55,7 +55,7 @@ namespace active_record::sqlite3 {
                 : "")
             + detail::reference_definition<T>();
     }
-    
+
     template<Attribute T>
     requires std::floating_point<typename T::value_type>
     [[nodiscard]] active_record::string column_definition() {

@@ -46,7 +46,7 @@ namespace active_record {
     public:
         bool has_error() const noexcept { return static_cast<bool>(error_msg); }
         const active_record::string& error_message() const { return error_msg.value(); }
-        
+
         static sqlite3_adaptor open(const active_record::string& file_name, const int flags = active_record::sqlite3::options::readwrite){
             return sqlite3_adaptor{ file_name, flags };
         }
@@ -70,7 +70,7 @@ namespace active_record {
         static constexpr bool bindable = true;
         static active_record::string bind_variable_str(const std::size_t idx) {
             // variable number must be between ?1 and ?250000
-            return active_record::string{ "?" } + std::to_string(idx + 1);
+            return concat_strings("?", std::to_string(idx + 1));
         }
 
         template<typename T, Tuple BindAttrs>
@@ -87,7 +87,7 @@ namespace active_record {
                     nullptr
                 );
                 if(result_code != SQLITE_OK) return result_code;
-                
+
                 if constexpr(query.bind_attrs_count() != 0) {
                     result_code = indexed_apply(
                         [stmt]<typename... Attrs>(const Attrs&... attr_ptrs){ return (active_record::sqlite3::detail::bind_variable(stmt, attr_ptrs.first, *(attr_ptrs.second)) + ...);},
@@ -141,7 +141,7 @@ namespace active_record {
                 nullptr
             );
             if(result_code != SQLITE_OK) return error_msg = get_error_msg(result_code);
-            
+
             if constexpr(query.bind_attrs_count() != 0) {
                 result_code = indexed_apply(
                     [stmt]<typename... Attrs>(const Attrs&... attr_ptrs){ return (active_record::sqlite3::detail::bind_variable(stmt, attr_ptrs.first, *(attr_ptrs.second)) + ...);},

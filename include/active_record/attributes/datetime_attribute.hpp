@@ -34,10 +34,10 @@ namespace active_record {
         }
 
         struct max : public attribute_aggregator<Model, Attribute, max> {
-            static constexpr auto aggregation_func = "max";
+            inline static decltype(auto) aggregation_func = "max";
         };
         struct min : public attribute_aggregator<Model, Attribute, min> {
-            static constexpr auto aggregation_func = "min";
+            inline static decltype(auto) aggregation_func = "min";
         };
     };
 

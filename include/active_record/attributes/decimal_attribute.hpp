@@ -16,7 +16,7 @@ namespace active_record {
             attr = tmp;
         }
     }
-    
+
     template<typename Model, typename Attribute, std::floating_point FP>
     struct attribute<Model, Attribute, FP> : attribute_common<Model, Attribute, FP> {
         using attribute_common<Model, Attribute, FP>::attribute_common;
@@ -37,7 +37,7 @@ namespace active_record {
             std::get<0>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
             ret.temporary_attrs.push_back(static_cast<Attribute>(value2));
             std::get<1>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
-            ret.condition.push_back(Attribute::column_full_name() + "\" BETWEEN ");
+            ret.condition.push_back(concat_strings(Attribute::column_full_name(), "\" BETWEEN "));
             ret.condition.push_back(0UL);
             ret.condition.push_back(" AND ");
             ret.condition.push_back(1UL);
@@ -45,16 +45,16 @@ namespace active_record {
         }
 
         struct sum : public attribute_aggregator<Model, Attribute, sum> {
-            static constexpr auto aggregation_func = "sum";
+            inline static decltype(auto) aggregation_func = "sum";
         };
         struct avg : public attribute_aggregator<Model, Attribute, avg> {
-            static constexpr auto aggregation_func = "avg";
+            inline static decltype(auto) aggregation_func = "avg";
         };
         struct max : public attribute_aggregator<Model, Attribute, max> {
-            static constexpr auto aggregation_func = "max";
+            inline static decltype(auto) aggregation_func = "max";
         };
         struct min : public attribute_aggregator<Model, Attribute, min> {
-            static constexpr auto aggregation_func = "min";
+            inline static decltype(auto) aggregation_func = "min";
         };
     };
 

@@ -13,7 +13,7 @@ namespace active_record {
     template<AttributeAggregator... Attrs>
     query_relation<std::unordered_map<typename Result::key_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> query_relation<Result, BindAttrs>::select() const & {
         query_relation<std::unordered_map<typename Result::key_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> ret;
-        
+
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<typename Result::key_type, Attrs...>());
         ret.query_table = this->query_table;
@@ -46,7 +46,7 @@ namespace active_record {
     template<AttributeAggregator Attr>
     query_relation<std::unordered_map<typename Result::key_type, typename Attr::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::pluck() const & {
         query_relation<std::unordered_map<typename Result::key_type, typename Attr::attribute_type>, BindAttrs> ret;
-        
+
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<typename Result::key_type, Attr>());
         ret.query_table = this->query_table;
@@ -62,7 +62,7 @@ namespace active_record {
     template<AttributeAggregator Attr>
     query_relation<std::unordered_map<typename Result::key_type, typename Attr::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::pluck() && {
         query_relation<std::unordered_map<typename Result::key_type, typename Attr::attribute_type>, BindAttrs> ret;
-        
+
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<typename Result::key_type, Attr>());
         ret.query_table = std::move(this->query_table);
@@ -92,7 +92,7 @@ namespace active_record {
     template<Tuple SrcBindAttrs>
     query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) &&{
         query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret;
-        
+
         ret.operation = this->operation;
         ret.query_op_arg = std::move(this->query_op_arg);
         ret.query_table = std::move(this->query_table);
@@ -101,12 +101,11 @@ namespace active_record {
             ret.query_condition = std::move(this->query_condition);
             ret.query_condition.push_back(" AND ");
         }
+        const struct {
+            std::variant<active_record::string, std::size_t> operator()(active_record::string&& str) const { return std::move(str); }
+            std::variant<active_record::string, std::size_t> operator()(std::size_t idx) const noexcept { return idx + std::tuple_size_v<BindAttrs>; }
+        } visitor;
         for(auto& cond : cond.condition){
-            struct {
-                std::variant<active_record::string, std::size_t> operator()(active_record::string&& str){ return std::move(str); }
-                std::variant<active_record::string, std::size_t> operator()(std::size_t idx){ return idx + std::tuple_size_v<BindAttrs>; }
-            } visitor;
-            
             ret.query_condition.push_back(
                 std::visit(visitor, std::move(cond))
             );
@@ -122,13 +121,13 @@ namespace active_record {
         detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
         return ret;
     }
-    
+
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
     template<Tuple SrcBindAttrs>
     query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) const&{
         query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret;
-        
+
         ret.operation = this->operation;
         ret.query_op_arg = this->query_op_arg;
         ret.query_table = this->query_table;
@@ -136,12 +135,11 @@ namespace active_record {
             ret.query_condition = this->query_condition;
             ret.query_condition.push_back(" AND ");
         }
+        const struct {
+            std::variant<active_record::string, std::size_t> operator()(active_record::string&& str) const { return std::move(str); }
+            std::variant<active_record::string, std::size_t> operator()(std::size_t idx) const noexcept { return idx + std::tuple_size_v<BindAttrs>; }
+        } visitor;
         for(auto& cond : cond.condition){
-            struct {
-                std::variant<active_record::string, std::size_t> operator()(active_record::string&& str){ return std::move(str); }
-                std::variant<active_record::string, std::size_t> operator()(std::size_t idx){ return idx + std::tuple_size_v<BindAttrs>; }
-            } visitor;
-            
             ret.query_condition.push_back(
                 std::visit(visitor, std::move(cond))
             );
@@ -167,7 +165,7 @@ namespace active_record {
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
     query_relation<Result, BindAttrs> query_relation<Result, BindAttrs>::limit(const std::size_t lim) const& {
         query_relation<Result, BindAttrs> ret;
-        
+
         ret.operation = this->operation;
         ret.query_op_arg = this->query_op_arg;
         ret.query_table = this->query_table;
@@ -196,7 +194,7 @@ namespace active_record {
     template<Attribute Attr>
     query_relation<Result, BindAttrs> query_relation<Result, BindAttrs>::order_by(const active_record::order order) const & {
         query_relation<Result, BindAttrs> ret;
-        
+
         ret.operation = this->operation;
         ret.query_op_arg = this->query_op_arg;
         ret.query_table = this->query_table;
@@ -217,7 +215,7 @@ namespace active_record {
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
     query_relation<std::unordered_map<typename Result::key_type, std::size_t>, BindAttrs> query_relation<Result, BindAttrs>::count() && {
         query_relation<std::unordered_map<typename Result::key_type, std::size_t>, BindAttrs> ret;
-        
+
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<typename Result::key_type>() + ",count(*)");
         ret.query_table = std::move(this->query_table);
@@ -232,7 +230,7 @@ namespace active_record {
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
     query_relation<std::unordered_map<typename Result::key_type, std::size_t>, BindAttrs> query_relation<Result, BindAttrs>::count() const& {
         query_relation<std::unordered_map<typename Result::key_type, std::size_t>, BindAttrs> ret;
-        
+
         ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<typename Result::key_type>() + ",count(*)");
         ret.query_table = this->query_table;

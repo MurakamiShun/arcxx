@@ -37,7 +37,7 @@ namespace active_record {
 
         [[nodiscard]] static auto insert(const Derived& model);
         [[nodiscard]] static auto insert(Derived&& model);
- 
+
         [[nodiscard]] static query_relation<std::vector<Derived>, std::tuple<>> all();
 
         template<Attribute... Attrs>
@@ -48,7 +48,7 @@ namespace active_record {
 
         template<Attribute Attr>
         [[nodiscard]] static query_relation<std::vector<Attr>, std::tuple<>> pluck();
-        
+
         // delete is identifier word
         template<Attribute Attr>
         [[nodiscard]] static query_relation<bool, std::tuple<const Attr*>> destroy(const Attr&&);

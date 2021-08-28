@@ -15,16 +15,19 @@
 #include <charconv>
 #include <unordered_map>
 #include <numeric>
+#include <bit>
+
+#include <iostream>
 
 namespace active_record{
     using string = std::string;
-    using string_view = std::string_view;
+    using string_view = std::basic_string_view<typename active_record::string::value_type>;
     // utc_clock is not implements any compiler.
     //using datetime = std::chrono::utc_clock;
     using datetime = std::chrono::system_clock;
 
-    template <class ContainerType> 
-    concept Container = requires(ContainerType a, const ContainerType b) 
+    template <class ContainerType>
+    concept Container = requires(ContainerType a, const ContainerType b)
     {
         requires std::regular<ContainerType>;
         requires std::swappable<ContainerType>;
@@ -140,24 +143,9 @@ namespace active_record{
         return std::apply(f, detail::indexed_apply_aux<0>(t));
     }
 
-    template<typename... Strings>
-    requires requires (Strings... strs){
-        (std::convertible_to<Strings, active_record::string_view> && ...);
-    }
-    [[nodiscard]] constexpr active_record::string concat_strings(const Strings&... strings) {
-        std::array<active_record::string_view, sizeof...(Strings)> str_views = { static_cast<active_record::string_view>(strings)... };
-        active_record::string buff;
-        buff.reserve(std::transform_reduce(
-            str_views.begin(), str_views.end(), static_cast<std::size_t>(0),
-            [](auto acc, const auto len){ return acc += len; },
-            [](const auto& str){ return str.length(); }
-        ));
-        for(const auto& str : str_views) buff += str;
-        return buff;
-    }
-
     [[nodiscard]] inline active_record::string sanitize(const active_record::string& src) {
         active_record::string result;
+        result.reserve(src.length());
         for(const auto& c : src) {
             switch(c) {
                 case '\'':
@@ -172,5 +160,58 @@ namespace active_record{
             }
         };
         return result;
+    }
+
+    template<typename... Strings>
+    requires requires (Strings... strs){
+        (std::convertible_to<Strings, active_record::string_view> && ...);
+    }
+    [[nodiscard]] constexpr active_record::string concat_strings(const Strings&... strings) {
+        if (std::is_constant_evaluated()) std::cout << "constant evaluated!!!" << std::endl;
+        const std::array<active_record::string_view, sizeof...(Strings)> str_views = { static_cast<active_record::string_view>(strings)... };
+        active_record::string buff;
+        buff.reserve(std::transform_reduce(
+            str_views.begin(), str_views.end(), static_cast<std::size_t>(0),
+            [](auto acc, const auto len){ return acc += len; },
+            [](const auto& str){ return str.length(); }
+        ));
+        for(const auto& str : str_views) buff += str;
+        return buff;
+    }
+    
+    template<typename CharT, std::size_t N>
+    struct basic_string_literal {
+        using traits_type = std::char_traits<CharT>;
+        CharT data[N] = {0}; // including null charactor
+        static constexpr std::size_t size() noexcept { return N; } 
+        consteval basic_string_literal() noexcept = default;
+        consteval basic_string_literal(const CharT (&arg)[N]) noexcept { traits_type::copy(data, arg, N); }
+        constexpr operator std::basic_string_view<CharT>() const noexcept {
+            return std::basic_string_view<CharT>{ data, N-1 };
+        }
+        operator std::basic_string<CharT>() const {
+            return std::basic_string<CharT>{ data, N-1 };
+        }
+        constexpr const CharT (&c_str() const noexcept)[N]{
+            return data;
+        }
+        template<std::size_t M>
+        consteval basic_string_literal<CharT, N+M-1> operator+(const basic_string_literal<CharT, M>& arg) const noexcept {
+            basic_string_literal<CharT, N+M-1> tmp;
+            traits_type::copy(tmp.data,         data,     N - 1); // remove null charactor
+            traits_type::copy(tmp.data + N - 1, arg.data, M);
+            return tmp;
+        }
+    };
+
+    template<std::size_t N>
+    using string_literal = basic_string_literal<typename active_record::string::value_type, N>;
+
+    template<std::size_t N>
+    using built_in_string_literal = const typename active_record::string::value_type (&)[N];
+
+    template<std::size_t... Ns>
+    [[nodiscard]] consteval auto concat_strings(built_in_string_literal<Ns>... strings) {
+        return (... + string_literal{ strings });
     }
 }

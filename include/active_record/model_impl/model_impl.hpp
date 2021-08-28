@@ -13,9 +13,7 @@ namespace active_record {
                 [](const auto& str){ return str.length(); }
             ) + column_names.size() * 3 + 4 + static_cast<active_record::string_view>(Derived::table_name).length();
         }());
-        table += "\"";
-        table += Derived::table_name;
-        table += "\"(";
+        table += concat_strings("\"", Derived::table_name, "\"(");
         active_record::string_view delimiter = "";
         for (const auto& col_name : column_names) {
             table += delimiter;

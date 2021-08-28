@@ -6,24 +6,24 @@
 #include "../../include/active_record.hpp"
 
 struct User : public active_record::model<User> {
-    static constexpr auto table_name = "user_table";
+    inline static decltype(auto) table_name = "user_table";
 
     struct ID : public active_record::attributes::integer<User, ID, std::size_t> {
-        static constexpr auto column_name = "id";
+        inline static decltype(auto) column_name = "id";
         using active_record::attributes::integer<User, ID, size_t>::integer;
 
         inline static const auto constraints = { primary_key };
     } id;
 
     struct Name : public active_record::attributes::string<User, Name> {
-        static constexpr auto column_name = "name";
+        inline static decltype(auto) column_name = "name";
         using active_record::attributes::string<User, Name>::string;
 
         inline static const auto constraints = { not_null, default_value("unknow") };
     } name;
 
     struct Height : public active_record::attributes::decimal<User, Height>{
-        static constexpr auto column_name = "height";
+        inline static decltype(auto) column_name = "height";
         using active_record::attributes::decimal<User, Height>::decimal;
     } height;
 

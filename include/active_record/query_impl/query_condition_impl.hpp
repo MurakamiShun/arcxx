@@ -10,7 +10,7 @@ namespace active_record {
     template<Tuple SrcBindAttrs>
     query_condition<active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_condition<BindAttrs>::concat_conditions(query_condition<SrcBindAttrs>&& cond, const conjunction conjunc) {
         query_condition<active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret;
-        
+
         ret.condition.push_back("(");
         ret.condition.insert(
             ret.condition.end(),
@@ -27,11 +27,11 @@ namespace active_record {
             break;
         }
         for(auto& cond : cond.condition){
-            struct {
-                str_or_bind operator()(active_record::string&& str){ return std::move(str); }
-                str_or_bind operator()(std::size_t idx){ return idx + std::tuple_size_v<BindAttrs>; }
+            const struct {
+                str_or_bind operator()(active_record::string&& str) const { return std::move(str); }
+                str_or_bind operator()(std::size_t idx) const noexcept { return idx + std::tuple_size_v<BindAttrs>; }
             } visitor;
-            
+
             ret.condition.push_back(
                 std::visit(visitor, std::move(cond))
             );

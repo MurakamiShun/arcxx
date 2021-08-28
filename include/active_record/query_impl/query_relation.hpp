@@ -13,69 +13,14 @@ namespace active_record {
         using str_or_bind = std::variant<active_record::string, std::size_t>;
     private:
         template<std::derived_from<adaptor> Adaptor>
-        struct sob_to_string_impl {
-            struct visitor_impl {
-                const std::array<active_record::string, std::tuple_size_v<BindAttrs>> attr_strings;
-                active_record::string buff;
-
-                visitor_impl(const BindAttrs& ba) :
-                    attr_strings([&ba](){
-                        if constexpr (Adaptor::bindable){
-                            std::array<active_record::string, std::tuple_size_v<BindAttrs>> ret;
-                            for(std::size_t i = 0; i < std::tuple_size_v<BindAttrs>; ++i){
-                                ret[i] = Adaptor::bind_variable_str(i);
-                            }
-                            return ret;
-                        }
-                        else {
-                            return std::apply([]<typename... Attrs>(const Attrs*... attrs) {
-                                return std::array<active_record::string, std::tuple_size_v<BindAttrs>>{ active_record::to_string<Adaptor>(*attrs)... };
-                            }, ba);
-                        }
-                    }()){/*
-                    buff.reserve(std::transform_reduce(
-                        attr_strings.begin(), attr_strings.end(), static_cast<std::size_t>(0),
-                        [](auto acc, const auto len){ return acc += len; },
-                        [](const auto& str){ return str.length(); }
-                    ));*/
-                }
-
-                void operator()(const active_record::string& str) {
-                    buff += str;
-                }
-                void operator()(const std::size_t idx) {
-                    buff += attr_strings[idx];
-                }
-            } visitor;
-
-            struct lazy_string_view {
-                const active_record::string& str;
-                const active_record::string::difference_type begin; // from begin(str)
-                const active_record::string::difference_type end; // from begin(str)
-                operator active_record::string_view() const {
-                    return active_record::string_view{ str.begin() + begin, str.begin() + end };
-                }
-            };
-
-            lazy_string_view to_string(const std::vector<str_or_bind>& sobs) {
-                const auto begin = std::distance(visitor.buff.cbegin(), visitor.buff.cend());
-                for(const auto& sob : sobs) {
-                    std::visit(visitor, sob);
-                }
-                return lazy_string_view {
-                    .str = visitor.buff,
-                    .begin = begin,
-                    .end = std::distance(visitor.buff.cbegin(), visitor.buff.cend())
-                };
-            }
-        };
-    public:        
+        struct sob_to_string_impl;
+    public:
         query_operation operation;
         std::vector<str_or_bind> query_op_arg;
         std::vector<str_or_bind> query_table;
         std::vector<str_or_bind> query_condition;
         std::vector<str_or_bind> query_options; // order, limit
-        
+
         BindAttrs bind_attrs;
         std::vector<std::any> temporary_attrs;
 
@@ -161,7 +106,7 @@ namespace active_record {
         [[nodiscard]] auto exec(Adaptor& adapt) const {
             return adapt.exec(*this);
         }
-        
+
         template<Attribute... Attrs>
         [[nodiscard]] query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> select() &&;
         template<Attribute... Attrs>
@@ -238,12 +183,12 @@ namespace active_record {
         using mapped_type = typename Result::mapped_type;
 
         using query_relation_common<BindAttrs>::query_relation_common;
-        
+
         template<std::derived_from<adaptor> Adaptor>
         [[nodiscard]] auto exec(Adaptor& adapt) const {
             return adapt.exec(*this);
         }
-        
+
         template<AttributeAggregator... Attrs>
         [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> select() &&;
         template<AttributeAggregator... Attrs>

@@ -4,13 +4,13 @@
 
 namespace active_record::detail {
     template<typename Last>
-    [[nodiscard]] constexpr active_record::string column_full_names_to_string(){
+    [[nodiscard]] constexpr auto column_full_names_to_string(){
         return Last::column_full_name();
     }
     template<typename Head, typename... Tail>
     requires (sizeof...(Tail) > 0)
-    [[nodiscard]] constexpr active_record::string column_full_names_to_string(){
-        return column_full_names_to_string<Head>() + "," + column_full_names_to_string<Tail...>();
+    [[nodiscard]] constexpr auto column_full_names_to_string(){
+        return concat_strings(column_full_names_to_string<Head>().c_str(), ",", column_full_names_to_string<Tail...>().c_str());
     }
 
     template<Model Mod>

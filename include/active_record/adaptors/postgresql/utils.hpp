@@ -13,25 +13,25 @@ namespace active_record::PostgreSQL::detail {
 
     template<std::integral T>
     [[nodiscard]] auto byte_swap(const T h) noexcept -> decltype(h) {
-        #if defined(_WIN32) || defined(_WIN64)
-        if constexpr (sizeof(h) == sizeof(uint16_t)) return _byteswap_ushort(h);
-        else if constexpr (sizeof(h) == sizeof(uint32_t)) return _byteswap_ulong(h);
-        else if constexpr (sizeof(h) == sizeof(uint64_t)) return _byteswap_uint64(h);
-        #else
-        if constexpr (__BYTE_ORDER == __LITTLE_ENDIAN) {
+        if constexpr (std::endian::native == std::endian::little) {
+            #if defined(_WIN32) || defined(_WIN64)
+            if constexpr (sizeof(h) == sizeof(uint16_t)) return _byteswap_ushort(h);
+            else if constexpr (sizeof(h) == sizeof(uint32_t)) return _byteswap_ulong(h);
+            else if constexpr (sizeof(h) == sizeof(uint64_t)) return _byteswap_uint64(h);
+            #else
             if constexpr (sizeof(h) == sizeof(uint16_t)) return bswap_16(h);
             else if constexpr (sizeof(h) == sizeof(uint32_t)) return bswap_32(h);
             else if constexpr (sizeof(h) == sizeof(uint64_t)) return bswap_64(h);
+            #endif
         }
-        #endif
-        return h;
+        else return h;
     }
 
     template<Attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::string>
     [[nodiscard]] auto get_value_ptr(const Attr* const attr_ptr, [[maybe_unused]]std::any&) {
         if (!(*attr_ptr)) return static_cast<const char*>(nullptr);
-        return attr_ptr->value().c_str(); 
+        return attr_ptr->value().c_str();
     }
     template<Attribute Attr>
     requires std::integral<typename Attr::value_type>

@@ -132,9 +132,9 @@ namespace active_record::sqlite3::detail {
         return ret;
     }
 
-    /* 
-        * variable binders 
-        */
+    /*
+     * variable binders
+     */
 
     template<Attribute Attr>
     requires std::integral<typename Attr::value_type>
