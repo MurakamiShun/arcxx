@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 
-project(active_record_cpp VERSION 0.1 LANGUAGES CXX)
+project(ActiveRecord VERSION 0.1 LANGUAGES CXX)
 
 include(GNUInstallDirs)
 

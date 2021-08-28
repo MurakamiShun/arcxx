@@ -10,7 +10,7 @@ namespace active_record {
             AND,
             OR
         };
-        
+
         template<Tuple SrcBindAttrs>
         [[nodiscard]] query_condition<active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> concat_conditions(query_condition<SrcBindAttrs>&&, const conjunction);
     public:
