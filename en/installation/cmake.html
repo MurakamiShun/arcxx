@@ -212,9 +212,9 @@ And make CMakeLists.txt under your project folder.</p>
 
 <span class="nb">project</span><span class="p">(</span><span class="s">your_prject_name</span> <span class="s">LANGUAGES</span> <span class="s">CXX</span><span class="p">)</span>
 <span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span> <span class="s">20</span><span class="p">)</span>
-<span class="nb">find_package</span><span class="p">(</span><span class="s">active_record_cpp</span><span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span><span class="s">ActiveRecord</span><span class="p">)</span>
 <span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span> <span class="s">main.cpp</span><span class="p">)</span>
-<span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span> <span class="s">PRIVATE</span> <span class="s">active_record_cpp</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span> <span class="s">PRIVATE</span> <span class="s">ActiveRecord</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Type below commands to build your project.</p>

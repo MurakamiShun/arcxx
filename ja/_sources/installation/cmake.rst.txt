@@ -29,9 +29,9 @@ And make CMakeLists.txt under your project folder.
 
     project(your_prject_name LANGUAGES CXX)
     set(CMAKE_CXX_STANDARD 20)
-    find_package(active_record_cpp)
+    find_package(ActiveRecord)
     add_executable(${PROJECT_NAME} main.cpp)
-    target_link_libraries(${PROJECT_NAME} PRIVATE active_record_cpp)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ActiveRecord)
 
 Type below commands to build your project.
 
