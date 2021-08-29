@@ -5,5 +5,5 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(ActiveRecord)
 
-add_executable(creata_table main.cpp)
-target_link_libraries(creata_table PRIVATE ActiveRecord sqlite3)
+add_executable(create_table main.cpp)
+target_link_libraries(create_table PRIVATE ActiveRecord sqlite3)
