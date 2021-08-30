@@ -2,23 +2,23 @@
 #include <iostream>
 
 struct Goods : public active_record::model<Goods> {
-    inline static decltype(auto) table_name = "goods_table";
+    static constexpr auto table_name = "goods_table";
     struct ID : public active_record::attributes::integer<Goods, ID, std::size_t> {
         using integer<Goods, ID, std::size_t>::integer;
-        inline static decltype(auto) column_name = "id";
-        inline static const auto constraints = { primary_key, not_null };
+        static constexpr auto column_name = "id";
+        static const auto constraints = { primary_key, not_null };
     } id;
 
     struct Name : public active_record::attributes::string<Goods, Name> {
         using string<Goods, Name>::string;
-        inline static decltype(auto) column_name = "name";
-        inline static const auto constraints = { not_null };
+        static constexpr auto column_name = "name";
+        static const auto constraints = { not_null };
     } name;
 
     struct Price : public active_record::attributes::integer<Goods, Price, uint32_t> {
         using integer<Goods, Price, uint32_t>::integer;
-        inline static decltype(auto) column_name = "price";
-        inline static const auto constraints = { not_null };
+        static constexpr auto column_name = "price";
+        static const auto constraints = { not_null };
     } price;
 
     std::tuple<ID&, Name&, Price&> attributes = std::tie(id, name, price);

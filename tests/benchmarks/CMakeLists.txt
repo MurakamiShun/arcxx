@@ -22,7 +22,9 @@ endif()
 
 # Benchmark
 add_executable(active_record_bench
+    main.cpp
     inserting_benchmark.cpp
+    long_SQL_statement_benchmark.cpp
 )
 target_link_libraries(active_record_bench PRIVATE Catch2::Catch2)
 target_compile_options(active_record_bench PUBLIC ${compile_options})

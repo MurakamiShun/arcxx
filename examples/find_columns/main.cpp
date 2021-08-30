@@ -38,6 +38,21 @@ std::optional<active_record::sqlite3::adaptor> setup(auto conn){
         std::cout << "SQL Statement:\n" << Goods::schema::template to_sql<decltype(conn)>() << std::endl;
         return std::nullopt;
     }
+
+    // Inserting data
+    Goods apple = {
+        .id = 1,
+        .name = "apple",
+        .price = 100
+    };
+
+    if(const auto error = Goods::insert(apple).exec(conn); error){
+        std::cout << "Error:" << error.value() << std::endl;
+        return -1;
+    }
+    else {
+        std::cout << "Done!!" << std::endl;
+    }
     return conn;
 }
 
@@ -49,23 +64,18 @@ int main(){
 
     auto& conn = result.value();
 
-    // Inserting data
-    Goods apple = {
-        .id = 1,
-        .name = "apple",
-        .price = 100
-    };
-
-    const auto insert_stmt = Goods::insert(apple);
-
-    std::cout << "SQL Statement:\n" << insert_stmt.to_sql<decltype(conn)>() << std::endl;
-    if(const auto error = insert_stmt.exec(conn); error){
+    if(const auto [error, goods] = Goods::where(Goods::Price::cmp < 1000).exec(conn); error){
         std::cout << "Error:" << error.value() << std::endl;
         return -1;
     }
     else {
+        std::cout << "Found count : " << goods.size() << std::endl;
+        for(const auto& g : goods){
+            std::cout << g.name.value() << " : " << g.price.value() << std::endl;
+        }
         std::cout << "Done!!" << std::endl;
     }
+    return conn;
 
     return 0;
 }
