@@ -89,14 +89,21 @@ TEST_CASE_METHOD(UserModelTestsFixture, "Find query tests", "[model][query_relat
 
     SECTION("find user with like condition and between id") {
         INFO(User::where(User::Name::like("user_")).where(User::ID{1}).to_sql());
-        if (const auto [error, users] = User::where(User::Name::like("user_")).where(User::ID{1}).exec(conn); error) {
-            FAIL(error.value());
+        if (const auto [error1, users1] = User::where(User::Name::like("user_")).where(User::ID{1}).exec(conn); error1) {
+            FAIL(error1.value());
         }
-        else {
-            REQUIRE(typeid(users).name() == typeid(std::vector<User>).name());
-            //STATIC_REQUIRE(std::is_same_v<decltype(users), std::vector<User::Name>>);
-            REQUIRE(users.size() == 1);
-            REQUIRE(users[0].name.value() == active_record::string{ "user1" });
+        else{
+            if (const auto [error2, users2] = User::where(User::Name::like("user_") && User::ID::cmp == 1).exec(conn); error2) {
+                FAIL(error2.value());
+            }
+            else {
+                REQUIRE(typeid(users1).name() == typeid(std::vector<User>).name());
+                //STATIC_REQUIRE(std::is_same_v<decltype(users), std::vector<User::Name>>);
+                REQUIRE(users1.size() == 1);
+                REQUIRE(users2.size() == 1);
+                REQUIRE(users1[0].name.value() == active_record::string{ "user1" });
+                REQUIRE(users2[0].name.value() == active_record::string{ "user1" });
+            }
         }
     }
 }

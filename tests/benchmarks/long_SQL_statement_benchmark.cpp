@@ -36,6 +36,11 @@ struct Clothes : public active_record::model<Clothes> {
 
 TEST_CASE("Long SQL statement benchmark"){
     // Benchmark
+    std::cout << Clothes::join<User>().where(
+                    User::Name::like("user%") &&
+                    User::Height::cmp < 175.0 &&
+                    Clothes::Price::between(10'000,50'000)
+                ).order_by<Clothes::Price>().to_sql() << std::endl;
     BENCHMARK_ADVANCED("Long SQL statement bench")(Catch::Benchmark::Chronometer meter){
         using namespace active_record;
         namespace ranges = std::ranges;

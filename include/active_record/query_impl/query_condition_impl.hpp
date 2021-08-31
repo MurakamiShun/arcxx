@@ -29,7 +29,7 @@ namespace active_record {
         }
 
         struct {
-                decltype(ret.condition) ret_cond;
+                decltype(ret.condition)& ret_cond;
                 void operator()(active_record::string&& str) { ret_cond.push_back(std::move(str)); }
                 void operator()(std::size_t idx) { ret_cond.push_back(idx + std::tuple_size_v<BindAttrs>); }
         } visitor { ret.condition };

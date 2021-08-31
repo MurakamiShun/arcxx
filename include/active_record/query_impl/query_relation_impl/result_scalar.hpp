@@ -31,14 +31,13 @@ namespace active_record {
             ret.query_condition = std::move(this->query_condition);
             ret.query_condition.push_back(" AND ");
         }
-        const struct {
-            std::variant<active_record::string, std::size_t> operator()(active_record::string&& str) const { return std::move(str); }
-            std::variant<active_record::string, std::size_t> operator()(std::size_t idx) const noexcept { return idx + std::tuple_size_v<BindAttrs>; }
-        } visitor;
+        struct {
+            decltype(ret.query_condition)& ret_cond;
+            void operator()(active_record::string&& str) { ret_cond.push_back(std::move(str)); }
+            void operator()(std::size_t idx) { ret_cond.push_back(idx + std::tuple_size_v<BindAttrs>); }
+        } visitor{ ret.query_condition };
         for(auto& cond : cond.condition){
-            ret.query_condition.push_back(
-                std::visit(visitor, std::move(cond))
-            );
+            std::visit(visitor, std::move(cond));
         }
 
         ret.query_options = std::move(this->query_options);
@@ -65,14 +64,13 @@ namespace active_record {
             ret.query_condition.push_back(" AND ");
         }
 
-        const struct {
-            std::variant<active_record::string, std::size_t> operator()(active_record::string&& str) const { return std::move(str); }
-            std::variant<active_record::string, std::size_t> operator()(std::size_t idx) const noexcept { return idx + std::tuple_size_v<BindAttrs>; }
-        } visitor;
+        struct {
+            decltype(ret.query_condition)& ret_cond;
+            void operator()(active_record::string&& str) { ret_cond.push_back(std::move(str)); }
+            void operator()(std::size_t idx) { ret_cond.push_back(idx + std::tuple_size_v<BindAttrs>); }
+        } visitor{ ret.query_condition };
         for(auto& cond : cond.condition){
-            ret.query_condition.push_back(
-                std::visit(visitor, std::move(cond))
-            );
+            std::visit(visitor, std::move(cond));
         }
 
         ret.query_options = this->query_options;
