@@ -15,7 +15,7 @@ namespace active_record {
         template<std::derived_from<adaptor> Adaptor>
         struct sob_to_string_impl;
     public:
-        query_operation operation;
+        const query_operation operation;
         std::vector<str_or_bind> query_op_arg;
         std::vector<str_or_bind> query_table;
         std::vector<str_or_bind> query_condition;
@@ -24,12 +24,13 @@ namespace active_record {
         BindAttrs bind_attrs;
         std::vector<std::any> temporary_attrs;
 
-        [[nodiscard]] static constexpr std::size_t bind_attrs_count() noexcept {
+        [[nodiscard]] static consteval std::size_t bind_attrs_count() noexcept {
             return std::tuple_size_v<BindAttrs>;
         }
 
-        query_relation_common(){}
-        query_relation_common(const BindAttrs attrs) : bind_attrs(attrs){  }
+        query_relation_common(const query_operation op) :
+            operation(op) {
+        }
 
         template<std::derived_from<adaptor> Adaptor = common_adaptor>
         [[nodiscard]] const active_record::string to_sql() const {
@@ -69,6 +70,11 @@ namespace active_record {
             }
         }
     };
+
+    /*
+     * Clang and MSVC has this bug.
+     * https://bugs.llvm.org/show_bug.cgi?id=48020
+     */
 
     template<Tuple BindAttrs>
     struct query_relation<bool, BindAttrs> : public query_relation_common<BindAttrs> {

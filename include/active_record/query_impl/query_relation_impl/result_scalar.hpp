@@ -22,9 +22,8 @@ namespace active_record {
     template<typename Result, Tuple BindAttrs>
     template<Tuple SrcBindAttrs>
     query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) &&{
-        query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret;
+        query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
 
-        ret.operation = this->operation;
         ret.query_op_arg = std::move(this->query_op_arg);
         ret.query_table = std::move(this->query_table);
 
@@ -56,9 +55,8 @@ namespace active_record {
     template<typename Result, Tuple BindAttrs>
     template<Tuple SrcBindAttrs>
     query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) const&{
-        query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret;
+        query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
 
-        ret.operation = this->operation;
         ret.query_op_arg = this->query_op_arg;
         ret.query_table = this->query_table;
 

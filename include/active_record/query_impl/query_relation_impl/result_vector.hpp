@@ -12,9 +12,8 @@ namespace active_record {
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute... Attrs>
     query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> query_relation<Result, BindAttrs>::select() const & {
-        query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> ret;
+        query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> ret{ query_operation::select };
 
-        ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<Attrs...>());
         ret.query_table = this->query_table;
 
@@ -28,9 +27,8 @@ namespace active_record {
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute... Attrs>
     query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> query_relation<Result, BindAttrs>::select() && {
-        query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> ret;
+        query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> ret{ query_operation::select };
 
-        ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<Attrs...>());
         ret.query_table = std::move(this->query_table);
 
@@ -45,9 +43,8 @@ namespace active_record {
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<AttributeAggregator... Attrs>
     query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> query_relation<Result, BindAttrs>::select() const & {
-        query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> ret;
+        query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> ret{ query_operation::select };
 
-        ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<Attrs...>());
         ret.query_table = this->query_table;
 
@@ -61,9 +58,8 @@ namespace active_record {
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<AttributeAggregator... Attrs>
     query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> query_relation<Result, BindAttrs>::select() && {
-        query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> ret;
+        query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> ret{ query_operation::select };
 
-        ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<Attrs...>());
         ret.query_table = std::move(this->query_table);
 
@@ -78,9 +74,8 @@ namespace active_record {
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     query_relation<std::vector<Attr>, BindAttrs> query_relation<Result, BindAttrs>::pluck() const & {
-        query_relation<std::vector<Attr>, BindAttrs> ret;
+        query_relation<std::vector<Attr>, BindAttrs> ret{ query_operation::select };
 
-        ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<Attr>());
         ret.query_table = this->query_table;
 
@@ -94,9 +89,8 @@ namespace active_record {
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     query_relation<std::vector<Attr>, BindAttrs> query_relation<Result, BindAttrs>::pluck() && {
-        query_relation<std::vector<Attr>, BindAttrs> ret;
+        query_relation<std::vector<Attr>, BindAttrs> ret{ query_operation::select };
 
-        ret.operation = query_operation::select;
         ret.query_op_arg.push_back(detail::column_full_names_to_string<Attr>());
         ret.query_table = std::move(this->query_table);
 
@@ -127,9 +121,8 @@ namespace active_record {
     template<Attribute... Attrs>
     requires Model<typename Result::value_type>
     query_relation<bool, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attrs*...>>> query_relation<Result, BindAttrs>::update(const Attrs... attrs) {
-        query_relation<bool, std::invoke_result_t<decltype(std::tuple_cat<BindAttrs, std::tuple<const Attrs*...>>), BindAttrs, std::tuple<const Attrs*...>>> ret;
+        query_relation<bool, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attrs*...>>> ret{ query_operation::update };
 
-        ret.operation = query_operation::update;
         ret.query_table.push_back(concat_strings("\"", Result::value_type::table_name, "\""));
         ret.query_condition = std::move(this->query_condition);
         ret.query_options = std::move(this->query_options);
@@ -156,9 +149,7 @@ namespace active_record {
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Tuple SrcBindAttrs>
     query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) &&{
-        query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret;
-
-        ret.operation = this->operation;
+        query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
         ret.query_op_arg = std::move(this->query_op_arg);
         ret.query_table = std::move(this->query_table);
 
@@ -191,9 +182,7 @@ namespace active_record {
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Tuple SrcBindAttrs>
     query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) const&{
-        query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret;
-
-        ret.operation = this->operation;
+        query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
         ret.query_op_arg = this->query_op_arg;
         ret.query_table = this->query_table;
         if(!this->query_condition.empty()){
@@ -229,9 +218,8 @@ namespace active_record {
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     query_relation<Result, BindAttrs> query_relation<Result, BindAttrs>::limit(const std::size_t lim) const& {
-        query_relation<Result, BindAttrs> ret;
+        query_relation<Result, BindAttrs> ret{ this->operation };
 
-        ret.operation = this->operation;
         ret.query_op_arg = this->query_op_arg;
         ret.query_table = this->query_table;
         ret.query_condition = this->query_condition;
@@ -258,9 +246,8 @@ namespace active_record {
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     query_relation<Result, BindAttrs> query_relation<Result, BindAttrs>::order_by(const active_record::order order) const & {
-        query_relation<Result, BindAttrs> ret;
+        query_relation<Result, BindAttrs> ret{ this->operation };
 
-        ret.operation = this->operation;
         ret.query_op_arg = this->query_op_arg;
         ret.query_table = this->query_table;
         ret.query_condition = this->query_condition;
@@ -279,9 +266,8 @@ namespace active_record {
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     query_relation<std::size_t, BindAttrs> query_relation<Result, BindAttrs>::count() && {
-        query_relation<std::size_t, BindAttrs> ret;
+        query_relation<std::size_t, BindAttrs> ret{ query_operation::select };
 
-        ret.operation = query_operation::select;
         ret.query_op_arg.push_back("count(*)");
         ret.query_table = std::move(this->query_table);
         ret.query_condition = std::move(this->query_condition);
@@ -294,9 +280,8 @@ namespace active_record {
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     query_relation<std::size_t, BindAttrs> query_relation<Result, BindAttrs>::count() const& {
-        query_relation<std::size_t, BindAttrs> ret;
+        query_relation<std::size_t, BindAttrs> ret{ query_operation::select };
 
-        ret.operation = query_operation::select;
         ret.query_op_arg.push_back("count(*)");
         ret.query_table = this->query_table;
         ret.query_condition = this->query_condition;
@@ -310,9 +295,8 @@ namespace active_record {
     namespace detail {
         template<typename Result, Tuple BindAttrs, AttributeAggregator T>
         query_relation<typename T::attribute_type, BindAttrs> vectored_aggregate_query(const query_relation<Result, BindAttrs>& src) {
-            query_relation<typename T::attribute_type, BindAttrs> ret;
+            query_relation<typename T::attribute_type, BindAttrs> ret{ query_operation::select };
 
-            ret.operation = query_operation::select;
             ret.query_op_arg.push_back(T::column_full_name());
             ret.query_table = src.query_table;
             ret.query_condition = src.query_condition;
@@ -325,9 +309,8 @@ namespace active_record {
 
         template<typename Result, Tuple BindAttrs, AttributeAggregator T>
         query_relation<typename T::attribute_type, BindAttrs> vectored_aggregate_query(query_relation<Result, BindAttrs>&& src) {
-            query_relation<typename T::attribute_type, BindAttrs> ret;
+            query_relation<typename T::attribute_type, BindAttrs> ret{ query_operation::select };
 
-            ret.operation = query_operation::select;
             ret.query_op_arg.push_back(T::column_full_name());
             ret.query_table = std::move(src.query_table);
             ret.query_condition = std::move(src.query_condition);

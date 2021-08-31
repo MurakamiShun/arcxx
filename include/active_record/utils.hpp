@@ -62,6 +62,17 @@ namespace active_record{
     template<typename T>
     concept same_as_unordered_map = std::same_as<T, std::unordered_map<typename T::key_type, typename T::mapped_type>>;
 
+    namespace detail{
+        /*
+         * Here is why not use lambda
+         * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=100594
+         */
+        template<template<typename>typename W, template<typename...>typename TupleType, typename... Elm>
+        auto apply_to_elements_impl(TupleType<Elm...>) ->TupleType<W<Elm>...>;
+    }
+    template<typename T, template<typename>typename W>
+    using apply_to_elements_t = decltype(detail::apply_to_elements_impl<W>(std::declval<T>()));
+
     template<class... Tuples>
     using tuple_cat_t = decltype(std::tuple_cat(std::declval<Tuples>()...));
 

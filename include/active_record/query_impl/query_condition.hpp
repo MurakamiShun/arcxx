@@ -19,7 +19,7 @@ namespace active_record {
         BindAttrs bind_attrs;
         std::vector<std::any> temporary_attrs;
 
-        [[nodiscard]] static constexpr std::size_t bind_attrs_count() noexcept {
+        [[nodiscard]] static consteval std::size_t bind_attrs_count() noexcept {
             return std::tuple_size_v<BindAttrs>;
         }
 

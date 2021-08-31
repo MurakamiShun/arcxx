@@ -10,6 +10,7 @@ namespace active_record {
     template<Tuple SrcBindAttrs>
     query_condition<active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_condition<BindAttrs>::concat_conditions(query_condition<SrcBindAttrs>&& cond, const conjunction conjunc) {
         query_condition<active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret;
+        ret.condition.reserve(this->condition.size() + 3 + cond.condition.size());
 
         ret.condition.push_back("(");
         ret.condition.insert(
@@ -26,18 +27,22 @@ namespace active_record {
             ret.condition.push_back(" OR ");
             break;
         }
-        for(auto& cond : cond.condition){
-            const struct {
-                str_or_bind operator()(active_record::string&& str) const { return std::move(str); }
-                str_or_bind operator()(std::size_t idx) const noexcept { return idx + std::tuple_size_v<BindAttrs>; }
-            } visitor;
 
-            ret.condition.push_back(
-                std::visit(visitor, std::move(cond))
-            );
+        struct {
+                decltype(ret.condition) ret_cond;
+                void operator()(active_record::string&& str) { ret_cond.push_back(std::move(str)); }
+                void operator()(std::size_t idx) { ret_cond.push_back(idx + std::tuple_size_v<BindAttrs>); }
+        } visitor { ret.condition };
+        for(auto& cond : cond.condition){
+            std::visit(visitor, std::move(cond));
         }
         ret.condition.push_back(")");
-        ret.temporary_attrs = std::move(this->temporary_attrs);
+
+        ret.temporary_attrs.insert(
+            ret.temporary_attrs.begin(),
+            std::make_move_iterator(this->temporary_attrs.begin()),
+            std::make_move_iterator(this->temporary_attrs.end())
+        );
         ret.temporary_attrs.insert(
             ret.temporary_attrs.end(),
             std::make_move_iterator(cond.temporary_attrs.begin()),
