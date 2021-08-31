@@ -3,20 +3,12 @@
 #include "../query_impl/query_relation_impl.hpp"
 
 namespace active_record {
-    namespace detail {
-        template<typename T>
-        using ref_to_const_ptr = std::add_pointer_t<std::add_const_t<std::remove_reference_t<T>>>;
-    }
-
     template<typename Derived>
     inline auto model<Derived>::insert(const Derived& model) {
-        using bindattr_t = apply_to_elements_t<decltype(model.attributes), detail::ref_to_const_ptr>;
+        using bindattr_t = apply_to_elements_t<decltype(model.attributes), std::remove_reference_t>;
         query_relation<bool, bindattr_t> ret{ query_operation::insert };
-        // get attribute pointers in model
-        ret.bind_attrs = std::apply(
-            []<Attribute... Attrs>(const Attrs&... attrs){ return std::make_tuple(&attrs...); },
-            model.attributes
-        );
+        // get attribute copy from model
+        ret.bind_attrs = model.attributes;
         ret.query_table.push_back(insert_column_names_to_string());
         // insert values
         ret.query_op_arg.push_back("(");
@@ -30,15 +22,10 @@ namespace active_record {
 
     template<typename Derived>
     inline auto model<Derived>::insert(Derived&& model) {
-        using bindattr_t = apply_to_elements_t<decltype(model.attributes), detail::ref_to_const_ptr>;
+        using bindattr_t = apply_to_elements_t<decltype(model.attributes), std::remove_reference_t>;
         query_relation<bool, bindattr_t> ret{ query_operation::insert };
-        // copy to temporary
-        ret.temporary_attrs.push_back(std::move(model));
-        // get attribute pointers in temporary model
-        ret.bind_attrs = std::apply(
-            []<Attribute... Attrs>(const Attrs&... attrs){ return std::make_tuple(&attrs...); },
-            std::any_cast<Derived>(ret.temporary_attrs[0]).attributes
-        );
+        ret.bind_attrs = std::move(model.attributes);
+
         ret.query_table.push_back(insert_column_names_to_string());
         // insert values
         ret.query_op_arg.push_back("(");
@@ -87,7 +74,7 @@ namespace active_record {
 
     template<typename Derived>
     template<Attribute Attr>
-    inline query_relation<bool, std::tuple<const Attr*>> model<Derived>::destroy(const Attr&& attr){
+    inline query_relation<bool, std::tuple<Attr>> model<Derived>::destroy(const Attr&& attr){
         return destroy(Attr::cmp == attr);
     }
 
@@ -97,14 +84,13 @@ namespace active_record {
         query_relation<bool, SrcBindAttrs> ret{ query_operation::destroy };
         ret.query_table.push_back(concat_strings("\"", Derived::table_name, "\""));
         ret.query_condition = std::move(cond.condition);
-        ret.temporary_attrs = std::move(cond.temporary_attrs);
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        ret.bind_attrs = std::move(cond.bind_attrs);
         return ret;
     }
 
     template<typename Derived>
     template<Attribute Attr>
-    inline query_relation<std::vector<Derived>, std::tuple<const Attr*>> model<Derived>::where(const Attr& attr) {
+    inline query_relation<std::vector<Derived>, std::tuple<Attr>> model<Derived>::where(const Attr& attr) {
         return where(Attr::cmp == attr);
     }
 
@@ -115,8 +101,7 @@ namespace active_record {
         ret.query_op_arg.push_back(detail::model_column_full_names_to_string<Derived>());
         ret.query_table.push_back(concat_strings("\"", Derived::table_name, "\""));
         ret.query_condition = std::move(cond.condition);
-        ret.temporary_attrs = std::move(cond.temporary_attrs);
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        ret.bind_attrs = std::move(cond.bind_attrs);
 
         return ret;
     }

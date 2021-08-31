@@ -25,8 +25,7 @@ namespace active_record {
 
         template<std::size_t I, typename Condition, std::convertible_to<Attribute> Last>
         static void copy_and_set_attrs_to_condition(Condition& ret, const Last& last) {
-            ret.temporary_attrs.push_back(Attribute{ last });
-            std::get<I>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
+            std::get<I>(ret.bind_attrs) = Attribute{ last };
             ret.condition.push_back(I);
         }
 
@@ -114,7 +113,7 @@ namespace active_record {
 
         template<std::convertible_to<Attribute>... Attrs>
         static auto in(const Attrs&... values) {
-            query_condition<std::tuple<const decltype(values, std::declval<Attribute>())*...>> ret;
+            query_condition<std::tuple<decltype(values, std::declval<Attribute>())...>> ret;
             ret.condition.push_back(concat_strings(
                 "\"", Model::table_name, "\".\"",
                 Attribute::column_name, "\" in ("
@@ -128,11 +127,10 @@ namespace active_record {
         private:
             template<std::size_t N>
             static auto make_condition(Attribute&& attr, built_in_string_literal<N> op){
-                query_condition<std::tuple<const Attribute*>> ret;
+                query_condition<std::tuple<Attribute>> ret;
                 ret.condition.push_back(concat_strings(Attribute::column_full_name(), op));
                 ret.condition.push_back(0UL);
-                ret.temporary_attrs.push_back(std::move(attr));
-                std::get<0>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
+                ret.bind_attrs = std::make_tuple(std::move(attr));
                 return ret;
             }
         public:

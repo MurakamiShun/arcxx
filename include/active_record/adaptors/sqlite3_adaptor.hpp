@@ -90,7 +90,7 @@ namespace active_record {
 
                 if constexpr(query.bind_attrs_count() != 0) {
                     result_code = indexed_apply(
-                        [stmt]<typename... Attrs>(const Attrs&... attr_ptrs){ return (active_record::sqlite3::detail::bind_variable(stmt, attr_ptrs.first, *(attr_ptrs.second)) + ...);},
+                        [stmt]<typename... Attrs>(const Attrs&... attr_ptrs){ return (active_record::sqlite3::detail::bind_variable(stmt, attr_ptrs.first, attr_ptrs.second) + ...);},
                         query.bind_attrs
                     );
                     if(result_code != SQLITE_OK) return result_code;
@@ -144,7 +144,7 @@ namespace active_record {
 
             if constexpr(query.bind_attrs_count() != 0) {
                 result_code = indexed_apply(
-                    [stmt]<typename... Attrs>(const Attrs&... attr_ptrs){ return (active_record::sqlite3::detail::bind_variable(stmt, attr_ptrs.first, *(attr_ptrs.second)) + ...);},
+                    [stmt]<typename... Attrs>(const Attrs&... attr_ptrs){ return (active_record::sqlite3::detail::bind_variable(stmt, attr_ptrs.first, attr_ptrs.second) + ...);},
                     query.bind_attrs
                 );
             }

@@ -34,10 +34,9 @@ namespace active_record {
         };
 
         template<std::convertible_to<active_record::string> StringType>
-        [[nodiscard]] static constexpr query_condition<std::tuple<const Attribute*>> like(const StringType& value){
-            query_condition<std::tuple<const Attribute*>> ret;
-            ret.temporary_attrs.push_back(Attribute{ value });
-            std::get<0>(ret.bind_attrs) = std::any_cast<Attribute>(&(ret.temporary_attrs.back()));
+        [[nodiscard]] static constexpr query_condition<std::tuple<Attribute>> like(const StringType& value){
+            query_condition<std::tuple<Attribute>> ret;
+            ret.bind_attrs = std::make_tuple(Attribute{ value });
             ret.condition.push_back(concat_strings(Attribute::column_full_name(), " LIKE "));
             ret.condition.push_back(static_cast<std::size_t>(0));
             return ret;

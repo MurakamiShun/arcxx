@@ -19,8 +19,7 @@ namespace active_record {
 
         ret.query_condition = this->query_condition;
         ret.query_options = this->query_options;
-        ret.temporary_attrs = this->temporary_attrs;
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        ret.bind_attrs = this->bind_attrs;
         return ret;
     }
     template<typename Result, Tuple BindAttrs>
@@ -34,8 +33,7 @@ namespace active_record {
 
         ret.query_condition = std::move(this->query_condition);
         ret.query_options = std::move(this->query_options);
-        ret.temporary_attrs = std::move(this->temporary_attrs);
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        ret.bind_attrs = std::move(this->bind_attrs);
         return ret;
     }
 
@@ -50,8 +48,7 @@ namespace active_record {
 
         ret.query_condition = this->query_condition;
         ret.query_options = this->query_options;
-        ret.temporary_attrs = this->temporary_attrs;
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        ret.bind_attrs = this->bind_attrs;
         return ret;
     }
     template<typename Result, Tuple BindAttrs>
@@ -65,8 +62,7 @@ namespace active_record {
 
         ret.query_condition = std::move(this->query_condition);
         ret.query_options = std::move(this->query_options);
-        ret.temporary_attrs = std::move(this->temporary_attrs);
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        ret.bind_attrs = std::move(this->bind_attrs);
         return ret;
     }
 
@@ -81,8 +77,7 @@ namespace active_record {
 
         ret.query_condition = this->query_condition;
         ret.query_options = this->query_options;
-        ret.temporary_attrs = this->temporary_attrs;
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        ret.bind_attrs = this->bind_attrs;
         return ret;
     }
     template<typename Result, Tuple BindAttrs>
@@ -96,8 +91,7 @@ namespace active_record {
 
         ret.query_condition = std::move(this->query_condition);
         ret.query_options = std::move(this->query_options);
-        ret.temporary_attrs = std::move(this->temporary_attrs);
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        ret.bind_attrs = std::move(this->bind_attrs);
         return ret;
     }
 
@@ -106,7 +100,7 @@ namespace active_record {
         void set_update_op_args(Query& query, Last&& last) {
             query.query_op_arg.push_back(concat_strings("\"", Last::column_name, "\" = "));
             query.query_op_arg.push_back(N);
-            query.temporary_attrs.push_back(std::move(last));
+            std::get<N>(query.bind_attrs) = std::move(last);
         }
         template<std::size_t N, typename Query, Attribute Head, Attribute... Tails>
         void set_update_op_args(Query& query, Head&& head, Tails&&... tails) {
@@ -120,28 +114,27 @@ namespace active_record {
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute... Attrs>
     requires Model<typename Result::value_type>
-    query_relation<bool, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attrs*...>>> query_relation<Result, BindAttrs>::update(const Attrs... attrs) {
-        query_relation<bool, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attrs*...>>> ret{ query_operation::update };
+    query_relation<bool, active_record::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> query_relation<Result, BindAttrs>::update(const Attrs&... attrs) {
+        query_relation<bool, active_record::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> ret{ query_operation::update };
 
         ret.query_table.push_back(concat_strings("\"", Result::value_type::table_name, "\""));
         ret.query_condition = std::move(this->query_condition);
         ret.query_options = std::move(this->query_options);
-        ret.temporary_attrs = std::move(this->temporary_attrs);
+        ret.bind_attrs = std::tuple_cat(std::move(this->bind_attrs), std::make_tuple(attrs...));
         detail::set_update_op_args<std::tuple_size_v<BindAttrs>>(ret, std::move(attrs)...);
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
         return ret;
     }
 
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
-    query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> query_relation<Result, BindAttrs>::where(const Attr& attr) && {
+    query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) && {
         return std::move(*this).where(Attr::cmp == attr);
     }
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
-    query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> query_relation<Result, BindAttrs>::where(const Attr& attr) const& {
+    query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) const& {
         return this->where(Attr::cmp == attr);
     }
 
@@ -167,13 +160,7 @@ namespace active_record {
         }
 
         ret.query_options = std::move(this->query_options);
-        ret.temporary_attrs = std::move(this->temporary_attrs);
-        ret.temporary_attrs.insert(
-            ret.temporary_attrs.end(),
-            std::make_move_iterator(cond.temporary_attrs.begin()),
-            std::make_move_iterator(cond.temporary_attrs.end())
-        );
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        ret.bind_attrs = std::tuple_cat(std::move(this->bind_attrs), std::move(cond.bind_attrs));
         return ret;
     }
 
@@ -197,13 +184,7 @@ namespace active_record {
             std::visit(visitor, std::move(cond));
         }
         ret.query_options = this->query_options;
-        ret.temporary_attrs = this->temporary_attrs;
-        ret.temporary_attrs.insert(
-            ret.temporary_attrs.end(),
-            std::make_move_iterator(cond.temporary_attrs.begin()),
-            std::make_move_iterator(cond.temporary_attrs.end())
-        );
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        ret.bind_attrs = std::tuple_cat(this->bind_attrs, std::move(cond.bind_attrs));
         return ret;
     }
 
@@ -223,8 +204,7 @@ namespace active_record {
         ret.query_condition = this->query_condition;
         ret.query_options = this->query_options;
         ret.query_options.push_back(concat_strings(" LIMIT ", std::to_string(lim)));
-        ret.temporary_attrs = this->temporary_attrs;
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        ret.bind_attrs = this->bind_attrs;
 
         return ret;
     }
@@ -249,9 +229,8 @@ namespace active_record {
         ret.query_op_arg = this->query_op_arg;
         ret.query_table = this->query_table;
         ret.query_condition = this->query_condition;
-        ret.temporary_attrs = this->temporary_attrs;
+        ret.bind_attrs = this->bind_attrs;
         ret.query_options = this->query_options;
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
 
         ret.query_options.push_back(concat_strings(
             " ORDER BY ", detail::column_full_names_to_string<Attr>(),
@@ -269,9 +248,8 @@ namespace active_record {
         ret.query_op_arg.push_back("count(*)");
         ret.query_table = std::move(this->query_table);
         ret.query_condition = std::move(this->query_condition);
-        ret.temporary_attrs = std::move(this->temporary_attrs);
+        ret.bind_attrs = std::move(this->bind_attrs);
         ret.query_options = std::move(this->query_options);
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
 
         return ret;
     }
@@ -283,9 +261,8 @@ namespace active_record {
         ret.query_op_arg.push_back("count(*)");
         ret.query_table = this->query_table;
         ret.query_condition = this->query_condition;
-        ret.temporary_attrs = this->temporary_attrs;
+        ret.bind_attrs = this->bind_attrs;
         ret.query_options = this->query_options;
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
 
         return ret;
     }
@@ -298,9 +275,8 @@ namespace active_record {
             ret.query_op_arg.push_back(T::column_full_name());
             ret.query_table = src.query_table;
             ret.query_condition = src.query_condition;
-            ret.temporary_attrs = src.temporary_attrs;
+            ret.bind_attrs = src.bind_attrs;
             ret.query_options = src.query_options;
-            set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
 
             return ret;
         }
@@ -312,9 +288,8 @@ namespace active_record {
             ret.query_op_arg.push_back(T::column_full_name());
             ret.query_table = std::move(src.query_table);
             ret.query_condition = std::move(src.query_condition);
-            ret.temporary_attrs = std::move(src.temporary_attrs);
+            ret.bind_attrs = std::move(src.bind_attrs);
             ret.query_options = std::move(src.query_options);
-            set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
 
             return ret;
         }

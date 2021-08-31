@@ -70,29 +70,29 @@ namespace active_record {
             }
             else{
                 const auto param_length = std::apply(
-                    []<typename... Attrs>(const Attrs* const... attr_ptrs){
-                        return std::array<int, sizeof...(Attrs)>{ static_cast<int>(attribute_size(*attr_ptrs))... };
+                    []<typename... Attrs>(const Attrs&... attrs){
+                        return std::array<int, sizeof...(Attrs)>{ static_cast<int>(attribute_size(attrs))... };
                     },
                     query.bind_attrs
                 );
                 const auto param_format = std::apply(
-                    []<typename... Attrs>(const Attrs* const... attr_ptrs){
-                        const auto is_not_text_format = []<typename Attr>([[maybe_unused]]const Attr* const){
+                    []<typename... Attrs>(const Attrs&... attrs){
+                        const auto is_not_text_format = []<typename Attr>([[maybe_unused]]const Attr&){
                             return static_cast<int>(
                                 !(std::is_same_v<typename Attr::value_type, active_record::string> ||
                                 std::is_same_v<typename Attr::value_type, active_record::datetime>) ||
                                 std::floating_point<typename Attr::value_type>
                             );
                         };
-                        return std::array<int, sizeof...(Attrs)>{ is_not_text_format(attr_ptrs)... };
+                        return std::array<int, sizeof...(Attrs)>{ is_not_text_format(attrs)... };
                     },
                     query.bind_attrs
                 );
 
                 std::array<std::any, query.bind_attrs_count()> temporary_values;
                 const auto param_values = active_record::indexed_apply(
-                    [&temporary_values]<typename... Attrs>(std::pair<std::size_t, const Attrs* const&>... attr_ptrs){
-                        return std::array<const char* const, sizeof...(Attrs)>{ PostgreSQL::detail::get_value_ptr(attr_ptrs.second, temporary_values[attr_ptrs.first])... };
+                    [&temporary_values]<typename... Attrs>(std::pair<std::size_t, const Attrs&>... attrs){
+                        return std::array<const char* const, sizeof...(Attrs)>{ PostgreSQL::detail::get_value_ptr(attrs.second, temporary_values[attrs.first])... };
                     },
                     query.bind_attrs
                 );

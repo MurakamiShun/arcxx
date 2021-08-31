@@ -35,10 +35,4 @@ namespace active_record::detail {
         }
         return buff;
     }
-
-    template<std::size_t I, typename BindAttr>
-    void set_bind_attrs_ptr(BindAttr& bind_attrs, const std::vector<std::any>& temp_attr){
-        if constexpr(std::tuple_size_v<BindAttr> != 0) std::get<I>(bind_attrs) = std::any_cast<std::remove_pointer_t<std::tuple_element_t<I, BindAttr>>>(&temp_attr[I]);
-        if constexpr(I + 1 < std::tuple_size_v<BindAttr>) set_bind_attrs_ptr<I + 1>(bind_attrs, temp_attr);
-    }
 }

@@ -29,28 +29,28 @@ namespace active_record::PostgreSQL::detail {
 
     template<Attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::string>
-    [[nodiscard]] auto get_value_ptr(const Attr* const attr_ptr, [[maybe_unused]]std::any&) {
-        if (!(*attr_ptr)) return static_cast<const char*>(nullptr);
-        return attr_ptr->value().c_str();
+    [[nodiscard]] auto get_value_ptr(const Attr& attr, [[maybe_unused]]std::any&) {
+        if (!attr) return static_cast<const char*>(nullptr);
+        return attr.value().c_str();
     }
     template<Attribute Attr>
     requires std::integral<typename Attr::value_type>
-    [[nodiscard]] auto get_value_ptr(const Attr* const attr_ptr, [[maybe_unused]]std::any& tmp) {
-        if (!(*attr_ptr)) return static_cast<const char*>(nullptr);
-        const auto tmp_value = byte_swap(attr_ptr->value());
+    [[nodiscard]] auto get_value_ptr(const Attr& attr, [[maybe_unused]]std::any& tmp) {
+        if (!attr) return static_cast<const char*>(nullptr);
+        const auto tmp_value = byte_swap(attr.value());
         tmp = tmp_value;
         return reinterpret_cast<const char*>(std::any_cast<decltype(tmp_value)>(&tmp));
     }
     template<Attribute Attr>
     requires std::floating_point<typename Attr::value_type>
-    [[nodiscard]] auto get_value_ptr(const Attr* const attr_ptr, [[maybe_unused]]std::any& tmp) {
-        if (!(*attr_ptr)) return static_cast<const char*>(nullptr);
+    [[nodiscard]] auto get_value_ptr(const Attr& attr, [[maybe_unused]]std::any& tmp) {
+        if (!attr) return static_cast<const char*>(nullptr);
         // PostgreSQL use IEE 754
         if constexpr(std::numeric_limits<typename Attr::value_type>::is_iec559){
             union {
                 uint<sizeof(typename Attr::value_type)>::type int_val;
                 typename Attr::value_type t;
-            } data = { .t = attr_ptr->value() };
+            } data = { .t = attr.value() };
             const auto tmp_value = byte_swap(data.int_val);
             tmp = tmp_value;
             return reinterpret_cast<const char*>(std::any_cast<decltype(tmp_value)>(&tmp));

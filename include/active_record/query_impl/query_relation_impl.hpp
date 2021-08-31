@@ -8,19 +8,10 @@ namespace active_record {
      * raw query implementation
      */
     template<typename Result, Attribute... Attrs>
-    query_relation<Result, std::tuple<const Attrs*...>> raw_query(const active_record::string_view query_str, Attrs... attrs) {
+    query_relation<Result, std::tuple<Attrs...>> raw_query(const active_record::string_view query_str, const Attrs&... attrs) {
         query_relation<Result, std::tuple<const Attrs*...>> ret{ query_operation::unspecified };
         ret.query_op_arg.push_back(active_record::string{ query_str });
-
-        if constexpr (sizeof...(Attrs) > 0){
-            ret.temporary_attrs.reserve(sizeof...(Attrs));
-            std::apply(
-                [&ret]<typename Attr>(Attr& attr){ ret.temporary_attrs.push_back(std::move(attr)); },
-                std::make_tuple(std::ref(attrs)...)
-            );
-
-            detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
-        }
+        ret.bind_attrs = std::make_tuple(attrs...);
 
         return ret;
     }
@@ -59,8 +50,8 @@ namespace active_record {
         const std::array<active_record::string, std::tuple_size_v<BindAttrs>> attr_strings;
         active_record::string buff;
 
-        visitor_impl(const BindAttrs& ba) :
-            attr_strings([&ba](){
+        visitor_impl(const BindAttrs& bind_attr) :
+            attr_strings([&bind_attr](){
                 if constexpr (Adaptor::bindable){
                     std::array<active_record::string, std::tuple_size_v<BindAttrs>> ret;
                     for(std::size_t i = 0; i < std::tuple_size_v<BindAttrs>; ++i){
@@ -69,9 +60,9 @@ namespace active_record {
                     return ret;
                 }
                 else {
-                    return std::apply([]<typename... Attrs>(const Attrs*... attrs) {
-                        return std::array<active_record::string, std::tuple_size_v<BindAttrs>>{ active_record::to_string<Adaptor>(*attrs)... };
-                    }, ba);
+                    return std::apply([]<typename... Attrs>(const Attrs&... attrs) {
+                        return std::array<active_record::string, std::tuple_size_v<BindAttrs>>{ active_record::to_string<Adaptor>(attrs)... };
+                    }, bind_attr);
                 }
             }()){
             const auto bit_ceil = [](std::size_t v) -> std::size_t{

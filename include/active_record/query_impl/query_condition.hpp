@@ -17,7 +17,6 @@ namespace active_record {
         using str_or_bind = std::variant<active_record::string, std::size_t>;
         std::vector<str_or_bind> condition;
         BindAttrs bind_attrs;
-        std::vector<std::any> temporary_attrs;
 
         [[nodiscard]] static consteval std::size_t bind_attrs_count() noexcept {
             return std::tuple_size_v<BindAttrs>;

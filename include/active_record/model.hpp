@@ -51,12 +51,12 @@ namespace active_record {
 
         // delete is identifier word
         template<Attribute Attr>
-        [[nodiscard]] static query_relation<bool, std::tuple<const Attr*>> destroy(const Attr&&);
+        [[nodiscard]] static query_relation<bool, std::tuple<Attr>> destroy(const Attr&&);
         template<Tuple SrcBindAttrs>
         [[nodiscard]] static query_relation<bool, SrcBindAttrs> destroy(query_condition<SrcBindAttrs>&&);
 
         template<Attribute Attr>
-        [[nodiscard]] static query_relation<std::vector<Derived>, std::tuple<const Attr*>> where(const Attr&);
+        [[nodiscard]] static query_relation<std::vector<Derived>, std::tuple<Attr>> where(const Attr&);
         template<Tuple SrcBindAttrs>
         [[nodiscard]] static query_relation<std::vector<Derived>, SrcBindAttrs> where(query_condition<SrcBindAttrs>&&);
 

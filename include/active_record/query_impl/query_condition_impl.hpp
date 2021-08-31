@@ -38,17 +38,7 @@ namespace active_record {
         }
         ret.condition.push_back(")");
 
-        ret.temporary_attrs.insert(
-            ret.temporary_attrs.begin(),
-            std::make_move_iterator(this->temporary_attrs.begin()),
-            std::make_move_iterator(this->temporary_attrs.end())
-        );
-        ret.temporary_attrs.insert(
-            ret.temporary_attrs.end(),
-            std::make_move_iterator(cond.temporary_attrs.begin()),
-            std::make_move_iterator(cond.temporary_attrs.end())
-        );
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        ret.bind_attrs = std::tuple_cat(std::move(this->bind_attrs), std::move(cond.bind_attrs));
 
         return ret;
     }

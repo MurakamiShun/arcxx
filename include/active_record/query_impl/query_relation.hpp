@@ -22,7 +22,6 @@ namespace active_record {
         std::vector<str_or_bind> query_options; // order, limit
 
         BindAttrs bind_attrs;
-        std::vector<std::any> temporary_attrs;
 
         [[nodiscard]] static consteval std::size_t bind_attrs_count() noexcept {
             return std::tuple_size_v<BindAttrs>;
@@ -94,9 +93,9 @@ namespace active_record {
         }
 
         template<Attribute Attr>
-        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> where(const Attr&&) &&;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) &&;
         template<Attribute Attr>
-        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> where(const Attr&&) const &;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) const &;
 
         template<Tuple SrcBindAttrs>
         [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
@@ -130,12 +129,12 @@ namespace active_record {
 
         template<Attribute... Attrs>
         requires Model<typename Result::value_type>
-        [[nodiscard]] query_relation<bool, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attrs*...>>> update(const Attrs...);
+        [[nodiscard]] query_relation<bool, active_record::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> update(const Attrs&...);
 
         template<Attribute Attr>
-        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> where(const Attr&) &&;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) &&;
         template<Attribute Attr>
-        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> where(const Attr&) const &;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) const &;
 
         template<Tuple SrcBindAttrs>
         [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
@@ -206,20 +205,20 @@ namespace active_record {
         [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::attribute_type>, BindAttrs> pluck() const &;
 
         template<Attribute Attr>
-        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> where(const Attr&) &&;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) &&;
         template<Attribute Attr>
-        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> where(const Attr&) const &;
+        [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) const &;
 
         template<Tuple SrcBindAttrs>
         [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
         template<Tuple SrcBindAttrs>
         [[nodiscard]] query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const&;
 
-        [[nodiscard]] query_relation<Result, BindAttrs>& limit(const std::size_t) &&;
+        [[nodiscard]] query_relation<Result, BindAttrs> limit(const std::size_t) &&;
         [[nodiscard]] query_relation<Result, BindAttrs> limit(const std::size_t) const &;
 
         template<Attribute Attr>
-        [[nodiscard]] query_relation<Result, BindAttrs>& order_by(const active_record::order = active_record::order::asc) &&;
+        [[nodiscard]] query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc) &&;
         template<Attribute Attr>
         [[nodiscard]] query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc) const &;
 

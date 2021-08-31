@@ -10,12 +10,12 @@ namespace active_record {
 
     template<typename Result, Tuple BindAttrs>
     template<Attribute Attr>
-    query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> query_relation<Result, BindAttrs>::where(const Attr&& attr) && {
+    query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) && {
         return std::move(*this).where(Attr::cmp == attr);
     }
     template<typename Result, Tuple BindAttrs>
     template<Attribute Attr>
-    query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<const Attr*>>> query_relation<Result, BindAttrs>::where(const Attr&& attr) const& {
+    query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) const& {
         return this->where(Attr::cmp == attr);
     }
 
@@ -41,13 +41,7 @@ namespace active_record {
         }
 
         ret.query_options = std::move(this->query_options);
-        ret.temporary_attrs = std::move(this->temporary_attrs);
-        ret.temporary_attrs.insert(
-            ret.temporary_attrs.end(),
-            std::make_move_iterator(cond.temporary_attrs.begin()),
-            std::make_move_iterator(cond.temporary_attrs.end())
-        );
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        ret.bind_attrs = std::tuple_cat(std::move(this->bind_attrs), std::move(cond.bind_attrs));
         return ret;
     }
 
@@ -74,13 +68,8 @@ namespace active_record {
         }
 
         ret.query_options = this->query_options;
-        ret.temporary_attrs = this->temporary_attrs;
-        ret.temporary_attrs.insert(
-            ret.temporary_attrs.end(),
-            std::make_move_iterator(cond.temporary_attrs.begin()),
-            std::make_move_iterator(cond.temporary_attrs.end())
-        );
-        detail::set_bind_attrs_ptr<0>(ret.bind_attrs, ret.temporary_attrs);
+        ret.bind_attrs = std::tuple_cat(this->bind_attrs, std::move(cond.bind_attrs));
+
         return ret;
     }
 }
