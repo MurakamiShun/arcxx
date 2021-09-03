@@ -145,11 +145,12 @@ namespace active_record {
         query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
         ret.query_op_arg = std::move(this->query_op_arg);
         ret.query_table = std::move(this->query_table);
-
         if(!this->query_condition.empty()){
             ret.query_condition = std::move(this->query_condition);
+            ret.query_condition.reserve(ret.query_condition.size() + cond.condition.size() + 1);
             ret.query_condition.push_back(" AND ");
         }
+        else ret.query_condition.reserve(cond.condition.size());
         struct {
             decltype(ret.query_condition)& ret_cond;
             void operator()(active_record::string&& str) { ret_cond.push_back(std::move(str)); }
@@ -171,6 +172,7 @@ namespace active_record {
         query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
         ret.query_op_arg = this->query_op_arg;
         ret.query_table = this->query_table;
+        ret.query_condition.reserve(this->query_condition.size() + cond.condition.size() + !this->query_condition.empty());
         if(!this->query_condition.empty()){
             ret.query_condition = this->query_condition;
             ret.query_condition.push_back(" AND ");

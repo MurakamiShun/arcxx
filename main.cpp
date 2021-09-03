@@ -22,7 +22,6 @@ struct Member : public active_record::model<Member> {
         static constexpr auto column_name = "height";
         inline static const auto constraints = { default_value(160.0) };
     } height;
-    std::tuple<ID&, Name&, Height&> attributes = std::tie(id, name, height);
 };
 
 struct EnteringLog : public active_record::model<EnteringLog> {
@@ -36,7 +35,6 @@ struct EnteringLog : public active_record::model<EnteringLog> {
         using foreign_key<EnteringLog, MemberID, Member::ID>::foreign_key;
         static constexpr auto column_name = "member_id";
     } member_id;
-    std::tuple<ID&, MemberID&> attributes = std::tie(id, member_id);
 };
 
 int main() {

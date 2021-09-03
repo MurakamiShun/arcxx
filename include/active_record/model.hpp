@@ -12,12 +12,6 @@ namespace active_record {
             static std::false_type check(...);
             static constexpr bool value = decltype(check(std::declval<Derived>()))::value;
         };
-        struct has_attributes_impl {
-            template<typename S>
-            static decltype(std::declval<S>().attributes, std::true_type{}) check(S);
-            static std::false_type check(...);
-            static constexpr bool value = decltype(check(std::declval<Derived>()))::value;
-        };
 
         [[nodiscard]] static constexpr active_record::string insert_column_names_to_string();
 
@@ -28,12 +22,24 @@ namespace active_record {
         };
 
         static constexpr bool has_table_name = has_table_name_impl::value;
-        static constexpr bool has_attributes = has_attributes_impl::value;
         [[nodiscard]] static constexpr auto column_names() noexcept;
 
         /*
          * Implementations are model_impl/queries.hpp
          */
+
+        auto get_attributes_tuple() noexcept {
+            //return apply_elements_filter<is_attribute>(bind_to_tuple<Derived, 1>{}(*reinterpret_cast<Derived*>(this)));
+            const auto attributes_tuple = bind_to_tuple<Derived, 1>{}(*reinterpret_cast<Derived*>(this));
+            using attrs_tuple_type = apply_to_elements_t<decltype(attributes_tuple), std::remove_const_t>;
+            return attrs_tuple_type{ attributes_tuple };
+        }
+        auto get_attributes_tuple() const noexcept {
+            //return apply_elements_filter<is_attribute>(bind_to_tuple<const Derived, 1>{}(*reinterpret_cast<const Derived*>(this)));
+            const auto attributes_tuple = bind_to_tuple<const Derived, 1>{}(*reinterpret_cast<const Derived*>(this));
+            //using attrs_tuple_type = apply_to_elements_t<decltype(attributes_tuple), std::remove_const_t>;
+            return attributes_tuple;
+        }
 
         [[nodiscard]] static auto insert(const Derived& model);
         [[nodiscard]] static auto insert(Derived&& model);
@@ -99,6 +105,5 @@ namespace active_record {
     concept Model = requires {
         std::derived_from<T, model<T>>;
         T::has_table_name;
-        T::has_attributes;
     };
 }

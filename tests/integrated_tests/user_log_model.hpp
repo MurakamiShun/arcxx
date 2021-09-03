@@ -18,6 +18,4 @@ struct UserLog : public active_record::model<UserLog>{
         constexpr static auto column_name = "comment";
         using string<UserLog, Comment>::string;
     } comment;
-
-    std::tuple<ID&, UserID&, Comment&> attributes = std::tie(id, user_id, comment);
 };

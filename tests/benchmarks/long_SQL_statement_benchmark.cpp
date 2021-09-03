@@ -31,7 +31,7 @@ struct Clothes : public active_record::model<Clothes> {
         using integer<User, Price, uint32_t>::integer;
     } price;
 
-    std::tuple<ID&, UserID&, Name&, Price&> attributes = std::tie(id, user_id, name, price);
+    //std::tuple<ID&, UserID&, Name&, Price&> attributes = std::tie(id, user_id, name, price);
 };
 
 TEST_CASE("Long SQL statement benchmark"){

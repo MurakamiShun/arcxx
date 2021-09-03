@@ -6,7 +6,7 @@ namespace active_record {
     requires std::same_as<typename Attr::value_type, active_record::string>
     [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
         // require sanitize
-        return static_cast<bool>(attr) ? active_record::string{"\'"} + active_record::sanitize(attr.value()) + "\'" : "null";
+        return static_cast<bool>(attr) ? concat_strings("\'", active_record::sanitize(attr.value()), "\'") : "null";
     }
     template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::string>

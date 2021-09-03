@@ -14,6 +14,8 @@ namespace active_record {
         std::derived_from<T, attribute_common<typename T::model_type, typename T::attribute_type, typename T::value_type>>;
         T::has_column_name;
     };
+    template<typename T>
+    struct is_attribute{ static constexpr bool value = Attribute<T>; };
 
     template<Attribute Attr>
     constexpr std::size_t attribute_size([[maybe_unused]] const Attr&){ return sizeof(typename Attr::value_type); }

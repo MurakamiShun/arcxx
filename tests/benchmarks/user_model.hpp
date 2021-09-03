@@ -25,5 +25,5 @@ struct User : public active_record::model<User> {
         using active_record::attributes::decimal<User, Height>::decimal;
     } height;
 
-    std::tuple<ID&, Name&, Height&> attributes = std::tie(id, name, height);
+    //std::tuple<ID&, Name&, Height&> attributes = std::tie(id, name, height);
 };

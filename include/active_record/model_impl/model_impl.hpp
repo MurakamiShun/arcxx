@@ -30,7 +30,7 @@ namespace active_record {
     inline constexpr auto model<Derived>::column_names() noexcept {
         return std::apply(
             []<Attribute... Attrs>([[maybe_unused]]Attrs...) constexpr { return std::array<const active_record::string_view, sizeof...(Attrs)>{(Attrs::column_name)...}; },
-            Derived{}.attributes
+            Derived{}.get_attributes_tuple()
         );
     }
 }

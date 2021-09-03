@@ -88,7 +88,7 @@ namespace active_record::PostgreSQL::detail {
             [res, col]<typename... Attrs>(Attrs... attrs){
                 return (set_column_data(res, col, attrs.first, attrs.second) && ...);
             },
-            ret.attributes
+            ret.get_attributes_tuple()
         );
         return ret;
     }

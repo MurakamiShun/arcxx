@@ -17,7 +17,7 @@
 #include <numeric>
 #include <bit>
 
-#include <iostream>
+#include "struct_bind.hpp"
 
 namespace active_record{
     using string = std::string;
@@ -61,17 +61,6 @@ namespace active_record{
 
     template<typename T>
     concept same_as_unordered_map = std::same_as<T, std::unordered_map<typename T::key_type, typename T::mapped_type>>;
-
-    namespace detail{
-        /*
-         * Here is why not use lambda
-         * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=100594
-         */
-        template<template<typename>typename W, template<typename...>typename TupleType, typename... Elm>
-        auto apply_to_elements_impl(TupleType<Elm...>) ->TupleType<W<Elm>...>;
-    }
-    template<typename T, template<typename>typename W>
-    using apply_to_elements_t = decltype(detail::apply_to_elements_impl<W>(std::declval<T>()));
 
     template<class... Tuples>
     using tuple_cat_t = decltype(std::tuple_cat(std::declval<Tuples>()...));
@@ -154,6 +143,32 @@ namespace active_record{
         return std::apply(f, detail::indexed_apply_aux<0>(t));
     }
 
+    namespace detail{
+        /*
+         * Here is why not use lambda
+         * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=100594
+         */
+        template<template<typename>typename W, template<typename...>typename TupleType, typename... Elm>
+        auto apply_to_elements_impl(TupleType<Elm...>) ->TupleType<W<Elm>...>;
+    }
+    template<typename T, template<typename>typename W>
+    using apply_to_elements_t = decltype(detail::apply_to_elements_impl<W>(std::declval<T>()));
+
+    template<template<typename>typename C, template<typename...>typename TupleType, typename Head, typename... Elm>
+    auto apply_elements_filter(TupleType<Head, Elm...> tuple){
+        if constexpr(sizeof...(Elm) == 0){
+            if constexpr(C<Head>::value) return std::tie(std::get<0>(tuple));
+            else return std::tuple<>{};
+        }
+        else{
+            if constexpr(C<Head>::value) return std::tuple_cat(std::tie(std::get<0>(tuple)), apply_elements_filter<C>(tuple_slice(tuple, make_index_sequence_between<0, sizeof...(Elm)>())));
+            else return apply_elements_filter<C>(tuple_slice(tuple, make_index_sequence_between<0, sizeof...(Elm)>()));
+        }
+    }
+    template<typename T, template<typename>typename Condition>
+    using apply_elements_filter_t = decltype(apply_elements_filter<Condition>(std::declval<T>()));
+
+
     [[nodiscard]] inline active_record::string sanitize(const active_record::string& src) {
         active_record::string result;
         result.reserve(src.length());
@@ -178,7 +193,6 @@ namespace active_record{
         (std::convertible_to<Strings, active_record::string_view> && ...);
     }
     [[nodiscard]] constexpr active_record::string concat_strings(const Strings&... strings) {
-        if (std::is_constant_evaluated()) std::cout << "constant evaluated!!!" << std::endl;
         const std::array<active_record::string_view, sizeof...(Strings)> str_views = { static_cast<active_record::string_view>(strings)... };
         active_record::string buff;
         buff.reserve(std::transform_reduce(

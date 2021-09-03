@@ -110,7 +110,7 @@ namespace active_record::sqlite3::detail {
             [stmt]<typename... Attrs>(Attrs... attrs){
                 return (set_column_data(stmt, attrs.first, attrs.second) && ...);
             },
-            ret.attributes
+            ret.get_attributes_tuple()
         );
         return ret;
     }
