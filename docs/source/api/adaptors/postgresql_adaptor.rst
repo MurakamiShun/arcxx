@@ -1,5 +1,5 @@
 =======================================
-[WIP] active_record::postgresql_adaptor
+active_record::postgresql_adaptor
 =======================================
 
 .. cpp:class:: postgresql_adaptor

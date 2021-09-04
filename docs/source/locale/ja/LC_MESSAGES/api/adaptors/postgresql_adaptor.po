@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Active Record C++ \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-06 00:33+0000\n"
+"POT-Creation-Date: 2021-09-04 16:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,11 @@ msgstr ""
 "Generated-By: Babel 2.9.1\n"
 
 #: ../../source/api/adaptors/postgresql_adaptor.rst:3
-msgid "[WIP] active_record::postgresql_adaptor"
+msgid "active_record::postgresql_adaptor"
 msgstr ""
 
+#: ../../source/api/adaptors/postgresql_adaptor.rst:11
+msgid ""
+"This class is database connector class for PostgreSQL. \"libpq-dev\" is "
+"required to use this class."
+msgstr "このクラスはPostgreSQLの接続用クラスです。 このクラスの使用には\"libpq-dev\"が必要です。"

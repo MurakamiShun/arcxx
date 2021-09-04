@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Active Record C++ \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-08 07:57+0000\n"
+"POT-Creation-Date: 2021-09-04 16:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,18 +24,20 @@ msgstr ""
 
 #: ../../source/api/active_record/model.rst:8
 msgid ""
-":code:`table_name` and :code:`attributes` are required in model struct "
+":code:`table_name` static member variable is required in model struct "
 "definition. :code:`active_record::model` is designed using CRTP(Curiously"
 " Recurring Template Pattern)."
 msgstr ""
+" modelの定義には :code:`table_name` 静的メンバ変数が必要です。"
+" :code:`active_record::model` は CRTP(奇妙に再帰したテンプレートパターン)を使用しています。"
 
 #: ../../source/api/active_record/model.rst:12
 msgid "A Minimum model define code"
-msgstr ""
+msgstr "modelを定義する最小コード"
 
 #: ../../source/api/active_record/model.rst:21
 msgid "Member functions"
-msgstr ""
+msgstr "メンバ関数"
 
 #: ../../source/api/active_record/model.rst:23
 msgid "(constructor)"
@@ -52,7 +54,7 @@ msgstr ""
 
 #: ../../source/api/active_record/model.rst:28
 msgid "Generates query functions"
-msgstr ""
+msgstr "クエリ生成関数"
 
 #: ../../source/api/active_record/model.rst:30
 msgid ":cpp:func:`insert`"
@@ -124,32 +126,28 @@ msgstr ""
 
 #: ../../source/api/active_record/model.rst:77
 msgid "The data inserting example is :doc:`here </tutorial/inserting>`."
-msgstr ""
+msgstr "データ挿入の例は :doc:`here </tutorial/inserting>`にあります。"
 
 #: ../../source/api/active_record/model.rst:86
 msgid "Get all model data in database."
-msgstr ""
+msgstr "データベースに存在する全てのデータを取得します。"
 
 #: ../../source/api/active_record/model.rst:94
 msgid "The select function example is :doc:`here </tutorial/select_columns>`."
-msgstr ""
+msgstr "select関数の例は :doc:`here </tutorial/select_columns>`にあります。"
 
 #: ../../source/api/active_record/model.rst:106
 msgid "The pluck function example is :doc:`here </tutorial/select_columns>`."
-msgstr ""
+msgstr "pluck関数の例は :doc:`here </tutorial/select_columns>`にあります。"
 
-#: ../../source/api/active_record/model.rst:118
+#: ../../source/api/active_record/model.rst:117
 msgid "The example is :doc:`here </tutorial/find_columns>`."
-msgstr ""
+msgstr "例は :doc:`here </tutorial/find_columns>`にあります。"
 
-#: ../../source/api/active_record/model.rst:168
-#: ../../source/api/active_record/model.rst:176
-#: ../../source/api/active_record/model.rst:186
-#: ../../source/api/active_record/model.rst:196
-#: ../../source/api/active_record/model.rst:206
+#: ../../source/api/active_record/model.rst:167
+#: ../../source/api/active_record/model.rst:175
+#: ../../source/api/active_record/model.rst:185
+#: ../../source/api/active_record/model.rst:195
+#: ../../source/api/active_record/model.rst:205
 msgid "The aggregation examples is :doc:`here </tutorial/aggregation>`."
-msgstr ""
-
-#~ msgid ":cpp:func:`update`"
-#~ msgstr ""
-
+msgstr "集計の例は :doc:`here </tutorial/aggregation>`にあります。"
