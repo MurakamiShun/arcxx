@@ -5,7 +5,7 @@ active_record::model
 .. cpp:struct:: template<typename Derived>\
                 model
 
-    :code:`table_name` and :code:`attributes` are required in model struct definition.
+    :code:`table_name` static member variable is required in model struct definition.
     :code:`active_record::model` is designed using
     CRTP(Curiously Recurring Template Pattern).
 

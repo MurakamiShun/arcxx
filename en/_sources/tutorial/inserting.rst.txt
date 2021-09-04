@@ -26,8 +26,6 @@ Example Table
             using active_record::attributes::string<ExampleTable, Name>::string;
             static constexpr auto column_name = "name";
         } name;
-        
-        std::tuple<ID&, Name&> attributes = std::tie(id, name);
     };
 
 Data Inserting

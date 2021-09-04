@@ -123,7 +123,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/active_record/attributes/foreign_key.html">active_record::attributes::foreign_key</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/active_record/attributes/integer.html">active_record::attributes::integer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/active_record/attributes/string.html">active_record::attributes::string</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/adaptors/postgresql_adaptor.html">[WIP] active_record::postgresql_adaptor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/adaptors/postgresql_adaptor.html">active_record::postgresql_adaptor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/adaptors/sqlite3_adaptor.html">active_record::sqlite3_adaptor</a></li>
 </ul>
 
@@ -196,7 +196,8 @@
 <h1>テーブルの作成<a class="headerlink" href="#table-creation" title="このヘッドラインへのパーマリンク">¶</a></h1>
 <div class="section" id="model-definition">
 <h2>モデル定義<a class="headerlink" href="#model-definition" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p>モデルの定義には、その構造体中に <code class="code docutils literal notranslate"><span class="pre">table_name</span></code> および <a class="reference internal" href="../api/active_record/attributes.html"><span class="doc">attributes</span></a> への参照のtupleが必要です。加えて、カラムの定義には <code class="code docutils literal notranslate"><span class="pre">column_name</span></code> と継承コンストラクタが必要です。</p>
+<p><code class="code docutils literal notranslate"><span class="pre">table_name</span></code> is required in model struct definition. Also, the model needs to be structured bindable.
+And column struct requires <code class="code docutils literal notranslate"><span class="pre">column_name</span></code> and inheriting constructors in the definition.</p>
 <p>基底クラスである <a class="reference internal" href="../api/active_record/model.html"><span class="doc">active_record::model</span></a> および <a class="reference internal" href="../api/active_record/attributes.html"><span class="doc">active_record::attribute</span></a> はCRTP(奇妙に再帰したテンプレートパターン)を使用しています。</p>
 <table class="docutils align-default" id="id2">
 <caption><span class="caption-text">example_table</span><a class="headerlink" href="#id2" title="このテーブルへのパーマリンク">¶</a></caption>
@@ -239,8 +240,6 @@
 <span class="w">        </span><span class="k">using</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">string</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span><span class="w"> </span><span class="n">Name</span><span class="o">&gt;::</span><span class="n">string</span><span class="p">;</span><span class="w"></span>
 <span class="w">        </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">column_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w"></span>
-
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">ID</span><span class="o">&amp;</span><span class="p">,</span><span class="w"> </span><span class="n">Name</span><span class="o">&amp;&gt;</span><span class="w"> </span><span class="n">attributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tie</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span><span class="w"></span>
 <span class="p">};</span><span class="w"></span>
 </pre></div>
 </div>

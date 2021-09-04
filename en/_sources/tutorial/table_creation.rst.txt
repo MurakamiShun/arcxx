@@ -6,7 +6,7 @@ Table Creation
 Model Definition
 ================
 
-:code:`table_name` and tuple of :doc:`attributes </api/active_record/attributes>` reference are required in model struct definition.
+:code:`table_name` is required in model struct definition. Also, the model needs to be structured bindable.
 And column struct requires :code:`column_name` and inheriting constructors in the definition.
 
 base classes, :doc:`active_record::model </api/active_record/model>` and :doc:`active_record::attribute </api/active_record/attributes>` are using CRTP(Curiously Recurring Template Pattern).
@@ -43,8 +43,6 @@ base classes, :doc:`active_record::model </api/active_record/model>` and :doc:`a
             using active_record::attributes::string<ExampleTable, Name>::string;
             static constexpr auto column_name = "name";
         } name;
-        
-        std::tuple<ID&, Name&> attributes = std::tie(id, name);
     };
 
 Attribute details are written in :doc:`/api/active_record/attributes`.
