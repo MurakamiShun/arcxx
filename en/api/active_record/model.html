@@ -42,7 +42,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="active_record::query_relation" href="query_relation.html" />
-    <link rel="prev" title="namespace active_record::sqlite3" href="sqlite3.html" /> 
+    <link rel="prev" title="namespace active_record::PostgreSQL" href="PostgreSQL.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -259,19 +259,22 @@ CRTP(Curiously Recurring Template Pattern).</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#_CPPv4N5model9left_joinEv" title="model::left_join"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">left_join()</span></code></a></p></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#_CPPv4N5model5countEv" title="model::count"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">count()</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#_CPPv4N5model8group_byEv" title="model::group_by"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">group_by()</span></code></a></p></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#_CPPv4N5model3sumEv" title="model::sum"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">sum()</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#_CPPv4N5model5countEv" title="model::count"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">count()</span></code></a></p></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#_CPPv4N5model3avgEv" title="model::avg"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">avg()</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#_CPPv4N5model3sumEv" title="model::sum"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">sum()</span></code></a></p></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#_CPPv4N5model3maxEv" title="model::max"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">max()</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#_CPPv4N5model3avgEv" title="model::avg"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">avg()</span></code></a></p></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#_CPPv4N5model3minEv" title="model::min"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">min()</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#_CPPv4N5model3maxEv" title="model::max"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">max()</span></code></a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#_CPPv4N5model3minEv" title="model::min"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">min()</span></code></a></p></td>
 <td></td>
 </tr>
 </tbody>
@@ -306,8 +309,8 @@ CRTP(Curiously Recurring Template Pattern).</p>
 <dt class="sig sig-object cpp" id="_CPPv4N5model6insertEv">
 <span id="_CPPv3N5model6insertEv"></span><span id="_CPPv2N5model6insertEv"></span><span id="model::insert"></span><span class="sig-name descname"><span class="n"><span class="pre">insert</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model6insertEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>The data inserting example is <a class="reference internal" href="../../tutorial/inserting.html"><span class="doc">here</span></a>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="n">BindAttrs</span><span class="o">&gt;</span><span class="w"> </span><span class="n">insert</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Derived</span><span class="o">&amp;</span><span class="w"> </span><span class="n">model</span><span class="p">);</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="n">BindAttrs</span><span class="o">&gt;</span><span class="w"> </span><span class="n">insert</span><span class="p">(</span><span class="n">Derived</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">model</span><span class="p">);</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="cm">/*model attributes*/</span><span class="o">&gt;</span><span class="w"> </span><span class="n">insert</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Derived</span><span class="o">&amp;</span><span class="w"> </span><span class="n">model</span><span class="p">);</span><span class="w"></span>
+<span class="k">static</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="cm">/*model attributes*/</span><span class="o">&gt;</span><span class="w"> </span><span class="n">insert</span><span class="p">(</span><span class="n">Derived</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">model</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
 </dd></dl>
@@ -407,6 +410,15 @@ CRTP(Curiously Recurring Template Pattern).</p>
 </dd></dl>
 
 <dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5model8group_byEv">
+<span id="_CPPv3N5model8group_byEv"></span><span id="_CPPv2N5model8group_byEv"></span><span id="model::group_by"></span><span class="sig-name descname"><span class="n"><span class="pre">group_by</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model8group_byEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">Attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span><span class="w"></span>
+<span class="k">static</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">Attr</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="w"> </span><span class="n">group_by</span><span class="p">();</span><span class="w"></span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model5countEv">
 <span id="_CPPv3N5model5countEv"></span><span id="_CPPv2N5model5countEv"></span><span id="model::count"></span><span class="sig-name descname"><span class="n"><span class="pre">count</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model5countEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>The aggregation examples is <a class="reference internal" href="../../tutorial/aggregation.html"><span class="doc">here</span></a>.</p>
@@ -470,7 +482,7 @@ CRTP(Curiously Recurring Template Pattern).</p>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="query_relation.html" class="btn btn-neutral float-right" title="active_record::query_relation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="sqlite3.html" class="btn btn-neutral float-left" title="namespace active_record::sqlite3" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="PostgreSQL.html" class="btn btn-neutral float-left" title="namespace active_record::PostgreSQL" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

@@ -47,6 +47,8 @@ active_record::model
           - 
         * - :cpp:func:`left_join`
           - 
+        * - :cpp:func:`group_by`
+          -
         * - :cpp:func:`count`
           - 
         * - :cpp:func:`sum`
@@ -78,8 +80,8 @@ active_record::model
 
       .. code-block:: cpp
 
-        static query_relation<bool, BindAttrs> insert(const Derived& model);
-        static query_relation<bool, BindAttrs> insert(Derived&& model);
+        static query_relation<bool, /*model attributes*/> insert(const Derived& model);
+        static query_relation<bool, /*model attributes*/> insert(Derived&& model);
 
     .. cpp:function:: all()
 
@@ -161,6 +163,13 @@ active_record::model
         template<typename ReferModel>
         requires std::derived_from<ReferModel, model<ReferModel>>
         static query_relation<std::vector<Derived>, std::tuple<>> left_join();
+
+    .. cpp:function:: group_by()
+
+      .. code-block:: cpp
+
+        template<Attribute Attr>
+        static query_relation<std::unordered_map<Attr, std::tuple<>>, std::tuple<>> group_by();
 
     .. cpp:function:: count()
 

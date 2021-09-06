@@ -42,8 +42,6 @@ This example will insert the below values.
     * - example_table.name
       - :code:`unknown`
 
-Data inserting code.
-
 .. code-block:: cpp
     :caption: inserting example code
 
