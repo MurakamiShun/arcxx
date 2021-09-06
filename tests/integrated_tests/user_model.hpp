@@ -26,6 +26,8 @@ struct User : public active_record::model<User> {
         inline static decltype(auto) column_name = "height";
         using decimal<User, Height>::decimal;
     } height;
+
+    int i_am_structure_noise = 0;
 };
 
 /*

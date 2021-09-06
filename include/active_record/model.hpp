@@ -32,13 +32,13 @@ namespace active_record {
             //return apply_elements_filter<is_attribute>(bind_to_tuple<Derived, 1>{}(*reinterpret_cast<Derived*>(this)));
             const auto attributes_tuple = bind_to_tuple<Derived, 1>{}(*reinterpret_cast<Derived*>(this));
             using attrs_tuple_type = apply_to_elements_t<decltype(attributes_tuple), std::remove_const_t>;
-            return attrs_tuple_type{ attributes_tuple };
+            return apply_elements_filter<is_attribute>(attrs_tuple_type{ attributes_tuple });
         }
         auto get_attributes_tuple() const noexcept {
             //return apply_elements_filter<is_attribute>(bind_to_tuple<const Derived, 1>{}(*reinterpret_cast<const Derived*>(this)));
             const auto attributes_tuple = bind_to_tuple<const Derived, 1>{}(*reinterpret_cast<const Derived*>(this));
             //using attrs_tuple_type = apply_to_elements_t<decltype(attributes_tuple), std::remove_const_t>;
-            return attributes_tuple;
+            return apply_elements_filter<is_attribute>(attributes_tuple);
         }
 
         [[nodiscard]] static auto insert(const Derived& model);

@@ -21,8 +21,6 @@ struct User : public active_record::model<User> {
 
         inline static const auto constraints = { default_value("unknow"), length(128) };
     } name;
-
-    std::tuple<ID&, Name&> attributes = std::tie(id, name);
 };
 ```
 
@@ -98,3 +96,8 @@ Waiting
 
 # License
 This software is released under the Apache-2.0 License, see [LICENSE](LICENSE).
+
+Active Record C++ depends on third party libraries. To use these subcomponents is subject to the terms and conditions of the following licenses.
+
+* libsqlite3 ([https://www.sqlite.org/copyright.html](https://www.sqlite.org/copyright.html))
+* libpq ([https://www.postgresql.org/about/licence/](https://www.postgresql.org/about/licence/))

@@ -28,7 +28,7 @@ msgid ""
 "definition. :code:`active_record::model` is designed using CRTP(Curiously"
 " Recurring Template Pattern)."
 msgstr ""
-" modelの定義には :code:`table_name` 静的メンバ変数が必要です。"
+"modelの定義には :code:`table_name` 静的メンバ変数が必要です。"
 " :code:`active_record::model` は CRTP(奇妙に再帰したテンプレートパターン)を使用しています。"
 
 #: ../../source/api/active_record/model.rst:12
@@ -126,7 +126,7 @@ msgstr ""
 
 #: ../../source/api/active_record/model.rst:77
 msgid "The data inserting example is :doc:`here </tutorial/inserting>`."
-msgstr "データ挿入の例は :doc:`here </tutorial/inserting>`にあります。"
+msgstr "データ挿入の例は :doc:`here </tutorial/inserting>` にあります。"
 
 #: ../../source/api/active_record/model.rst:86
 msgid "Get all model data in database."
@@ -134,15 +134,15 @@ msgstr "データベースに存在する全てのデータを取得します。
 
 #: ../../source/api/active_record/model.rst:94
 msgid "The select function example is :doc:`here </tutorial/select_columns>`."
-msgstr "select関数の例は :doc:`here </tutorial/select_columns>`にあります。"
+msgstr "select関数の例は :doc:`here </tutorial/select_columns>` にあります。"
 
 #: ../../source/api/active_record/model.rst:106
 msgid "The pluck function example is :doc:`here </tutorial/select_columns>`."
-msgstr "pluck関数の例は :doc:`here </tutorial/select_columns>`にあります。"
+msgstr "pluck関数の例は :doc:`here </tutorial/select_columns>` にあります。"
 
 #: ../../source/api/active_record/model.rst:117
 msgid "The example is :doc:`here </tutorial/find_columns>`."
-msgstr "例は :doc:`here </tutorial/find_columns>`にあります。"
+msgstr "例は :doc:`here </tutorial/find_columns>` にあります。"
 
 #: ../../source/api/active_record/model.rst:167
 #: ../../source/api/active_record/model.rst:175
@@ -150,4 +150,4 @@ msgstr "例は :doc:`here </tutorial/find_columns>`にあります。"
 #: ../../source/api/active_record/model.rst:195
 #: ../../source/api/active_record/model.rst:205
 msgid "The aggregation examples is :doc:`here </tutorial/aggregation>`."
-msgstr "集計の例は :doc:`here </tutorial/aggregation>`にあります。"
+msgstr "集計の例は :doc:`here </tutorial/aggregation>` にあります。"

@@ -157,17 +157,16 @@ namespace active_record{
     template<template<typename>typename C, template<typename...>typename TupleType, typename Head, typename... Elm>
     auto apply_elements_filter(TupleType<Head, Elm...> tuple){
         if constexpr(sizeof...(Elm) == 0){
-            if constexpr(C<Head>::value) return std::tie(std::get<0>(tuple));
-            else return std::tuple<>{};
+            if constexpr(C<std::remove_reference_t<Head>>::value) return std::tie(std::get<0>(tuple));
+            else return TupleType<>{};
         }
         else{
-            if constexpr(C<Head>::value) return std::tuple_cat(std::tie(std::get<0>(tuple)), apply_elements_filter<C>(tuple_slice(tuple, make_index_sequence_between<0, sizeof...(Elm)>())));
-            else return apply_elements_filter<C>(tuple_slice(tuple, make_index_sequence_between<0, sizeof...(Elm)>()));
+            if constexpr(C<std::remove_reference_t<Head>>::value) return std::tuple_cat(std::tie(std::get<0>(tuple)), apply_elements_filter<C>(tuple_slice(tuple, make_index_sequence_between<1, sizeof...(Elm)+1>())));
+            else return apply_elements_filter<C>(tuple_slice(tuple, make_index_sequence_between<1, sizeof...(Elm)+1>()));
         }
     }
     template<typename T, template<typename>typename Condition>
     using apply_elements_filter_t = decltype(apply_elements_filter<Condition>(std::declval<T>()));
-
 
     [[nodiscard]] inline active_record::string sanitize(const active_record::string& src) {
         active_record::string result;

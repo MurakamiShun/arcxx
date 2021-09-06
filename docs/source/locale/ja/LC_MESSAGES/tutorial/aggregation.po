@@ -39,7 +39,8 @@ msgid ""
 "Column aggregation functions, :code:`avg()` and :code:`max` etc... are "
 "used like :code:`count()` function."
 msgstr ""
-" :code:`avg()` や :code:`max()` といった カラム集計関数は :code:`count()` と同じように使用することができます。"
+":code:`avg()` や :code:`max()` といったカラム集計関数は"
+" :code:`count()` と同じように使用することができます。"
 
 #: ../../source/tutorial/aggregation.rst:50
 msgid "Also, aggregation functions can be used in select."
