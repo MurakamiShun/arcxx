@@ -109,6 +109,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../active_record.html">namespace active_record</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../active_record/attributes.html">namespace active_record::attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../active_record/sqlite3.html">namespace active_record::sqlite3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../active_record/PostgreSQL.html">namespace active_record::PostgreSQL</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">class</span></p>
 <ul class="current">
@@ -203,6 +204,57 @@
 </div>
 <p>This class is database connector class for PostgreSQL.
 “libpq-dev” is required to use this class.</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18postgresql_adaptor4openEv">
+<span id="_CPPv3N18postgresql_adaptor4openEv"></span><span id="_CPPv2N18postgresql_adaptor4openEv"></span><span id="postgresql_adaptor::open"></span><span class="sig-name descname"><span class="n"><span class="pre">open</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18postgresql_adaptor4openEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">postgresql_adaptor</span><span class="w"> </span><span class="n">open</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">PostgreSQL</span><span class="o">::</span><span class="n">endpoint</span><span class="w"> </span><span class="n">endpoint_info</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">PostgreSQL</span><span class="o">::</span><span class="n">auth</span><span class="o">&gt;</span><span class="w"> </span><span class="n">auth_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">PostgreSQL</span><span class="o">::</span><span class="n">options</span><span class="o">&gt;</span><span class="w"> </span><span class="n">option</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="w"></span>
+<span class="p">)</span><span class="w"></span>
+<span class="k">static</span><span class="w"> </span><span class="n">postgresql_adaptor</span><span class="w"> </span><span class="n">open</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">connection_info</span><span class="p">)</span><span class="w"></span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18postgresql_adaptor5closeEv">
+<span id="_CPPv3N18postgresql_adaptor5closeEv"></span><span id="_CPPv2N18postgresql_adaptor5closeEv"></span><span id="postgresql_adaptor::close"></span><span class="sig-name descname"><span class="n"><span class="pre">close</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18postgresql_adaptor5closeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18postgresql_adaptor16protocol_versionEv">
+<span id="_CPPv3N18postgresql_adaptor16protocol_versionEv"></span><span id="_CPPv2N18postgresql_adaptor16protocol_versionEv"></span><span id="postgresql_adaptor::protocol_version"></span><span class="sig-name descname"><span class="n"><span class="pre">protocol_version</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18postgresql_adaptor16protocol_versionEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return PQprotocolVersion.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">protocol_version</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18postgresql_adaptor14server_versionEv">
+<span id="_CPPv3N18postgresql_adaptor14server_versionEv"></span><span id="_CPPv2N18postgresql_adaptor14server_versionEv"></span><span id="postgresql_adaptor::server_version"></span><span class="sig-name descname"><span class="n"><span class="pre">server_version</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18postgresql_adaptor14server_versionEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return PQserverVersion.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">server_version</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18postgresql_adaptor4execEv">
+<span id="_CPPv3N18postgresql_adaptor4execEv"></span><span id="_CPPv2N18postgresql_adaptor4execEv"></span><span id="postgresql_adaptor::exec"></span><span class="sig-name descname"><span class="n"><span class="pre">exec</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18postgresql_adaptor4execEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18postgresql_adaptor12create_tableEv">
+<span id="_CPPv3N18postgresql_adaptor12create_tableEv"></span><span id="_CPPv2N18postgresql_adaptor12create_tableEv"></span><span id="postgresql_adaptor::create_table"></span><span class="sig-name descname"><span class="n"><span class="pre">create_table</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18postgresql_adaptor12create_tableEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18postgresql_adaptor11transactionEv">
+<span id="_CPPv3N18postgresql_adaptor11transactionEv"></span><span id="_CPPv2N18postgresql_adaptor11transactionEv"></span><span id="postgresql_adaptor::transaction"></span><span class="sig-name descname"><span class="n"><span class="pre">transaction</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18postgresql_adaptor11transactionEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>

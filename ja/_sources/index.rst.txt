@@ -34,6 +34,7 @@ API
    /api/active_record
    /api/active_record/attributes
    /api/active_record/sqlite3
+   /api/active_record/PostgreSQL
 
 .. toctree::
    :maxdepth: 1
