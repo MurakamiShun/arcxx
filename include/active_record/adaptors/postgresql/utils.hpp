@@ -47,7 +47,7 @@ namespace active_record::PostgreSQL::detail {
         if (!attr) return static_cast<const char*>(nullptr);
         // PostgreSQL use IEE 754
         if constexpr(std::numeric_limits<typename Attr::value_type>::is_iec559){
-            const auto tmp_value = byte_swap(std::bit_cast<uint<sizeof(typename Attr::value_type)>::type>(attr.value()));
+            const auto tmp_value = byte_swap(std::bit_cast<typename uint<sizeof(typename Attr::value_type)>::type>(attr.value()));
             tmp = tmp_value;
             return reinterpret_cast<const char*>(std::any_cast<decltype(tmp_value)>(&tmp));
         }

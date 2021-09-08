@@ -126,7 +126,7 @@ namespace active_record {
             return PQprotocolVersion(conn);
         }
         int server_version() const {
-            return PQprotocolVersion(conn);
+            return PQserverVersion(conn);
         }
 
         ~postgresql_adaptor() {
