@@ -20,5 +20,8 @@ namespace active_record {
     struct query_relation;
 
     template<Tuple BindAttrs>
+    struct query_expression;
+
+    template<Tuple BindAttrs>
     struct query_condition;
 }
