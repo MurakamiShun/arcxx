@@ -1,74 +1,35 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="ja" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>namespace active_record::PostgreSQL &mdash; Active Record C++  ドキュメント</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/translations.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="索引" href="../../genindex.html" />
     <link rel="search" title="検索" href="../../search.html" />
     <link rel="next" title="active_record::model" href="model.html" />
     <link rel="prev" title="namespace active_record::sqlite3" href="sqlite3.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> Active Record C++
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -76,18 +37,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">インストール</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../installation/cmake.html">CMakeを利用したライブラリの導入</a></li>
@@ -124,136 +74,93 @@
 <li class="toctree-l1"><a class="reference internal" href="../adaptors/sqlite3_adaptor.html">active_record::sqlite3_adaptor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">Active Record C++</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../active_record.html">namespace active_record</a> &raquo;</li>
-        
       <li>namespace active_record::PostgreSQL</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/api/active_record/PostgreSQL.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="namespace-active-record-postgresql">
-<h1>namespace active_record::PostgreSQL<a class="headerlink" href="#namespace-active-record-postgresql" title="このヘッドラインへのパーマリンク">¶</a></h1>
+             
+  <section id="namespace-active-record-postgresql">
+<h1>namespace active_record::PostgreSQL<a class="headerlink" href="#namespace-active-record-postgresql" title="このヘッドラインへのパーマリンク"></a></h1>
 <dl class="cpp struct">
 <dt class="sig sig-object cpp" id="_CPPv4N13active_record10PostgreSQL7adaptorE">
-<span id="_CPPv3N13active_record10PostgreSQL7adaptorE"></span><span id="_CPPv2N13active_record10PostgreSQL7adaptorE"></span><span id="active_record::PostgreSQL::adaptor"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">PostgreSQL</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">adaptor</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL7adaptorE" title="この定義へのパーマリンク">¶</a><br /></dt>
+<span id="_CPPv3N13active_record10PostgreSQL7adaptorE"></span><span id="_CPPv2N13active_record10PostgreSQL7adaptorE"></span><span id="active_record::PostgreSQL::adaptor"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">PostgreSQL</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">adaptor</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL7adaptorE" title="この定義へのパーマリンク"></a><br /></dt>
 <dd><p>詳細は <a class="reference internal" href="../adaptors/postgresql_adaptor.html"><span class="doc">active_record::postgresql_adaptor</span></a></p>
 </dd></dl>
 
 <dl class="cpp struct">
 <dt class="sig sig-object cpp" id="_CPPv4N13active_record10PostgreSQL8endpointE">
-<span id="_CPPv3N13active_record10PostgreSQL8endpointE"></span><span id="_CPPv2N13active_record10PostgreSQL8endpointE"></span><span id="active_record::PostgreSQL::endpoint"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">PostgreSQL</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">endpoint</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL8endpointE" title="この定義へのパーマリンク">¶</a><br /></dt>
+<span id="_CPPv3N13active_record10PostgreSQL8endpointE"></span><span id="_CPPv2N13active_record10PostgreSQL8endpointE"></span><span id="active_record::PostgreSQL::endpoint"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">PostgreSQL</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">endpoint</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL8endpointE" title="この定義へのパーマリンク"></a><br /></dt>
 <dd><dl class="cpp member">
 <dt class="sig sig-object cpp" id="_CPPv4N13active_record10PostgreSQL8endpoint11server_nameE">
-<span id="_CPPv3N13active_record10PostgreSQL8endpoint11server_nameE"></span><span id="_CPPv2N13active_record10PostgreSQL8endpoint11server_nameE"></span><span id="active_record::PostgreSQL::endpoint::server_name__active_record::stringC"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">server_name</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL8endpoint11server_nameE" title="この定義へのパーマリンク">¶</a><br /></dt>
+<span id="_CPPv3N13active_record10PostgreSQL8endpoint11server_nameE"></span><span id="_CPPv2N13active_record10PostgreSQL8endpoint11server_nameE"></span><span id="active_record::PostgreSQL::endpoint::server_name__active_record::stringC"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">server_name</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL8endpoint11server_nameE" title="この定義へのパーマリンク"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp member">
 <dt class="sig sig-object cpp" id="_CPPv4N13active_record10PostgreSQL8endpoint4portE">
-<span id="_CPPv3N13active_record10PostgreSQL8endpoint4portE"></span><span id="_CPPv2N13active_record10PostgreSQL8endpoint4portE"></span><span id="active_record::PostgreSQL::endpoint::port__active_record::stringC"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">port</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;5432&quot;</span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL8endpoint4portE" title="この定義へのパーマリンク">¶</a><br /></dt>
+<span id="_CPPv3N13active_record10PostgreSQL8endpoint4portE"></span><span id="_CPPv2N13active_record10PostgreSQL8endpoint4portE"></span><span id="active_record::PostgreSQL::endpoint::port__active_record::stringC"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">port</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><s><span class="pre">&quot;5432&quot;</span></s><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL8endpoint4portE" title="この定義へのパーマリンク"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp member">
 <dt class="sig sig-object cpp" id="_CPPv4N13active_record10PostgreSQL8endpoint7db_nameE">
-<span id="_CPPv3N13active_record10PostgreSQL8endpoint7db_nameE"></span><span id="_CPPv2N13active_record10PostgreSQL8endpoint7db_nameE"></span><span id="active_record::PostgreSQL::endpoint::db_name__active_record::stringC"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">db_name</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL8endpoint7db_nameE" title="この定義へのパーマリンク">¶</a><br /></dt>
+<span id="_CPPv3N13active_record10PostgreSQL8endpoint7db_nameE"></span><span id="_CPPv2N13active_record10PostgreSQL8endpoint7db_nameE"></span><span id="active_record::PostgreSQL::endpoint::db_name__active_record::stringC"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">db_name</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL8endpoint7db_nameE" title="この定義へのパーマリンク"></a><br /></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="cpp struct">
 <dt class="sig sig-object cpp" id="_CPPv4N13active_record10PostgreSQL4authE">
-<span id="_CPPv3N13active_record10PostgreSQL4authE"></span><span id="_CPPv2N13active_record10PostgreSQL4authE"></span><span id="active_record::PostgreSQL::auth"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">PostgreSQL</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">auth</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL4authE" title="この定義へのパーマリンク">¶</a><br /></dt>
+<span id="_CPPv3N13active_record10PostgreSQL4authE"></span><span id="_CPPv2N13active_record10PostgreSQL4authE"></span><span id="active_record::PostgreSQL::auth"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">PostgreSQL</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">auth</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL4authE" title="この定義へのパーマリンク"></a><br /></dt>
 <dd><dl class="cpp member">
 <dt class="sig sig-object cpp" id="_CPPv4N13active_record10PostgreSQL4auth4userE">
-<span id="_CPPv3N13active_record10PostgreSQL4auth4userE"></span><span id="_CPPv2N13active_record10PostgreSQL4auth4userE"></span><span id="active_record::PostgreSQL::auth::user__active_record::stringC"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">user</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL4auth4userE" title="この定義へのパーマリンク">¶</a><br /></dt>
+<span id="_CPPv3N13active_record10PostgreSQL4auth4userE"></span><span id="_CPPv2N13active_record10PostgreSQL4auth4userE"></span><span id="active_record::PostgreSQL::auth::user__active_record::stringC"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">user</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL4auth4userE" title="この定義へのパーマリンク"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp member">
 <dt class="sig sig-object cpp" id="_CPPv4N13active_record10PostgreSQL4auth8passwordE">
-<span id="_CPPv3N13active_record10PostgreSQL4auth8passwordE"></span><span id="_CPPv2N13active_record10PostgreSQL4auth8passwordE"></span><span id="active_record::PostgreSQL::auth::password__active_record::stringC"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">password</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL4auth8passwordE" title="この定義へのパーマリンク">¶</a><br /></dt>
+<span id="_CPPv3N13active_record10PostgreSQL4auth8passwordE"></span><span id="_CPPv2N13active_record10PostgreSQL4auth8passwordE"></span><span id="active_record::PostgreSQL::auth::password__active_record::stringC"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">password</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL4auth8passwordE" title="この定義へのパーマリンク"></a><br /></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="cpp struct">
 <dt class="sig sig-object cpp" id="_CPPv4N13active_record10PostgreSQL7optionsE">
-<span id="_CPPv3N13active_record10PostgreSQL7optionsE"></span><span id="_CPPv2N13active_record10PostgreSQL7optionsE"></span><span id="active_record::PostgreSQL::options"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">PostgreSQL</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">options</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL7optionsE" title="この定義へのパーマリンク">¶</a><br /></dt>
+<span id="_CPPv3N13active_record10PostgreSQL7optionsE"></span><span id="_CPPv2N13active_record10PostgreSQL7optionsE"></span><span id="active_record::PostgreSQL::options"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">PostgreSQL</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">options</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL7optionsE" title="この定義へのパーマリンク"></a><br /></dt>
 <dd><dl class="cpp member">
 <dt class="sig sig-object cpp" id="_CPPv4N13active_record10PostgreSQL7options6optionE">
-<span id="_CPPv3N13active_record10PostgreSQL7options6optionE"></span><span id="_CPPv2N13active_record10PostgreSQL7options6optionE"></span><span id="active_record::PostgreSQL::options::option__active_record::stringC"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">option</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL7options6optionE" title="この定義へのパーマリンク">¶</a><br /></dt>
+<span id="_CPPv3N13active_record10PostgreSQL7options6optionE"></span><span id="_CPPv2N13active_record10PostgreSQL7options6optionE"></span><span id="active_record::PostgreSQL::options::option__active_record::stringC"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">option</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL7options6optionE" title="この定義へのパーマリンク"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp member">
 <dt class="sig sig-object cpp" id="_CPPv4N13active_record10PostgreSQL7options8debug_ofE">
-<span id="_CPPv3N13active_record10PostgreSQL7options8debug_ofE"></span><span id="_CPPv2N13active_record10PostgreSQL7options8debug_ofE"></span><span id="active_record::PostgreSQL::options::debug_of__active_record::stringC"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">debug_of</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL7options8debug_ofE" title="この定義へのパーマリンク">¶</a><br /></dt>
+<span id="_CPPv3N13active_record10PostgreSQL7options8debug_ofE"></span><span id="_CPPv2N13active_record10PostgreSQL7options8debug_ofE"></span><span id="active_record::PostgreSQL::options::debug_of__active_record::stringC"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">debug_of</span></span></span><a class="headerlink" href="#_CPPv4N13active_record10PostgreSQL7options8debug_ofE" title="この定義へのパーマリンク"></a><br /></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
@@ -289,22 +196,13 @@
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

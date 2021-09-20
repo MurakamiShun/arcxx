@@ -1,73 +1,34 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Table Creation &mdash; Active Record C++  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Data Inserting" href="inserting.html" />
     <link rel="prev" title="active_record::sqlite3_adaptor" href="../api/adaptors/sqlite3_adaptor.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> Active Record C++
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -75,18 +36,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation/cmake.html">Installation with CMake</a></li>
@@ -127,80 +77,39 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/adaptors/sqlite3_adaptor.html">active_record::sqlite3_adaptor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">Active Record C++</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Table Creation</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/tutorial/table_creation.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="table-creation">
-<h1>Table Creation<a class="headerlink" href="#table-creation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="model-definition">
-<h2>Model Definition<a class="headerlink" href="#model-definition" title="Permalink to this headline">¶</a></h2>
+             
+  <section id="table-creation">
+<h1>Table Creation<a class="headerlink" href="#table-creation" title="Permalink to this headline"></a></h1>
+<section id="model-definition">
+<h2>Model Definition<a class="headerlink" href="#model-definition" title="Permalink to this headline"></a></h2>
 <p><code class="code docutils literal notranslate"><span class="pre">table_name</span></code> is required in model struct definition. Also, the model needs to be structured bindable.
 And column struct requires <code class="code docutils literal notranslate"><span class="pre">column_name</span></code> and inheriting constructors in the definition.</p>
 <p>base classes, <a class="reference internal" href="../api/active_record/model.html"><span class="doc">active_record::model</span></a> and <a class="reference internal" href="../api/active_record/attributes.html"><span class="doc">active_record::attribute</span></a> are using CRTP(Curiously Recurring Template Pattern).</p>
 <table class="docutils align-default" id="id2">
-<caption><span class="caption-text">example_table</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">example_table</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -222,7 +131,7 @@ And column struct requires <code class="code docutils literal notranslate"><span
 </tbody>
 </table>
 <div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-text">example_table code</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">example_table code</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;active_record.hpp&gt;</span><span class="cp"></span>
 
 <span class="k">struct</span> <span class="nc">ExampleTable</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">model</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
@@ -245,17 +154,17 @@ And column struct requires <code class="code docutils literal notranslate"><span
 </div>
 </div>
 <p>Attribute details are written in <a class="reference internal" href="../api/active_record/attributes.html"><span class="doc">namespace active_record::attributes</span></a>.</p>
-</div>
-<div class="section" id="id1">
-<h2>Table Creation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="id1">
+<h2>Table Creation<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h2>
 <div class="literal-block-wrapper docutils container" id="id4">
-<div class="code-block-caption"><span class="caption-text">Generate table creation SQL code (SQLite3)</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">Generate table creation SQL code (SQLite3)</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">schema</span><span class="o">::</span><span class="n">to_sql</span><span class="o">&lt;</span><span class="n">active_record</span><span class="o">::</span><span class="n">sqlite3_adaptor</span><span class="o">&gt;</span><span class="p">()</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
 <div class="literal-block-wrapper docutils container" id="id5">
-<div class="code-block-caption"><span class="caption-text">Generated SQL code (SQLite3)</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">Generated SQL code (SQLite3)</span><a class="headerlink" href="#id5" title="Permalink to this code"></a></div>
 <div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">example_table</span><span class="p">(</span>
     <span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
     <span class="n">name</span> <span class="nb">TEXT</span>
@@ -264,18 +173,17 @@ And column struct requires <code class="code docutils literal notranslate"><span
 </div>
 </div>
 <div class="literal-block-wrapper docutils container" id="id6">
-<div class="code-block-caption"><span class="caption-text">Create table into Database file.</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-text">Create table into Database file.</span><a class="headerlink" href="#id6" title="Permalink to this code"></a></div>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">sqlite3_adaptor</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;example.sqlite3&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">sqlite3</span><span class="o">::</span><span class="n">options</span><span class="o">::</span><span class="n">create</span><span class="p">);</span><span class="w"></span>
 <span class="n">connection</span><span class="p">.</span><span class="n">create_table</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span><span class="p">();</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
@@ -311,22 +219,13 @@ And column struct requires <code class="code docutils literal notranslate"><span
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

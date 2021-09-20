@@ -1,73 +1,34 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>active_record::attributes::binary &mdash; Active Record C++  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
+    <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="active_record::attributes::boolean" href="boolean.html" />
     <link rel="prev" title="namespace active_record::attributes" href="../attributes.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../../index.html" class="icon icon-home"> Active Record C++
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -75,18 +36,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation/cmake.html">Installation with CMake</a></li>
@@ -123,83 +73,40 @@
 <li class="toctree-l1"><a class="reference internal" href="../../adaptors/sqlite3_adaptor.html">active_record::sqlite3_adaptor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">Active Record C++</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../../active_record.html">namespace active_record</a> &raquo;</li>
-        
           <li><a href="../attributes.html">namespace active_record::attributes</a> &raquo;</li>
-        
       <li>active_record::attributes::binary</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../../_sources/api/active_record/attributes/binary.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="active-record-attributes-binary">
-<h1>active_record::attributes::binary<a class="headerlink" href="#active-record-attributes-binary" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="active-record-attributes-binary">
+<h1>active_record::attributes::binary<a class="headerlink" href="#active-record-attributes-binary" title="Permalink to this headline"></a></h1>
 <dl class="cpp struct">
 <dt class="sig sig-object cpp" id="_CPPv4I00E6binary">
-<span id="_CPPv3I00E6binary"></span><span id="_CPPv2I00E6binary"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Model</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Attribute</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">binary</span></span></span><a class="headerlink" href="#_CPPv4I00E6binary" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3I00E6binary"></span><span id="_CPPv2I00E6binary"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Model</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Attribute</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">binary</span></span></span><a class="headerlink" href="#_CPPv4I00E6binary" title="Permalink to this definition"></a><br /></dt>
 <dd><p>binary attribute.</p>
 <table class="docutils align-default" id="id1">
-<caption><span class="caption-text">Member functions</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Member functions</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -217,7 +124,7 @@
 </tbody>
 </table>
 <table class="docutils align-default" id="id2">
-<caption><span class="caption-text">Member variables</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Member variables</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -229,7 +136,7 @@
 </tbody>
 </table>
 <table class="docutils align-default" id="id3">
-<caption><span class="caption-text">Member types</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Member types</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -250,7 +157,7 @@
 </tbody>
 </table>
 <table class="docutils align-default" id="id4">
-<caption><span class="caption-text">Observers</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Observers</span><a class="headerlink" href="#id4" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -265,7 +172,7 @@
 </tbody>
 </table>
 <table class="docutils align-default" id="id5">
-<caption><span class="caption-text">Condition Queries</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Condition Queries</span><a class="headerlink" href="#id5" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -286,7 +193,7 @@
 </tbody>
 </table>
 <table class="docutils align-default" id="id6">
-<caption><span class="caption-text">String mutual converts</span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">String mutual converts</span><a class="headerlink" href="#id6" title="Permalink to this table"></a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -302,7 +209,7 @@
 </table>
 <span class="target" id="binary-constructors"></span><dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6binary6binaryEv">
-<span id="_CPPv3N6binary6binaryEv"></span><span id="_CPPv2N6binary6binaryEv"></span><span id="binary::binary"></span><span class="sig-name descname"><span class="n"><span class="pre">binary</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binary6binaryEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N6binary6binaryEv"></span><span id="_CPPv2N6binary6binaryEv"></span><span id="binary::binary"></span><span class="sig-name descname"><span class="n"><span class="pre">binary</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binary6binaryEv" title="Permalink to this definition"></a><br /></dt>
 <dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span><span class="w"> </span><span class="n">binary</span><span class="p">();</span><span class="w"></span>
 <span class="k">constexpr</span><span class="w"> </span><span class="n">binary</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">byte</span><span class="o">&gt;&gt;&amp;</span><span class="p">);</span><span class="w"></span>
 <span class="k">constexpr</span><span class="w"> </span><span class="n">binary</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">byte</span><span class="o">&gt;&gt;&amp;&amp;</span><span class="p">);</span><span class="w"></span>
@@ -316,7 +223,7 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6binaryaSEv">
-<span id="_CPPv3N6binaryaSEv"></span><span id="_CPPv2N6binaryaSEv"></span><span id="binary::assign-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binaryaSEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N6binaryaSEv"></span><span id="_CPPv2N6binaryaSEv"></span><span id="binary::assign-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binaryaSEv" title="Permalink to this definition"></a><br /></dt>
 <dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Attribute</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Attribute</span><span class="o">&amp;</span><span class="p">);</span><span class="w"></span>
 <span class="n">Attribute</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">Attribute</span><span class="o">&amp;&amp;</span><span class="p">);</span><span class="w"></span>
 
@@ -332,7 +239,7 @@
 
 <span class="target" id="binary-destructors"></span><dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6binaryD0Ev">
-<span id="_CPPv3N6binaryD0Ev"></span><span id="_CPPv2N6binaryD0Ev"></span><span id="binary::~binary"></span><span class="sig-name descname"><span class="n"><span class="pre">~binary</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binaryD0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N6binaryD0Ev"></span><span id="_CPPv2N6binaryD0Ev"></span><span id="binary::~binary"></span><span class="sig-name descname"><span class="n"><span class="pre">~binary</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binaryD0Ev" title="Permalink to this definition"></a><br /></dt>
 <dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span><span class="w"> </span><span class="k">virtual</span><span class="w"> </span><span class="o">~</span><span class="n">binary</span><span class="p">();</span><span class="w"></span>
 </pre></div>
 </div>
@@ -340,7 +247,7 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6binarycvbEv">
-<span id="_CPPv3N6binarycvbEv"></span><span id="_CPPv2N6binarycvbEv"></span><span id="binary::castto-b-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binarycvbEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N6binarycvbEv"></span><span id="_CPPv2N6binarycvbEv"></span><span id="binary::castto-b-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binarycvbEv" title="Permalink to this definition"></a><br /></dt>
 <dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span><span class="w"> </span><span class="k">operator</span><span class="w"> </span><span class="kt">bool</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">noexcept</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
@@ -349,7 +256,7 @@
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6binary5valueEv">
-<span id="_CPPv3N6binary5valueEv"></span><span id="_CPPv2N6binary5valueEv"></span><span id="binary::value"></span><span class="sig-name descname"><span class="n"><span class="pre">value</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binary5valueEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N6binary5valueEv"></span><span id="_CPPv2N6binary5valueEv"></span><span id="binary::value"></span><span class="sig-name descname"><span class="n"><span class="pre">value</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binary5valueEv" title="Permalink to this definition"></a><br /></dt>
 <dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">byte</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="p">;</span><span class="w"></span>
 <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">byte</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="p">;</span><span class="w"></span>
 <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">byte</span><span class="o">&gt;&amp;&amp;</span><span class="w"> </span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="p">;</span><span class="w"></span>
@@ -361,7 +268,7 @@ If the value is null, throw <code class="code docutils literal notranslate"><spa
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6binary2inEv">
-<span id="_CPPv3N6binary2inEv"></span><span id="_CPPv2N6binary2inEv"></span><span id="binary::in"></span><span class="sig-name descname"><span class="n"><span class="pre">in</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binary2inEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N6binary2inEv"></span><span id="_CPPv2N6binary2inEv"></span><span id="binary::in"></span><span class="sig-name descname"><span class="n"><span class="pre">in</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binary2inEv" title="Permalink to this definition"></a><br /></dt>
 <dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span><span class="w"> </span><span class="n">Attrs</span><span class="o">&gt;</span><span class="w"></span>
 <span class="n">query_condition</span><span class="w"> </span><span class="n">in</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Attrs</span><span class="o">&amp;&amp;</span><span class="p">...</span><span class="w"> </span><span class="n">args</span><span class="p">);</span><span class="w"></span>
 </pre></div>
@@ -372,7 +279,7 @@ If the value is null, throw <code class="code docutils literal notranslate"><spa
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6binary7betweenEv">
-<span id="_CPPv3N6binary7betweenEv"></span><span id="_CPPv2N6binary7betweenEv"></span><span id="binary::between"></span><span class="sig-name descname"><span class="n"><span class="pre">between</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binary7betweenEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N6binary7betweenEv"></span><span id="_CPPv2N6binary7betweenEv"></span><span id="binary::between"></span><span class="sig-name descname"><span class="n"><span class="pre">between</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binary7betweenEv" title="Permalink to this definition"></a><br /></dt>
 <dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">query_condition</span><span class="w"> </span><span class="nf">between</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">convertible_to</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">byte</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">arg1</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">convertible_to</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">byte</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">arg2</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
@@ -382,7 +289,7 @@ If the value is null, throw <code class="code docutils literal notranslate"><spa
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6binaryaaEv">
-<span id="_CPPv3N6binaryaaEv"></span><span id="_CPPv2N6binaryaaEv"></span><span id="binary::sand-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&amp;&amp;</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binaryaaEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N6binaryaaEv"></span><span id="_CPPv2N6binaryaaEv"></span><span id="binary::sand-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&amp;&amp;</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binaryaaEv" title="Permalink to this definition"></a><br /></dt>
 <dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">query_condition</span><span class="w"> </span><span class="k">operator</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">query_condition</span><span class="o">&amp;</span><span class="w"> </span><span class="n">condition</span><span class="p">);</span><span class="w"> </span><span class="c1">// (1)</span>
 
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Arg</span><span class="o">&gt;</span><span class="w"></span>
@@ -398,7 +305,7 @@ If the value is null, throw <code class="code docutils literal notranslate"><spa
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6binaryooEv">
-<span id="_CPPv3N6binaryooEv"></span><span id="_CPPv2N6binaryooEv"></span><span id="binary::sor-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">||</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binaryooEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N6binaryooEv"></span><span id="_CPPv2N6binaryooEv"></span><span id="binary::sor-operator"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">||</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binaryooEv" title="Permalink to this definition"></a><br /></dt>
 <dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">query_condition</span><span class="w"> </span><span class="k">operator</span><span class="o">||</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">query_condition</span><span class="o">&amp;</span><span class="w"> </span><span class="n">condition</span><span class="p">);</span><span class="w"> </span><span class="c1">// (1)</span>
 
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="nc">Arg</span><span class="o">&gt;</span><span class="w"></span>
@@ -414,7 +321,7 @@ If the value is null, throw <code class="code docutils literal notranslate"><spa
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6binary9to_stringEv">
-<span id="_CPPv3N6binary9to_stringEv"></span><span id="_CPPv2N6binary9to_stringEv"></span><span id="binary::to_string"></span><span class="sig-name descname"><span class="n"><span class="pre">to_string</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binary9to_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N6binary9to_stringEv"></span><span id="_CPPv2N6binary9to_stringEv"></span><span id="binary::to_string"></span><span class="sig-name descname"><span class="n"><span class="pre">to_string</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binary9to_stringEv" title="Permalink to this definition"></a><br /></dt>
 <dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">to_string</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
@@ -423,7 +330,7 @@ If the value is null, throw <code class="code docutils literal notranslate"><spa
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N6binary11from_stringEv">
-<span id="_CPPv3N6binary11from_stringEv"></span><span id="_CPPv2N6binary11from_stringEv"></span><span id="binary::from_string"></span><span class="sig-name descname"><span class="n"><span class="pre">from_string</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binary11from_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N6binary11from_stringEv"></span><span id="_CPPv2N6binary11from_stringEv"></span><span id="binary::from_string"></span><span class="sig-name descname"><span class="n"><span class="pre">from_string</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6binary11from_stringEv" title="Permalink to this definition"></a><br /></dt>
 <dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">from_string</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">string_view</span><span class="w"> </span><span class="n">str</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
@@ -432,11 +339,10 @@ If the value is null, throw <code class="code docutils literal notranslate"><spa
 
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
@@ -472,22 +378,13 @@ If the value is null, throw <code class="code docutils literal notranslate"><spa
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
