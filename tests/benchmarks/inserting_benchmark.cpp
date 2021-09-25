@@ -1,6 +1,6 @@
 
 #include "user_model.hpp"
-
+#include <iostream>
 TEST_CASE("User model inserting benchmark"){
     // Benchmark
     BENCHMARK_ADVANCED("10000 data inserting bench")(Catch::Benchmark::Chronometer meter){
@@ -16,6 +16,8 @@ TEST_CASE("User model inserting benchmark"){
             }
             return users;
         }();
+
+        std::cout << User::insert(users[0]).to_sql() << std::endl;
 
         meter.measure([&users](){
             std::size_t t = 0; // Optimization prevention

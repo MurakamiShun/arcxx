@@ -5,14 +5,15 @@
 namespace active_record {
     template<typename Derived>
     inline auto model<Derived>::insert(const Derived& model) {
-        using bindattr_t = apply_to_elements_t<apply_to_elements_t<decltype(model.get_attributes_tuple()), std::remove_reference_t>, std::remove_const_t>;
+        using namespace tuptup::type_placeholders;
+        using bindattr_t = tuptup::apply_type_t<std::remove_const<defer<std::remove_reference<_1>>>, decltype(model.attributes_as_tuple())>;
         query_relation<bool, bindattr_t> ret{ query_operation::insert };
         // get attribute copy from model
-        ret.bind_attrs = model.get_attributes_tuple();
+        ret.bind_attrs = model.attributes_as_tuple();
         ret.query_table.push_back(insert_column_names_to_string());
         // insert values
         ret.query_op_arg.push_back("(");
-        for(std::size_t i = 0; i < std::tuple_size_v<decltype(model.get_attributes_tuple())>; ++i){
+        for(std::size_t i = 0; i < std::tuple_size_v<decltype(model.attributes_as_tuple())>; ++i){
             if (i != 0) ret.query_op_arg.push_back(",");
             ret.query_op_arg.push_back(i);
         }
@@ -22,14 +23,15 @@ namespace active_record {
 
     template<typename Derived>
     inline auto model<Derived>::insert(Derived&& model) {
-        using bindattr_t = apply_to_elements_t<decltype(model.get_attributes_tuple()), std::remove_reference_t>;
+        using namespace tuptup::type_placeholders;
+        using bindattr_t = tuptup::apply_type_t<std::remove_reference<_1>, decltype(model.attributes_as_tuple())>;
         query_relation<bool, bindattr_t> ret{ query_operation::insert };
-        ret.bind_attrs = std::move(model.get_attributes_tuple());
+        ret.bind_attrs = std::move(model.attributes_as_tuple());
 
         ret.query_table.push_back(insert_column_names_to_string());
         // insert values
         ret.query_op_arg.push_back("(");
-        for(auto i = 0; i < std::tuple_size_v<decltype(model.get_attributes_tuple())>; ++i){
+        for(auto i = 0; i < std::tuple_size_v<decltype(model.attributes_as_tuple())>; ++i){
             if (i != 0) ret.query_op_arg.push_back(",");
             ret.query_op_arg.push_back(i);
         }
@@ -163,7 +165,7 @@ namespace active_record {
     inline query_relation<std::vector<Derived>, std::tuple<>> model<Derived>::join() {
         query_relation<std::vector<Derived>, std::tuple<>> ret{ query_operation::select };
 
-        using ReferenceAttribute = std::invoke_result_t<detail::get_reference_attr<ReferModel>, decltype(Derived{}.get_attributes_tuple())>;
+        using ReferenceAttribute = std::invoke_result_t<detail::get_reference_attr<ReferModel>, decltype(Derived{}.attributes_as_tuple())>;
 
         static_assert(!std::is_same_v<ReferenceAttribute, std::false_type>, "Derived model does not have reference to given model");
 
@@ -184,7 +186,7 @@ namespace active_record {
     inline query_relation<std::vector<Derived>, std::tuple<>> model<Derived>::left_join() {
         query_relation<std::vector<Derived>, std::tuple<>> ret{ query_operation::select };
 
-        using ReferenceAttribute = std::invoke_result_t<detail::get_reference_attr<ReferModel>, decltype(Derived{}.get_attributes_tuple())>;
+        using ReferenceAttribute = std::invoke_result_t<detail::get_reference_attr<ReferModel>, decltype(Derived{}.attributes_as_tuple())>;
 
         static_assert(!std::is_same_v<ReferenceAttribute, std::false_type>, "Derived model does not have reference to given model");
 
@@ -269,7 +271,7 @@ namespace active_record {
     inline active_record::string model<Derived>::schema::to_sql(bool abort_if_exist) {
         const auto column_definitions = std::apply(
             []<typename... Attrs>(const Attrs&...){ return std::array<const active_record::string, sizeof...(Attrs)>{(Adaptor::template column_definition<Attrs>())...}; },
-            Derived{}.get_attributes_tuple()
+            Derived{}.attributes_as_tuple()
         );
 
         active_record::string col_defs;

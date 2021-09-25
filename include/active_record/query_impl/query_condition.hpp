@@ -12,7 +12,7 @@ namespace active_record {
         };
 
         template<Tuple SrcBindAttrs>
-        [[nodiscard]] query_condition<active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> concat_conditions(query_condition<SrcBindAttrs>&&, const conjunction);
+        [[nodiscard]] query_condition<tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> concat_conditions(query_condition<SrcBindAttrs>&&, const conjunction);
     public:
         using str_or_bind = std::variant<active_record::string, std::size_t>;
         std::vector<str_or_bind> condition;

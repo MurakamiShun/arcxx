@@ -89,8 +89,12 @@ namespace active_record {
                 if(result_code != SQLITE_OK) return result_code;
 
                 if constexpr(query.bind_attrs_count() != 0) {
-                    result_code = indexed_apply(
-                        [stmt]<typename... Attrs>(const Attrs&... attr_ptrs){ return (active_record::sqlite3::detail::bind_variable(stmt, attr_ptrs.first, attr_ptrs.second) + ...);},
+                    result_code = SQLITE_OK;
+                    tuptup::indexed_apply_each(
+                        [stmt, &result_code]<std::size_t N, typename Attr>(const Attr& attr){
+                            const auto res = active_record::sqlite3::detail::bind_variable(stmt, N, attr);
+                            if(res != SQLITE_OK) result_code = res;
+                        },
                         query.bind_attrs
                     );
                     if(result_code != SQLITE_OK) return result_code;
@@ -104,11 +108,11 @@ namespace active_record {
                         }
                         else if constexpr (same_as_unordered_map<T>) {
                             if constexpr (Tuple<typename T::mapped_type>){
-                                using result_type = active_record::tuple_cat_t<std::tuple<typename T::key_type>, typename T::mapped_type>;
+                                using result_type = tuptup::tuple_cat_t<std::tuple<typename T::key_type>, typename T::mapped_type>;
                                 auto result_column = active_record::sqlite3::detail::extract_column_data<result_type>(stmt);
                                 result.insert(std::make_pair(
                                     std::get<0>(result_column),
-                                    active_record::tuple_slice(result_column, active_record::make_index_sequence_between<1, std::tuple_size_v<result_type>>())
+                                    tuptup::tuple_slice<tuptup::make_index_range<1, std::tuple_size_v<result_type>>>(result_column)
                                 ));
                             }
                             else{
@@ -143,8 +147,12 @@ namespace active_record {
             if(result_code != SQLITE_OK) return error_msg = get_error_msg(result_code);
 
             if constexpr(query.bind_attrs_count() != 0) {
-                result_code = indexed_apply(
-                    [stmt]<typename... Attrs>(const Attrs&... attr_ptrs){ return (active_record::sqlite3::detail::bind_variable(stmt, attr_ptrs.first, attr_ptrs.second) + ...);},
+                result_code = SQLITE_OK;
+                tuptup::indexed_apply_each(
+                    [stmt, &result_code]<std::size_t N, typename Attr>(const Attr& attr){
+                        const auto res = active_record::sqlite3::detail::bind_variable(stmt, N, attr);
+                        if (res != SQLITE_OK) result_code = res;
+                    },
                     query.bind_attrs
                 );
             }

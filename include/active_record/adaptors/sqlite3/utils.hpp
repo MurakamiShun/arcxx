@@ -106,21 +106,17 @@ namespace active_record::sqlite3::detail {
     template<Model T>
     [[nodiscard]] T extract_column_data(sqlite3_stmt* stmt){
         T ret;
-        indexed_apply(
-            [stmt]<typename... Attrs>(Attrs... attrs){
-                return (set_column_data(stmt, attrs.first, attrs.second) && ...);
-            },
-            ret.get_attributes_tuple()
+        tuptup::indexed_apply_each(
+            [stmt]<std::size_t N, typename Attr>(Attr& attr){ set_column_data(stmt, N, attr); },
+            ret.attributes_as_tuple()
         );
         return ret;
     }
     template<Tuple T>
     [[nodiscard]] T extract_column_data(sqlite3_stmt* stmt){
         T ret;
-        indexed_apply(
-            [stmt]<typename... Attrs>(Attrs... attrs){
-                return (set_column_data(stmt, attrs.first, attrs.second) && ...);
-            },
+        tuptup::indexed_apply_each(
+            [stmt]<std::size_t N, typename Attr>(Attr& attr){ set_column_data(stmt, N, attr); },
             ret
         );
         return ret;

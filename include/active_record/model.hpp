@@ -24,21 +24,15 @@ namespace active_record {
         static constexpr bool has_table_name = has_table_name_impl::value;
         [[nodiscard]] static constexpr auto column_names() noexcept;
 
-        /*
-         * Implementations are model_impl/queries.hpp
-         */
-
-        auto get_attributes_tuple() noexcept {
-            //return apply_elements_filter<is_attribute>(bind_to_tuple<Derived, 1>{}(*reinterpret_cast<Derived*>(this)));
-            const auto attributes_tuple = bind_to_tuple<Derived, 1>{}(*reinterpret_cast<Derived*>(this));
-            using attrs_tuple_type = apply_to_elements_t<decltype(attributes_tuple), std::remove_const_t>;
-            return apply_elements_filter<is_attribute>(attrs_tuple_type{ attributes_tuple });
+        auto attributes_as_tuple() noexcept {
+            using namespace tuptup::type_placeholders;
+            auto attributes_tuple = tuptup::struct_binder<Derived>{}(*reinterpret_cast<Derived*>(this));
+            return tuptup::tuple_filter<is_attribute<defer<std::remove_reference<_1>>>>(attributes_tuple);
         }
-        auto get_attributes_tuple() const noexcept {
-            //return apply_elements_filter<is_attribute>(bind_to_tuple<const Derived, 1>{}(*reinterpret_cast<const Derived*>(this)));
-            const auto attributes_tuple = bind_to_tuple<const Derived, 1>{}(*reinterpret_cast<const Derived*>(this));
-            //using attrs_tuple_type = apply_to_elements_t<decltype(attributes_tuple), std::remove_const_t>;
-            return apply_elements_filter<is_attribute>(attributes_tuple);
+        auto attributes_as_tuple() const noexcept {
+            using namespace tuptup::type_placeholders;
+            const auto attributes_tuple = tuptup::struct_binder<Derived>{}(*reinterpret_cast<const Derived*>(this));
+            return tuptup::tuple_filter<is_attribute<defer<std::remove_reference<_1>>>>(attributes_tuple);
         }
 
         [[nodiscard]] static auto insert(const Derived& model);

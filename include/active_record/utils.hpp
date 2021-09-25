@@ -17,7 +17,7 @@
 #include <numeric>
 #include <bit>
 
-#include "struct_bind.hpp"
+#include "third_party/tuptup.hpp"
 
 namespace active_record{
     using string = std::string;
@@ -25,30 +25,6 @@ namespace active_record{
     // utc_clock is not implements any compiler.
     //using datetime = std::chrono::utc_clock;
     using datetime = std::chrono::system_clock;
-
-    template <class ContainerType>
-    concept Container = requires(ContainerType a, const ContainerType b)
-    {
-        requires std::regular<ContainerType>;
-        requires std::swappable<ContainerType>;
-        requires std::destructible<typename ContainerType::value_type>;
-        requires std::same_as<typename ContainerType::reference, typename ContainerType::value_type &>;
-        requires std::same_as<typename ContainerType::const_reference, const typename ContainerType::value_type &>;
-        requires std::forward_iterator<typename ContainerType::iterator>;
-        requires std::forward_iterator<typename ContainerType::const_iterator>;
-        requires std::signed_integral<typename ContainerType::difference_type>;
-        requires std::same_as<typename ContainerType::difference_type, typename std::iterator_traits<typename ContainerType::iterator>::difference_type>;
-        requires std::same_as<typename ContainerType::difference_type, typename std::iterator_traits<typename ContainerType::const_iterator>::difference_type>;
-        { a.begin() } -> std::same_as<typename ContainerType::iterator>;
-        { a.end() } -> std::same_as<typename ContainerType::iterator>;
-        { b.begin() } -> std::same_as<typename ContainerType::const_iterator>;
-        { b.end() } -> std::same_as<typename ContainerType::const_iterator>;
-        { a.cbegin() } -> std::same_as<typename ContainerType::const_iterator>;
-        { a.cend() } -> std::same_as<typename ContainerType::const_iterator>;
-        { a.size() } -> std::same_as<typename ContainerType::size_type>;
-        { a.max_size() } -> std::same_as<typename ContainerType::size_type>;
-        { a.empty() } -> std::same_as<bool>;
-    };
 
     template<class TupleType>
     concept Tuple = requires {
@@ -61,112 +37,6 @@ namespace active_record{
 
     template<typename T>
     concept same_as_unordered_map = std::same_as<T, std::unordered_map<typename T::key_type, typename T::mapped_type>>;
-
-    template<class... Tuples>
-    using tuple_cat_t = decltype(std::tuple_cat(std::declval<Tuples>()...));
-
-    template<class Tuple, std::size_t... I>
-    [[nodiscard]] constexpr auto tuple_slice(Tuple& t, std::index_sequence<I...>&&) noexcept {
-        return std::tie(std::get<I>(t)...);
-    }
-    template<class Tuple, std::size_t... I>
-    [[nodiscard]] constexpr auto tuple_slice(Tuple&& t, std::index_sequence<I...>&&) {
-        return std::make_tuple(std::get<I>(t)...);
-    }
-
-    template<std::size_t from, std::size_t to>
-    [[nodiscard]] constexpr auto make_index_sequence_between() noexcept {
-        return []<std::size_t... I>(std::index_sequence<I...>&&){
-            return std::index_sequence<(I + from)...>{};
-        }(std::make_index_sequence<to-from>());
-    }
-    
-    namespace detail {
-        // non const
-        template<std::size_t I>
-        [[nodiscard]] constexpr auto indexed_apply_aux(std::tuple<>&&) noexcept {
-            return std::make_tuple();
-        }
-        template<std::size_t I>
-        [[nodiscard]] constexpr auto indexed_apply_aux(std::tuple<>&) noexcept {
-            return std::make_tuple();
-        }
-        template<std::size_t I, class Head, class... Tail>
-        [[nodiscard]] constexpr auto indexed_apply_aux(std::tuple<Head&, Tail&...>&& t) noexcept {
-            return std::tuple_cat(
-                std::make_tuple(std::make_pair(I, std::ref(std::get<0>(t)))),
-                indexed_apply_aux<I+1>(tuple_slice(
-                    t,
-                    make_index_sequence_between<1, sizeof...(Tail)+1>()
-                ))
-            );
-        }
-        template<std::size_t I, class Head, class... Tail>
-        [[nodiscard]] constexpr auto indexed_apply_aux(std::tuple<Head, Tail...>& t) noexcept {
-            return std::tuple_cat(
-                std::make_tuple(std::make_pair(I, std::ref(std::get<0>(t)))),
-                indexed_apply_aux<I+1>(tuple_slice(
-                    t,
-                    make_index_sequence_between<1, sizeof...(Tail)+1>()
-                ))
-            );
-        }
-        // const overload
-        template<std::size_t I>
-        [[nodiscard]] constexpr auto indexed_apply_aux(const std::tuple<>&) noexcept {
-            return std::make_tuple();
-        }
-        template<std::size_t I, class Head, class... Tail>
-        [[nodiscard]] constexpr auto indexed_apply_aux(const std::tuple<const Head&, const Tail&...>&& t) noexcept {
-            return std::tuple_cat(
-                std::make_tuple(std::make_pair(I, std::cref(std::get<0>(t)))),
-                indexed_apply_aux<I+1>(tuple_slice(
-                    t,
-                    make_index_sequence_between<1, sizeof...(Tail)+1>()
-                ))
-            );
-        }
-        template<std::size_t I, class Head, class... Tail>
-        [[nodiscard]] constexpr auto indexed_apply_aux(const std::tuple<Head, Tail...>& t) noexcept {
-            return std::tuple_cat(
-                std::make_tuple(std::make_pair(I, std::cref(std::get<0>(t)))),
-                indexed_apply_aux<I+1>(tuple_slice(
-                    t,
-                    make_index_sequence_between<1, sizeof...(Tail)+1>()
-                ))
-            );
-        }
-    }
-
-    template<class F, class Tuple>
-    constexpr decltype(auto) indexed_apply(F&& f, Tuple&& t){
-        return std::apply(f, detail::indexed_apply_aux<0>(t));
-    }
-
-    namespace detail{
-        /*
-         * Here is why not use lambda
-         * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=100594
-         */
-        template<template<typename>typename W, template<typename...>typename TupleType, typename... Elm>
-        auto apply_to_elements_impl(TupleType<Elm...>) ->TupleType<W<Elm>...>;
-    }
-    template<typename T, template<typename>typename W>
-    using apply_to_elements_t = decltype(detail::apply_to_elements_impl<W>(std::declval<T>()));
-
-    template<template<typename>typename C, template<typename...>typename TupleType, typename Head, typename... Elm>
-    auto apply_elements_filter(TupleType<Head, Elm...> tuple){
-        if constexpr(sizeof...(Elm) == 0){
-            if constexpr(C<std::remove_reference_t<Head>>::value) return std::tie(std::get<0>(tuple));
-            else return TupleType<>{};
-        }
-        else{
-            if constexpr(C<std::remove_reference_t<Head>>::value) return std::tuple_cat(std::tie(std::get<0>(tuple)), apply_elements_filter<C>(tuple_slice(tuple, make_index_sequence_between<1, sizeof...(Elm)+1>())));
-            else return apply_elements_filter<C>(tuple_slice(tuple, make_index_sequence_between<1, sizeof...(Elm)+1>()));
-        }
-    }
-    template<typename T, template<typename>typename Condition>
-    using apply_elements_filter_t = decltype(apply_elements_filter<Condition>(std::declval<T>()));
 
     [[nodiscard]] inline active_record::string sanitize(const active_record::string& src) {
         active_record::string result;

@@ -80,21 +80,17 @@ namespace active_record::PostgreSQL::detail {
     template<Model T>
     [[nodiscard]] T extract_column_data(PGresult* res, int col) {
         T ret;
-        indexed_apply(
-            [res, col]<typename... Attrs>(Attrs... attrs){
-                return (set_column_data(res, col, attrs.first, attrs.second) && ...);
-            },
-            ret.get_attributes_tuple()
+        tuptup::indexed_apply_each(
+            [res, col]<std::size_t N, typename Attr>(Attr& attr){ set_column_data(res, col, N, attr); },
+            ret.attributes_as_tuple()
         );
         return ret;
     }
     template<Tuple T>
     [[nodiscard]] T extract_column_data(PGresult* res, int col) {
         T ret;
-        indexed_apply(
-            [res, col]<typename... Attrs>(Attrs... attrs){
-                return (set_column_data(res, col, attrs.first, attrs.second) && ...);
-            },
+        tuptup::indexed_apply_each(
+            [res, col]<std::size_t N, typename Attr>(Attr& attr){ set_column_data(res, col, N, attr); },
             ret
         );
         return ret;

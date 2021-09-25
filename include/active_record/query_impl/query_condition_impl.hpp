@@ -8,8 +8,8 @@ namespace active_record {
      */
     template<Tuple BindAttrs>
     template<Tuple SrcBindAttrs>
-    query_condition<active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_condition<BindAttrs>::concat_conditions(query_condition<SrcBindAttrs>&& cond, const conjunction conjunc) {
-        query_condition<active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret;
+    query_condition<tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_condition<BindAttrs>::concat_conditions(query_condition<SrcBindAttrs>&& cond, const conjunction conjunc) {
+        query_condition<tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret;
         ret.condition.reserve(this->condition.size() + 3 + cond.condition.size());
 
         ret.condition.push_back("(");

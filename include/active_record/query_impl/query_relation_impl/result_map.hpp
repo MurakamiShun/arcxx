@@ -65,21 +65,21 @@ namespace active_record {
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
     template<Attribute Attr>
-    query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) && {
+    query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) && {
         return std::move(*this).where(Attr::cmp == attr);
     }
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
     template<Attribute Attr>
-    query_relation<Result, active_record::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) const& {
+    query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) const& {
         return this->where(Attr::cmp == attr);
     }
 
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
     template<Tuple SrcBindAttrs>
-    query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) &&{
-        query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
+    query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) &&{
+        query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
         ret.query_op_arg = std::move(this->query_op_arg);
         ret.query_table = std::move(this->query_table);
 
@@ -104,8 +104,8 @@ namespace active_record {
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
     template<Tuple SrcBindAttrs>
-    query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) const&{
-        query_relation<Result, active_record::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
+    query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) const&{
+        query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
         ret.query_op_arg = this->query_op_arg;
         ret.query_table = this->query_table;
         if(!this->query_condition.empty()){

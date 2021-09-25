@@ -90,11 +90,14 @@ namespace active_record {
                 );
 
                 std::array<std::any, query.bind_attrs_count()> temporary_values;
-                const auto param_values = active_record::indexed_apply(
-                    [&temporary_values]<typename... Attrs>(std::pair<std::size_t, const Attrs&>... attrs){
-                        return std::array<const char* const, sizeof...(Attrs)>{ PostgreSQL::detail::get_value_ptr(attrs.second, temporary_values[attrs.first])... };
-                    },
-                    query.bind_attrs
+                const auto param_values = std::apply(
+                    []<typename... Ptrs>(const Ptrs... ptrs){ return std::array<const char* const, sizeof...(Ptrs)>{ptrs...}; },
+                    tuptup::indexed_apply_each(
+                        [&temporary_values]<std::size_t N, typename Attr>(const Attr& attr){
+                            return PostgreSQL::detail::get_value_ptr(attr, temporary_values[N]);
+                        },
+                        query.bind_attrs
+                    )
                 );
 
                 result = PQexecParams(
@@ -191,11 +194,11 @@ namespace active_record {
                 }
                 else if constexpr(active_record::same_as_unordered_map<Result>){
                     if constexpr (Tuple<typename Result::mapped_type>){
-                        using result_type = active_record::tuple_cat_t<std::tuple<typename Result::key_type>, typename Result::mapped_type>;
+                        using result_type = tuptup::tuple_cat_t<std::tuple<typename Result::key_type>, typename Result::mapped_type>;
                         auto result_column = active_record::PostgreSQL::detail::extract_column_data<result_type>(result, col);
                         ret.insert(std::make_pair(
                             std::get<0>(result_column),
-                            active_record::tuple_slice(result_column, active_record::make_index_sequence_between<1, std::tuple_size_v<result_type>>())
+                            tuptup::tuple_slice<tuptup::make_index_range<1, std::tuple_size_v<result_type>>>(result_column)
                         ));
                     }
                     else{
