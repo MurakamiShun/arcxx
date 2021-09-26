@@ -155,7 +155,7 @@ namespace active_record {
 
         template<Model Mod>
         std::optional<active_record::string> drop_table(){
-            return exec(raw_query<bool>(concat_strings("DROP TABLE ", Mod::table_name,";")));
+            return exec(raw_query<bool>("DROP TABLE ", Mod::table_name,";"));
         }
 
         template<typename T, Tuple BindAttrs>
@@ -217,13 +217,13 @@ namespace active_record {
         }
 
         std::optional<active_record::string> begin(){
-            return exec(raw_query<bool>(active_record::string{ "BEGIN" }));
+            return exec(raw_query<bool>("BEGIN"));
         }
         std::optional<active_record::string> commit(){
-            return exec(raw_query<bool>(active_record::string{ "COMMIT" }));
+            return exec(raw_query<bool>("COMMIT"));
         }
         std::optional<active_record::string> rollback(){
-            return exec(raw_query<bool>(active_record::string{ "ROLLBACK" }));
+            return exec(raw_query<bool>("ROLLBACK"));
         }
 
         template<std::convertible_to<std::function<active_record::transaction(void)>> F>

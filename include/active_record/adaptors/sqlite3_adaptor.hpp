@@ -171,47 +171,22 @@ namespace active_record {
 
         template<Model Mod>
         std::optional<active_record::string> create_table(bool abort_if_exist = true){
-            char* errmsg_ptr = nullptr;
-            auto result_code = sqlite3_exec(db_obj,
-                Mod::schema::template to_sql<sqlite3_adaptor>(abort_if_exist).c_str(),
-                nullptr,
-                nullptr,
-                &errmsg_ptr
-            );
-            if(errmsg_ptr != nullptr){
-                error_msg = get_error_msg(errmsg_ptr);
-                sqlite3_free(errmsg_ptr);
-                return error_msg;
-            }
-            return error_msg = get_error_msg(result_code);
+            return exec(raw_query<bool>(Mod::schema::template to_sql<sqlite3_adaptor>(abort_if_exist).c_str()));
         }
 
         template<Model Mod>
         std::optional<active_record::string> drop_table(){
-            char* errmsg_ptr = nullptr;
-            const auto sql = active_record::string{ "DROP TABLE " } + Mod::table_name + ";";
-            auto result_code = sqlite3_exec(db_obj,
-                sql.c_str(),
-                nullptr,
-                nullptr,
-                &errmsg_ptr
-            );
-            if(errmsg_ptr != nullptr){
-                error_msg = get_error_msg(errmsg_ptr);
-                sqlite3_free(errmsg_ptr);
-                return error_msg;
-            }
-            return error_msg = get_error_msg(result_code);
+            return exec(raw_query<bool>("DROP TABLE ", Mod::table_name, ";"));
         }
 
         std::optional<active_record::string> begin(const active_record::string_view transaction_name = ""){
-            return exec(raw_query<bool>(active_record::string{ "BEGIN TRANSACTION " } + active_record::string{ transaction_name } + ";"));
+            return exec(raw_query<bool>("BEGIN TRANSACTION ", transaction_name, ";"));
         }
         std::optional<active_record::string> commit(const active_record::string_view transaction_name = ""){
-            return exec(raw_query<bool>(active_record::string{ "COMMIT TRANSACTION " } + active_record::string{ transaction_name } + ";"));
+            return exec(raw_query<bool>("COMMIT TRANSACTION ", transaction_name, ";"));
         }
         std::optional<active_record::string> rollback(const active_record::string_view transaction_name = ""){
-            return exec(raw_query<bool>(active_record::string{ "ROLLBACK TRANSACTION " } + active_record::string{ transaction_name } + ";"));
+            return exec(raw_query<bool>("ROLLBACK TRANSACTION ", transaction_name, ";"));
         }
 
         template<std::convertible_to<std::function<active_record::transaction(void)>> F>

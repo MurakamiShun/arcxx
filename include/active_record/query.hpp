@@ -1,5 +1,6 @@
 #pragma once
 #include "utils.hpp"
+#include "attribute.hpp"
 
 namespace active_record {
     enum class query_operation {
@@ -24,4 +25,8 @@ namespace active_record {
 
     template<Tuple BindAttrs>
     struct query_condition;
+
+    template<typename Result, typename... Args>
+    requires ((Attribute<Args> || std::convertible_to<Args, active_record::string_view>) && ...)
+    auto raw_query(Args&&... args);
 }

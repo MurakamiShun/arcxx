@@ -16,10 +16,10 @@ namespace active_record {
         struct sob_to_string_impl;
     public:
         const query_operation operation;
-        std::vector<str_or_bind> query_op_arg;
-        std::vector<str_or_bind> query_table;
-        std::vector<str_or_bind> query_condition;
-        std::vector<str_or_bind> query_options; // order, limit
+        std::vector<str_or_bind> op_args;
+        std::vector<str_or_bind> tables;
+        std::vector<str_or_bind> conditions;
+        std::vector<str_or_bind> options; // order, limit
 
         BindAttrs bind_attrs;
 
@@ -35,37 +35,37 @@ namespace active_record {
         [[nodiscard]] const active_record::string to_sql() const {
             sob_to_string_impl<Adaptor> convertor{ bind_attrs };
             if (operation == query_operation::select) {
-                return concat_strings("SELECT ", convertor.to_string(query_op_arg),
-                    " FROM ", convertor.to_string(query_table),
-                    query_condition.empty() ? "" : concat_strings(" WHERE ", convertor.to_string(query_condition)),
-                    " ", convertor.to_string(query_options), ";"
+                return concat_strings("SELECT ", convertor.to_string(op_args),
+                    " FROM ", convertor.to_string(tables),
+                    conditions.empty() ? "" : concat_strings(" WHERE ", convertor.to_string(conditions)),
+                    " ", convertor.to_string(options), ";"
                 );
             }
             else if (operation == query_operation::insert) {
-                return concat_strings("INSERT INTO ", convertor.to_string(query_table),
-                    " VALUES ", convertor.to_string(query_op_arg), ";"
+                return concat_strings("INSERT INTO ", convertor.to_string(tables),
+                    " VALUES ", convertor.to_string(op_args), ";"
                 );
             }
             else if (operation == query_operation::destroy) {
-                return concat_strings("DELETE FROM ", convertor.to_string(query_table),
-                    query_condition.empty() ? "" : concat_strings(" WHERE ", convertor.to_string(query_condition)), ";"
+                return concat_strings("DELETE FROM ", convertor.to_string(tables),
+                    conditions.empty() ? "" : concat_strings(" WHERE ", convertor.to_string(conditions)), ";"
                 );
             }
             else if (operation == query_operation::update) {
-                return concat_strings("UPDATE ", convertor.to_string(query_table),
-                    " SET ", convertor.to_string(query_op_arg),
-                    query_condition.empty() ? "": concat_strings(" WHERE ", convertor.to_string(query_condition)), ";"
+                return concat_strings("UPDATE ", convertor.to_string(tables),
+                    " SET ", convertor.to_string(op_args),
+                    conditions.empty() ? "": concat_strings(" WHERE ", convertor.to_string(conditions)), ";"
                 );
             }
             else if (operation == query_operation::condition) {
-                return concat_strings("SELECT ", convertor.to_string(query_op_arg),
-                    " FROM ", convertor.to_string(query_table),
-                    " WHERE ", convertor.to_string(query_condition),
-                    convertor.to_string(query_options), ";"
+                return concat_strings("SELECT ", convertor.to_string(op_args),
+                    " FROM ", convertor.to_string(tables),
+                    " WHERE ", convertor.to_string(conditions),
+                    convertor.to_string(options), ";"
                 );
             }
             else {
-                return concat_strings(convertor.to_string(query_op_arg), ";");
+                return concat_strings(convertor.to_string(op_args), ";");
             }
         }
     };

@@ -4,14 +4,25 @@
 #include "query_relation_impl/result_map.hpp"
 
 namespace active_record {
-    /*
-     * raw query implementation
-     */
-    template<typename Result, Attribute... Attrs>
-    query_relation<Result, std::tuple<Attrs...>> raw_query(const active_record::string_view query_str, const Attrs&... attrs) {
-        query_relation<Result, std::tuple<const Attrs*...>> ret{ query_operation::unspecified };
-        ret.query_op_arg.push_back(active_record::string{ query_str });
-        ret.bind_attrs = std::make_tuple(attrs...);
+    template<typename Result, typename... Args>
+    requires ((Attribute<Args> || std::convertible_to<Args, active_record::string_view>) && ...)
+    auto raw_query(Args&&... args){
+        using namespace tuptup::type_placeholders;
+        using bind_attrs_t = tuptup::tuple_filter_t<is_attribute<_1>, std::tuple<std::remove_const_t<std::remove_reference_t<Args>>...>>;
+        
+        query_relation<Result, bind_attrs_t> ret{ query_operation::unspecified };
+        std::size_t index = 0;
+        ret.op_args.reserve(sizeof...(Args));
+        ret.op_args = {
+            [&index]<typename Arg>(const Arg& arg) -> decltype(ret)::str_or_bind {
+                if constexpr (is_attribute<Arg>::value) {
+                    ++index;
+                    return index;
+                }
+                else return active_record::string{ arg };
+            }(args)...
+        };
+        ret.bind_attrs = tuptup::tuple_filter<is_attribute<_1>>(std::make_tuple(std::forward<Args>(args)...));
 
         return ret;
     }
