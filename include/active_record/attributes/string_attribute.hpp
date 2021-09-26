@@ -29,7 +29,7 @@ namespace active_record {
                 return static_cast<bool>(t) && t.value().length() <= length;
             }
         };
-        [[nodiscard]] static const attribute_common<Model, Attribute, active_record::string>::constraint length(const std::size_t len) noexcept {
+        [[nodiscard]] static const typename attribute_common<Model, Attribute, active_record::string>::constraint length(const std::size_t len) noexcept {
             return constraint_length_impl{ len };
         };
 

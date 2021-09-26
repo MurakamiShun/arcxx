@@ -11,7 +11,7 @@ namespace active_record {
     requires std::same_as<typename Attr::value_type, bool>
     void from_string(Attr& attr, const active_record::string_view str){
         if(str != "null" && str != "NULL"){
-            attr = ((str == "false" || str == "0") ? false : true);
+            attr = ((str == "false" || str == "0" || str == "False") ? false : true);
         }
     }
 

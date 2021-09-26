@@ -7,7 +7,7 @@ namespace active_record {
         using model_type = Model;
         using attribute_type = Attribute;
         using aggregator_type = Aggregator;
-        using value_type = Attribute::value_type;
+        using value_type = typename Attribute::value_type;
 
 
         static constexpr auto column_full_name() {
