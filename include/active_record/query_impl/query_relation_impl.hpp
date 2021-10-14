@@ -23,7 +23,7 @@ namespace active_record {
     requires ((Attribute<Args> || std::convertible_to<Args, active_record::string_view>) && ...)
     auto raw_query(Args&&... args){
         using namespace tuptup::type_placeholders;
-        using bind_attrs_t = tuptup::tuple_filter_t<is_attribute<_1>, std::tuple<std::remove_const_t<std::remove_reference_t<Args>>...>>;
+        using bind_attrs_t = tuptup::tuple_filter_t<is_attribute<_1>, std::tuple<std::remove_cvref_t<Args>...>>;
         
         query_relation<Result, bind_attrs_t> ret{ query_operation::unspecified };
         std::size_t index = 0;

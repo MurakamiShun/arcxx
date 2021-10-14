@@ -21,7 +21,7 @@ namespace active_record {
     template<typename Derived>
     inline auto model<Derived>::insert(const Derived& model) {
         using namespace tuptup::type_placeholders;
-        using bindattr_t = tuptup::apply_type_t<std::remove_const<defer<std::remove_reference<_1>>>, decltype(model.attributes_as_tuple())>;
+        using bindattr_t = tuptup::apply_type_t<std::remove_cvref<_1>, decltype(model.attributes_as_tuple())>;
         query_relation<bool, bindattr_t> ret{ query_operation::insert };
         // get attribute copy from model
         ret.bind_attrs = model.attributes_as_tuple();
