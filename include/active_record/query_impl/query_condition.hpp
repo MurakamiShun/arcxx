@@ -16,6 +16,7 @@
  */
 #include "../query.hpp"
 #include "../attribute.hpp"
+#include "query_utils.hpp"
 
 namespace active_record {
     template<Tuple BindAttrs>
@@ -56,3 +57,5 @@ namespace active_record {
         }
     };
 }
+
+#include "query_condition_impl.ipp"

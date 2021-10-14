@@ -14,14 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "../query_relation.hpp"
-#include "../query_utils.hpp"
-#include "../query_condition_impl.hpp"
 
 namespace active_record {
     /*
      * return type == Scalar
      */
+
+    template<typename Result, Tuple BindAttrs>
+    struct query_relation : public query_relation_common<BindAttrs> {
+        using query_relation_common<BindAttrs>::query_relation_common;
+        template<std::derived_from<adaptor> Adaptor>
+        [[nodiscard]] auto exec(Adaptor& adapt) const {
+            return adapt.exec(*this);
+        }
+
+        template<Attribute Attr>
+        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) &&;
+        template<Attribute Attr>
+        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) const &;
+
+        template<Tuple SrcBindAttrs>
+        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
+        template<Tuple SrcBindAttrs>
+        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const&;
+    };
 
     template<typename Result, Tuple BindAttrs>
     template<Attribute Attr>

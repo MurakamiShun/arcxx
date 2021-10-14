@@ -14,14 +14,83 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "../query_relation.hpp"
-#include "../query_utils.hpp"
-#include "../query_condition_impl.hpp"
 
 namespace active_record {
     /*
      * return type == std::unordered_map<Attribute, Tuple or Attribute>
      */
+
+    template<typename Result, Tuple BindAttrs>
+    requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>
+    struct query_relation<Result, BindAttrs> : public query_relation_common<BindAttrs> {
+        using mapped_type = typename Result::mapped_type;
+
+        using query_relation_common<BindAttrs>::query_relation_common;
+
+        template<std::derived_from<adaptor> Adaptor>
+        [[nodiscard]] auto exec(Adaptor& adapt) const {
+            return adapt.exec(*this);
+        }
+
+        template<AttributeAggregator... Attrs>
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> select() &&;
+        template<AttributeAggregator... Attrs>
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> select() const &;
+
+        template<AttributeAggregator Attr>
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::attribute_type>, BindAttrs> pluck() &&;
+        template<AttributeAggregator Attr>
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::attribute_type>, BindAttrs> pluck() const &;
+
+        template<Attribute Attr>
+        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) &&;
+        template<Attribute Attr>
+        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) const &;
+
+        template<Tuple SrcBindAttrs>
+        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
+        template<Tuple SrcBindAttrs>
+        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const&;
+
+        [[nodiscard]] query_relation<Result, BindAttrs> limit(const std::size_t) &&;
+        [[nodiscard]] query_relation<Result, BindAttrs> limit(const std::size_t) const &;
+
+        template<Attribute Attr>
+        [[nodiscard]] query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc) &&;
+        template<Attribute Attr>
+        [[nodiscard]] query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc) const &;
+
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, std::size_t>, BindAttrs> count() &&;
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, std::size_t>, BindAttrs> count() const&;
+
+        template<Attribute Attr>
+        requires requires{ typename Attr::sum; }
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::sum::attribute_type>, BindAttrs> sum() &&;
+        template<Attribute Attr>
+        requires requires{ typename Attr::sum; }
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::sum::attribute_type>, BindAttrs> sum() const&;
+
+        template<Attribute Attr>
+        requires requires{ typename Attr::avg; }
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::avg::attribute_type>, BindAttrs> avg() &&;
+        template<Attribute Attr>
+        requires requires{ typename Attr::avg; }
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::avg::attribute_type>, BindAttrs> avg() const&;
+
+        template<Attribute Attr>
+        requires requires{ typename Attr::max; }
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::max::attribute_type>, BindAttrs> max() &&;
+        template<Attribute Attr>
+        requires requires{ typename Attr::max; }
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::max::attribute_type>, BindAttrs> max() const&;
+
+        template<Attribute Attr>
+        requires requires{ typename Attr::min; }
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::min::attribute_type>, BindAttrs> min() &&;
+        template<Attribute Attr>
+        requires requires{ typename Attr::min; }
+        [[nodiscard]] query_relation<std::unordered_map<typename Result::key_type, typename Attr::min::attribute_type>, BindAttrs> min() const&;
+    };
 
     template<typename Result, Tuple BindAttrs>
     requires std::same_as<Result, std::unordered_map<typename Result::key_type, typename Result::mapped_type>>

@@ -39,16 +39,8 @@ namespace active_record {
         static constexpr bool has_table_name = has_table_name_impl::value;
         [[nodiscard]] static constexpr auto column_names() noexcept;
 
-        auto attributes_as_tuple() noexcept {
-            using namespace tuptup::type_placeholders;
-            auto attributes_tuple = tuptup::struct_binder<Derived>{}(*reinterpret_cast<Derived*>(this));
-            return tuptup::tuple_filter<is_attribute<defer<std::remove_reference<_1>>>>(attributes_tuple);
-        }
-        auto attributes_as_tuple() const noexcept {
-            using namespace tuptup::type_placeholders;
-            const auto attributes_tuple = tuptup::struct_binder<Derived>{}(*reinterpret_cast<const Derived*>(this));
-            return tuptup::tuple_filter<is_attribute<defer<std::remove_reference<_1>>>>(attributes_tuple);
-        }
+        [[nodiscard]] auto attributes_as_tuple() noexcept;
+        [[nodiscard]] auto attributes_as_tuple() const noexcept;
 
         [[nodiscard]] static auto insert(const Derived& model);
         [[nodiscard]] static auto insert(Derived&& model);
@@ -116,3 +108,5 @@ namespace active_record {
         T::has_table_name;
     };
 }
+
+#include "model_impl/model_impl.ipp"

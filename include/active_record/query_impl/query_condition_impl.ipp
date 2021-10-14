@@ -14,9 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "query_condition.hpp"
-#include "query_utils.hpp"
-
 namespace active_record {
     /*
      * implements

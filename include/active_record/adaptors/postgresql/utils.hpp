@@ -16,6 +16,7 @@
  */
 #include "../../attribute.hpp"
 #include "string_convertors.hpp"
+#include <any>
 #if !(defined(_WIN32) || defined(_WIN64))
 #include <byteswap.h>
 #endif

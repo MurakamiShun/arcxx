@@ -48,4 +48,18 @@ namespace active_record {
             Derived{}.attributes_as_tuple()
         );
     }
+
+    template<typename Derived>
+    inline auto model<Derived>::attributes_as_tuple() noexcept {
+        using namespace tuptup::type_placeholders;
+        auto attributes_tuple = tuptup::struct_binder<Derived>{}(*reinterpret_cast<Derived*>(this));
+        return tuptup::tuple_filter<is_attribute<defer<std::remove_reference<_1>>>>(attributes_tuple);
+    }
+
+    template<typename Derived>
+    inline auto model<Derived>::attributes_as_tuple() const noexcept {
+        using namespace tuptup::type_placeholders;
+        const auto attributes_tuple = tuptup::struct_binder<Derived>{}(*reinterpret_cast<const Derived*>(this));
+        return tuptup::tuple_filter<is_attribute<defer<std::remove_reference<_1>>>>(attributes_tuple);
+    }
 }

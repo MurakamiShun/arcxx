@@ -14,9 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "query_relation_impl/result_vector.hpp"
-#include "query_relation_impl/result_scalar.hpp"
-#include "query_relation_impl/result_map.hpp"
 
 namespace active_record {
     template<typename Result, typename... Args>
