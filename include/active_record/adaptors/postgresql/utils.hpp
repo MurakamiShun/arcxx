@@ -102,7 +102,7 @@ namespace active_record::PostgreSQL::detail {
         );
         return ret;
     }
-    template<Tuple T>
+    template<specialized_from<std::tuple> T>
     [[nodiscard]] T extract_column_data(PGresult* res, int col) {
         T ret;
         tuptup::indexed_apply_each(

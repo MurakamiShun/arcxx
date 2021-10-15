@@ -39,7 +39,7 @@ namespace active_record {
         return ret;
     }
 
-    template<Tuple BindAttrs>
+    template<specialized_from<std::tuple> BindAttrs>
     template<std::derived_from<adaptor> Adaptor>
     struct query_relation_common<BindAttrs>::sob_to_string_impl {
         struct visitor_impl;
@@ -67,7 +67,7 @@ namespace active_record {
         }
     };
 
-    template<Tuple BindAttrs>
+    template<specialized_from<std::tuple> BindAttrs>
     template<std::derived_from<adaptor> Adaptor>
     struct query_relation_common<BindAttrs>::sob_to_string_impl<Adaptor>::visitor_impl {
         const std::array<active_record::string, std::tuple_size_v<BindAttrs>> attr_strings;

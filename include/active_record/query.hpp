@@ -32,10 +32,10 @@ namespace active_record {
         desc
     };
 
-    template<typename T, Tuple BindAttrs>
+    template<typename T, specialized_from<std::tuple> BindAttrs>
     struct query_relation;
 
-    template<Tuple BindAttrs>
+    template<specialized_from<std::tuple> BindAttrs>
     struct query_condition;
 
     template<typename Result, typename... Args>

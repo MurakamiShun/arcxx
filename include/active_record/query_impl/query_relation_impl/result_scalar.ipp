@@ -20,7 +20,7 @@ namespace active_record {
      * return type == Scalar
      */
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     struct query_relation : public query_relation_common<BindAttrs> {
         using query_relation_common<BindAttrs>::query_relation_common;
         template<std::derived_from<adaptor> Adaptor>
@@ -33,25 +33,25 @@ namespace active_record {
         template<Attribute Attr>
         [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) const &;
 
-        template<Tuple SrcBindAttrs>
+        template<specialized_from<std::tuple> SrcBindAttrs>
         [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
-        template<Tuple SrcBindAttrs>
+        template<specialized_from<std::tuple> SrcBindAttrs>
         [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const&;
     };
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<Attribute Attr>
     query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) && {
         return std::move(*this).where(Attr::cmp == attr);
     }
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<Attribute Attr>
     query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) const& {
         return this->where(Attr::cmp == attr);
     }
 
-    template<typename Result, Tuple BindAttrs>
-    template<Tuple SrcBindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
+    template<specialized_from<std::tuple> SrcBindAttrs>
     query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) &&{
         query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
 
@@ -76,8 +76,8 @@ namespace active_record {
         return ret;
     }
 
-    template<typename Result, Tuple BindAttrs>
-    template<Tuple SrcBindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
+    template<specialized_from<std::tuple> SrcBindAttrs>
     query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) const&{
         query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
 

@@ -19,7 +19,7 @@
 #include "query_utils.hpp"
 
 namespace active_record {
-    template<Tuple BindAttrs>
+    template<specialized_from<std::tuple> BindAttrs>
     struct query_condition {
     private:
         enum class conjunction{
@@ -27,7 +27,7 @@ namespace active_record {
             OR
         };
 
-        template<Tuple SrcBindAttrs>
+        template<specialized_from<std::tuple> SrcBindAttrs>
         [[nodiscard]] query_condition<tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> concat_conditions(query_condition<SrcBindAttrs>&&, const conjunction);
     public:
         using str_or_bind = std::variant<active_record::string, std::size_t>;
@@ -38,11 +38,11 @@ namespace active_record {
             return std::tuple_size_v<BindAttrs>;
         }
 
-        template<Tuple DestBindAttrs>
+        template<specialized_from<std::tuple> DestBindAttrs>
         auto operator&&(query_condition<DestBindAttrs>&& cond) && {
             return concat_conditions(std::move(cond), conjunction::AND);
         }
-        template<Tuple DestBindAttrs>
+        template<specialized_from<std::tuple> DestBindAttrs>
         auto operator||(query_condition<DestBindAttrs>&& cond) && {
             return concat_conditions(std::move(cond), conjunction::OR);
         }

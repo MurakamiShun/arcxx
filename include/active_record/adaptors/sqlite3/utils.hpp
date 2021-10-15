@@ -127,7 +127,7 @@ namespace active_record::sqlite3::detail {
         );
         return ret;
     }
-    template<Tuple T>
+    template<specialized_from<std::tuple> T>
     [[nodiscard]] T extract_column_data(sqlite3_stmt* stmt){
         T ret;
         tuptup::indexed_apply_each(

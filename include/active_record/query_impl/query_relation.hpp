@@ -22,7 +22,7 @@
 #include "query_utils.hpp"
 
 namespace active_record {
-    template<Tuple BindAttrs>
+    template<specialized_from<std::tuple> BindAttrs>
     struct query_relation_common {
     public:
         using str_or_bind = std::variant<active_record::string, std::size_t>;
@@ -88,7 +88,7 @@ namespace active_record {
 #include "query_relation_impl.ipp"
 
 namespace active_record{
-    template<Tuple BindAttrs>
+    template<specialized_from<std::tuple> BindAttrs>
     struct query_relation<bool, BindAttrs> : public query_relation_common<BindAttrs> {
         using query_relation_common<BindAttrs>::query_relation_common;
         template<std::derived_from<adaptor> Adaptor>

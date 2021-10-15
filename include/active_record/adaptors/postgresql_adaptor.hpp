@@ -72,7 +72,7 @@ namespace active_record {
             }
         }
 
-        template<typename Result, Tuple BindAttrs>
+        template<typename Result, specialized_from<std::tuple> BindAttrs>
         PGresult* exec_sql(const query_relation<Result, BindAttrs>& query) {
             const auto sql = query.template to_sql<postgresql_adaptor>();
 
@@ -173,12 +173,12 @@ namespace active_record {
             return exec(raw_query<bool>("DROP TABLE ", Mod::table_name,";"));
         }
 
-        template<typename T, Tuple BindAttrs>
+        template<typename T, specialized_from<std::tuple> BindAttrs>
         auto exec(const query_relation<T, BindAttrs>&& query){
             return exec(query);
         }
 
-        template<Tuple BindAttrs>
+        template<specialized_from<std::tuple> BindAttrs>
         auto exec(const query_relation<bool, BindAttrs>& query){
             PGresult* result = this->exec_sql(query);
 
@@ -190,7 +190,7 @@ namespace active_record {
             if(result != nullptr) PQclear(result);
             return error_msg;
         }
-        template<typename Result, Tuple BindAttrs>
+        template<typename Result, specialized_from<std::tuple> BindAttrs>
         auto exec(const query_relation<Result, BindAttrs>& query){
             PGresult* result = this->exec_sql(query);
 
@@ -204,11 +204,11 @@ namespace active_record {
 
             auto col_count = PQntuples(result);
             for(decltype(col_count) col = 0; col < col_count; ++col){
-                if constexpr(active_record::same_as_vector<Result>) {
+                if constexpr(specialized_from<Result, std::vector>) {
                     ret.push_back(PostgreSQL::detail::extract_column_data<typename Result::value_type>(result, col));
                 }
-                else if constexpr(active_record::same_as_unordered_map<Result>){
-                    if constexpr (Tuple<typename Result::mapped_type>){
+                else if constexpr(specialized_from<Result, std::unordered_map>){
+                    if constexpr (specialized_from<typename Result::mapped_type, std::tuple>){
                         using result_type = tuptup::tuple_cat_t<std::tuple<typename Result::key_type>, typename Result::mapped_type>;
                         auto result_column = active_record::PostgreSQL::detail::extract_column_data<result_type>(result, col);
                         ret.insert(std::make_pair(
@@ -265,9 +265,9 @@ namespace active_record {
             return transaction(func);
         }
 
-        template<Attribute T>
+        template<Attribute Attr>
         static active_record::string column_definition() {
-            return active_record::PostgreSQL::column_definition<T>();
+            return active_record::PostgreSQL::column_definition<Attr>();
         }
     };
 

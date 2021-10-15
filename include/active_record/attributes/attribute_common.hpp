@@ -24,19 +24,8 @@ namespace active_record {
     private:
         std::optional<Type> data;
 
-        struct has_column_name_impl {
-            template<typename S>
-            static decltype(S::column_name, std::true_type{}) check(S);
-            static std::false_type check(...);
-            static constexpr bool value = decltype(check(std::declval<Attribute>()))::value;
-        };
-
-        struct has_constraints_impl {
-            template<typename S>
-            static decltype(S::constraints, std::true_type{}) check(S);
-            static std::false_type check(...);
-            static constexpr bool value = decltype(check(std::declval<Attribute>()))::value;
-        };
+        struct has_column_name_impl : std::conditional_t<requires {Attribute::column_name;}, std::true_type, std::false_type>{};
+        struct has_constraints_impl : std::conditional_t<requires {Attribute::constraints;}, std::true_type, std::false_type>{};
 
         template<std::size_t I, typename Condition, std::convertible_to<Attribute> Last>
         static void copy_and_set_attrs_to_condition(Condition& ret, const Last& last);
@@ -126,11 +115,11 @@ namespace active_record {
             }
         } cmp{};
 
-        template<Tuple BindAttrs>
+        template<specialized_from<std::tuple> BindAttrs>
         [[nodiscard]] auto operator&&(query_condition<BindAttrs>&& cond) const {
             return (cmp == data) && cond;
         }
-        template<Tuple BindAttrs>
+        template<specialized_from<std::tuple> BindAttrs>
         [[nodiscard]] auto operator||(query_condition<BindAttrs>&& cond) const {
             return (cmp == data) || cond;
         }

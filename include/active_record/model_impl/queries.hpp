@@ -96,7 +96,7 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<Tuple SrcBindAttrs>
+    template<specialized_from<std::tuple> SrcBindAttrs>
     inline query_relation<bool, SrcBindAttrs> model<Derived>::destroy(query_condition<SrcBindAttrs>&& cond) {
         query_relation<bool, SrcBindAttrs> ret{ query_operation::destroy };
         ret.tables.push_back(concat_strings("\"", Derived::table_name, "\""));
@@ -112,7 +112,7 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<Tuple SrcBindAttrs>
+    template<specialized_from<std::tuple> SrcBindAttrs>
     inline query_relation<std::vector<Derived>, SrcBindAttrs> model<Derived>::where(query_condition<SrcBindAttrs>&& cond) {
         query_relation<std::vector<Derived>, SrcBindAttrs> ret{ query_operation::condition };
         ret.op_args.push_back(detail::model_column_full_names_to_string<Derived>());

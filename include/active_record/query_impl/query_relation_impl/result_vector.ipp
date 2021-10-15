@@ -17,10 +17,10 @@
 
 namespace active_record {
     /*
-     * return type == Container<model or Tuple>
+     * return type == Container<model or specialized_from<std::tuple>>
      */
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     struct query_relation<Result, BindAttrs> : public query_relation_common<BindAttrs> {
         using query_relation_common<BindAttrs>::query_relation_common;
@@ -53,9 +53,9 @@ namespace active_record {
         template<Attribute Attr>
         [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) const &;
 
-        template<Tuple SrcBindAttrs>
+        template<specialized_from<std::tuple> SrcBindAttrs>
         [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
-        template<Tuple SrcBindAttrs>
+        template<specialized_from<std::tuple> SrcBindAttrs>
         [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const&;
 
         [[nodiscard]] query_relation<Result, BindAttrs>& limit(const std::size_t) &&;
@@ -98,7 +98,7 @@ namespace active_record {
         [[nodiscard]] query_relation<typename Attr::min::attribute_type, BindAttrs> min() const&;
     };
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute... Attrs>
     query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> query_relation<Result, BindAttrs>::select() const & {
@@ -112,7 +112,7 @@ namespace active_record {
         ret.bind_attrs = this->bind_attrs;
         return ret;
     }
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute... Attrs>
     query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> query_relation<Result, BindAttrs>::select() && {
@@ -127,7 +127,7 @@ namespace active_record {
         return ret;
     }
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<AttributeAggregator... Attrs>
     query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> query_relation<Result, BindAttrs>::select() const & {
@@ -141,7 +141,7 @@ namespace active_record {
         ret.bind_attrs = this->bind_attrs;
         return ret;
     }
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<AttributeAggregator... Attrs>
     query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> query_relation<Result, BindAttrs>::select() && {
@@ -156,7 +156,7 @@ namespace active_record {
         return ret;
     }
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     query_relation<std::vector<Attr>, BindAttrs> query_relation<Result, BindAttrs>::pluck() const & {
@@ -170,7 +170,7 @@ namespace active_record {
         ret.bind_attrs = this->bind_attrs;
         return ret;
     }
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     query_relation<std::vector<Attr>, BindAttrs> query_relation<Result, BindAttrs>::pluck() && {
@@ -200,7 +200,7 @@ namespace active_record {
         }
     }
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute... Attrs>
     requires Model<typename Result::value_type>
@@ -215,22 +215,22 @@ namespace active_record {
         return ret;
     }
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) && {
         return std::move(*this).where(Attr::cmp == attr);
     }
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) const& {
         return this->where(Attr::cmp == attr);
     }
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
-    template<Tuple SrcBindAttrs>
+    template<specialized_from<std::tuple> SrcBindAttrs>
     query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) &&{
         query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
         ret.op_args = std::move(this->op_args);
@@ -255,9 +255,9 @@ namespace active_record {
         return ret;
     }
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
-    template<Tuple SrcBindAttrs>
+    template<specialized_from<std::tuple> SrcBindAttrs>
     query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) const&{
         query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
         ret.op_args = this->op_args;
@@ -280,13 +280,13 @@ namespace active_record {
         return ret;
     }
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     query_relation<Result, BindAttrs>& query_relation<Result, BindAttrs>::limit(const std::size_t lim) && {
         this->options.push_back(concat_strings(" LIMIT ", std::to_string(lim)));
         return *this;
     }
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     query_relation<Result, BindAttrs> query_relation<Result, BindAttrs>::limit(const std::size_t lim) const& {
         query_relation<Result, BindAttrs> ret{ this->operation };
@@ -301,7 +301,7 @@ namespace active_record {
         return ret;
     }
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     query_relation<Result, BindAttrs>& query_relation<Result, BindAttrs>::order_by(const active_record::order order) && {
@@ -312,7 +312,7 @@ namespace active_record {
 
         return *this;
     }
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     query_relation<Result, BindAttrs> query_relation<Result, BindAttrs>::order_by(const active_record::order order) const & {
@@ -332,7 +332,7 @@ namespace active_record {
         return ret;
     }
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     query_relation<std::size_t, BindAttrs> query_relation<Result, BindAttrs>::count() && {
         query_relation<std::size_t, BindAttrs> ret{ query_operation::select };
@@ -345,7 +345,7 @@ namespace active_record {
 
         return ret;
     }
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     query_relation<std::size_t, BindAttrs> query_relation<Result, BindAttrs>::count() const& {
         query_relation<std::size_t, BindAttrs> ret{ query_operation::select };
@@ -360,7 +360,7 @@ namespace active_record {
     }
 
     namespace detail {
-        template<typename Result, Tuple BindAttrs, AttributeAggregator T>
+        template<typename Result, specialized_from<std::tuple> BindAttrs, AttributeAggregator T>
         query_relation<typename T::attribute_type, BindAttrs> vectored_aggregate_query(const query_relation<Result, BindAttrs>& src) {
             query_relation<typename T::attribute_type, BindAttrs> ret{ query_operation::select };
 
@@ -373,7 +373,7 @@ namespace active_record {
             return ret;
         }
 
-        template<typename Result, Tuple BindAttrs, AttributeAggregator T>
+        template<typename Result, specialized_from<std::tuple> BindAttrs, AttributeAggregator T>
         query_relation<typename T::attribute_type, BindAttrs> vectored_aggregate_query(query_relation<Result, BindAttrs>&& src) {
             query_relation<typename T::attribute_type, BindAttrs> ret{ query_operation::select };
 
@@ -387,7 +387,7 @@ namespace active_record {
         }
     }
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     requires requires{ typename Attr::sum; }
@@ -396,7 +396,7 @@ namespace active_record {
             std::move(*this)
         );
     }
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     requires requires{ typename Attr::sum; }
@@ -406,7 +406,7 @@ namespace active_record {
         );
     }
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     requires requires{ typename Attr::avg; }
@@ -415,7 +415,7 @@ namespace active_record {
             std::move(*this)
         );
     }
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     requires requires{ typename Attr::avg; }
@@ -425,7 +425,7 @@ namespace active_record {
         );
     }
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     requires requires{ typename Attr::max; }
@@ -434,7 +434,7 @@ namespace active_record {
             std::move(*this)
         );
     }
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     requires requires{ typename Attr::max; }
@@ -444,7 +444,7 @@ namespace active_record {
         );
     }
 
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     requires requires{ typename Attr::min; }
@@ -453,7 +453,7 @@ namespace active_record {
             std::move(*this)
         );
     }
-    template<typename Result, Tuple BindAttrs>
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
     requires std::same_as<Result, std::vector<typename Result::value_type>>
     template<Attribute Attr>
     requires requires{ typename Attr::min; }

@@ -18,8 +18,8 @@ namespace active_record {
     /*
      * implements
      */
-    template<Tuple BindAttrs>
-    template<Tuple SrcBindAttrs>
+    template<specialized_from<std::tuple> BindAttrs>
+    template<specialized_from<std::tuple> SrcBindAttrs>
     query_condition<tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_condition<BindAttrs>::concat_conditions(query_condition<SrcBindAttrs>&& cond, const conjunction conjunc) {
         query_condition<tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret;
         ret.condition.reserve(this->condition.size() + 3 + cond.condition.size());

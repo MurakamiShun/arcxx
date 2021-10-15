@@ -36,21 +36,25 @@
 namespace active_record{
     using string = std::string;
     using string_view = std::basic_string_view<typename active_record::string::value_type>;
-    // utc_clock is not implements any compiler.
+    // utc_clock is not implements in gcc.
     //using datetime = std::chrono::utc_clock;
     using datetime = std::chrono::system_clock;
 
-    template<class TupleType>
-    concept Tuple = requires {
-        std::tuple_size<TupleType>::value;
-        // { std::bool_constant<std::is_standard_layout_v<TupleType>>{} } -> std::same_as<std::bool_constant<false>>;
-    };
+    namespace detail{
+        template<typename T, template<typename...>typename U>
+        struct specialized_from_impl {
+            static constexpr bool value = false;
+        };
+        template<template<typename...>typename T, template<typename...>typename U, typename... Args>
+        requires std::same_as<T<Args...>, U<Args...>>
+        struct specialized_from_impl<T<Args...>, U>{
+            static constexpr bool value = true;
+        };
+    }
 
-    template<typename T>
-    concept same_as_vector = std::same_as<T, std::vector<typename T::value_type>>;
-
-    template<typename T>
-    concept same_as_unordered_map = std::same_as<T, std::unordered_map<typename T::key_type, typename T::mapped_type>>;
+    // Whether T is template specialization from U
+    template<typename T, template<typename...>typename U>
+    concept specialized_from = detail::specialized_from_impl<std::remove_cvref_t<T>, U>::value;
 
     [[nodiscard]] inline active_record::string sanitize(const active_record::string& src) {
         active_record::string result;

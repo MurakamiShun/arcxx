@@ -88,9 +88,9 @@ namespace active_record {
             return concat_strings("?", std::to_string(idx + 1));
         }
 
-        template<typename T, Tuple BindAttrs>
-        [[nodiscard]] std::pair<std::optional<active_record::string>, T> exec(const query_relation<T, BindAttrs>& query){
-            T result;
+        template<typename Result, specialized_from<std::tuple> BindAttrs>
+        [[nodiscard]] std::pair<std::optional<active_record::string>, Result> exec(const query_relation<Result, BindAttrs>& query){
+            Result result;
             const auto result_code = [this, &query, &result](){
                 const auto sql = query.template to_sql<sqlite3_adaptor>();
                 sqlite3_stmt* stmt = nullptr;
@@ -118,12 +118,12 @@ namespace active_record {
                 while(true){
                     const auto status = sqlite3_step(stmt);
                     if(status == SQLITE_ROW){
-                        if constexpr (same_as_vector<T>) {
-                            result.push_back(active_record::sqlite3::detail::extract_column_data<typename T::value_type>(stmt));
+                        if constexpr (specialized_from<Result, std::vector>) {
+                            result.push_back(active_record::sqlite3::detail::extract_column_data<typename Result::value_type>(stmt));
                         }
-                        else if constexpr (same_as_unordered_map<T>) {
-                            if constexpr (Tuple<typename T::mapped_type>){
-                                using result_type = tuptup::tuple_cat_t<std::tuple<typename T::key_type>, typename T::mapped_type>;
+                        else if constexpr (specialized_from<Result, std::unordered_map>) {
+                            if constexpr (specialized_from<typename Result::mapped_type, std::tuple>){
+                                using result_type = tuptup::tuple_cat_t<std::tuple<typename Result::key_type>, typename Result::mapped_type>;
                                 auto result_column = active_record::sqlite3::detail::extract_column_data<result_type>(stmt);
                                 result.insert(std::make_pair(
                                     std::get<0>(result_column),
@@ -131,12 +131,12 @@ namespace active_record {
                                 ));
                             }
                             else{
-                                auto result_column = active_record::sqlite3::detail::extract_column_data<std::tuple<typename T::key_type, typename T::mapped_type>>(stmt);
+                                auto result_column = active_record::sqlite3::detail::extract_column_data<std::tuple<typename Result::key_type, typename Result::mapped_type>>(stmt);
                                 result.insert(std::make_pair(std::move(std::get<0>(result_column)), std::move(std::get<1>(result_column))));
                             }
                         }
                         else {
-                            result = active_record::sqlite3::detail::extract_column_data<T>(stmt);
+                            result = active_record::sqlite3::detail::extract_column_data<Result>(stmt);
                         }
                     }
                     else if (status == SQLITE_DONE) break;
@@ -148,7 +148,7 @@ namespace active_record {
 
             return {error_msg = get_error_msg(result_code), result};
         }
-        template<Tuple BindAttrs>
+        template<specialized_from<std::tuple> BindAttrs>
         std::optional<active_record::string> exec(const query_relation<bool, BindAttrs>& query){
             const auto sql = query.template to_sql<sqlite3_adaptor>();
             sqlite3_stmt* stmt = nullptr;
@@ -179,8 +179,8 @@ namespace active_record {
             result_code = sqlite3_finalize(stmt);
             return error_msg = get_error_msg(result_code);
         }
-        template<typename T, Tuple BindAttrs>
-        auto exec(const query_relation<T, BindAttrs>&& query){
+        template<typename Result, specialized_from<std::tuple> BindAttrs>
+        auto exec(const query_relation<Result, BindAttrs>&& query){
             return exec(query);
         }
 
@@ -228,9 +228,9 @@ namespace active_record {
             return transaction(func);
         }
 
-        template<Attribute T>
+        template<Attribute Attr>
         static active_record::string column_definition() {
-            return active_record::sqlite3::column_definition<T>();
+            return active_record::sqlite3::column_definition<Attr>();
         }
     };
 

@@ -21,12 +21,7 @@ namespace active_record {
     template<typename Derived>
     class model {
     private:
-        struct has_table_name_impl {
-            template<typename S>
-            static decltype(S::table_name, std::true_type{}) check(S);
-            static std::false_type check(...);
-            static constexpr bool value = decltype(check(std::declval<Derived>()))::value;
-        };
+        struct has_table_name_impl : std::conditional_t<requires {Derived::table_name;}, std::true_type, std::false_type>{};
 
         [[nodiscard]] static constexpr active_record::string insert_column_names_to_string();
 
@@ -37,6 +32,7 @@ namespace active_record {
         };
 
         static constexpr bool has_table_name = has_table_name_impl::value;
+
         [[nodiscard]] static constexpr auto column_names() noexcept;
 
         [[nodiscard]] auto attributes_as_tuple() noexcept;
@@ -59,12 +55,12 @@ namespace active_record {
         // delete is identifier word
         template<Attribute Attr>
         [[nodiscard]] static query_relation<bool, std::tuple<Attr>> destroy(const Attr&&);
-        template<Tuple SrcBindAttrs>
+        template<specialized_from<std::tuple> SrcBindAttrs>
         [[nodiscard]] static query_relation<bool, SrcBindAttrs> destroy(query_condition<SrcBindAttrs>&&);
 
         template<Attribute Attr>
         [[nodiscard]] static query_relation<std::vector<Derived>, std::tuple<Attr>> where(const Attr&);
-        template<Tuple SrcBindAttrs>
+        template<specialized_from<std::tuple> SrcBindAttrs>
         [[nodiscard]] static query_relation<std::vector<Derived>, SrcBindAttrs> where(query_condition<SrcBindAttrs>&&);
 
         [[nodiscard]] static query_relation<std::vector<Derived>, std::tuple<>> limit(const std::size_t);
