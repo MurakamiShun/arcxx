@@ -24,7 +24,6 @@ namespace active_record {
         using aggregator_type = Aggregator;
         using value_type = typename Attribute::value_type;
 
-
         static constexpr auto column_full_name() {
             return concat_strings(Aggregator::aggregation_func, "(", Attribute::column_full_name(), ")");
         }

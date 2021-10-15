@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "attribute_common_impl.hpp"
+#include "attribute_common.hpp"
 
 namespace active_record {
     template<std::same_as<common_adaptor> Adaptor, Attribute Attr>

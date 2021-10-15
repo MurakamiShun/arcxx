@@ -39,17 +39,10 @@ namespace active_record {
         };
 
         template<std::size_t I, typename Condition, std::convertible_to<Attribute> Last>
-        static void copy_and_set_attrs_to_condition(Condition& ret, const Last& last) {
-            std::get<I>(ret.bind_attrs) = Attribute{ last };
-            ret.condition.push_back(I);
-        }
+        static void copy_and_set_attrs_to_condition(Condition& ret, const Last& last);
 
         template<std::size_t I, typename Condition, std::convertible_to<Attribute> Head, std::convertible_to<Attribute>... Tails>
-        static void copy_and_set_attrs_to_condition(Condition& ret, const Head& head, const Tails&... tails) {
-            copy_and_set_attrs_to_condition<I+1>(ret, head);
-            ret.condition.push_back(",");
-            copy_and_set_attrs_to_condition<I+1>(ret, tails...);
-        }
+        static void copy_and_set_attrs_to_condition(Condition& ret, const Head& head, const Tails&... tails);
     public:
         using constraint = std::function<bool(const std::optional<Type>&)>;
         using model_type = Model;
@@ -58,9 +51,7 @@ namespace active_record {
 
         static constexpr bool has_column_name = has_column_name_impl::value;
         static constexpr bool has_constraints = has_constraints_impl::value;
-        [[nodiscard]] static constexpr auto column_full_name() {
-            return concat_strings("\"", Model::table_name, "\".\"", Attribute::column_name, "\"");
-        }
+        [[nodiscard]] static constexpr auto column_full_name();
 
         // constexpr std::type_info::operator== is C++23
         inline static const constraint not_null = [](const std::optional<Type>& t) constexpr { return static_cast<bool>(t); };
@@ -71,28 +62,10 @@ namespace active_record {
             constexpr bool operator()(const std::optional<Type>&){ return true; }
         };
 
-        [[nodiscard]] static const constraint default_value(const Type& def_val) {
-            return constraint_default_value_impl{ def_val };
-        }
+        [[nodiscard]] static const constraint default_value(const Type& def_val);
 
-        [[nodiscard]] static bool has_constraint(const constraint& c) noexcept{
-            if constexpr (!has_constraints) return false;
-            else{
-                for(const auto& con : Attribute::constraints){
-                    if(con.target_type() == c.target_type()) return true;
-                }
-                return false;
-            }
-        }
-        static const std::optional<std::reference_wrapper<const constraint>> get_constraint(const constraint& c){
-            if constexpr (!has_constraints) return std::nullopt;
-            else{
-                for(const auto& con : Attribute::constraints){
-                    if(con.target_type() == c.target_type()) return std::cref(con);
-                }
-                return std::nullopt;
-            }
-        }
+        [[nodiscard]] static bool has_constraint(const constraint& c) noexcept;
+        static const std::optional<std::reference_wrapper<const constraint>> get_constraint(const constraint& c);
 
         inline static const bool is_primary_key =  [](){
             return has_constraint(primary_key);
@@ -104,14 +77,7 @@ namespace active_record {
         template<std::convertible_to<std::optional<Type>> T>
         constexpr attribute_common(T&& default_value) : data(static_cast<std::optional<Type>>(std::move(default_value))) {}
 
-        [[nodiscard]] constexpr bool is_valid() const {
-            if constexpr (has_constraints) {
-                for (const auto& val : Attribute::constraints) {
-                    if (!val(data)) return false;
-                }
-            }
-            return true;
-        }
+        [[nodiscard]] constexpr bool is_valid() const;
         explicit constexpr operator bool() const noexcept { return static_cast<bool>(data); }
         [[nodiscard]] const Type& value() const& { return data.value(); }
         [[nodiscard]] Type& value()& { return data.value(); }
@@ -127,16 +93,7 @@ namespace active_record {
         }
 
         template<std::convertible_to<Attribute>... Attrs>
-        static auto in(const Attrs&... values) {
-            query_condition<std::tuple<decltype(values, std::declval<Attribute>())...>> ret;
-            ret.condition.push_back(concat_strings(
-                "\"", Model::table_name, "\".\"",
-                Attribute::column_name, "\" in ("
-            ));
-            copy_and_set_attrs_to_condition(ret, values...);
-            ret.condition.push_back(")");
-            return ret;
-        }
+        static auto in(const Attrs&... values);
 
         constexpr static const struct {
         private:
@@ -193,3 +150,5 @@ namespace active_record {
         };
     };
 }
+
+#include "attribute_common_impl.ipp"
