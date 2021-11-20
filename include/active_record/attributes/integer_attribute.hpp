@@ -34,13 +34,10 @@ namespace active_record {
 
     template<typename Model, typename Attribute, std::integral Integer>
     struct attribute<Model, Attribute, Integer> : public attribute_common<Model, Attribute, Integer> {
-    private:
-        template<typename T>
-        struct avg_attribute : public attribute<Model, avg_attribute<T>, T>{
-            inline static decltype(auto) column_name = Attribute::column_name;
-            using attribute<Model, avg_attribute<T>, T>::attribute;
+        struct avg_attribute : public attribute_common<Model, avg_attribute, double>{
+            inline static const auto column_name = Attribute::column_name;
+            using attribute_common<Model, avg_attribute, double>::attribute_common;
         };
-    public:
         using attribute_common<Model, Attribute, Integer>::attribute_common;
 
         inline static const typename attribute_common<Model, Attribute, Integer>::constraint auto_increment = [](const std::optional<Integer>& t) constexpr { return false; };
@@ -68,7 +65,7 @@ namespace active_record {
         struct sum : public attribute_aggregator<Model, Attribute, sum> {
             inline static decltype(auto) aggregation_func = "sum";
         };
-        struct avg : public attribute_aggregator<Model, avg_attribute<double>, avg> {
+        struct avg : public attribute_aggregator<Model, avg_attribute, avg> {
             inline static decltype(auto) aggregation_func = "avg";
         };
         struct max : public attribute_aggregator<Model, Attribute, max> {
