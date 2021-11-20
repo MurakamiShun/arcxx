@@ -22,7 +22,7 @@ namespace active_record{
     }
 
     template<typename Model, typename Attribute, typename Type>
-    const attribute_common<Model, Attribute, Type>::constraint attribute_common<Model, Attribute, Type>::default_value(const Type& def_val) {
+    const typename attribute_common<Model, Attribute, Type>::constraint attribute_common<Model, Attribute, Type>::default_value(const Type& def_val) {
         return constraint_default_value_impl{ def_val };
     }
 

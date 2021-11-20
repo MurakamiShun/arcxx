@@ -12,12 +12,10 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
-if(ENABLE_PROFILE)
-set(compile_options -Wall -Wextra -pedantic -Werror -pg -g)
-set(link_options -pg)
+if(MSVC)
+set(compile_options)
 else()
 set(compile_options -Wall -Wextra -pedantic -Werror)
-set(link_options)
 endif()
 
 # Benchmark
@@ -32,6 +30,9 @@ target_link_options(active_record_bench PUBLIC ${link_options})
 
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
 include(CTest)
-include(Catch)
 
-catch_discover_tests(active_record_bench)
+if(MSVC)
+    add_test(NAME active_record_bench COMMAND active_record_bench.exe)
+else()
+    add_test(NAME active_record_bench COMMAND active_record_bench)
+endif()

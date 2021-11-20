@@ -43,7 +43,7 @@ namespace active_record {
     public:
         using attribute_common<Model, Attribute, Integer>::attribute_common;
 
-        inline static const typename attribute_common<Model, Attribute, Integer>::constraint auto_increment = [](const std::optional<Integer>& t) constexpr { return not_null(t) && unique(t); };
+        inline static const typename attribute_common<Model, Attribute, Integer>::constraint auto_increment = [](const std::optional<Integer>& t) constexpr { return false; };
 
         template<std::derived_from<adaptor> Adaptor = common_adaptor>
         [[nodiscard]] constexpr active_record::string to_string() const {
