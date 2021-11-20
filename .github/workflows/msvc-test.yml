@@ -14,11 +14,14 @@ jobs:
       - uses: microsoft/setup-msbuild@v1.1
 
       - name: Install packages
-        run: nuget install sqlite3
+        working-directory: ${{github.workspace}}/tests/integrated_tests
+        run: |
+          vcpkg integrate install
+          vcpkg install sqlite3:x64-windows catch2:x64-windows
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}/tests/integrated_tests
-        run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} .
+        run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake .
 
       - name: Build
         working-directory: ${{github.workspace}}/tests/integrated_tests
@@ -34,9 +37,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: microsoft/setup-msbuild@v1.1
-
-      - name: Install packages
-        run: nuget install sqlite3
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}/tests/benchmarks

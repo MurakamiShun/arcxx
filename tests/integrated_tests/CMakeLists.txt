@@ -3,35 +3,31 @@ cmake_minimum_required(VERSION 3.11)
 project(tests LANGUAGES CXX)
 
 if(MSVC)
-set(CMAKE_CXX_STANDARD 23) # c++latest
+    find_package(Catch2 CONFIG REQUIRED)
+    find_package(unofficial-sqlite3 CONFIG REQUIRED)
+    set(compile_options /DSQLITE_TEST)
+    set(compile_feature cxx_std_23) # c++latest
+    set(link_library unofficial::sqlite3::sqlite3 Catch2::Catch2)
 else()
-set(CMAKE_CXX_STANDARD 20)
-endif()
+    include(FetchContent)
+    FetchContent_Declare(
+        Catch2
+        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+        GIT_TAG        v2.13.7
+    )
 
-include(FetchContent)
-FetchContent_Declare(
-    Catch2
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG        v2.13.7
-)
-
-FetchContent_MakeAvailable(Catch2)
-
-if(TARGET_SQL MATCHES "PostgreSQL")
-    if(MSVC)
-        set(compile_options /DPOSTGRESQL_TEST)
-    else()
+    FetchContent_MakeAvailable(Catch2)
+    if(TARGET_SQL MATCHES "PostgreSQL")
         set(compile_options -Wall -Wextra -pedantic -Werror -DPOSTGRESQL_TEST)
-    endif()
-    set(link_library Catch2::Catch2 pq)
-else()
-    if(MSVC)
-        set(compile_options /DSQLITE_TEST)
+        set(compile_feature cxx_std_20)
+        set(link_library Catch2::Catch2 pq)
     else()
         set(compile_options -Wall -Wextra -pedantic -Werror -DSQLITE_TEST)
+        set(compile_feature cxx_std_20)
+        set(link_library Catch2::Catch2 sqlite3)
     endif()
-    set(link_library Catch2::Catch2 sqlite3)
 endif()
+
 
 # Integrated Tests
 add_executable(active_record_IT
@@ -47,6 +43,7 @@ add_executable(active_record_IT
 )
 target_link_libraries(active_record_IT PRIVATE ${link_library})
 target_compile_options(active_record_IT PUBLIC ${compile_options})
+target_compile_features(active_record_IT PRIVATE ${compile_feature})
 
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
 include(CTest)
