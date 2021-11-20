@@ -23,23 +23,14 @@ namespace active_record {
     class attribute_common {
     private:
         std::optional<Type> data;
-
-        struct has_column_name_impl : std::conditional_t<requires {Attribute::column_name;}, std::true_type, std::false_type>{};
-        struct has_constraints_impl : std::conditional_t<requires {Attribute::constraints;}, std::true_type, std::false_type>{};
-
-        template<std::size_t I, typename Condition, std::convertible_to<Attribute> Last>
-        static void copy_and_set_attrs_to_condition(Condition& ret, const Last& last);
-
-        template<std::size_t I, typename Condition, std::convertible_to<Attribute> Head, std::convertible_to<Attribute>... Tails>
-        static void copy_and_set_attrs_to_condition(Condition& ret, const Head& head, const Tails&... tails);
     public:
         using constraint = std::function<bool(const std::optional<Type>&)>;
         using model_type = Model;
         using attribute_type = Attribute;
         using value_type = Type;
 
-        static constexpr bool has_column_name = has_column_name_impl::value;
-        static constexpr bool has_constraints = has_constraints_impl::value;
+        static constexpr bool has_column_name = requires {Attribute::column_name;};
+        static constexpr bool has_constraints = requires {Attribute::constraints;};
         [[nodiscard]] static constexpr auto column_full_name();
 
         // constexpr std::type_info::operator== is C++23
@@ -50,7 +41,6 @@ namespace active_record {
             const Type default_value;
             constexpr bool operator()(const std::optional<Type>&){ return true; }
         };
-
         [[nodiscard]] static const constraint default_value(const Type& def_val);
 
         [[nodiscard]] static bool has_constraint(const constraint& c) noexcept;

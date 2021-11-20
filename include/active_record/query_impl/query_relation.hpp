@@ -47,45 +47,10 @@ namespace active_record {
         }
 
         template<std::derived_from<adaptor> Adaptor = common_adaptor>
-        [[nodiscard]] const active_record::string to_sql() const {
-            sob_to_string_impl<Adaptor> convertor{ bind_attrs };
-            if (operation == query_operation::select) {
-                return concat_strings("SELECT ", convertor.to_string(op_args),
-                    " FROM ", convertor.to_string(tables),
-                    conditions.empty() ? "" : concat_strings(" WHERE ", convertor.to_string(conditions)),
-                    " ", convertor.to_string(options), ";"
-                );
-            }
-            else if (operation == query_operation::insert) {
-                return concat_strings("INSERT INTO ", convertor.to_string(tables),
-                    " VALUES ", convertor.to_string(op_args), ";"
-                );
-            }
-            else if (operation == query_operation::destroy) {
-                return concat_strings("DELETE FROM ", convertor.to_string(tables),
-                    conditions.empty() ? "" : concat_strings(" WHERE ", convertor.to_string(conditions)), ";"
-                );
-            }
-            else if (operation == query_operation::update) {
-                return concat_strings("UPDATE ", convertor.to_string(tables),
-                    " SET ", convertor.to_string(op_args),
-                    conditions.empty() ? "": concat_strings(" WHERE ", convertor.to_string(conditions)), ";"
-                );
-            }
-            else if (operation == query_operation::condition) {
-                return concat_strings("SELECT ", convertor.to_string(op_args),
-                    " FROM ", convertor.to_string(tables),
-                    " WHERE ", convertor.to_string(conditions),
-                    convertor.to_string(options), ";"
-                );
-            }
-            else {
-                return concat_strings(convertor.to_string(op_args), ";");
-            }
-        }
+        [[nodiscard]] const active_record::string to_sql() const;
     };
 }
-#include "query_relation_impl.ipp"
+#include "query_relation_common_impl.ipp"
 
 namespace active_record{
     template<specialized_from<std::tuple> BindAttrs>

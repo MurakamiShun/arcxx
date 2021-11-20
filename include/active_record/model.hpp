@@ -21,17 +21,14 @@ namespace active_record {
     template<typename Derived>
     class model {
     private:
-        struct has_table_name_impl : std::conditional_t<requires {Derived::table_name;}, std::true_type, std::false_type>{};
-
         [[nodiscard]] static constexpr active_record::string insert_column_names_to_string();
-
     public:
         struct schema {
             template<std::derived_from<adaptor> Adaptor>
             [[nodiscard]] static active_record::string to_sql(bool abort_if_exist = true);
         };
 
-        static constexpr bool has_table_name = has_table_name_impl::value;
+        static constexpr bool has_table_name = requires {Derived::table_name;};
 
         [[nodiscard]] static constexpr auto column_names() noexcept;
 

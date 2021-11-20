@@ -17,21 +17,6 @@
 
 namespace active_record{
     template<typename Model, typename Attribute, typename Type>
-    template<std::size_t I, typename Condition, std::convertible_to<Attribute> Last>
-    void attribute_common<Model, Attribute, Type>::copy_and_set_attrs_to_condition(Condition& ret, const Last& last) {
-        std::get<I>(ret.bind_attrs) = Attribute{ last };
-        ret.condition.push_back(I);
-    }
-
-    template<typename Model, typename Attribute, typename Type>
-    template<std::size_t I, typename Condition, std::convertible_to<Attribute> Head, std::convertible_to<Attribute>... Tails>
-    void attribute_common<Model, Attribute, Type>::copy_and_set_attrs_to_condition(Condition& ret, const Head& head, const Tails&... tails) {
-        copy_and_set_attrs_to_condition<I+1>(ret, head);
-        ret.condition.push_back(",");
-        copy_and_set_attrs_to_condition<I+1>(ret, tails...);
-    }
-
-    template<typename Model, typename Attribute, typename Type>
     constexpr auto attribute_common<Model, Attribute, Type>::column_full_name() {
         return concat_strings("\"", Model::table_name, "\".\"", Attribute::column_name, "\"");
     }
@@ -73,6 +58,22 @@ namespace active_record{
         return true;
     }
 
+    namespace detail {
+    template<typename Attribute, std::size_t I, typename Condition, std::convertible_to<Attribute> Last>
+    void copy_and_set_attrs_to_condition(Condition& ret, const Last& last) {
+        std::get<I>(ret.bind_attrs) = Attribute{ last };
+        ret.condition.push_back(I);
+    }
+
+    template<typename Attribute, std::size_t I, typename Condition, std::convertible_to<Attribute> Head, std::convertible_to<Attribute>... Tails>
+    void copy_and_set_attrs_to_condition(Condition& ret, const Head& head, const Tails&... tails) {
+        copy_and_set_attrs_to_condition<Attribute, I+1>(ret, head);
+        ret.condition.push_back(",");
+        copy_and_set_attrs_to_condition<Attribute, I+1>(ret, tails...);
+    }
+
+    }
+
     template<typename Model, typename Attribute, typename Type>
     template<std::convertible_to<Attribute>... Attrs>
     auto attribute_common<Model, Attribute, Type>::in(const Attrs&... values) {
@@ -81,7 +82,7 @@ namespace active_record{
             "\"", Model::table_name, "\".\"",
             Attribute::column_name, "\" in ("
         ));
-        copy_and_set_attrs_to_condition(ret, values...);
+        detail::copy_and_set_attrs_to_condition<Attribute, 0>(ret, values...);
         ret.condition.push_back(")");
         return ret;
     }

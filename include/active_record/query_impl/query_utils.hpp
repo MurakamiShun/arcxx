@@ -29,7 +29,7 @@ namespace active_record::detail {
     }
 
     template<Model Mod>
-    [[nodiscard]] constexpr active_record::string model_column_full_names_to_string(){
+    [[nodiscard]] active_record::string model_column_full_names_to_string(){
         const auto column_names = Mod::column_names();
         active_record::string buff;
         const std::size_t buff_size = std::transform_reduce(
