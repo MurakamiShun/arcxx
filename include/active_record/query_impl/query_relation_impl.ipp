@@ -106,11 +106,17 @@ namespace active_record {
 
         /* map */
         template<typename T>
-        struct group_type_impl{ using type = void; };
+        struct group_type_impl{ using type = int; };
         template<specialized_from<std::unordered_map> T>
         struct group_type_impl<T>{ using type = typename T::key_type; };
 
+        template<typename T>
+        struct mapped_type_impl{ using type = std::tuple<int>; };
+        template<specialized_from<std::unordered_map> T>
+        struct mapped_type_impl<T>{ using type = typename T::mapped_type; };
+
         using group_type = group_type_impl<Result>::type;
+        using mapped_type = mapped_type_impl<Result>::type;
 
         template<AttributeAggregator... Attrs>
         [[nodiscard]] query_relation<std::unordered_map<group_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> select() && requires specialized_from<Result, std::unordered_map>;

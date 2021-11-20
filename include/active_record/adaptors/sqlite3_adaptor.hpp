@@ -97,7 +97,7 @@ namespace active_record {
                 auto result_code = sqlite3_prepare_v2(
                     db_obj,
                     sql.c_str(),
-                    sql.size(),
+                    static_cast<int>(sql.size()),
                     &stmt,
                     nullptr
                 );
@@ -123,7 +123,7 @@ namespace active_record {
                         }
                         else if constexpr (specialized_from<Result, std::unordered_map>) {
                             if constexpr (specialized_from<typename Result::mapped_type, std::tuple>){
-                                using result_type = tuptup::tuple_cat_t<std::tuple<typename Result::key_type>, typename Result::mapped_type>;
+                                using result_type = tuptup::tuple_cat_t<std::tuple<typename query_relation<Result, BindAttrs>::group_type>, typename query_relation<Result, BindAttrs>::mapped_type>;
                                 auto result_column = active_record::sqlite3::detail::extract_column_data<result_type>(stmt);
                                 result.insert(std::make_pair(
                                     std::get<0>(result_column),
@@ -131,7 +131,7 @@ namespace active_record {
                                 ));
                             }
                             else{
-                                auto result_column = active_record::sqlite3::detail::extract_column_data<std::tuple<typename Result::key_type, typename Result::mapped_type>>(stmt);
+                                auto result_column = active_record::sqlite3::detail::extract_column_data<std::tuple<typename query_relation<Result, BindAttrs>::group_type, typename query_relation<Result, BindAttrs>::mapped_type>>(stmt);
                                 result.insert(std::make_pair(std::move(std::get<0>(result_column)), std::move(std::get<1>(result_column))));
                             }
                         }
@@ -155,7 +155,7 @@ namespace active_record {
             auto result_code = sqlite3_prepare_v2(
                 db_obj,
                 sql.c_str(),
-                sql.size(),
+                static_cast<int>(sql.size()),
                 &stmt,
                 nullptr
             );

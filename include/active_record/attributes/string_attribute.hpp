@@ -36,6 +36,7 @@ namespace active_record {
         using attribute_common<Model, Attribute, active_record::string>::attribute_common;
 
         template<std::convertible_to<active_record::string> StringType>
+        requires (!std::convertible_to<StringType, std::optional<active_record::string>>)
         constexpr attribute(const StringType& default_value) : attribute_common<Model, Attribute, active_record::string>(active_record::string{ default_value }) {}
 
         struct constraint_length_impl {
