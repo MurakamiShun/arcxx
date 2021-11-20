@@ -8,10 +8,10 @@ env:
 
 jobs:
   sqlite3-tests:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v2
-      - uses: microsoft/setup-msbuild@v1.0.3
+      - uses: microsoft/setup-msbuild@v1.1
 
       - name: Install packages
         run: nuget install sqlite3
@@ -22,18 +22,18 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}/tests/integrated_tests
-        run: cmake --build build --config ${{env.BUILD_TYPE}} -j2
+        run: cmake --build build --config ${{env.BUILD_TYPE}}
 
       - name: Run integrated tests
         working-directory: ${{github.workspace}}/tests/integrated_tests/build
         run: ./active_record_IT.exe
 
-  benchmarks:    
-    runs-on: windows-latest
+  benchmarks:
+    runs-on: windows-2022
     needs: [sqlite3-tests]
     steps:
       - uses: actions/checkout@v2
-      - uses: microsoft/setup-msbuild@v1.0.3
+      - uses: microsoft/setup-msbuild@v1.1
 
       - name: Install packages
         run: nuget install sqlite3
@@ -44,7 +44,7 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}/tests/benchmarks
-        run: cmake --build build --config ${{env.BUILD_TYPE}} -j2
+        run: cmake --build build --config ${{env.BUILD_TYPE}}
 
       - name: Run benchmarks
         working-directory: ${{github.workspace}}/tests/benchmarks/build
