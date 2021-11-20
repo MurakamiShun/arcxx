@@ -1,4 +1,4 @@
-# Active Record C++ [![test](https://github.com/akisute514/active_record_cpp/actions/workflows/test.yml/badge.svg)](https://github.com/akisute514/active_record_cpp/actions/workflows/test.yml) [![doc_build](https://github.com/akisute514/active_record_cpp/actions/workflows/doc_build.yml/badge.svg)](https://github.com/akisute514/active_record_cpp/actions/workflows/doc_build.yml)
+# Active Record C++ [![gcc](https://github.com/akisute514/active_record_cpp/actions/workflows/gcc-test.yml/badge.svg)](https://github.com/akisute514/active_record_cpp/actions/workflows/gcc-test.yml) [![msvc](https://github.com/akisute514/active_record_cpp/actions/workflows/msvc-test.yml/badge.svg)](https://github.com/akisute514/active_record_cpp/actions/workflows/msvc-test.yml) [![doc_build](https://github.com/akisute514/active_record_cpp/actions/workflows/doc_build.yml/badge.svg)](https://github.com/akisute514/active_record_cpp/actions/workflows/doc_build.yml)
 
 Active Record C++ is an Open Source C++20 O/R mapper of Active Record pattern.
 
