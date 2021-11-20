@@ -71,7 +71,7 @@ namespace active_record {
     };
 
     namespace attributes {
-        template<typename Model, typename Attribute, std::floating_point FP = float>
+        template<typename Model, typename Attribute, std::floating_point FP = double>
         struct decimal : public attribute<Model, Attribute, FP>{
             using attribute<Model, Attribute, FP>::attribute;
         };

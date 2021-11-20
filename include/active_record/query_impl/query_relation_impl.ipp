@@ -111,7 +111,7 @@ namespace active_record {
         struct group_type_impl<T>{ using type = typename T::key_type; };
 
         template<typename T>
-        struct mapped_type_impl{ using type = std::tuple<int>; };
+        struct mapped_type_impl{ using type = std::tuple<>; };
         template<specialized_from<std::unordered_map> T>
         struct mapped_type_impl<T>{ using type = typename T::mapped_type; };
 

@@ -22,9 +22,9 @@ namespace active_record::sqlite3::detail {
     template<Attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::string>
     bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, Attr& attr){
-        const auto type = sqlite3_column_type(stmt, idx);
+        const auto type = sqlite3_column_type(stmt, static_cast<int>(idx));
         if(type == SQLITE_TEXT){
-            auto text_ptr = sqlite3_column_text(stmt, idx);
+            auto text_ptr = sqlite3_column_text(stmt, static_cast<int>(idx));
             attr = active_record::string{ reinterpret_cast<const char*>(text_ptr) };
             return true;
         }
@@ -39,13 +39,13 @@ namespace active_record::sqlite3::detail {
     template<Attribute Attr>
     requires std::integral<typename Attr::value_type>
     bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, Attr& attr){
-        const auto type = sqlite3_column_type(stmt, idx);
+        const auto type = sqlite3_column_type(stmt, static_cast<int>(idx));
         if(type == SQLITE_INTEGER){
             if constexpr(sizeof(typename Attr::value_type) == sizeof(int64_t)){
-                attr = sqlite3_column_int64(stmt, idx);
+                attr = sqlite3_column_int64(stmt, static_cast<int>(idx));
             }
             else{
-                attr = sqlite3_column_int(stmt, idx);
+                attr = sqlite3_column_int(stmt, static_cast<int>(idx));
             }
             return true;
         }
@@ -60,9 +60,9 @@ namespace active_record::sqlite3::detail {
     template<Attribute Attr>
     requires std::floating_point<typename Attr::value_type>
     bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, Attr& attr){
-        const auto type = sqlite3_column_type(stmt, idx);
+        const auto type = sqlite3_column_type(stmt, static_cast<int>(idx));
         if(type == SQLITE_FLOAT){
-            attr = sqlite3_column_double(stmt, idx);
+            attr = sqlite3_column_double(stmt, static_cast<int>(idx));
             return true;
         }
         else if(type == SQLITE_NULL){
@@ -76,11 +76,11 @@ namespace active_record::sqlite3::detail {
     template<Attribute Attr>
     requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
     bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, Attr& attr){
-        const auto type = sqlite3_column_type(stmt, idx);
+        const auto type = sqlite3_column_type(stmt, static_cast<int>(idx));
         if(type == SQLITE_BLOB){
-            void* ptr = sqlite3_column_blob(stmt, idx);
+            void* ptr = sqlite3_column_blob(stmt, static_cast<int>(idx));
             attr = std::vector<std::byte>{};
-            const auto size = sqlite3_column_bytes(stmt, idx);
+            const auto size = sqlite3_column_bytes(stmt, static_cast<int>(idx));
             attr.value().resize(size);
             std::copy_n(attr.value().begin(), ptr, size);
             return true;
@@ -96,20 +96,20 @@ namespace active_record::sqlite3::detail {
     template<typename T>
     requires (!Attribute<T>)
     bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, T& attr){
-        const auto type = sqlite3_column_type(stmt, idx);
+        const auto type = sqlite3_column_type(stmt, static_cast<int>(idx));
         if constexpr(std::is_floating_point_v<T>){
             if(type == SQLITE_FLOAT) {
-                attr = sqlite3_column_double(stmt, idx);
+                attr = sqlite3_column_double(stmt, static_cast<int>(idx));
                 return true;
             }
         }
         else if constexpr(std::is_integral_v<T>){
             if(type == SQLITE_INTEGER) {
                 if constexpr(sizeof(T) == sizeof(int64_t)){
-                    attr = sqlite3_column_int64(stmt, idx);
+                    attr = sqlite3_column_int64(stmt, static_cast<int>(idx));
                 }
                 else{
-                    attr = sqlite3_column_int(stmt, idx);
+                    attr = sqlite3_column_int(stmt, static_cast<int>(idx));
                 }
                 return true;
             }
@@ -150,14 +150,14 @@ namespace active_record::sqlite3::detail {
     requires std::integral<typename Attr::value_type>
     int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
         if(!attr) {
-            return sqlite3_bind_null(stmt, index + 1);
+            return sqlite3_bind_null(stmt, static_cast<int>(index + 1));
         }
         else {
             if constexpr (sizeof(typename Attr::value_type) == sizeof(int64_t)) {
-                return sqlite3_bind_int64(stmt, index + 1, attr.value());
+                return sqlite3_bind_int64(stmt, static_cast<int>(index + 1), attr.value());
             }
             else {
-                return sqlite3_bind_int(stmt, index + 1, attr.value());
+                return sqlite3_bind_int(stmt, static_cast<int>(index + 1), attr.value());
             }
         }
     }
@@ -166,10 +166,10 @@ namespace active_record::sqlite3::detail {
     requires std::floating_point<typename Attr::value_type>
     int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
         if(!attr) {
-            return sqlite3_bind_null(stmt, index + 1);
+            return sqlite3_bind_null(stmt, static_cast<int>(index + 1));
         }
         else {
-            return sqlite3_bind_double(stmt, index + 1, static_cast<double>(attr.value()));
+            return sqlite3_bind_double(stmt, static_cast<int>(index + 1), static_cast<double>(attr.value()));
         }
     }
 
@@ -177,22 +177,22 @@ namespace active_record::sqlite3::detail {
     requires std::same_as<typename Attr::value_type, active_record::string>
     int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
         if(!attr) {
-            return sqlite3_bind_null(stmt, index + 1);
+            return sqlite3_bind_null(stmt, static_cast<int>(index + 1));
         }
         else {
             // not copy text
-            return sqlite3_bind_text(stmt, index + 1, attr.value().c_str(), attr.value().length(), SQLITE_STATIC);
+            return sqlite3_bind_text(stmt, static_cast<int>(index + 1), attr.value().c_str(), static_cast<int>(attr.value().length()), SQLITE_STATIC);
         }
     }
     template<Attribute Attr>
     requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
     int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
         if(!attr) {
-            return sqlite3_bind_null(stmt, index + 1);
+            return sqlite3_bind_null(stmt, static_cast<int>(index + 1));
         }
         else {
             // not copy text
-            return sqlite3_bind_blob(stmt, index + 1, attr.value().data(), attr.value().size(), SQLITE_STATIC);
+            return sqlite3_bind_blob(stmt, static_cast<int>(index + 1), attr.value().data(), static_cast<int>(attr.value().size()), SQLITE_STATIC);
         }
     }
 }
