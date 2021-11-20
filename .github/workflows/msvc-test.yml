@@ -28,7 +28,7 @@ jobs:
         run: cmake --build build --config ${{env.BUILD_TYPE}}
 
       - name: Run integrated tests
-        working-directory: ${{github.workspace}}/tests/integrated_tests/build
+        working-directory: ${{github.workspace}}/tests/integrated_tests/build/${{env.BUILD_TYPE}}
         run: ./active_record_IT.exe
 
   benchmarks:
@@ -47,5 +47,5 @@ jobs:
         run: cmake --build build --config ${{env.BUILD_TYPE}}
 
       - name: Run benchmarks
-        working-directory: ${{github.workspace}}/tests/benchmarks/build
+        working-directory: ${{github.workspace}}/tests/benchmarks/build/${{env.BUILD_TYPE}}
         run: ./active_record_bench.exe
