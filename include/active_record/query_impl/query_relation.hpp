@@ -66,6 +66,4 @@ namespace active_record{
  * Clang and MSVC has this bug.
  * https://bugs.llvm.org/show_bug.cgi?id=48020
  */
-#include "query_relation_impl/result_scalar.ipp"
-#include "query_relation_impl/result_vector.ipp"
-#include "query_relation_impl/result_map.ipp"
+#include "query_relation_impl.ipp"

@@ -19,26 +19,6 @@ namespace active_record {
     /*
      * return type == Scalar
      */
-
-    template<typename Result, specialized_from<std::tuple> BindAttrs>
-    struct query_relation : public query_relation_common<BindAttrs> {
-        using query_relation_common<BindAttrs>::query_relation_common;
-        template<std::derived_from<adaptor> Adaptor>
-        [[nodiscard]] auto exec(Adaptor& adapt) const {
-            return adapt.exec(*this);
-        }
-
-        template<Attribute Attr>
-        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) &&;
-        template<Attribute Attr>
-        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) const &;
-
-        template<specialized_from<std::tuple> SrcBindAttrs>
-        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
-        template<specialized_from<std::tuple> SrcBindAttrs>
-        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const&;
-    };
-
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<Attribute Attr>
     query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) && {
