@@ -14,9 +14,8 @@ jobs:
       - uses: microsoft/setup-msbuild@v1.0.3
 
       - name: Install packages
-        run: |
-          sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-          sudo apt update && sudo apt install gcc-11 g++-11
+        run: nuget install sqlite3
+
       - name: Configure CMake
         working-directory: ${{github.workspace}}/tests/integrated_tests
         run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} .
@@ -29,54 +28,16 @@ jobs:
         working-directory: ${{github.workspace}}/tests/integrated_tests/build
         run: ./active_record_IT.exe
 
-  postgresql-tests:
-    runs-on: windows-latest
-    services:
-      postgres:
-        image: postgres:alpine3.14
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_PASSWORD: password
-          POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
-          POSTGRES_DB: "test_db"
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    steps:
-      - uses: actions/checkout@v2
-      - uses: microsoft/setup-msbuild@v1.0.3
-
-      - name: Install packages
-        run: |
-          sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-          sudo apt update && sudo apt install gcc-11 g++-11
-      - name: Configure CMake
-        working-directory: ${{github.workspace}}/tests/integrated_tests
-        run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DTARGET_SQL=PostgreSQL .
-
-      - name: Build
-        working-directory: ${{github.workspace}}/tests/integrated_tests
-        run: cmake --build build --config ${{env.BUILD_TYPE}} -j2
-
-      - name: Run integrated tests
-        working-directory: ${{github.workspace}}/tests/integrated_tests/build
-        run: ./active_record_IT.exe
-
-
   benchmarks:    
     runs-on: windows-latest
-    needs: [sqlite3-tests, postgresql-tests]
+    needs: [sqlite3-tests]
     steps:
       - uses: actions/checkout@v2
       - uses: microsoft/setup-msbuild@v1.0.3
 
       - name: Install packages
-        run: |
-          sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-          sudo apt update && sudo apt install gcc-11 g++-11
+        run: nuget install sqlite3
+
       - name: Configure CMake
         working-directory: ${{github.workspace}}/tests/benchmarks
         run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} .

@@ -1,7 +1,12 @@
 cmake_minimum_required(VERSION 3.11)
 
 project(tests LANGUAGES CXX)
+
+if(MSVC)
+set(CMAKE_CXX_STANDARD 23) # c++latest
+else()
 set(CMAKE_CXX_STANDARD 20)
+endif()
 
 include(FetchContent)
 FetchContent_Declare(
