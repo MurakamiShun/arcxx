@@ -19,7 +19,7 @@
 namespace active_record {
     template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::string>
-    [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
+    [[nodiscard]] active_record::string to_string(const Attr& attr) {
         // require sanitize
         return static_cast<bool>(attr) ? concat_strings("\'", active_record::sanitize(attr.value()), "\'") : "null";
     }
@@ -59,7 +59,7 @@ namespace active_record {
         }
 
         template<std::derived_from<adaptor> Adaptor = common_adaptor>
-        [[nodiscard]] constexpr active_record::string to_string() const {
+        [[nodiscard]] active_record::string to_string() const {
             return active_record::to_string<Adaptor>(*this);
         }
         template<std::derived_from<adaptor> Adaptor = common_adaptor>

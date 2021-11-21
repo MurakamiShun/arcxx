@@ -19,14 +19,14 @@
 namespace active_record {
     template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::datetime>
-    [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
+    [[nodiscard]] active_record::string to_string(const Attr&) {
         // ISO 8601 yyyyMMddTHHmmss+09:00
         //return static_cast<bool>(attr) ? std::format("%FT%T%z", attr.value()) : "null";
         return active_record::string{ "" };
     }
     template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::datetime>
-    void from_string(Attr& attr, const active_record::string_view str){
+    void from_string(Attr& attr, const active_record::string_view){
         active_record::datetime dt;
         //std::chrono::parse("%fT%T%z", dt, str);
         attr = dt;
@@ -40,7 +40,7 @@ namespace active_record {
         //inline static const attribute_common<Model, Attribute, active_record::datetime>::constraint timestamp = [](const std::optional<active_record::datetime>& t) constexpr { return static_cast<bool>(t); };
 
         template<std::derived_from<adaptor> Adaptor = common_adaptor>
-        [[nodiscard]] constexpr active_record::string to_string() const {
+        [[nodiscard]] active_record::string to_string() const {
             return active_record::to_string<Adaptor>(*this);
         }
         template<std::derived_from<adaptor> Adaptor = common_adaptor>

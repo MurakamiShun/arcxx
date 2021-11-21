@@ -21,7 +21,7 @@ namespace active_record {
     template<typename Derived>
     class model {
     private:
-        [[nodiscard]] static constexpr active_record::string insert_column_names_to_string();
+        [[nodiscard]] static active_record::string insert_column_names_to_string();
     public:
         struct schema {
             template<std::derived_from<adaptor> Adaptor>

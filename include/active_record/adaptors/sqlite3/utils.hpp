@@ -78,7 +78,7 @@ namespace active_record::sqlite3::detail {
     bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, Attr& attr){
         const auto type = sqlite3_column_type(stmt, static_cast<int>(idx));
         if(type == SQLITE_BLOB){
-            void* ptr = sqlite3_column_blob(stmt, static_cast<int>(idx));
+            auto ptr = sqlite3_column_blob(stmt, static_cast<int>(idx));
             attr = std::vector<std::byte>{};
             const auto size = sqlite3_column_bytes(stmt, static_cast<int>(idx));
             attr.value().resize(size);

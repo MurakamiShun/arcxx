@@ -19,7 +19,7 @@
 namespace active_record {
     template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
     requires std::same_as<typename Attr::value_type, bool>
-    [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
+    [[nodiscard]] active_record::string to_string(const Attr& attr) {
         return static_cast<bool>(attr) ? (attr.value() ? "true" : "false") : "null";
     }
     template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
@@ -35,7 +35,7 @@ namespace active_record {
         using attribute_common<Model, Attribute, bool>::attribute_common;
 
         template<std::derived_from<adaptor> Adaptor = common_adaptor>
-        [[nodiscard]] constexpr active_record::string to_string() const {
+        [[nodiscard]] active_record::string to_string() const {
             return active_record::to_string<Adaptor>(*this);
         }
         template<std::derived_from<adaptor> Adaptor = common_adaptor>

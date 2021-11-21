@@ -26,7 +26,7 @@ namespace active_record {
         std::size_t index = 0;
         ret.op_args.reserve(sizeof...(Args));
         ret.op_args = {
-            [&index]<typename Arg>(const Arg& arg) -> std::type_identity_t<decltype(ret)>::str_or_bind {
+            [&index]<typename Arg>(const Arg& arg) -> typename std::type_identity_t<decltype(ret)>::str_or_bind {
                 if constexpr (is_attribute<Arg>::value) {
                     ++index;
                     return index;

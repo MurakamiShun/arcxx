@@ -19,7 +19,7 @@
 namespace active_record {
     template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
     requires std::floating_point<typename Attr::value_type>
-    [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
+    [[nodiscard]] active_record::string to_string(const Attr& attr) {
         return static_cast<bool>(attr) ? std::to_string(attr.value()) : "null";
     }
     template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
@@ -37,7 +37,7 @@ namespace active_record {
         using attribute_common<Model, Attribute, FP>::attribute_common;
 
         template<std::derived_from<adaptor> Adaptor = common_adaptor>
-        [[nodiscard]] constexpr active_record::string to_string() const {
+        [[nodiscard]] active_record::string to_string() const {
             return active_record::to_string<Adaptor>(*this);
         }
         template<std::derived_from<adaptor> Adaptor = common_adaptor>

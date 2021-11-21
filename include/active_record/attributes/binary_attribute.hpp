@@ -19,12 +19,12 @@
 namespace active_record {
     template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
     requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
-    [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
+    [[nodiscard]] active_record::string to_string(const Attr& attr) {
         return static_cast<bool>(attr) ? "" : "null";
     }
     template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
     requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
-    void from_string(Attr& attr, const active_record::string_view str){
+    void from_string(Attr&, const active_record::string_view){
     }
 
     template<typename Model, typename Attribute>
@@ -32,7 +32,7 @@ namespace active_record {
         using attribute_common<Model, Attribute, std::vector<std::byte>>::attribute_common;
 
         template<std::derived_from<adaptor> Adaptor = common_adaptor>
-        [[nodiscard]] constexpr active_record::string to_string() const {
+        [[nodiscard]] active_record::string to_string() const {
             return active_record::to_string<Adaptor>(*this);
         }
         template<std::derived_from<adaptor> Adaptor = common_adaptor>

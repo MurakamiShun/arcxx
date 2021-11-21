@@ -46,10 +46,6 @@ namespace active_record {
         [[nodiscard]] static bool has_constraint(const constraint& c) noexcept;
         static const std::optional<std::reference_wrapper<const constraint>> get_constraint(const constraint& c);
 
-        inline static const bool is_primary_key =  [](){
-            return has_constraint(primary_key);
-        }();
-
         constexpr attribute_common() {}
         template<std::convertible_to<std::optional<Type>> T>
         constexpr attribute_common(const T& default_value) : data(static_cast<std::optional<Type>>(default_value)) {}

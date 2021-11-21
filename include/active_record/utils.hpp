@@ -123,6 +123,6 @@ namespace active_record{
 
     template<std::size_t... Ns>
     [[nodiscard]] consteval auto concat_strings(built_in_string_literal<Ns>... strings) {
-        return (... + string_literal{ strings });
+        return (... + string_literal<Ns>{ strings });
     }
 }

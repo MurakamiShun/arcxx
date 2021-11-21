@@ -18,7 +18,7 @@
 
 namespace active_record {
     template<typename Derived>
-    inline constexpr active_record::string model<Derived>::insert_column_names_to_string() {
+    inline active_record::string model<Derived>::insert_column_names_to_string() {
         active_record::string table;
         const auto column_names = Derived::column_names();
         table.reserve([&column_names]() constexpr {
