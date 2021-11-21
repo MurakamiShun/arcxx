@@ -28,7 +28,7 @@
 #include "active_record/adaptors/sqlite3_adaptor.hpp"
 #endif
 
-#if __has_include(<postgresql/libpq-fe.h>)
+#if __has_include(<libpq-fe.h>)
 #include "active_record/adaptors/postgresql_adaptor.hpp"
 #endif
 //#endif

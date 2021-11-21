@@ -24,7 +24,7 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}/tests/integrated_tests
-        run: cmake --build build --config ${{env.BUILD_TYPE}}
+        run: cmake --build build --config ${{env.BUILD_TYPE}} --parallel
 
       - name: Run integrated tests
         working-directory: ${{github.workspace}}/tests/integrated_tests/build/${{env.BUILD_TYPE}}
@@ -47,7 +47,7 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}/tests/integrated_tests
-        run: cmake --build build --config ${{env.BUILD_TYPE}}
+        run: cmake --build build --config ${{env.BUILD_TYPE}} --parallel
 
       - name: Run integrated tests
         working-directory: ${{github.workspace}}/tests/integrated_tests/build/${{env.BUILD_TYPE}}
@@ -71,7 +71,7 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}/tests/benchmarks
-        run: cmake --build build --config ${{env.BUILD_TYPE}}
+        run: cmake --build build --config ${{env.BUILD_TYPE}} --parallel
 
       - name: Run benchmarks
         working-directory: ${{github.workspace}}/tests/benchmarks/build/${{env.BUILD_TYPE}}

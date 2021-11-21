@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <libpq-fe.h>
 #include "../adaptor.hpp"
-#include <postgresql/libpq-fe.h>
 #include "postgresql/schema.hpp"
 #include "postgresql/utils.hpp"
 
