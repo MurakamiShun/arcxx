@@ -41,7 +41,7 @@ jobs:
         ports:
           - 5432:5432
         env:
-          POSTGRES_PASSWORD: password
+          POSTGRES_PASSWORD: root
           POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
           POSTGRES_DB: "test_db"
         options: >-

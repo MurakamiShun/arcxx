@@ -4,10 +4,17 @@ project(tests LANGUAGES CXX)
 
 if(MSVC)
     find_package(Catch2 CONFIG REQUIRED)
-    find_package(unofficial-sqlite3 CONFIG REQUIRED)
-    set(compile_options /DSQLITE_TEST)
+    
     set(compile_feature cxx_std_23) # c++latest
-    set(link_library unofficial::sqlite3::sqlite3 Catch2::Catch2)
+    if(TARGET_SQL MATCHES "PostgreSQL")
+        find_package(PostgreSQL REQUIRED)
+        set(compile_options /W3 /DPOSTGRESQL_TEST)
+        set(link_library Catch2::Catch2 PostgreSQL::PostgreSQL)
+    else()
+        find_package(unofficial-sqlite3 CONFIG REQUIRED)
+        set(compile_options /W3 /DSQLITE_TEST)
+        set(link_library unofficial::sqlite3::sqlite3 Catch2::Catch2)
+    endif()
 else()
     include(FetchContent)
     FetchContent_Declare(
@@ -15,15 +22,13 @@ else()
         GIT_REPOSITORY https://github.com/catchorg/Catch2.git
         GIT_TAG        v2.13.7
     )
-
     FetchContent_MakeAvailable(Catch2)
+    set(compile_feature cxx_std_20)
     if(TARGET_SQL MATCHES "PostgreSQL")
         set(compile_options -Wall -Wextra -pedantic -Werror -DPOSTGRESQL_TEST)
-        set(compile_feature cxx_std_20)
         set(link_library Catch2::Catch2 pq)
     else()
         set(compile_options -Wall -Wextra -pedantic -Werror -DSQLITE_TEST)
-        set(compile_feature cxx_std_20)
         set(link_library Catch2::Catch2 sqlite3)
     endif()
 endif()

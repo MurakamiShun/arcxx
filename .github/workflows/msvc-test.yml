@@ -30,9 +30,32 @@ jobs:
         working-directory: ${{github.workspace}}/tests/integrated_tests/build/${{env.BUILD_TYPE}}
         run: ./active_record_IT.exe
 
+  postgresql-tests:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v2
+      - uses: microsoft/setup-msbuild@v1.1
+
+      - name: Install packages
+        run: |
+          vcpkg integrate install
+          vcpkg install libpq:x64-windows catch2:x64-windows
+
+      - name: Configure CMake
+        working-directory: ${{github.workspace}}/tests/integrated_tests
+        run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DTARGET_SQL=PostgreSQL -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake .
+
+      - name: Build
+        working-directory: ${{github.workspace}}/tests/integrated_tests
+        run: cmake --build build --config ${{env.BUILD_TYPE}}
+
+      - name: Run integrated tests
+        working-directory: ${{github.workspace}}/tests/integrated_tests/build/${{env.BUILD_TYPE}}
+        run: ./active_record_IT.exe
+
   benchmarks:
     runs-on: windows-2022
-    needs: [sqlite3-tests]
+    needs: [sqlite3-tests, postgresql-tests]
     steps:
       - uses: actions/checkout@v2
       - uses: microsoft/setup-msbuild@v1.1
