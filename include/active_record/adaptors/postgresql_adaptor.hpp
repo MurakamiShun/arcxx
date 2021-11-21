@@ -16,6 +16,9 @@
  */
 #include <libpq-fe.h>
 #include "../adaptor.hpp"
+#include "../utils.hpp"
+#include "../query.hpp"
+#include "../attribute.hpp"
 #include "postgresql/schema.hpp"
 #include "postgresql/utils.hpp"
 
@@ -256,11 +259,11 @@ namespace active_record {
         std::pair<std::optional<active_record::string>, active_record::transaction>  transaction(F&& func) {
             return transaction(func);
         }
-        template<std::convertible_to<std::function<active_record::transaction(sqlite3_adaptor&)>> F>
+        template<std::convertible_to<std::function<active_record::transaction(postgresql_adaptor&)>> F>
         std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F& func) {
             return transaction(static_cast<std::function<active_record::transaction()>>(std::bind(func, std::ref(*this))));
         }
-        template<std::convertible_to<std::function<active_record::transaction(sqlite3_adaptor&)>> F>
+        template<std::convertible_to<std::function<active_record::transaction(postgresql_adaptor&)>> F>
         std::pair<std::optional<active_record::string>, active_record::transaction>  transaction(F&& func) {
             return transaction(func);
         }
