@@ -27,7 +27,7 @@ namespace active_record {
     template<typename T>
     concept Attribute = requires {
         std::derived_from<T, attribute_common<typename T::model_type, typename T::attribute_type, typename T::value_type>>;
-        T::has_column_name;
+        requires T::has_column_name();
     };
     template<typename T>
     struct is_attribute{ static constexpr bool value = Attribute<T>; };

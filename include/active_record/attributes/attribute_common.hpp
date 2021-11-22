@@ -29,8 +29,8 @@ namespace active_record {
         using attribute_type = Attribute;
         using value_type = Type;
 
-        static constexpr bool has_column_name = requires {Attribute::column_name;};
-        static constexpr bool has_constraints = requires {Attribute::constraints;};
+        static constexpr bool has_column_name() noexcept { return requires {Attribute::column_name;}; }
+        static constexpr bool has_constraints() noexcept { return requires {Attribute::constraints;}; }
         [[nodiscard]] static constexpr auto column_full_name();
 
         // constexpr std::type_info::operator== is C++23

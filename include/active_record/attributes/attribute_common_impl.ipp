@@ -16,6 +16,7 @@
  */
 
 namespace active_record{
+
     template<typename Model, typename Attribute, typename Type>
     constexpr auto attribute_common<Model, Attribute, Type>::column_full_name() {
         return concat_strings("\"", Model::table_name, "\".\"", Attribute::column_name, "\"");
@@ -28,7 +29,7 @@ namespace active_record{
 
     template<typename Model, typename Attribute, typename Type>
     bool attribute_common<Model, Attribute, Type>::has_constraint(const constraint& c) noexcept {
-        if constexpr (!has_constraints) return false;
+        if constexpr (!has_constraints()) return false;
         else{
             for(const auto& con : Attribute::constraints){
                 if(con.target_type() == c.target_type()) return true;
@@ -39,7 +40,7 @@ namespace active_record{
     
     template<typename Model, typename Attribute, typename Type>
     const std::optional<std::reference_wrapper<const typename attribute_common<Model, Attribute, Type>::constraint>> attribute_common<Model, Attribute, Type>::get_constraint(const constraint& c) {
-        if constexpr (!has_constraints) return std::nullopt;
+        if constexpr (!has_constraints()) return std::nullopt;
         else{
             for(const auto& con : Attribute::constraints){
                 if(con.target_type() == c.target_type()) return std::cref(con);
@@ -50,7 +51,7 @@ namespace active_record{
 
     template<typename Model, typename Attribute, typename Type>
     constexpr bool attribute_common<Model, Attribute, Type>::is_valid() const {
-        if constexpr (has_constraints) {
+        if constexpr (has_constraints()) {
             for (const auto& val : Attribute::constraints) {
                 if (!val(data)) return false;
             }

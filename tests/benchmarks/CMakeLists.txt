@@ -4,7 +4,7 @@ project(tests LANGUAGES CXX)
 
 if(MSVC)
     find_package(Catch2 CONFIG REQUIRED)
-    set(compile_options /Wall)
+    set(compile_options /W3)
     set(compile_feature cxx_std_23) # c++latest
 else()
     include(FetchContent)
