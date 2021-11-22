@@ -95,7 +95,7 @@ Waiting
 
 
 # License
-This software is released under the Apache-2.0 License, see [LICENSE](LICENSE).
+This software is released under the MIT License, see [LICENSE](LICENSE).
 
 Active Record C++ depends on third party libraries. To use these subcomponents is subject to the terms and conditions of the following licenses.
 
