@@ -41,8 +41,8 @@
               <p class="caption" role="heading"><span class="caption-text">インストール</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CMakeを利用したライブラリの導入</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#installation">インストール</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#quick-start">クイックスタート</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">インストール</a></li>
 </ul>
 </li>
 </ul>
@@ -104,32 +104,37 @@
              
   <section id="installation-with-cmake">
 <h1>CMakeを利用したライブラリの導入<a class="headerlink" href="#installation-with-cmake" title="このヘッドラインへのパーマリンク"></a></h1>
-<section id="installation">
-<h2>インストール<a class="headerlink" href="#installation" title="このヘッドラインへのパーマリンク"></a></h2>
-<p>ライブラリの導入にCMakeを使用することができます</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/akisute514/active_record_cpp.git
-$ <span class="nb">cd</span> active_record_cpp
-$ cmake -S . -B build
-$ cmake --build build
-$ cmake --install build
-</pre></div>
-</div>
-</section>
 <section id="quick-start">
 <h2>クイックスタート<a class="headerlink" href="#quick-start" title="このヘッドラインへのパーマリンク"></a></h2>
 <p>main.cppの存在するフォルダ内に、以下のCMakeLists.txtを作成してください。</p>
-<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.9</span><span class="p">)</span>
-
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.14</span><span class="p">)</span>
 <span class="nb">project</span><span class="p">(</span><span class="s">your_prject_name</span> <span class="s">LANGUAGES</span> <span class="s">CXX</span><span class="p">)</span>
-<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span> <span class="s">20</span><span class="p">)</span>
-<span class="nb">find_package</span><span class="p">(</span><span class="s">ActiveRecord</span><span class="p">)</span>
 <span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span> <span class="s">main.cpp</span><span class="p">)</span>
-<span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span> <span class="s">PRIVATE</span> <span class="s">ActiveRecord</span><span class="p">)</span>
+<span class="nb">target_compile_features</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span> <span class="s">PUBLIC</span> <span class="s">cxx_std_20</span><span class="p">)</span>
+
+<span class="nb">include</span><span class="p">(</span><span class="s">FetchContent</span><span class="p">)</span>
+<span class="nb">FetchContent_Declare</span><span class="p">(</span>
+    <span class="s">ActiveRecord</span>
+    <span class="s">GIT_REPOSITORY</span> <span class="s">https://github.com/akisute514/active_record_cpp</span>
+    <span class="s">GIT_TAG</span> <span class="s">main</span>
+<span class="p">)</span>
+<span class="nb">FetchContent_MakeAvailable</span><span class="p">(</span><span class="s">ActiveRecord</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span> <span class="s">PRIVATE</span> <span class="s">ActiveRecord::ActiveRecord</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>以下のコマンドを実行し、プロジェクトをビルドしてください。</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ cmake -S . -B build
 $ cmake --build build
+</pre></div>
+</div>
+</section>
+<section id="installation">
+<h2>インストール<a class="headerlink" href="#installation" title="このヘッドラインへのパーマリンク"></a></h2>
+<p>You can use CMake to install Active Record C++ package.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/akisute514/active_record_cpp.git
+$ <span class="nb">cd</span> active_record_cpp
+$ cmake -S . -B build
+$ cmake --install build
 </pre></div>
 </div>
 </section>
