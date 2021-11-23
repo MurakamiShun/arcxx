@@ -16,6 +16,7 @@ jobs:
       - name: Install packages
         run: |
           vcpkg integrate install
+          vcpkg update
           vcpkg install sqlite3:x64-windows catch2:x64-windows
 
       - name: Configure CMake
@@ -44,6 +45,7 @@ jobs:
       - name: Install packages
         run: |
           vcpkg integrate install
+          vcpkg update
           vcpkg install libpq:x64-windows catch2:x64-windows
 
       - name: Configure CMake
@@ -68,6 +70,7 @@ jobs:
       - name: Install packages
         run: |
           vcpkg integrate install
+          vcpkg update
           vcpkg install catch2:x64-windows
 
       - name: Configure CMake
