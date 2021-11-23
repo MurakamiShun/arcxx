@@ -24,10 +24,10 @@ struct Goods : public active_record::model<Goods> {
     std::tuple<ID&, Name&, Price&> attributes = std::tie(id, name, price);
 };
 
-std::optional<active_record::sqlite3::adaptor> setup(auto conn){
+std::optional<active_record::sqlite3::adaptor> setup(){
     using namespace active_record;
     // Connect and create table
-    auto conn = sqlite3::adaptor::open("create_table_example.sqlite3", sqlite3::options::readwrite);
+    auto conn = sqlite3::adaptor::open("find_column_example.sqlite3", sqlite3::options::create);
     if (conn.has_error()){
         std::cout << conn.error_message() << std::endl;
         return std::nullopt;
@@ -39,20 +39,31 @@ std::optional<active_record::sqlite3::adaptor> setup(auto conn){
         return std::nullopt;
     }
 
-    // Inserting data
-    Goods apple = {
-        .id = 1,
-        .name = "apple",
-        .price = 100
+    const auto insert_transaction = [](auto& conn){
+        using transaction = active_record::transaction;
+        // Inserting data
+        std::array<Goods, 4> goods = {
+            Goods{.id = 1, .name = "apple",.price = 100},
+            Goods{.id = 2, .name = "note", .price = 300},
+            Goods{.id = 3, .name = "gold", .price = 100000},
+            Goods{.id = 4, .name = "pen",  .price = 5},
+        };
+        for(const auto& good : goods){
+            if(const auto error = Goods::insert(good).exec(conn); error){
+                return transaction::rollback;
+            }
+        }
+        return transaction::commit;
     };
-
-    if(const auto error = Goods::insert(apple).exec(conn); error){
+    if(const auto [error, transaction_result] = conn.transaction(insert_transaction); error){
         std::cout << "Error:" << error.value() << std::endl;
-        return -1;
+        return std::nullopt;
     }
-    else {
-        std::cout << "Done!!" << std::endl;
+    else if(transaction_result == active_record::transaction::rollback){
+        std::cout << "Insertion is rollbacked!!" << error.value() << std::endl;
+        return std::nullopt;
     }
+    std::cout << "Setting up is done!!" << std::endl;
     return conn;
 }
 
@@ -62,7 +73,7 @@ int main(){
     auto result = setup();
     if(!result) { return -1; }
 
-    auto& conn = result.value();
+    auto conn = std::move(result.value());
 
     if(const auto [error, goods] = Goods::where(Goods::Price::cmp < 1000).exec(conn); error){
         std::cout << "Error:" << error.value() << std::endl;
@@ -75,7 +86,6 @@ int main(){
         }
         std::cout << "Done!!" << std::endl;
     }
-    return conn;
 
     return 0;
 }

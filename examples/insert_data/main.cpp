@@ -24,10 +24,10 @@ struct Goods : public active_record::model<Goods> {
     std::tuple<ID&, Name&, Price&> attributes = std::tie(id, name, price);
 };
 
-std::optional<active_record::sqlite3::adaptor> setup(auto conn){
+std::optional<active_record::sqlite3::adaptor> setup(){
     using namespace active_record;
     // Connect and create table
-    auto conn = sqlite3::adaptor::open("create_table_example.sqlite3", sqlite3::options::readwrite);
+    auto conn = sqlite3::adaptor::open("insert_data_example.sqlite3", sqlite3::options::create);
     if (conn.has_error()){
         std::cout << conn.error_message() << std::endl;
         return std::nullopt;
@@ -47,7 +47,7 @@ int main(){
     auto result = setup();
     if(!result) { return -1; }
 
-    auto& conn = result.value();
+    auto conn = std::move(result.value());
 
     // Inserting data
     Goods apple = {

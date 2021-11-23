@@ -32,7 +32,6 @@ namespace active_record {
         ::sqlite3* db_obj = nullptr;
         std::optional<active_record::string> error_msg = std::nullopt;
 
-        sqlite3_adaptor() = delete;
         sqlite3_adaptor(const active_record::string& file_name, const int flags){
             auto result = sqlite3_open_v2(file_name.c_str(), &db_obj, flags, nullptr);
             if(result != SQLITE_OK) error_msg = get_error_msg(result);
@@ -61,6 +60,15 @@ namespace active_record {
                 sqlite3_close(db_obj);
                 db_obj = nullptr;
             }
+        }
+
+        sqlite3_adaptor() = delete;
+        sqlite3_adaptor(const sqlite3_adaptor&) = delete;
+        sqlite3_adaptor(sqlite3_adaptor&& adpt){
+            this->db_obj = adpt.db_obj;
+            adpt.db_obj = nullptr;
+
+            this->error_msg = std::move(error_msg);
         }
         ~sqlite3_adaptor(){
             this->close();

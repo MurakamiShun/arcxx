@@ -6,19 +6,19 @@ struct Goods : public active_record::model<Goods> {
     struct ID : public active_record::attributes::integer<Goods, ID, std::size_t> {
         using integer<Goods, ID, std::size_t>::integer;
         static constexpr auto column_name = "id";
-        static const auto constraints = { primary_key, not_null };
+        static inline const auto constraints = { primary_key, not_null };
     } id;
 
     struct Name : public active_record::attributes::string<Goods, Name> {
         using string<Goods, Name>::string;
         static constexpr auto column_name = "name";
-        static const auto constraints = { not_null };
+        static inline const auto constraints = { not_null };
     } name;
 
     struct Price : public active_record::attributes::integer<Goods, Price, uint32_t> {
         using integer<Goods, Price, uint32_t>::integer;
         static constexpr auto column_name = "price";
-        static const auto constraints = { not_null };
+        static inline const auto constraints = { not_null };
     } price;
 
     std::tuple<ID&, Name&, Price&> attributes = std::tie(id, name, price);
@@ -40,6 +40,5 @@ int main(){
     else {
         std::cout << "Done!!" << std::endl;
     }
-
     return 0;
 }

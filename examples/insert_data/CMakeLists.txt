@@ -1,9 +1,17 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.14)
 
-project(create_table_example LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 20)
+project(insert_data_example LANGUAGES CXX)
 
-find_package(ActiveRecord)
+include(FetchContent)
+FetchContent_Declare(
+    ActiveRecord
+    GIT_REPOSITORY https://github.com/akisute514/active_record_cpp
+    GIT_TAG main
+)
+FetchContent_MakeAvailable(ActiveRecord)
 
-add_executable(create_table main.cpp)
-target_link_libraries(create_table PRIVATE ActiveRecord sqlite3)
+find_package(SQLite3 REQUIRED)
+
+add_executable(insert_data main.cpp)
+target_link_libraries(insert_data PRIVATE ActiveRecord::ActiveRecord SQLite::SQLite3)
+target_compile_features(insert_data PUBLIC cxx_std_20)
