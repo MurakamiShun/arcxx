@@ -117,7 +117,7 @@ namespace active_record {
                     }, bind_attr);
                 }
             }()){
-            const auto bit_ceil = [](std::size_t v) -> std::size_t{
+            const auto bit_ceil = [](const std::size_t v) -> std::size_t{
                 if (v <= 4) return 4; // minimum reserve size
                 return std::bit_ceil(v);
             };

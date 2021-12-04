@@ -86,7 +86,7 @@ namespace active_record::PostgreSQL::detail {
         return true;
     }
 
-    template<Model T>
+    template<is_model T>
     [[nodiscard]] T extract_column_data(PGresult* res, int col) {
         T ret;
         tuptup::indexed_apply_each(

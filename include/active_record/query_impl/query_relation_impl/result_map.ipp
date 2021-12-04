@@ -84,7 +84,7 @@ namespace active_record {
         struct {
             decltype(ret.conditions)& ret_cond;
             void operator()(active_record::string&& str) { ret_cond.push_back(std::move(str)); }
-            void operator()(std::size_t idx) { ret_cond.push_back(idx + std::tuple_size_v<BindAttrs>); }
+            void operator()(const std::size_t idx) { ret_cond.push_back(idx + std::tuple_size_v<BindAttrs>); }
         } visitor{ ret.conditions };
         for(auto& cond : cond.condition){
             std::visit(visitor, std::move(cond));
@@ -108,7 +108,7 @@ namespace active_record {
         struct {
             decltype(ret.conditions)& ret_cond;
             void operator()(active_record::string&& str) { ret_cond.push_back(std::move(str)); }
-            void operator()(std::size_t idx) { ret_cond.push_back(idx + std::tuple_size_v<BindAttrs>); }
+            void operator()(const std::size_t idx) { ret_cond.push_back(idx + std::tuple_size_v<BindAttrs>); }
         } visitor{ ret.conditions };
         for(auto& cond : cond.condition){
             std::visit(visitor, std::move(cond));

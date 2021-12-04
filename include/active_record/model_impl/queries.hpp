@@ -140,10 +140,10 @@ namespace active_record {
     }
 
     namespace detail {
-        template<Model ReferModel>
+        template<is_model Referis_model>
         struct get_reference_attr{
             template<Attribute Attr>
-            requires std::same_as<typename Attr::foreign_key_type::model_type, ReferModel>
+            requires std::same_as<typename Attr::foreign_key_type::model_type, Referis_model>
             auto operator()([[maybe_unused]]std::tuple<Attr&>) {
                 return Attr{};
             }
@@ -153,9 +153,9 @@ namespace active_record {
             }
             template<Attribute Head, Attribute... Tail>
             auto operator()([[maybe_unused]]std::tuple<Head&, Tail&...>) {
-                using head_type = std::invoke_result_t<get_reference_attr<ReferModel>, std::tuple<Head&>>;
+                using head_type = std::invoke_result_t<get_reference_attr<Referis_model>, std::tuple<Head&>>;
                 if constexpr(std::is_same_v<head_type, std::false_type>) {
-                    using tail_type = std::invoke_result_t<get_reference_attr<ReferModel>, std::tuple<Tail&...>>;
+                    using tail_type = std::invoke_result_t<get_reference_attr<Referis_model>, std::tuple<Tail&...>>;
                     return tail_type{};
                 }
                 else {
@@ -166,12 +166,12 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<typename ReferModel>
-    requires std::derived_from<ReferModel, model<ReferModel>>
+    template<typename Referis_model>
+    requires std::derived_from<Referis_model, model<Referis_model>>
     inline query_relation<std::vector<Derived>, std::tuple<>> model<Derived>::join() {
         query_relation<std::vector<Derived>, std::tuple<>> ret{ query_operation::select };
 
-        using ReferenceAttribute = std::invoke_result_t<detail::get_reference_attr<ReferModel>, decltype(Derived{}.attributes_as_tuple())>;
+        using ReferenceAttribute = std::invoke_result_t<detail::get_reference_attr<Referis_model>, decltype(Derived{}.attributes_as_tuple())>;
 
         static_assert(!std::is_same_v<ReferenceAttribute, std::false_type>, "Derived model does not have reference to given model");
 
@@ -187,12 +187,12 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<typename ReferModel>
-    requires std::derived_from<ReferModel, model<ReferModel>>
+    template<typename Referis_model>
+    requires std::derived_from<Referis_model, model<Referis_model>>
     inline query_relation<std::vector<Derived>, std::tuple<>> model<Derived>::left_join() {
         query_relation<std::vector<Derived>, std::tuple<>> ret{ query_operation::select };
 
-        using ReferenceAttribute = std::invoke_result_t<detail::get_reference_attr<ReferModel>, decltype(Derived{}.attributes_as_tuple())>;
+        using ReferenceAttribute = std::invoke_result_t<detail::get_reference_attr<Referis_model>, decltype(Derived{}.attributes_as_tuple())>;
 
         static_assert(!std::is_same_v<ReferenceAttribute, std::false_type>, "Derived model does not have reference to given model");
 

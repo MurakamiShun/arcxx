@@ -19,7 +19,7 @@ namespace active_record::detail {
         return concat_strings(column_full_names_to_string<Head>().c_str(), ",", column_full_names_to_string<Tail...>().c_str());
     }
 
-    template<Model Mod>
+    template<is_model Mod>
     [[nodiscard]] active_record::string model_column_full_names_to_string(){
         const auto column_names = Mod::column_names();
         active_record::string buff;

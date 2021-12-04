@@ -68,7 +68,7 @@ namespace active_record {
             this->db_obj = adpt.db_obj;
             adpt.db_obj = nullptr;
 
-            this->error_msg = std::move(error_msg);
+            this->error_msg = std::move(adpt.error_msg);
         }
         ~sqlite3_adaptor(){
             this->close();
@@ -187,12 +187,12 @@ namespace active_record {
             return exec(query);
         }
 
-        template<Model Mod>
+        template<is_model Mod>
         std::optional<active_record::string> create_table(bool abort_if_exist = true){
             return exec(raw_query<bool>(Mod::schema::template to_sql<sqlite3_adaptor>(abort_if_exist).c_str()));
         }
 
-        template<Model Mod>
+        template<is_model Mod>
         std::optional<active_record::string> drop_table(){
             return exec(raw_query<bool>("DROP TABLE ", Mod::table_name, ";"));
         }

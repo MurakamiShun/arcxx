@@ -157,12 +157,12 @@ namespace active_record {
             return concat_strings("$", std::to_string(idx + 1));
         }
 
-        template<Model Mod>
+        template<is_model Mod>
         std::optional<active_record::string> create_table(bool abort_if_exist = true){
             return exec(raw_query<bool>(Mod::schema::template to_sql<postgresql_adaptor>(abort_if_exist)));
         }
 
-        template<Model Mod>
+        template<is_model Mod>
         std::optional<active_record::string> drop_table(){
             return exec(raw_query<bool>("DROP TABLE ", Mod::table_name,";"));
         }

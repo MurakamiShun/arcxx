@@ -108,7 +108,7 @@ namespace active_record::sqlite3::detail {
         return false;
     }
 
-    template<Model T>
+    template<is_model T>
     [[nodiscard]] T extract_column_data(sqlite3_stmt* stmt){
         T ret;
         tuptup::indexed_apply_each(

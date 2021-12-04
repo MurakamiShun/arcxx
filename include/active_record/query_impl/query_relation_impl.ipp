@@ -42,7 +42,7 @@ namespace active_record {
         [[nodiscard]] query_relation<std::vector<Attr>, BindAttrs> pluck() const& requires specialized_from<Result, std::vector>;
 
         template<Attribute... Attrs>
-        requires Model<typename Result::value_type>
+        requires is_model<typename Result::value_type>
         [[nodiscard]] query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> update(const Attrs&...) requires specialized_from<Result, std::vector>;
 
         template<Attribute Attr>

@@ -87,7 +87,7 @@ namespace active_record {
     };
 
     template<typename T>
-    concept Model = requires {
+    concept is_model = requires {
         std::derived_from<T, model<T>>;
         T::has_table_name;
     };
