@@ -22,6 +22,7 @@ Active Record C++ Documentation
    /tutorial/find_columns
    /tutorial/select_columns
    /tutorial/aggregation
+   /tutorial/group_by
 
 API
 ===
