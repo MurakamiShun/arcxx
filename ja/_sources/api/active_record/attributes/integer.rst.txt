@@ -31,6 +31,15 @@ active_record::attributes::integer
           - :code:`Integer`
         * - :cpp:type:`constraint`
           - :code:`std::function<bool(const std::optional<Integer>&)>`
+        * - :cpp:type:`sum`
+          - 
+        * - :cpp:type:`avg`
+          - 
+        * - :cpp:type:`max`
+          - 
+        * - :cpp:type:`min`
+          - 
+
 
     .. list-table:: Observers
 
