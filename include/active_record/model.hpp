@@ -19,7 +19,7 @@ namespace active_record {
             [[nodiscard]] static active_record::string to_sql(bool abort_if_exist = true);
         };
 
-        static constexpr bool has_table_name = requires {Derived::table_name;};
+        static constexpr bool has_table_name() noexcept { return requires {Derived::table_name;}; }
 
         [[nodiscard]] static constexpr auto column_names() noexcept;
 
@@ -89,7 +89,7 @@ namespace active_record {
     template<typename T>
     concept is_model = requires {
         std::derived_from<T, model<T>>;
-        requires T::has_table_name;
+        requires T::has_table_name();
     };
 }
 

@@ -100,6 +100,20 @@ namespace active_record {
                     ret[i] = Adaptor::bind_variable_str(i);
                 }
                 return ret;
+                /*
+                if constexpr (Adaptor::bindable){
+                    std::array<active_record::string, std::tuple_size_v<BindAttrs>> ret;
+                    for(std::size_t i = 0; i < std::tuple_size_v<BindAttrs>; ++i){
+                        ret[i] = Adaptor::bind_variable_str(i);
+                    }
+                    return ret;
+                }
+                else {
+                    return std::apply([]<typename... Attrs>(const Attrs&... attrs) {
+                        return std::array<active_record::string, std::tuple_size_v<BindAttrs>>{ active_record::to_string<Adaptor>(attrs)... };
+                    }, bind_attr);
+                }
+                */
             }()){
             const auto bit_ceil = [](const std::size_t v) -> std::size_t{
                 if (v <= 4) return 4; // minimum reserve size
