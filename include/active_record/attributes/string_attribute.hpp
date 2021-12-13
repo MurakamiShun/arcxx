@@ -8,20 +8,6 @@
 #include "attribute_common.hpp"
 
 namespace active_record {
-    template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
-    requires std::same_as<typename Attr::value_type, active_record::string>
-    [[nodiscard]] active_record::string to_string(const Attr& attr) {
-        // require sanitize
-        return static_cast<bool>(attr) ? concat_strings("\'", active_record::sanitize(attr.value()), "\'") : "null";
-    }
-    template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
-    requires std::same_as<typename Attr::value_type, active_record::string>
-    void from_string(Attr& attr, const active_record::string_view str) {
-        if(str != "null" && str != "NULL"){
-            attr = active_record::string{ str };
-        }
-    }
-
     template<typename Model, typename Attribute>
     struct attribute<Model, Attribute, active_record::string> : public attribute_common<Model, Attribute, active_record::string> {
         using attribute_common<Model, Attribute, active_record::string>::attribute_common;
@@ -47,15 +33,6 @@ namespace active_record {
             ret.condition.push_back(concat_strings(Attribute::column_full_name(), " LIKE "));
             ret.condition.push_back(static_cast<std::size_t>(0));
             return ret;
-        }
-
-        template<std::derived_from<adaptor> Adaptor = common_adaptor>
-        [[nodiscard]] active_record::string to_string() const {
-            return active_record::to_string<Adaptor>(*this);
-        }
-        template<std::derived_from<adaptor> Adaptor = common_adaptor>
-        void from_string(const active_record::string_view str) {
-            active_record::from_string<Adaptor>(*this, str);
         }
     };
 

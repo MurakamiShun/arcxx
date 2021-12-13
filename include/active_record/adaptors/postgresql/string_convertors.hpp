@@ -29,37 +29,35 @@ namespace active_record {
         // integer
         template<std::same_as<postgresql_adaptor> Adaptor, Attribute Attr>
         requires std::integral<typename Attr::value_type>
-        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
-            return to_string<common_adaptor>(attr);
-        }
-        template<std::same_as<postgresql_adaptor> Adaptor, Attribute Attr>
-        requires std::integral<typename Attr::value_type>
         void from_string(Attr& attr, const active_record::string_view str) {
-            from_string<common_adaptor>(attr, str);
+            if(str != "null" && str != "NULL"){
+                typename Attr::value_type tmp = static_cast<typename Attr::value_type>(0);
+                std::from_chars(&*str.begin(), &*str.end(), tmp);
+                attr = tmp;
+            }
         }
 
         // decimal
         template<std::same_as<postgresql_adaptor> Adaptor, Attribute Attr>
         requires std::floating_point<typename Attr::value_type>
-        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
-            return to_string<common_adaptor>(attr);
-        }
-        template<std::same_as<postgresql_adaptor> Adaptor, Attribute Attr>
-        requires std::floating_point<typename Attr::value_type>
         void from_string(Attr& attr, const active_record::string_view str){
-            from_string<common_adaptor>(attr, str);
+            if(str != "null" && str != "NULL"){
+                typename Attr::value_type tmp = static_cast<typename Attr::value_type>(0);
+                std::from_chars(&*str.begin(), &*str.end(), tmp);
+                attr = tmp;
+            }
         }
 
         // string
         template<std::same_as<postgresql_adaptor> Adaptor, Attribute Attr>
         requires std::same_as<typename Attr::value_type, active_record::string>
         [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
-            return to_string<common_adaptor>(attr);
+            return static_cast<bool>(attr) ? attr.value() : "null";
         }
         template<std::same_as<postgresql_adaptor> Adaptor, Attribute Attr>
         requires std::same_as<typename Attr::value_type, active_record::string>
         void from_string(Attr& attr, const active_record::string_view str) {
-            from_string<common_adaptor>(attr, str);
+            attr = active_record::string{ str };
         }
 
         // datetime
@@ -77,6 +75,8 @@ namespace active_record {
             //std::chrono::parse("%fT%T", dt, str);
             attr = dt;
         }
+
+        // binary
         template<std::same_as<postgresql_adaptor> Adaptor, Attribute Attr>
         requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
         [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {

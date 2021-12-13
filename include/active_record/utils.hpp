@@ -26,8 +26,6 @@
 namespace active_record{
     using string = std::string;
     using string_view = std::basic_string_view<typename active_record::string::value_type>;
-    // utc_clock is not implements in gcc.
-    //using datetime = std::chrono::utc_clock;
     using datetime = std::chrono::system_clock;
 
     namespace detail{
@@ -74,8 +72,8 @@ namespace active_record{
         active_record::string buff;
         buff.reserve(std::transform_reduce(
             str_views.begin(), str_views.end(), static_cast<std::size_t>(0),
-            [](auto acc, const auto len){ return acc += len; },
-            [](const auto& str){ return str.length(); }
+            [](auto acc, const auto len) noexcept { return acc += len; },
+            [](const auto& str) noexcept { return str.length(); }
         ));
         for(const auto& str : str_views) buff += str;
         return buff;
@@ -84,11 +82,14 @@ namespace active_record{
     template<typename CharT, std::size_t N>
     struct basic_string_literal {
         using traits_type = std::char_traits<CharT>;
-        CharT data[N] = {0}; // including null charactor
+        CharT data[N]; // including null charactor
         static constexpr std::size_t size() noexcept { return N; } 
-        consteval basic_string_literal() noexcept = default;
-        consteval basic_string_literal(const CharT (&arg)[N]) noexcept { traits_type::copy(data, arg, N); }
-        constexpr operator std::basic_string_view<CharT>() const noexcept {
+        consteval basic_string_literal() = delete;
+        template<std::size_t... I>
+        consteval basic_string_literal(const CharT* const arg, [[maybe_unused]]std::index_sequence<I...>) noexcept : data{ arg[I]... } {}
+        consteval basic_string_literal(const CharT (&arg)[N]) noexcept : basic_string_literal(arg, std::make_index_sequence<N>{}) {}
+        
+        constexpr operator std::basic_string_view<CharT>() const {
             return std::basic_string_view<CharT>{ data, N-1 };
         }
         operator std::basic_string<CharT>() const {
@@ -99,8 +100,7 @@ namespace active_record{
         }
         template<std::size_t M>
         consteval basic_string_literal<CharT, N+M-1> operator+(const basic_string_literal<CharT, M>& arg) const noexcept {
-            basic_string_literal<CharT, N+M-1> tmp;
-            traits_type::copy(tmp.data,         data,     N - 1); // remove null charactor
+            basic_string_literal<CharT, N+M-1> tmp(data, std::make_index_sequence<N - 1>{}); // remove null charactor
             traits_type::copy(tmp.data + N - 1, arg.data, M);
             return tmp;
         }
@@ -113,7 +113,16 @@ namespace active_record{
     using built_in_string_literal = const typename active_record::string::value_type (&)[N];
 
     template<std::size_t... Ns>
-    [[nodiscard]] consteval auto concat_strings(built_in_string_literal<Ns>... strings) {
+    [[nodiscard]] consteval auto concat_strings(built_in_string_literal<Ns>... strings) noexcept {
         return (... + string_literal<Ns>{ strings });
     }
+
+    struct lazy_string_view {
+        const active_record::string& str;
+        const active_record::string::difference_type begin; // from begin(str)
+        const active_record::string::difference_type end; // from begin(str)
+        operator active_record::string_view() const {
+            return active_record::string_view{ str.begin() + begin, str.begin() + end };
+        }
+    };
 }

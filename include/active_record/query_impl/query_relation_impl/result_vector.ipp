@@ -7,7 +7,7 @@
  */
 namespace active_record {
     /*
-     * return type == Container<model or specialized_from<std::tuple>>
+     * return type == std::vector<model or specialized_from<std::tuple>>
      */
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<Attribute... Attrs>

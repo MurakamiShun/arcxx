@@ -26,57 +26,23 @@ namespace active_record {
             }
         }
 
-        // integer
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::integral<typename Attr::value_type>
-        [[nodiscard]] active_record::string to_string(const Attr& attr) {
-            return to_string<common_adaptor>(attr);
-        }
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::integral<typename Attr::value_type>
-        void from_string(Attr& attr, const active_record::string_view str) {
-            from_string<common_adaptor>(attr, str);
-        }
-
-        // decimal
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::floating_point<typename Attr::value_type>
-        [[nodiscard]] active_record::string to_string(const Attr& attr) {
-            return to_string<common_adaptor>(attr);
-        }
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::floating_point<typename Attr::value_type>
-        void from_string(Attr& attr, const active_record::string_view str){
-            from_string<common_adaptor>(attr, str);
-        }
-
-        // string
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::same_as<typename Attr::value_type, active_record::string>
-        [[nodiscard]] active_record::string to_string(const Attr& attr) {
-            return to_string<common_adaptor>(attr);
-        }
-        template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
-        requires std::same_as<typename Attr::value_type, active_record::string>
-        void from_string(Attr& attr, const active_record::string_view str) {
-            from_string<common_adaptor>(attr, str);
-        }
-
         // datetime
         template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
         requires std::same_as<typename Attr::value_type, active_record::datetime>
         [[nodiscard]] active_record::string to_string(const Attr&) {
-            // ISO 8601 yyyyMMddTHHmmss (sqlite supports only utc)
-            //return static_cast<bool>(attr) ? std::format("%FT%T", attr.value()) : "null";
+            // yyyy-MM-dd HH:mm:ss (sqlite supports only utc)
+            //return std::format("{:%F} {:%T}", attr.value());
             return "";
         }
         template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
         requires std::same_as<typename Attr::value_type, active_record::datetime>
         void from_string(Attr& attr, const active_record::string_view){
             active_record::datetime dt;
-            //std::chrono::parse("%fT%T", dt, str);
+            //std::chrono::parse("{:%F} {:%T}", dt, str);
             attr = dt;
         }
+
+        // binary
         template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
         requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
         [[nodiscard]] active_record::string to_string(const Attr& attr) {

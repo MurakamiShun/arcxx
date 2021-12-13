@@ -81,7 +81,7 @@ namespace active_record::sqlite3 {
     requires std::same_as<typename T::value_type, active_record::datetime>
     [[nodiscard]] active_record::string column_definition() {
         return active_record::string{ T::column_name }
-            + active_record::string{ " TEXT CHECK(" } + active_record::string{ T::column_name } + " LIKE '____-__-__ __:__:__')"
+            + active_record::string{ " DATETIME CHECK(" } + active_record::string{ T::column_name } + " LIKE '____-__-__ __:__:__')"
             + (T::has_constraint(T::unique) ? " UNIQUE" : "")
             + (T::has_constraint(T::primary_key) ? " PRIMARY KEY" : "")
             + (T::has_constraint(T::not_null) ? " NOT NULL" : "")
