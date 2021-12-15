@@ -142,13 +142,11 @@ namespace active_record {
             ret.conditions.push_back(" AND ");
         }
         else ret.conditions.reserve(cond.condition.size());
-        struct {
-            decltype(ret.conditions)& ret_cond;
-            void operator()(active_record::string&& str) { ret_cond.push_back(std::move(str)); }
-            void operator()(const std::size_t idx) { ret_cond.push_back(idx + std::tuple_size_v<BindAttrs>); }
-        } visitor{ ret.conditions };
         for(auto& cond : cond.condition){
-            std::visit(visitor, std::move(cond));
+            visit_by_lambda(std::move(cond),
+                [&ret_cond = ret.conditions](active_record::string&& str) { ret_cond.push_back(std::move(str)); },
+                [&ret_cond = ret.conditions](const std::size_t idx) { ret_cond.push_back(idx + std::tuple_size_v<BindAttrs>); }
+            );
         }
 
         ret.options = std::move(this->options);
@@ -167,13 +165,11 @@ namespace active_record {
             ret.conditions = this->conditions;
             ret.conditions.push_back(" AND ");
         }
-        struct {
-            decltype(ret.conditions)& ret_cond;
-            void operator()(active_record::string&& str) { ret_cond.push_back(std::move(str)); }
-            void operator()(const std::size_t idx) { ret_cond.push_back(idx + std::tuple_size_v<BindAttrs>); }
-        } visitor{ ret.conditions };
         for(auto& cond : cond.condition){
-            std::visit(visitor, std::move(cond));
+            visit_by_lambda(std::move(cond),
+                [&ret_cond = ret.conditions](active_record::string&& str) { ret_cond.push_back(std::move(str)); },
+                [&ret_cond = ret.conditions](const std::size_t idx) { ret_cond.push_back(idx + std::tuple_size_v<BindAttrs>); }
+            );
         }
         ret.options = this->options;
         ret.bind_attrs = std::tuple_cat(this->bind_attrs, std::move(cond.bind_attrs));

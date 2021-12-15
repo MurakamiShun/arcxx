@@ -7,7 +7,6 @@
  */
 #include "../query.hpp"
 #include "../attribute.hpp"
-#include "query_utils.hpp"
 
 namespace active_record {
     template<specialized_from<std::tuple> BindAttrs>

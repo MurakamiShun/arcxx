@@ -44,6 +44,14 @@ namespace active_record{
     template<typename T, template<typename...>typename U>
     concept specialized_from = detail::specialized_from_impl<std::remove_cvref_t<T>, U>::value;
 
+    template<specialized_from<std::variant> Variant, class... Lambdas>
+    constexpr decltype(auto) visit_by_lambda(Variant&& var, Lambdas&&... lambdas){
+        struct : public Lambdas...{
+            using Lambdas::operator()...;
+        } visitor{std::forward<Lambdas>(lambdas)...};
+        return std::visit(visitor, std::forward<Variant>(var));
+    }
+
     [[nodiscard]] inline active_record::string sanitize(const active_record::string& src) {
         active_record::string result;
         result.reserve(src.length());

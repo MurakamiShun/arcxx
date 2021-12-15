@@ -6,7 +6,6 @@
  * Released under the MIT Lisence.
  */
 #include "../model.hpp"
-#include "../query_impl/query_utils.hpp"
 
 namespace active_record {
     template<typename Derived>
