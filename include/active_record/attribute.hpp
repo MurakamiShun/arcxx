@@ -34,6 +34,14 @@ namespace active_record {
 
     template<typename T>
     concept AttributeAggregator = std::derived_from<T, attribute_aggregator<typename T::model_type, typename T::attribute_type, typename T::aggregator_type>>;
+
+    template<std::derived_from<adaptor> Adaptor, Attribute Attr>
+    requires false
+    [[nodiscard]] active_record::string to_string(const Attr& attr);
+
+    template<std::derived_from<adaptor> Adaptor, Attribute Attr>
+    requires false
+    void from_string(Attr& attr, const active_record::string_view str);
 }
 
 template<active_record::Attribute Attr>

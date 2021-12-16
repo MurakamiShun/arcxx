@@ -10,6 +10,7 @@
 #include "../attribute.hpp"
 #include "../adaptor.hpp"
 #include "query_condition.hpp"
+#include "../adaptors/common_adaptor.hpp"
 
 namespace active_record {
     template<specialized_from<std::tuple> BindAttrs>

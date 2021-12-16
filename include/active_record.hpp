@@ -15,6 +15,8 @@
 #include "active_record/query_impl/query_condition.hpp"
 #include "active_record/model_impl/queries.hpp"
 
+#include "active_record/adaptors/common_adaptor.hpp"
+
 #if __has_include(<sqlite3.h>)
 #include "active_record/adaptors/sqlite3_adaptor.hpp"
 #endif

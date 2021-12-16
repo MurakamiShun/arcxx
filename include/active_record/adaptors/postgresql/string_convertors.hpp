@@ -15,7 +15,7 @@ namespace active_record {
         // boolean
         template<std::same_as<postgresql_adaptor> Adaptor, Attribute Attr>
         requires std::same_as<typename Attr::value_type, bool>
-        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
+        [[nodiscard]] active_record::string to_string(const Attr& attr) {
             return static_cast<bool>(attr) ? (attr.value() ? "1" : "0") : "null";
         }
         template<std::same_as<postgresql_adaptor> Adaptor, Attribute Attr>
@@ -51,7 +51,7 @@ namespace active_record {
         // string
         template<std::same_as<postgresql_adaptor> Adaptor, Attribute Attr>
         requires std::same_as<typename Attr::value_type, active_record::string>
-        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
+        [[nodiscard]] active_record::string to_string(const Attr& attr) {
             return static_cast<bool>(attr) ? attr.value() : "null";
         }
         template<std::same_as<postgresql_adaptor> Adaptor, Attribute Attr>
@@ -63,7 +63,7 @@ namespace active_record {
         // datetime
         template<std::same_as<postgresql_adaptor> Adaptor, Attribute Attr>
         requires std::same_as<typename Attr::value_type, active_record::datetime>
-        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
+        [[nodiscard]] active_record::string to_string(const Attr& attr) {
             // ISO 8601 yyyyMMddTHHmmss (sqlite supports only utc)
             //return static_cast<bool>(attr) ? std::format("%FT%T", attr.value()) : "null";
             return "";
@@ -79,7 +79,7 @@ namespace active_record {
         // binary
         template<std::same_as<postgresql_adaptor> Adaptor, Attribute Attr>
         requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
-        [[nodiscard]] constexpr active_record::string to_string(const Attr& attr) {
+        [[nodiscard]] active_record::string to_string(const Attr& attr) {
             active_record::string hex = "x'";
             char buf[4];
             for(const auto b : attr.value()){

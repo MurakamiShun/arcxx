@@ -83,8 +83,8 @@ namespace active_record {
         }
         for(auto& cond : cond.condition){
             visit_by_lambda(std::move(cond),
-                [&ret_cond = ret.condition](active_record::string&& str) { ret_cond.push_back(std::move(str)); },
-                [&ret_cond = ret.condition](const std::size_t idx) { ret_cond.push_back(idx + std::tuple_size_v<BindAttrs>); }
+                [&ret_cond = ret.conditions](active_record::string&& str) { ret_cond.push_back(std::move(str)); },
+                [&ret_cond = ret.conditions](const std::size_t idx) { ret_cond.push_back(idx + std::tuple_size_v<BindAttrs>); }
             );
         }
 
@@ -105,8 +105,8 @@ namespace active_record {
         }
         for(auto& cond : cond.condition){
             visit_by_lambda(std::move(cond),
-                [&ret_cond = ret.condition](active_record::string&& str) { ret_cond.push_back(std::move(str)); },
-                [&ret_cond = ret.condition](const std::size_t idx) { ret_cond.push_back(idx + std::tuple_size_v<BindAttrs>); }
+                [&ret_cond = ret.conditions](active_record::string&& str) { ret_cond.push_back(std::move(str)); },
+                [&ret_cond = ret.conditions](const std::size_t idx) { ret_cond.push_back(idx + std::tuple_size_v<BindAttrs>); }
             );
         }
 

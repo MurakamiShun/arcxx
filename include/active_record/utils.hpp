@@ -27,6 +27,7 @@ namespace active_record{
     using string = std::string;
     using string_view = std::basic_string_view<typename active_record::string::value_type>;
     using datetime = std::chrono::system_clock;
+    using namespace std::string_view_literals;
 
     namespace detail{
         template<typename T, template<typename...>typename U>
@@ -124,13 +125,4 @@ namespace active_record{
     [[nodiscard]] consteval auto concat_strings(built_in_string_literal<Ns>... strings) noexcept {
         return (... + string_literal<Ns>{ strings });
     }
-
-    struct lazy_string_view {
-        const active_record::string& str;
-        const active_record::string::difference_type begin; // from begin(str)
-        const active_record::string::difference_type end; // from begin(str)
-        operator active_record::string_view() const {
-            return active_record::string_view{ str.begin() + begin, str.begin() + end };
-        }
-    };
 }

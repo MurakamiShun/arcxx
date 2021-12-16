@@ -71,66 +71,33 @@ namespace active_record {
     template<specialized_from<std::tuple> BindAttrs>
     template<std::derived_from<adaptor> Adaptor>
     struct query_relation_common<BindAttrs>::sob_to_string_impl {
-        struct visitor_impl;
-        visitor_impl visitor;
+        const BindAttrs& bind_attrs;
 
-        lazy_string_view to_string(const std::vector<str_or_bind>& sobs) {
-            const auto begin = std::distance(visitor.buff.cbegin(), visitor.buff.cend());
-            for(const auto& sob : sobs) {
-                std::visit(visitor, sob);
+        active_record::string to_string(const std::vector<str_or_bind>& sobs) {
+            active_record::string buff;
+
+            if constexpr (Adaptor::bindable){
+                for(const auto& sob : sobs) {
+                    visit_by_lambda(sob,
+                        [&buff](const active_record::string& str) { buff += str; },
+                        [&buff](const std::size_t idx) { buff += Adaptor::bind_variable_str(idx); }
+                    );
+                }
             }
-            return lazy_string_view {
-                .str = visitor.buff,
-                .begin = begin,
-                .end = std::distance(visitor.buff.cbegin(), visitor.buff.cend())
-            };
-        }
-    };
-
-    template<specialized_from<std::tuple> BindAttrs>
-    template<std::derived_from<adaptor> Adaptor>
-    struct query_relation_common<BindAttrs>::sob_to_string_impl<Adaptor>::visitor_impl {
-        const std::array<active_record::string, std::tuple_size_v<BindAttrs>> attr_strings;
-        active_record::string buff;
-
-        visitor_impl(const BindAttrs& bind_attr) :
-            attr_strings([&bind_attr](){
-                std::array<active_record::string, std::tuple_size_v<BindAttrs>> ret;
-                for(std::size_t i = 0; i < std::tuple_size_v<BindAttrs>; ++i){
-                    ret[i] = Adaptor::bind_variable_str(i);
+            else{
+                const auto to_string_func = [&attrs = this->bind_attrs]<std::size_t... I>(std::index_sequence<I...>){
+                    return std::array<std::function<active_record::string()>, std::tuple_size_v<BindAttrs>>{
+                        [&attr = std::get<I>(attrs)]{ return active_record::to_string<Adaptor>(attr); }...
+                    };
+                }(std::make_index_sequence<std::tuple_size_v<BindAttrs>>{});
+                for(const auto& sob : sobs) {
+                    visit_by_lambda(sob,
+                        [&buff](const active_record::string& str) { buff += str; },
+                        [&buff, &to_string_func](const std::size_t idx) { buff += to_string_func[idx](); }
+                    );
                 }
-                return ret;
-                /*
-                if constexpr (Adaptor::bindable){
-                    std::array<active_record::string, std::tuple_size_v<BindAttrs>> ret;
-                    for(std::size_t i = 0; i < std::tuple_size_v<BindAttrs>; ++i){
-                        ret[i] = Adaptor::bind_variable_str(i);
-                    }
-                    return ret;
-                }
-                else {
-                    return std::apply([]<typename... Attrs>(const Attrs&... attrs) {
-                        return std::array<active_record::string, std::tuple_size_v<BindAttrs>>{ active_record::to_string<Adaptor>(attrs)... };
-                    }, bind_attr);
-                }
-                */
-            }()){
-            const auto bit_ceil = [](const std::size_t v) -> std::size_t{
-                if (v <= 4) return 4; // minimum reserve size
-                return std::bit_ceil(v);
-            };
-            buff.reserve(bit_ceil(std::transform_reduce(
-                attr_strings.begin(), attr_strings.end(), static_cast<std::size_t>(0),
-                [](auto acc, const auto len){ return acc += len; },
-                [](const auto& str){ return str.length(); }
-            )) * 2);
-        }
-
-        void operator()(const active_record::string& str) {
-            buff += str;
-        }
-        void operator()(const std::size_t idx) {
-            buff += attr_strings[idx];
+            }
+            return buff;
         }
     };
 }
