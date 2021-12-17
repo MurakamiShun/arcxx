@@ -7,8 +7,6 @@
  */
 #include "../model.hpp"
 #include "../query.hpp"
-#include "../attribute.hpp"
-#include "../adaptor.hpp"
 #include "query_condition.hpp"
 #include "../adaptors/common_adaptor.hpp"
 

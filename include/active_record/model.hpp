@@ -6,7 +6,6 @@
  * Released under the MIT Lisence.
  */
 #include "query.hpp"
-#include "attribute.hpp"
 
 namespace active_record {
     template<typename Derived>
@@ -39,6 +38,8 @@ namespace active_record {
 
         template<Attribute Attr>
         [[nodiscard]] static query_relation<std::vector<Attr>, std::tuple<>> pluck();
+        template<AttributeAggregator Aggregator>
+        [[nodiscard]] static query_relation<typename Aggregator::attribute_type, std::tuple<>> pluck();
 
         // delete is identifier word
         template<Attribute Attr>

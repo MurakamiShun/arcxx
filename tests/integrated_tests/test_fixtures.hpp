@@ -1,5 +1,5 @@
 #pragma once
-#include "../include/active_record.hpp"
+#include <active_record.hpp>
 #include <filesystem>
 #include <catch2/catch.hpp>
 

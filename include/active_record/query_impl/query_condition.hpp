@@ -6,7 +6,6 @@
  * Released under the MIT Lisence.
  */
 #include "../query.hpp"
-#include "../attribute.hpp"
 
 namespace active_record {
     template<specialized_from<std::tuple> BindAttrs>

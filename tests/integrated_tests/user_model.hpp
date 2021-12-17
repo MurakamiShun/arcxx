@@ -1,5 +1,5 @@
 #pragma once
-#include "../test_fixtures.hpp"
+#include "test_fixtures.hpp"
 
 /*
  * User model (active record)

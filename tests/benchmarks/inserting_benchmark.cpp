@@ -1,4 +1,3 @@
-
 #include "user_model.hpp"
 
 TEST_CASE("User model inserting benchmark"){

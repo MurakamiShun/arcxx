@@ -9,7 +9,6 @@
 //#error C++20 is required.
 //#else
 
-#include "active_record/model.hpp"
 #include "active_record/attributes/attributes.hpp"
 #include "active_record/query_impl/query_relation.hpp"
 #include "active_record/query_impl/query_condition.hpp"

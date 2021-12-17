@@ -1,6 +1,4 @@
-
 #include "user_model.hpp"
-#include "../../include/active_record.hpp"
 
 struct Clothes : public active_record::model<Clothes> {
     inline static decltype(auto) table_name = "clothes_table";

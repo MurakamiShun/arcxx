@@ -5,7 +5,6 @@
  * 
  * Released under the MIT Lisence.
  */
-#include "utils.hpp"
 #include "adaptor.hpp"
 
 namespace active_record {

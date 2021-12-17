@@ -1,5 +1,4 @@
 #pragma once
-#include "../adaptor.hpp"
 #include "../attribute.hpp"
 
 namespace active_record {

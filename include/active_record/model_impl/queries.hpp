@@ -6,7 +6,6 @@
  * Released under the MIT Lisence.
  */
 #include "../model.hpp"
-
 namespace active_record {
     template<typename Derived>
     inline auto model<Derived>::insert(const Derived& model) {
@@ -78,7 +77,14 @@ namespace active_record {
         ret.tables.push_back(concat_strings("\"", Derived::table_name, "\""));
         return ret;
     }
-
+    template<typename Derived>
+    template<AttributeAggregator Aggregator>
+    inline query_relation<typename Aggregator::attribute_type, std::tuple<>> model<Derived>::pluck(){
+        query_relation<typename Aggregator::attribute_type, std::tuple<>> ret{ query_operation::select };
+        ret.op_args.push_back(detail::column_full_names_to_string<Aggregator>());
+        ret.tables.push_back(concat_strings("\"", Derived::table_name, "\""));
+        return ret;
+    }
     template<typename Derived>
     template<Attribute Attr>
     inline query_relation<bool, std::tuple<Attr>> model<Derived>::destroy(const Attr&& attr){

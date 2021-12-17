@@ -40,10 +40,18 @@ namespace active_record {
         [[nodiscard]] query_relation<std::vector<Attr>, BindAttrs> pluck() && requires specialized_from<Result, std::vector>;
         template<Attribute Attr>
         [[nodiscard]] query_relation<std::vector<Attr>, BindAttrs> pluck() const& requires specialized_from<Result, std::vector>;
+        template<AttributeAggregator Attr>
+        [[nodiscard]] query_relation<typename Attr::attribute_type, BindAttrs> pluck() && requires specialized_from<Result, std::vector>;
+        template<AttributeAggregator Attr>
+        [[nodiscard]] query_relation<typename Attr::attribute_type, BindAttrs> pluck() const& requires specialized_from<Result, std::vector>;
 
         template<Attribute... Attrs>
         requires is_model<typename Result::value_type>
-        [[nodiscard]] query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> update(const Attrs&...) requires specialized_from<Result, std::vector>;
+        [[nodiscard]] query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> update(const Attrs&...) && requires specialized_from<Result, std::vector>;
+        template<Attribute... Attrs>
+        requires is_model<typename Result::value_type>
+        [[nodiscard]] query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> update(const Attrs&...) const& requires specialized_from<Result, std::vector>;
+
 
         template<Attribute Attr>
         [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) && requires specialized_from<Result, std::vector>;

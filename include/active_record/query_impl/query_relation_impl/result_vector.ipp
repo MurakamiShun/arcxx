@@ -89,6 +89,33 @@ namespace active_record {
         ret.bind_attrs = std::move(this->bind_attrs);
         return ret;
     }
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
+    template<AttributeAggregator Attr>
+    query_relation<typename Attr::attribute_type, BindAttrs> query_relation<Result, BindAttrs>::pluck() && requires specialized_from<Result, std::vector>{
+        query_relation<typename Attr::attribute_type, BindAttrs> ret{ query_operation::select };
+
+        ret.op_args.push_back(detail::column_full_names_to_string<Attr>());
+        ret.tables = std::move(this->tables);
+
+        ret.conditions = std::move(this->conditions);
+        ret.options = std::move(this->options);
+        ret.bind_attrs = std::move(this->bind_attrs);
+        return ret;
+    }
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
+    template<AttributeAggregator Attr>
+    query_relation<typename Attr::attribute_type, BindAttrs> query_relation<Result, BindAttrs>::pluck() const& requires specialized_from<Result, std::vector>{
+        query_relation<typename Attr::attribute_type, BindAttrs> ret{ query_operation::select };
+
+        ret.op_args.push_back(detail::column_full_names_to_string<Attr>());
+        ret.tables = this->tables;
+
+        ret.conditions = this->conditions;
+        ret.options = this->options;
+        ret.bind_attrs = this->bind_attrs;
+        return ret;
+    }
+
 
     namespace detail {
         template<std::size_t N, typename Query, Attribute Last>
@@ -103,12 +130,25 @@ namespace active_record {
             query.op_args.push_back(",");
             set_update_op_args<N + 1>(query, std::move(tails)...);
         }
+
+        template<std::size_t N, typename Query, Attribute Last>
+        void set_update_op_args(Query& query, Last& last) {
+            query.op_args.push_back(concat_strings("\"", Last::column_name, "\" = "));
+            query.op_args.push_back(N);
+            std::get<N>(query.bind_attrs) = last;
+        }
+        template<std::size_t N, typename Query, Attribute Head, Attribute... Tails>
+        void set_update_op_args(Query& query, Head& head, Tails&... tails) {
+            set_update_op_args<N>(query, head);
+            query.op_args.push_back(",");
+            set_update_op_args<N + 1>(query, tails...);
+        }
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<Attribute... Attrs>
     requires is_model<typename Result::value_type>
-    query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> query_relation<Result, BindAttrs>::update(const Attrs&... attrs) requires specialized_from<Result, std::vector>{
+    query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> query_relation<Result, BindAttrs>::update(const Attrs&... attrs) && requires specialized_from<Result, std::vector>{
         query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> ret{ query_operation::update };
 
         ret.tables.push_back(concat_strings("\"", Result::value_type::table_name, "\""));
@@ -116,6 +156,19 @@ namespace active_record {
         ret.options = std::move(this->options);
         ret.bind_attrs = std::tuple_cat(std::move(this->bind_attrs), std::make_tuple(attrs...));
         detail::set_update_op_args<std::tuple_size_v<BindAttrs>>(ret, std::move(attrs)...);
+        return ret;
+    }
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
+    template<Attribute... Attrs>
+    requires is_model<typename Result::value_type>
+    query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> query_relation<Result, BindAttrs>::update(const Attrs&... attrs) const& requires specialized_from<Result, std::vector>{
+        query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> ret{ query_operation::update };
+
+        ret.tables.push_back(concat_strings("\"", Result::value_type::table_name, "\""));
+        ret.conditions = this->conditions;
+        ret.options = this->options;
+        ret.bind_attrs = std::tuple_cat(this->bind_attrs, std::make_tuple(attrs...));
+        detail::set_update_op_args<std::tuple_size_v<BindAttrs>>(ret, attrs...);
         return ret;
     }
 
