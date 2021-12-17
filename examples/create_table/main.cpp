@@ -20,8 +20,6 @@ struct Goods : public active_record::model<Goods> {
         static constexpr auto column_name = "price";
         static inline const auto constraints = { not_null };
     } price;
-
-    std::tuple<ID&, Name&, Price&> attributes = std::tie(id, name, price);
 };
 
 int main(){

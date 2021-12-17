@@ -3,6 +3,10 @@
 
 TEST_CASE("User model inserting benchmark"){
     // Benchmark
+    WARN(
+        User::insert(User{{}, 0, "user0", 170.0}).to_sql()
+    );
+
     BENCHMARK_ADVANCED("10000 data inserting bench")(Catch::Benchmark::Chronometer meter){
         using namespace active_record;
         namespace ranges = std::ranges;

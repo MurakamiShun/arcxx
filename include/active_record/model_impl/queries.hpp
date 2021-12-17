@@ -29,14 +29,14 @@ namespace active_record {
     template<typename Derived>
     inline auto model<Derived>::insert(Derived&& model) {
         using namespace tuptup::type_placeholders;
-        using bindattr_t = tuptup::apply_type_t<std::remove_reference<_1>, decltype(model.attributes_as_tuple())>;
+        using bindattr_t = tuptup::apply_type_t<std::remove_cvref<_1>, decltype(model.attributes_as_tuple())>;
         query_relation<bool, bindattr_t> ret{ query_operation::insert };
+        // get attribute from model
         ret.bind_attrs = std::move(model.attributes_as_tuple());
-
         ret.tables.push_back(insert_column_names_to_string());
         // insert values
         ret.op_args.push_back("(");
-        for(auto i = 0; i < std::tuple_size_v<decltype(model.attributes_as_tuple())>; ++i){
+        for(std::size_t i = 0; i < std::tuple_size_v<decltype(model.attributes_as_tuple())>; ++i){
             if (i != 0) ret.op_args.push_back(",");
             ret.op_args.push_back(i);
         }

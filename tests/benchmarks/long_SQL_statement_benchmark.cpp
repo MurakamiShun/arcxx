@@ -30,12 +30,18 @@ struct Clothes : public active_record::model<Clothes> {
         inline static decltype(auto) column_name = "price";
         using integer<User, Price, uint32_t>::integer;
     } price;
-
-    //std::tuple<ID&, UserID&, Name&, Price&> attributes = std::tie(id, user_id, name, price);
 };
 
 TEST_CASE("Long SQL statement benchmark"){
     // Benchmark
+    WARN(
+        Clothes::join<User>().where(
+            User::Name::like("user%") &&
+            User::Height::cmp < 175.0 &&
+            Clothes::Price::between(10'000,50'000)
+        ).order_by<Clothes::Price>().to_sql()
+    );
+
     BENCHMARK_ADVANCED("Long SQL statement bench")(Catch::Benchmark::Chronometer meter){
         using namespace active_record;
         namespace ranges = std::ranges;

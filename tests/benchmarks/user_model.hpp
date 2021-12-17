@@ -24,6 +24,4 @@ struct User : public active_record::model<User> {
         inline static decltype(auto) column_name = "height";
         using active_record::attributes::decimal<User, Height>::decimal;
     } height;
-
-    //std::tuple<ID&, Name&, Height&> attributes = std::tie(id, name, height);
 };
