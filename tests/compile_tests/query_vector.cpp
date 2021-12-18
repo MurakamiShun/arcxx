@@ -37,8 +37,9 @@ int main(){
     auto query_test = [&discard_val](auto&& query_relation){
         discard_val += query_relation.to_sql().length();
     };
-    
+    // left value
     const auto query = Test::where(Test::Int::cmp > 0);
+
     query_test(query.select<Test::Int, Test::String, Test::Decimal>());
     
     query_test(query.select<Test::Int::count, Test::Int::sum, Test::Int::avg, Test::Int::max, Test::Int::min>());
@@ -92,4 +93,59 @@ int main(){
     query_test(query.avg<Test::Decimal>());
     query_test(query.max<Test::Decimal>());
     query_test(query.min<Test::Decimal>());
+
+    // right value
+    query_test(Test::where(Test::Int::cmp > 0).select<Test::Int, Test::String, Test::Decimal>());
+    
+    query_test(Test::where(Test::Int::cmp > 0).select<Test::Int::count, Test::Int::sum, Test::Int::avg, Test::Int::max, Test::Int::min>());
+    query_test(Test::where(Test::Int::cmp > 0).select<Test::String::count>());
+    query_test(Test::where(Test::Int::cmp > 0).select<Test::Decimal::count, Test::Decimal::sum, Test::Decimal::avg, Test::Int::max, Test::Decimal::min>());
+    
+    query_test(Test::where(Test::Int::cmp > 0).pluck<Test::Int>());
+    query_test(Test::where(Test::Int::cmp > 0).pluck<Test::String>());
+    query_test(Test::where(Test::Int::cmp > 0).pluck<Test::Decimal>());
+    query_test(Test::where(Test::Int::cmp > 0).pluck<Test::Int::count>());
+    query_test(Test::where(Test::Int::cmp > 0).pluck<Test::String::count>());
+    query_test(Test::where(Test::Int::cmp > 0).pluck<Test::Decimal::count>());
+
+    query_test(Test::where(Test::Int::cmp > 0).update(Test::Int{0}, Test::String{"unknown"}, Test::Decimal{0.0}));
+
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::Int{0}));
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::String{"unknown"}));
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::Decimal{0.0}));
+
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::Int::cmp == 0));
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::Int::cmp != 0));
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::Int::cmp < 0));
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::Int::cmp > 0));
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::Int::cmp <= 0));
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::Int::cmp >= 0));
+
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::String::cmp == "unknown"));
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::String::cmp != "unknown"));
+
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::Decimal::cmp == 0.0));
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::Decimal::cmp != 0.0));
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::Decimal::cmp < 0.0));
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::Decimal::cmp > 0.0));
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::Decimal::cmp <= 0.0));
+    query_test(Test::where(Test::Int::cmp > 0).where(Test::Decimal::cmp >= 0.0));
+
+    query_test(Test::where(Test::Int::cmp > 0).limit(100));
+
+    query_test(Test::where(Test::Int::cmp > 0).order_by<Test::Int>()); // asc
+    query_test(Test::where(Test::Int::cmp > 0).order_by<Test::Int>(active_record::order::desc));
+    query_test(Test::where(Test::Int::cmp > 0).order_by<Test::String>()); // asc
+    query_test(Test::where(Test::Int::cmp > 0).order_by<Test::Decimal>()); // asc
+    
+    query_test(Test::where(Test::Int::cmp > 0).count());
+    query_test(Test::where(Test::Int::cmp > 0).sum<Test::Int>());
+    query_test(Test::where(Test::Int::cmp > 0).avg<Test::Int>());
+    query_test(Test::where(Test::Int::cmp > 0).max<Test::Int>());
+    query_test(Test::where(Test::Int::cmp > 0).min<Test::Int>());
+
+    query_test(Test::where(Test::Int::cmp > 0).sum<Test::Decimal>());
+    query_test(Test::where(Test::Int::cmp > 0).avg<Test::Decimal>());
+    query_test(Test::where(Test::Int::cmp > 0).max<Test::Decimal>());
+    query_test(Test::where(Test::Int::cmp > 0).min<Test::Decimal>());
 }

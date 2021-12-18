@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.16)
 
 project(tests LANGUAGES CXX)
 
@@ -51,7 +51,8 @@ target_link_libraries(active_record_IT PRIVATE ${link_library})
 target_compile_options(active_record_IT PUBLIC ${compile_options})
 target_include_directories(active_record_IT PUBLIC ../../include)
 target_compile_features(active_record_IT PRIVATE ${compile_feature})
-
+#target_precompile_headers(active_record_IT PUBLIC <string> <string_view> <functional> <utility> <filesystem>)
+target_precompile_headers(active_record_IT PUBLIC <active_record.hpp> <filesystem>)
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
 include(CTest)
 

@@ -19,3 +19,8 @@ add_executable(query_vector query_vector.cpp)
 target_compile_options(query_vector PUBLIC ${compile_options})
 target_include_directories(query_vector PUBLIC ../../include)
 target_compile_features(query_vector PRIVATE ${compile_feature})
+
+add_executable(query_scalar query_scalar.cpp)
+target_compile_options(query_scalar PUBLIC ${compile_options})
+target_include_directories(query_scalar PUBLIC ../../include)
+target_compile_features(query_scalar PRIVATE ${compile_feature})
