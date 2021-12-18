@@ -6,10 +6,6 @@
  * Released under the MIT Lisence.
  */
 #include <libpq-fe.h>
-#include "../adaptor.hpp"
-#include "../utils.hpp"
-#include "../query.hpp"
-#include "../attribute.hpp"
 #include "postgresql/schema.hpp"
 #include "postgresql/utils.hpp"
 

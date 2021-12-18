@@ -5,7 +5,6 @@
  * 
  * Released under the MIT Lisence.
  */
-#include "../../adaptor.hpp"
 #include "../../attributes/attributes.hpp"
 
 namespace active_record {
@@ -15,12 +14,12 @@ namespace active_record {
         // boolean
         template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
         requires std::same_as<typename Attr::value_type, bool>
-        [[nodiscard]] active_record::string to_string(const Attr& attr) {
+        [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
             return static_cast<bool>(attr) ? (attr.value() ? "1" : "0") : "null";
         }
         template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
         requires std::same_as<typename Attr::value_type, bool>
-        void from_string(Attr& attr, const active_record::string_view str){
+        inline void from_string(Attr& attr, const active_record::string_view str){
             if(str != "null"){
                 attr = ((str == "0") ? false : true);
             }
@@ -29,14 +28,14 @@ namespace active_record {
         // datetime
         template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
         requires std::same_as<typename Attr::value_type, active_record::datetime>
-        [[nodiscard]] active_record::string to_string(const Attr&) {
+        [[nodiscard]] inline active_record::string to_string(const Attr&) {
             // yyyy-MM-dd HH:mm:ss (sqlite supports only utc)
             //return std::format("{:%F} {:%T}", attr.value());
             return "";
         }
         template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
         requires std::same_as<typename Attr::value_type, active_record::datetime>
-        void from_string(Attr& attr, const active_record::string_view){
+        inline void from_string(Attr& attr, const active_record::string_view){
             active_record::datetime dt;
             //std::chrono::parse("{:%F} {:%T}", dt, str);
             attr = dt;
@@ -45,7 +44,7 @@ namespace active_record {
         // binary
         template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
         requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
-        [[nodiscard]] active_record::string to_string(const Attr& attr) {
+        [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
             active_record::string hex = "x'";
             char buf[4];
             for(const auto b : attr.value()){
@@ -55,7 +54,7 @@ namespace active_record {
         }
         template<std::same_as<sqlite3_adaptor> Adaptor, Attribute Attr>
         requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
-        void from_string(Attr& attr, const active_record::string_view str){
+        inline void from_string(Attr& attr, const active_record::string_view str){
             attr = std::vector<std::byte>{};
             attr.value().reserve(str.size());
             std::copy(str.begin(), str.end(), attr.value().begin());

@@ -6,13 +6,14 @@
  * Released under the MIT Lisence.
  */
 #include <libpq-fe.h>
-#include "../../attribute.hpp"
-#include "string_convertors.hpp"
 #include <any>
 #include <bit>
 #if !(defined(_WIN32) || defined(_WIN64))
 #include <byteswap.h>
 #endif
+#include "active_record/query_impl/query_relation.hpp"
+#include "active_record/model_impl/queries.hpp"
+#include "string_convertors.hpp"
 
 namespace active_record::PostgreSQL::detail {
     template<std::size_t Bytes> struct uint{};

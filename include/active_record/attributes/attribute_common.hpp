@@ -40,7 +40,9 @@ namespace active_record {
         [[nodiscard]] static const constraint default_value(const Type& def_val);
 
         [[nodiscard]] static bool has_constraint(const constraint& c) noexcept;
-        static const std::optional<std::reference_wrapper<const constraint>> get_constraint(const constraint& c);
+        template<typename Constraint>
+        [[nodiscard]]static const Constraint* get_constraint();
+
 
         constexpr attribute_common() {}
         template<std::convertible_to<std::optional<Type>> T>

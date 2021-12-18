@@ -18,24 +18,25 @@ namespace active_record{
 
     template<typename Model, typename Attribute, typename Type>
     bool attribute_common<Model, Attribute, Type>::has_constraint(const constraint& c) noexcept {
-        if constexpr (!has_constraints()) return false;
-        else{
+        if constexpr (has_constraints()){
             for(const auto& con : Attribute::constraints){
                 if(con.target_type() == c.target_type()) return true;
             }
-            return false;
         }
+        return false;
     }
     
     template<typename Model, typename Attribute, typename Type>
-    const std::optional<std::reference_wrapper<const typename attribute_common<Model, Attribute, Type>::constraint>> attribute_common<Model, Attribute, Type>::get_constraint(const constraint& c) {
-        if constexpr (!has_constraints()) return std::nullopt;
-        else{
+    template<typename Constraint>
+    const Constraint* attribute_common<Model, Attribute, Type>::get_constraint() {
+        if constexpr(has_constraints()) {
             for(const auto& con : Attribute::constraints){
-                if(con.target_type() == c.target_type()) return std::cref(con);
+                if(con.target_type() == typeid(Constraint)){
+                    return con.template target<Constraint>();
+                }
             }
-            return std::nullopt;
         }
+        return nullptr;
     }
 
     template<typename Model, typename Attribute, typename Type>
