@@ -9,10 +9,7 @@
 
 namespace active_record {
     template<typename Derived>
-    class model {
-    private:
-        [[nodiscard]] static active_record::string insert_column_names_to_string();
-    public:
+    struct model {
         struct schema {
             template<std::derived_from<adaptor> Adaptor>
             [[nodiscard]] static active_record::string to_sql(bool abort_if_exist = true);
@@ -20,10 +17,23 @@ namespace active_record {
 
         static constexpr bool has_table_name() noexcept { return requires {Derived::table_name;}; }
 
-        [[nodiscard]] static constexpr auto column_names() noexcept;
+        [[nodiscard]] static constexpr auto column_names() noexcept {
+            return std::apply(
+                []<Attribute... Attrs>([[maybe_unused]]Attrs...) constexpr { return std::array<const active_record::string_view, sizeof...(Attrs)>{(Attrs::column_name)...}; },
+                Derived{}.attributes_as_tuple()
+            );
+        }
 
-        [[nodiscard]] auto attributes_as_tuple() noexcept;
-        [[nodiscard]] auto attributes_as_tuple() const noexcept;
+        [[nodiscard]] auto attributes_as_tuple() noexcept {
+            using namespace tuptup::type_placeholders;
+            auto attributes_tuple = tuptup::struct_binder<Derived>{}(*reinterpret_cast<Derived*>(this));
+            return tuptup::tuple_filter<is_attribute<defer<std::remove_reference<_1>>>>(attributes_tuple);
+        }
+        [[nodiscard]] auto attributes_as_tuple() const noexcept {
+            using namespace tuptup::type_placeholders;
+            const auto attributes_tuple = tuptup::struct_binder<Derived>{}(*reinterpret_cast<const Derived*>(this));
+            return tuptup::tuple_filter<is_attribute<defer<std::remove_reference<_1>>>>(attributes_tuple);
+        }
 
         [[nodiscard]] static auto insert(const Derived& model);
         [[nodiscard]] static auto insert(Derived&& model);
@@ -93,5 +103,3 @@ namespace active_record {
         requires T::has_table_name();
     };
 }
-
-#include "model_impl/model_impl.ipp"

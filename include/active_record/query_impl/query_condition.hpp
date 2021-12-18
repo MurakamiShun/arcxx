@@ -35,15 +35,6 @@ namespace active_record {
         auto operator||(query_condition<DestBindAttrs>&& cond) && {
             return concat_conditions(std::move(cond), conjunction::OR);
         }
-
-        template<Attribute Attr>
-        auto operator&&(const Attr& cond) && {
-            return this->operator&&(Attr::cmp == cond);
-        }
-        template<Attribute Attr>
-        auto operator||(const Attr& cond) && {
-            return this->operator||(Attr::cmp == cond);
-        }
     };
 }
 

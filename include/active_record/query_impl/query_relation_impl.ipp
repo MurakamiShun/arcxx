@@ -177,6 +177,6 @@ namespace active_record {
     };
 }
 
-#include "query_relation_impl/result_scalar.ipp"
-#include "query_relation_impl/result_vector.ipp"
-#include "query_relation_impl/result_map.ipp"
+#include "query_relation_impls/result_scalar.ipp"
+#include "query_relation_impls/result_vector.ipp"
+#include "query_relation_impls/result_map.ipp"

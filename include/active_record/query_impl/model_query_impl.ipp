@@ -5,7 +5,6 @@
  * 
  * Released under the MIT Lisence.
  */
-#include "../model.hpp"
 namespace active_record {
     template<typename Derived>
     inline auto model<Derived>::insert(const Derived& model) {
@@ -14,7 +13,7 @@ namespace active_record {
         query_relation<bool, bindattr_t> ret{ query_operation::insert };
         // get attribute copy from model
         ret.bind_attrs = model.attributes_as_tuple();
-        ret.tables.push_back(insert_column_names_to_string());
+        ret.tables.push_back(detail::insert_column_names_to_string<Derived>());
         // insert values
         ret.op_args.push_back("(");
         for(std::size_t i = 0; i < std::tuple_size_v<decltype(model.attributes_as_tuple())>; ++i){
@@ -32,7 +31,7 @@ namespace active_record {
         query_relation<bool, bindattr_t> ret{ query_operation::insert };
         // get attribute from model
         ret.bind_attrs = std::move(model.attributes_as_tuple());
-        ret.tables.push_back(insert_column_names_to_string());
+        ret.tables.push_back(detail::insert_column_names_to_string<Derived>());
         // insert values
         ret.op_args.push_back("(");
         for(std::size_t i = 0; i < std::tuple_size_v<decltype(model.attributes_as_tuple())>; ++i){

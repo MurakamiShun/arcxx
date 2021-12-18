@@ -6,7 +6,7 @@
  * Released under the MIT Lisence.
  */
 #include "../model.hpp"
-#include "../query.hpp"
+#include "query_utils.hpp"
 #include "query_condition.hpp"
 #include "../adaptors/common_adaptor.hpp"
 
@@ -56,3 +56,4 @@ namespace active_record{
  * https://bugs.llvm.org/show_bug.cgi?id=48020
  */
 #include "query_relation_impl.ipp"
+#include "model_query_impl.ipp"

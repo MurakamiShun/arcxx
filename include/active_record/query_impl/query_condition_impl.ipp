@@ -6,9 +6,6 @@
  * Released under the MIT Lisence.
  */
 namespace active_record {
-    /*
-     * implements
-     */
     template<specialized_from<std::tuple> BindAttrs>
     template<specialized_from<std::tuple> SrcBindAttrs>
     query_condition<tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_condition<BindAttrs>::concat_conditions(query_condition<SrcBindAttrs>&& cond, const conjunction conjunc) {

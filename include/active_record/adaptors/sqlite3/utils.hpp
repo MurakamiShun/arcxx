@@ -7,7 +7,6 @@
  */
 #include <sqlite3.h>
 #include "active_record/query_impl/query_relation.hpp"
-#include "active_record/model_impl/queries.hpp"
 
 namespace active_record::sqlite3::detail {
     template<Attribute Attr>

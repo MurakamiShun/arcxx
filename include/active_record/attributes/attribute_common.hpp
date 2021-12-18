@@ -13,6 +13,7 @@ namespace active_record {
     template<typename Model, typename Attribute, typename Type>
     class attribute_common {
     private:
+        struct compare;
         std::optional<Type> data;
     public:
         using constraint = std::function<bool(const std::optional<Type>&)>;
@@ -25,98 +26,53 @@ namespace active_record {
         static constexpr bool has_constraints = requires {Attribute::constraints;};
         */
 
-        static constexpr bool has_column_name() noexcept { return requires {Attribute::column_name;}; }
-        static constexpr bool has_constraints() noexcept { return requires {Attribute::constraints;}; }
+        static constexpr bool has_column_name() noexcept;
+        static constexpr bool has_constraints() noexcept;
         [[nodiscard]] static constexpr auto column_full_name();
 
         // constexpr std::type_info::operator== is C++23
         inline static const constraint not_null = [](const std::optional<Type>& t) constexpr { return static_cast<bool>(t); };
         inline static const constraint unique = [](const std::optional<Type>&) constexpr { return true; };
         inline static const constraint primary_key = [](const std::optional<Type>& t) { return not_null(t) && unique(t); };
-        struct constraint_default_value_impl{
-            const Type default_value;
-            constexpr bool operator()(const std::optional<Type>&){ return true; }
-        };
+        struct constraint_default_value_impl;
         [[nodiscard]] static const constraint default_value(const Type& def_val);
 
-        [[nodiscard]] static bool has_constraint(const constraint& c) noexcept;
+        [[nodiscard]] static bool has_constraint(const constraint&) noexcept;
         template<typename Constraint>
-        [[nodiscard]]static const Constraint* get_constraint();
+        [[nodiscard]] static const Constraint* get_constraint();
 
-
-        constexpr attribute_common() {}
+        constexpr attribute_common();
         template<std::convertible_to<std::optional<Type>> T>
-        constexpr attribute_common(const T& default_value) : data(static_cast<std::optional<Type>>(default_value)) {}
+        constexpr attribute_common(const T& default_value);
         template<std::convertible_to<std::optional<Type>> T>
-        constexpr attribute_common(T&& default_value) : data(static_cast<std::optional<Type>>(std::move(default_value))) {}
+        constexpr attribute_common(T&& default_value);
 
         [[nodiscard]] constexpr bool is_valid() const;
-        explicit constexpr operator bool() const noexcept { return static_cast<bool>(data); }
-        [[nodiscard]] const Type& value() const& { return data.value(); }
-        [[nodiscard]] Type& value()& { return data.value(); }
-        [[nodiscard]] Type&& value()&& { return std::move(data.value()); }
+        explicit constexpr operator bool() const noexcept;
+        [[nodiscard]] const Type& value() const&;
+        [[nodiscard]] Type& value()&;
+        [[nodiscard]] Type&& value()&&;
 
-        [[nodiscard]] constexpr operator const std::optional<Type>&() const& noexcept { return data; }
-        [[nodiscard]] constexpr operator std::optional<Type>&()& noexcept { return data; }
-        [[nodiscard]] constexpr operator std::optional<Type>()&& noexcept { return std::move(data); }
+        [[nodiscard]] constexpr operator const std::optional<Type>&() const& noexcept;
+        [[nodiscard]] constexpr operator std::optional<Type>&()& noexcept;
+        [[nodiscard]] constexpr operator std::optional<Type>()&& noexcept;
 
         template<std::convertible_to<std::optional<Type>> T>
-        [[nodiscard]] constexpr bool operator==(const T& cmp) const {
-            return data == static_cast<std::optional<Type>>(cmp);
-        }
+        [[nodiscard]] constexpr bool operator==(const T&) const;
+        template<std::convertible_to<std::optional<Type>> T>
+        [[nodiscard]] constexpr bool operator!=(const T&) const;
 
         template<std::convertible_to<Attribute>... Attrs>
         static auto in(const Attrs&... values);
 
-        constexpr static const struct {
-        private:
-            template<std::size_t N>
-            static auto make_condition(Attribute&& attr, built_in_string_literal<N> op){
-                query_condition<std::tuple<Attribute>> ret;
-                ret.condition.push_back(concat_strings(Attribute::column_full_name(), op));
-                ret.condition.push_back(0UL);
-                ret.bind_attrs = std::make_tuple(std::move(attr));
-                return ret;
-            }
-        public:
-            auto operator==(const std::convertible_to<std::optional<Type>> auto& attr) const {
-                return make_condition(Attribute{ static_cast<std::optional<Type>>(attr) }, " = ");
-            }
-            auto operator!=(const std::convertible_to<std::optional<Type>> auto& attr) const {
-                return make_condition(Attribute{ static_cast<std::optional<Type>>(attr) }, " != ");
-            }
-            auto operator<(const std::convertible_to<std::optional<Type>> auto& attr) const {
-                return make_condition(Attribute{ static_cast<std::optional<Type>>(attr) }, " < ");
-            }
-            auto operator<=(const std::convertible_to<std::optional<Type>> auto& attr) const {
-                return make_condition(Attribute{ static_cast<std::optional<Type>>(attr) }, " <= ");
-            }
-            auto operator>(const std::convertible_to<std::optional<Type>> auto& attr) const {
-                return make_condition(Attribute{ static_cast<std::optional<Type>>(attr) }, " > ");
-            }
-            auto operator>=(const std::convertible_to<std::optional<Type>> auto& attr) const {
-                return make_condition(Attribute{ static_cast<std::optional<Type>>(attr) }, " >= ");
-            }
+        constexpr static struct compare_type {
+            auto operator==(const std::convertible_to<std::optional<Type>> auto&) const;
+            auto operator!=(const std::convertible_to<std::optional<Type>> auto&) const;
+            auto operator<(const std::convertible_to<std::optional<Type>> auto&) const;
+            auto operator<=(const std::convertible_to<std::optional<Type>> auto&) const;
+            auto operator>(const std::convertible_to<std::optional<Type>> auto&) const;
+            auto operator>=(const std::convertible_to<std::optional<Type>> auto&) const;
         } cmp{};
-
-        template<specialized_from<std::tuple> BindAttrs>
-        [[nodiscard]] auto operator&&(query_condition<BindAttrs>&& cond) const {
-            return (cmp == data) && cond;
-        }
-        template<specialized_from<std::tuple> BindAttrs>
-        [[nodiscard]] auto operator||(query_condition<BindAttrs>&& cond) const {
-            return (cmp == data) || cond;
-        }
-        template<typename Attr>
-        requires std::derived_from<Attr, attribute_common<typename Attr::model_type, typename Attr::attribute_type, typename Attr::value_type>>
-        [[nodiscard]] auto operator&&(const Attr& attr) const {
-            return (cmp == data) && (Attr::cmp == attr);
-        }
-        template<typename Attr>
-        requires std::derived_from<Attr, attribute_common<typename Attr::model_type, typename Attr::attribute_type, typename Attr::value_type>>
-        [[nodiscard]] auto operator||(const Attr& attr) const {
-            return (cmp == data) || (Attr::cmp == attr);
-        }
 
         struct count : public attribute_aggregator<Model, Attribute, count>{
             static constexpr auto aggregation_func = "count";
