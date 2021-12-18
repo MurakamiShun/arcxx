@@ -39,229 +39,63 @@ namespace active_record {
         std::optional<active_record::string> error_msg = std::nullopt;
 
         postgresql_adaptor() = delete;
-        postgresql_adaptor(const PostgreSQL::endpoint& endpoint_info, const std::optional<PostgreSQL::auth>& auth_info, const std::optional<PostgreSQL::options> option) {
-            conn = PQsetdbLogin(
-                endpoint_info.server_name.c_str(),
-                endpoint_info.port.c_str(),
-                option ? option.value().option.c_str() : NULL,
-                option ? option.value().debug_of.c_str() : NULL,
-                endpoint_info.db_name.c_str(),
-                auth_info ? auth_info.value().user.c_str() : NULL,
-                auth_info ? auth_info.value().password.c_str() : NULL
-            );
-            if (PQstatus(conn) == CONNECTION_BAD){
-                // handle error
-                error_msg = PQerrorMessage(conn);
-            }
-        }
-        postgresql_adaptor(const active_record::string& info){
-            conn = PQconnectdb(info.c_str());
-            if (PQstatus(conn) == CONNECTION_BAD){
-                // handle error
-                error_msg = PQerrorMessage(conn);
-            }
-        }
+        postgresql_adaptor(const PostgreSQL::endpoint& endpoint_info, const std::optional<PostgreSQL::auth>& auth_info, const std::optional<PostgreSQL::options> option);
+        postgresql_adaptor(const active_record::string& info);
 
         template<typename Result, specialized_from<std::tuple> BindAttrs>
-        PGresult* exec_sql(const query_relation<Result, BindAttrs>& query) {
-            const auto sql = query.template to_sql<postgresql_adaptor>();
-
-            PGresult* result = nullptr;
-            if constexpr(query.bind_attrs_count() == 0){
-                result = PQexec(
-                    conn,
-                    sql.c_str()
-                );
-            }
-            else{
-                const auto param_length = std::apply(
-                    []<typename... Attrs>(const Attrs&... attrs){
-                        return std::array<int, sizeof...(Attrs)>{ static_cast<int>(attribute_size(attrs))... };
-                    },
-                    query.bind_attrs
-                );
-                const auto param_format = std::apply(
-                    []<typename... Attrs>(const Attrs&... attrs){
-                        const auto is_not_text_format = []<typename Attr>([[maybe_unused]]const Attr&){
-                            return static_cast<int>(
-                                !(std::is_same_v<typename Attr::value_type, active_record::string> ||
-                                std::is_same_v<typename Attr::value_type, active_record::datetime>) ||
-                                std::floating_point<typename Attr::value_type>
-                            );
-                        };
-                        return std::array<int, sizeof...(Attrs)>{ is_not_text_format(attrs)... };
-                    },
-                    query.bind_attrs
-                );
-
-                std::array<std::any, query.bind_attrs_count()> temporary_values;
-                const auto param_values = std::apply(
-                    []<typename... Ptrs>(const Ptrs... ptrs){ return std::array<const char* const, sizeof...(Ptrs)>{ptrs...}; },
-                    tuptup::indexed_apply_each(
-                        [&temporary_values]<std::size_t N, typename Attr>(const Attr& attr){
-                            return PostgreSQL::detail::get_value_ptr(attr, temporary_values[N]);
-                        },
-                        query.bind_attrs
-                    )
-                );
-
-                result = PQexecParams(
-                    conn,
-                    sql.c_str(),
-                    std::tuple_size_v<BindAttrs>, // parameter count
-                    NULL, // parameter types
-                    param_values.data(), // parameter values
-                    param_length.data(), // parameter length
-                    param_format.data(), // parameter formats
-                    0  // result formats(text)
-                );
-            }
-            return result;
-        }
+        PGresult* exec_sql(const query_relation<Result, BindAttrs>& query);
 
     public:
-        bool has_error() const noexcept { return static_cast<bool>(error_msg); }
-        const active_record::string& error_message() const { return error_msg.value(); }
+        bool has_error() const noexcept;
+        const active_record::string& error_message() const;
 
-        static postgresql_adaptor open(const PostgreSQL::endpoint endpoint_info, const std::optional<PostgreSQL::auth> auth_info = std::nullopt, const std::optional<PostgreSQL::options> option = std::nullopt){
-            return postgresql_adaptor(endpoint_info, auth_info, option);
-        }
-        static postgresql_adaptor open(const active_record::string& connection_info){
-            return postgresql_adaptor(connection_info);
-        }
+        static postgresql_adaptor open(const PostgreSQL::endpoint endpoint_info, const std::optional<PostgreSQL::auth> auth_info = std::nullopt, const std::optional<PostgreSQL::options> option = std::nullopt);
+        static postgresql_adaptor open(const active_record::string& connection_info);
 
-        int protocol_version() const {
-            return PQprotocolVersion(conn);
-        }
-        int server_version() const {
-            return PQserverVersion(conn);
-        }
+        int protocol_version() const;
+        int server_version() const;
 
-        ~postgresql_adaptor() {
-            this->close();
-        }
+        ~postgresql_adaptor();
 
-        void close(){
-            if (conn != nullptr){
-                PQfinish(conn);
-                conn = nullptr;
-            }
-        }
+        void close();
 
         static constexpr bool bindable = true;
-        static active_record::string bind_variable_str(const std::size_t idx) {
-            return concat_strings("$", std::to_string(idx + 1));
-        }
+        static active_record::string bind_variable_str(const std::size_t idx);
 
         template<is_model Mod>
-        std::optional<active_record::string> create_table(bool abort_if_exist = true){
-            return exec(raw_query<bool>(Mod::schema::template to_sql<postgresql_adaptor>(abort_if_exist)));
-        }
-
+        std::optional<active_record::string> create_table(bool abort_if_exist = true);
         template<is_model Mod>
-        std::optional<active_record::string> drop_table(){
-            return exec(raw_query<bool>("DROP TABLE ", Mod::table_name,";"));
-        }
+        std::optional<active_record::string> drop_table();
 
         template<typename T, specialized_from<std::tuple> BindAttrs>
-        auto exec(const query_relation<T, BindAttrs>&& query){
-            return exec(query);
-        }
+        auto exec(const query_relation<T, BindAttrs>&& query);
 
         template<specialized_from<std::tuple> BindAttrs>
-        auto exec(const query_relation<bool, BindAttrs>& query){
-            PGresult* result = this->exec_sql(query);
+        auto exec(const query_relation<bool, BindAttrs>& query);
 
-            if (const auto stat = PQresultStatus(result); stat == PGRES_COMMAND_OK || stat == PGRES_NONFATAL_ERROR){
-                error_msg = std::nullopt;
-            }
-            else error_msg = PQresultErrorMessage(result);
-
-            if(result != nullptr) PQclear(result);
-            return error_msg;
-        }
         template<typename Result, specialized_from<std::tuple> BindAttrs>
-        auto exec(const query_relation<Result, BindAttrs>& query){
-            PGresult* result = this->exec_sql(query);
+        auto exec(const query_relation<Result, BindAttrs>& query);
 
-            Result ret;
-            // error handling
-            if (PQresultStatus(result) != PGRES_TUPLES_OK) {
-                error_msg = PQresultErrorMessage(result);
-                if(result != nullptr) PQclear(result);
-                return std::make_pair(error_msg, ret);
-            }
-
-            auto col_count = PQntuples(result);
-            for(decltype(col_count) col = 0; col < col_count; ++col){
-                if constexpr(specialized_from<Result, std::vector>) {
-                    ret.push_back(PostgreSQL::detail::extract_column_data<typename Result::value_type>(result, col));
-                }
-                else if constexpr(specialized_from<Result, std::unordered_map>){
-                    if constexpr (specialized_from<typename Result::mapped_type, std::tuple>){
-                        using result_type = tuptup::tuple_cat_t<std::tuple<typename Result::key_type>, typename Result::mapped_type>;
-                        auto result_column = active_record::PostgreSQL::detail::extract_column_data<result_type>(result, col);
-                        ret.insert(std::make_pair(
-                            std::get<0>(result_column),
-                            tuptup::tuple_slice<tuptup::make_index_range<1, std::tuple_size_v<result_type>>>(result_column)
-                        ));
-                    }
-                    else{
-                        auto result_column = active_record::PostgreSQL::detail::extract_column_data<std::tuple<typename Result::key_type, typename Result::mapped_type>>(result, col);
-                        ret.insert(std::make_pair(std::move(std::get<0>(result_column)), std::move(std::get<1>(result_column))));
-                    }
-                }
-                else {
-                    ret = active_record::PostgreSQL::detail::extract_column_data<Result>(result, col);
-                }
-            }
-
-            if(result != nullptr) PQclear(result);
-            error_msg = std::nullopt;
-            return std::make_pair(error_msg, ret);
-        }
-
-        std::optional<active_record::string> begin(){
-            return exec(raw_query<bool>("BEGIN"));
-        }
-        std::optional<active_record::string> commit(){
-            return exec(raw_query<bool>("COMMIT"));
-        }
-        std::optional<active_record::string> rollback(){
-            return exec(raw_query<bool>("ROLLBACK"));
-        }
+        std::optional<active_record::string> begin();
+        std::optional<active_record::string> commit();
+        std::optional<active_record::string> rollback();
 
         template<std::convertible_to<std::function<active_record::transaction(void)>> F>
-        std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F& func) {
-            if(const auto errmsg = begin(); errmsg) return { errmsg, active_record::transaction::rollback };
-            const auto transaction_result = func();
-            switch (transaction_result) {
-            case active_record::transaction::commit:
-                return { commit(), active_record::transaction::commit };
-            default:
-                return { rollback(), active_record::transaction::rollback };
-            }
-        }
+        std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F& func);
         template<std::convertible_to<std::function<active_record::transaction(void)>> F>
-        std::pair<std::optional<active_record::string>, active_record::transaction>  transaction(F&& func) {
-            return transaction(func);
-        }
+        std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F&& func);
         template<std::convertible_to<std::function<active_record::transaction(postgresql_adaptor&)>> F>
-        std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F& func) {
-            return transaction(static_cast<std::function<active_record::transaction()>>(std::bind(func, std::ref(*this))));
-        }
+        std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F& func);
         template<std::convertible_to<std::function<active_record::transaction(postgresql_adaptor&)>> F>
-        std::pair<std::optional<active_record::string>, active_record::transaction>  transaction(F&& func) {
-            return transaction(func);
-        }
+        std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F&& func);
 
         template<Attribute Attr>
-        static active_record::string column_definition() {
-            return active_record::PostgreSQL::column_definition<Attr>();
-        }
+        static active_record::string column_definition();
     };
 
     namespace PostgreSQL {
         using adaptor = postgresql_adaptor;
     }
 }
+
+#include "postgresql/adaptor.ipp"

@@ -22,7 +22,7 @@ namespace active_record::PostgreSQL::detail {
     template<> struct uint<8> { using type = uint64_t; };
 
     template<std::integral T>
-    [[nodiscard]] auto byte_swap(const T h) noexcept -> decltype(h) {
+    [[nodiscard]] inline auto byte_swap(const T h) noexcept -> decltype(h) {
         if constexpr (std::endian::native == std::endian::little) {
             #if defined(_WIN32) || defined(_WIN64)
             if constexpr (sizeof(h) == sizeof(uint16_t)) return _byteswap_ushort(h);
@@ -39,13 +39,13 @@ namespace active_record::PostgreSQL::detail {
 
     template<Attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::string>
-    [[nodiscard]] auto get_value_ptr(const Attr& attr, [[maybe_unused]]std::any&) {
+    [[nodiscard]] inline auto get_value_ptr(const Attr& attr, [[maybe_unused]]std::any&) {
         if (!attr) return static_cast<const char*>(nullptr);
         return attr.value().c_str();
     }
     template<Attribute Attr>
     requires std::integral<typename Attr::value_type>
-    [[nodiscard]] auto get_value_ptr(const Attr& attr, [[maybe_unused]]std::any& tmp) {
+    [[nodiscard]] inline auto get_value_ptr(const Attr& attr, [[maybe_unused]]std::any& tmp) {
         if (!attr) return static_cast<const char*>(nullptr);
         const auto tmp_value = byte_swap(attr.value());
         tmp = tmp_value;
@@ -53,7 +53,7 @@ namespace active_record::PostgreSQL::detail {
     }
     template<Attribute Attr>
     requires std::floating_point<typename Attr::value_type>
-    [[nodiscard]] auto get_value_ptr(const Attr& attr, [[maybe_unused]]std::any& tmp) {
+    [[nodiscard]] inline auto get_value_ptr(const Attr& attr, [[maybe_unused]]std::any& tmp) {
         if (!attr) return static_cast<const char*>(nullptr);
         // PostgreSQL use IEE 754
         if constexpr(std::numeric_limits<typename Attr::value_type>::is_iec559){
@@ -67,7 +67,7 @@ namespace active_record::PostgreSQL::detail {
     }
 
     template<Attribute Attr>
-    bool set_column_data(PGresult* res, int col, int field, Attr& attr) {
+    inline bool set_column_data(PGresult* res, int col, int field, Attr& attr) {
         if(PQgetisnull(res, col, field)){
             attr = std::nullopt;
             return true;
@@ -79,7 +79,7 @@ namespace active_record::PostgreSQL::detail {
     }
     template<typename T>
     requires (!Attribute<T>)
-    bool set_column_data(PGresult* res, int col, int field, T& result) {
+    inline bool set_column_data(PGresult* res, int col, int field, T& result) {
         const char* const text_ptr = PQgetvalue(res, col, field);
         if (text_ptr == nullptr) return false;
         const auto value_text = active_record::string{ text_ptr };
@@ -88,7 +88,7 @@ namespace active_record::PostgreSQL::detail {
     }
 
     template<is_model T>
-    [[nodiscard]] T extract_column_data(PGresult* res, int col) {
+    [[nodiscard]] inline T extract_column_data(PGresult* res, int col) {
         T ret;
         tuptup::indexed_apply_each(
             [res, col]<std::size_t N, typename Attr>(Attr& attr){ set_column_data(res, col, N, attr); },
@@ -97,7 +97,7 @@ namespace active_record::PostgreSQL::detail {
         return ret;
     }
     template<specialized_from<std::tuple> T>
-    [[nodiscard]] T extract_column_data(PGresult* res, int col) {
+    [[nodiscard]] inline T extract_column_data(PGresult* res, int col) {
         T ret;
         tuptup::indexed_apply_each(
             [res, col]<std::size_t N, typename Attr>(Attr& attr){ set_column_data(res, col, N, attr); },
@@ -106,7 +106,7 @@ namespace active_record::PostgreSQL::detail {
         return ret;
     }
     template<typename T>
-    [[nodiscard]] T extract_column_data(PGresult* res, int col) {
+    [[nodiscard]] inline T extract_column_data(PGresult* res, int col) {
         T ret;
         set_column_data(res, col, 0, ret);
         return ret;
