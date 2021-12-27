@@ -28,11 +28,11 @@ namespace active_record {
         }
 
         template<specialized_from<std::tuple> DestBindAttrs>
-        auto operator&&(query_condition<DestBindAttrs>&& cond) && {
+        [[nodiscard]] auto operator&&(query_condition<DestBindAttrs>&& cond) && {
             return concat_conditions(std::move(cond), conjunction::AND);
         }
         template<specialized_from<std::tuple> DestBindAttrs>
-        auto operator||(query_condition<DestBindAttrs>&& cond) && {
+        [[nodiscard]] auto operator||(query_condition<DestBindAttrs>&& cond) && {
             return concat_conditions(std::move(cond), conjunction::OR);
         }
     };

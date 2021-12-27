@@ -77,9 +77,14 @@ namespace active_record {
         sob_to_string_impl(const BindAttrs& attrs) :
             bind_attrs(attrs),
             to_string_func([&attrs]<std::size_t... I>(std::index_sequence<I...>){
-                return std::array<std::function<active_record::string()>, std::tuple_size_v<BindAttrs>>{
-                    [&attr = std::get<I>(attrs)]{ return active_record::to_string<Adaptor>(attr); }...
-                };
+                if constexpr(Adaptor::bindable){
+                    return std::array<std::function<active_record::string()>, std::tuple_size_v<BindAttrs>>{};
+                }
+                else{
+                    return std::array<std::function<active_record::string()>, std::tuple_size_v<BindAttrs>>{
+                        [&attr = std::get<I>(attrs)]{ return active_record::to_string<Adaptor>(attr); }...
+                    };
+                }
             }(std::make_index_sequence<std::tuple_size_v<BindAttrs>>{})){
         }
 
