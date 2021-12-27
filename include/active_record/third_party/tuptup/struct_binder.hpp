@@ -9,7 +9,7 @@
  */
 
 #ifndef TUPTUP_STRUCT_BINDER_MAX_VAR_COUNT
-#define TUPTUP_STRUCT_BINDER_MAX_VAR_COUNT 64
+#define TUPTUP_STRUCT_BINDER_MAX_VAR_COUNT 128
 #endif
 
 namespace tuptup::detail{
@@ -1575,18 +1575,18 @@ namespace tuptup{
             return false;
         }
 
-        template<template<auto>class Any, size_t N, std::size_t MaxArgCount>
+        template<template<auto>class Any, size_t N>
         static constexpr std::size_t max_initializable_arg_count() noexcept {
             if constexpr(!initializable<Any>(std::make_index_sequence<N>{}, 0)) return N-1;
-            else return max_initializable_arg_count<Any, N+1, MaxArgCount>();
+            else return max_initializable_arg_count<Any, N+1>();
         }
     public:
         static constexpr std::size_t base_class_num = []() constexpr {
-            return max_initializable_arg_count<any_base, 0, sizeof(T) * 8>();
+            return max_initializable_arg_count<any_base, 0>();
         }();
 
         static constexpr std::size_t variable_num = []() constexpr {
-           return max_initializable_arg_count<anything, 0, sizeof(T) * 8>();
+           return max_initializable_arg_count<anything, base_class_num>();
         }() - base_class_num;
 
         constexpr auto operator()(T& t) const noexcept {

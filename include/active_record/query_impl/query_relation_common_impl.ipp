@@ -72,9 +72,20 @@ namespace active_record {
     template<std::derived_from<adaptor> Adaptor>
     struct query_relation_common<BindAttrs>::sob_to_string_impl {
         const BindAttrs& bind_attrs;
+        const std::array<std::function<active_record::string()>, std::tuple_size_v<BindAttrs>> to_string_func;
 
-        active_record::string to_string(const std::vector<str_or_bind>& sobs) {
+        sob_to_string_impl(const BindAttrs& attrs) :
+            bind_attrs(attrs),
+            to_string_func([&attrs]<std::size_t... I>(std::index_sequence<I...>){
+                return std::array<std::function<active_record::string()>, std::tuple_size_v<BindAttrs>>{
+                    [&attr = std::get<I>(attrs)]{ return active_record::to_string<Adaptor>(attr); }...
+                };
+            }(std::make_index_sequence<std::tuple_size_v<BindAttrs>>{})){
+        }
+
+        active_record::string to_string(const std::vector<str_or_bind>& sobs) const {
             active_record::string buff;
+            buff.reserve(std::bit_ceil(sobs.size()*2));
 
             if constexpr (Adaptor::bindable){
                 for(const auto& sob : sobs) {
@@ -85,15 +96,10 @@ namespace active_record {
                 }
             }
             else{
-                const auto to_string_func = [&attrs = this->bind_attrs]<std::size_t... I>(std::index_sequence<I...>){
-                    return std::array<std::function<active_record::string()>, std::tuple_size_v<BindAttrs>>{
-                        [&attr = std::get<I>(attrs)]{ return active_record::to_string<Adaptor>(attr); }...
-                    };
-                }(std::make_index_sequence<std::tuple_size_v<BindAttrs>>{});
                 for(const auto& sob : sobs) {
                     visit_by_lambda(sob,
                         [&buff](const active_record::string& str) { buff += str; },
-                        [&buff, &to_string_func](const std::size_t idx) { buff += to_string_func[idx](); }
+                        [&buff, this](const std::size_t idx) { buff += this->to_string_func[idx](); }
                     );
                 }
             }

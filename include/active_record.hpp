@@ -20,3 +20,5 @@
 #include "active_record/adaptors/postgresql_adaptor.hpp"
 #endif
 //#endif
+
+using testtss = tuptup::make_index_sequence<1025>;
