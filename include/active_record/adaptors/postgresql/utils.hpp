@@ -36,13 +36,13 @@ namespace active_record::PostgreSQL::detail {
         else return h;
     }
 
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::string>
     [[nodiscard]] inline auto get_value_ptr(const Attr& attr, [[maybe_unused]]std::any&) {
         if (!attr) return static_cast<const char*>(nullptr);
         return attr.value().c_str();
     }
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires std::integral<typename Attr::value_type>
     [[nodiscard]] inline auto get_value_ptr(const Attr& attr, [[maybe_unused]]std::any& tmp) {
         if (!attr) return static_cast<const char*>(nullptr);
@@ -50,7 +50,7 @@ namespace active_record::PostgreSQL::detail {
         tmp = tmp_value;
         return reinterpret_cast<const char*>(std::any_cast<decltype(tmp_value)>(&tmp));
     }
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires std::floating_point<typename Attr::value_type>
     [[nodiscard]] inline auto get_value_ptr(const Attr& attr, [[maybe_unused]]std::any& tmp) {
         if (!attr) return static_cast<const char*>(nullptr);
@@ -65,7 +65,7 @@ namespace active_record::PostgreSQL::detail {
         }
     }
 
-    template<Attribute Attr>
+    template<is_attribute Attr>
     inline bool set_column_data(PGresult* res, int col, int field, Attr& attr) {
         if(PQgetisnull(res, col, field)){
             attr = std::nullopt;
@@ -77,7 +77,7 @@ namespace active_record::PostgreSQL::detail {
         return true;
     }
     template<typename T>
-    requires (!Attribute<T>)
+    requires (!is_attribute<T>)
     inline bool set_column_data(PGresult* res, int col, int field, T& result) {
         const char* const text_ptr = PQgetvalue(res, col, field);
         if (text_ptr == nullptr) return false;

@@ -218,7 +218,7 @@ namespace active_record {
         return transaction(func);
     }
 
-    template<Attribute Attr>
+    template<is_attribute Attr>
     inline active_record::string postgresql_adaptor::column_definition() {
         return active_record::PostgreSQL::column_definition<Attr>();
     }

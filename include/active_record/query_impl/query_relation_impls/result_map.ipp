@@ -12,8 +12,8 @@ namespace active_record {
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute_aggregator... Attrs>
     inline auto query_relation<Result, BindAttrs>::select() const& requires specialized_from<Result, std::unordered_map>{
-        query_relation<std::unordered_map<typename Result::group_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> ret{ query_operation::select };
-        ret.op_args.push_back(detail::column_full_names_to_string<typename Result::group_type, Attrs...>());
+        query_relation<std::unordered_map<typename Result::key_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> ret{ query_operation::select };
+        ret.op_args.push_back(detail::column_full_names_to_string<typename Result::key_type, Attrs...>());
         ret.tables = this->tables;
 
         ret.conditions = this->conditions;
@@ -24,8 +24,8 @@ namespace active_record {
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute_aggregator... Attrs>
     inline auto query_relation<Result, BindAttrs>::select() && requires specialized_from<Result, std::unordered_map>{
-        query_relation<std::unordered_map<typename Result::group_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> ret{ query_operation::select };
-        ret.op_args.push_back(detail::column_full_names_to_string<typename Result::group_type, Attrs...>());
+        query_relation<std::unordered_map<typename Result::key_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> ret{ query_operation::select };
+        ret.op_args.push_back(detail::column_full_names_to_string<typename Result::key_type, Attrs...>());
         ret.tables = std::move(this->tables);
 
         ret.conditions = std::move(this->conditions);
@@ -37,8 +37,8 @@ namespace active_record {
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute_aggregator Attr>
     inline auto query_relation<Result, BindAttrs>::pluck() const& requires specialized_from<Result, std::unordered_map>{
-        query_relation<std::unordered_map<typename Result::group_type, typename Attr::attribute_type>, BindAttrs> ret{ query_operation::select };
-        ret.op_args.push_back(detail::column_full_names_to_string<typename Result::group_type, Attr>());
+        query_relation<std::unordered_map<typename Result::key_type, typename Attr::attribute_type>, BindAttrs> ret{ query_operation::select };
+        ret.op_args.push_back(detail::column_full_names_to_string<typename Result::key_type, Attr>());
         ret.tables = this->tables;
 
         ret.conditions = this->conditions;
@@ -49,8 +49,8 @@ namespace active_record {
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute_aggregator Attr>
     inline auto query_relation<Result, BindAttrs>::pluck() && requires specialized_from<Result, std::unordered_map>{
-        query_relation<std::unordered_map<typename Result::group_type, typename Attr::attribute_type>, BindAttrs> ret{ query_operation::select };
-        ret.op_args.push_back(detail::column_full_names_to_string<typename Result::group_type, Attr>());
+        query_relation<std::unordered_map<typename Result::key_type, typename Attr::attribute_type>, BindAttrs> ret{ query_operation::select };
+        ret.op_args.push_back(detail::column_full_names_to_string<typename Result::key_type, Attr>());
         ret.tables = std::move(this->tables);
 
         ret.conditions = std::move(this->conditions);
@@ -163,8 +163,8 @@ namespace active_record {
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     inline auto query_relation<Result, BindAttrs>::count() && requires specialized_from<Result, std::unordered_map>{
-        query_relation<std::unordered_map<typename Result::group_type, std::size_t>, BindAttrs> ret{ query_operation::select };
-        ret.op_args.push_back(detail::column_full_names_to_string<typename Result::group_type>() + ",count(*)");
+        query_relation<std::unordered_map<typename Result::key_type, std::size_t>, BindAttrs> ret{ query_operation::select };
+        ret.op_args.push_back(detail::column_full_names_to_string<typename Result::key_type>() + ",count(*)");
         ret.tables = std::move(this->tables);
 
         ret.conditions = std::move(this->conditions);
@@ -174,8 +174,8 @@ namespace active_record {
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     inline auto query_relation<Result, BindAttrs>::count() const& requires specialized_from<Result, std::unordered_map>{
-        query_relation<std::unordered_map<typename Result::group_type, std::size_t>, BindAttrs> ret{ query_operation::select };
-        ret.op_args.push_back(detail::column_full_names_to_string<typename Result::group_type>() + ",count(*)");
+        query_relation<std::unordered_map<typename Result::key_type, std::size_t>, BindAttrs> ret{ query_operation::select };
+        ret.op_args.push_back(detail::column_full_names_to_string<typename Result::key_type>() + ",count(*)");
         ret.tables = this->tables;
 
         ret.conditions = this->conditions;

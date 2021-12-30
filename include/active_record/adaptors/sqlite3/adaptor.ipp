@@ -93,8 +93,8 @@ namespace active_record {
                     else if constexpr (specialized_from<Result, std::unordered_map>) {
                         if constexpr (specialized_from<typename Result::mapped_type, std::tuple>){
                             using result_type = tuptup::tuple_cat_t<
-                                std::tuple<typename query_relation<Result, BindAttrs>::group_type>,
-                                std::conditional_t<specialized_from<typename query_relation<Result, BindAttrs>::mapped_type, std::tuple>, typename query_relation<Result, BindAttrs>::mapped_type, std::tuple<>>
+                                std::tuple<typename Result::key_type>,
+                                std::conditional_t<specialized_from<typename Result::mapped_type, std::tuple>, typename Result::mapped_type, std::tuple<>>
                             >;
                             auto result_column = active_record::sqlite3::detail::extract_column_data<result_type>(stmt);
                             result.insert(std::make_pair(
@@ -103,7 +103,7 @@ namespace active_record {
                             ));
                         }
                         else{
-                            using result_type = std::tuple<typename query_relation<Result, BindAttrs>::group_type, typename query_relation<Result, BindAttrs>::mapped_type>;
+                            using result_type = std::tuple<typename Result::key_type, typename Result::mapped_type>;
                             auto result_column = active_record::sqlite3::detail::extract_column_data<result_type>(stmt);
                             result.insert(std::make_pair(std::move(std::get<0>(result_column)), std::move(std::get<1>(result_column))));
                         }
