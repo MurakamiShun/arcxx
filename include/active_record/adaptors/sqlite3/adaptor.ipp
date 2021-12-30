@@ -57,6 +57,36 @@ namespace active_record {
         return concat_strings("?", std::to_string(idx + 1));
     }
 
+    namespace detail{
+        template<typename Result>
+        inline void set_result(Result& result, sqlite3_stmt* stmt){
+            result = active_record::sqlite3::detail::extract_column_data<Result>(stmt);
+        }
+        template<specialized_from<std::vector> Result>
+        inline void set_result(Result& result, sqlite3_stmt* stmt){
+            result.push_back(active_record::sqlite3::detail::extract_column_data<typename Result::value_type>(stmt));
+        }
+        template<specialized_from<std::unordered_map> Result>
+        inline void set_result(Result& result, sqlite3_stmt* stmt){
+            if constexpr (specialized_from<typename Result::mapped_type, std::tuple>){
+                using result_type = tuptup::tuple_cat_t<
+                    std::tuple<typename Result::key_type>,
+                    std::conditional_t<specialized_from<typename Result::mapped_type, std::tuple>, typename Result::mapped_type, std::tuple<>>
+                >;
+                auto result_column = active_record::sqlite3::detail::extract_column_data<result_type>(stmt);
+                result.insert(std::make_pair(
+                    std::get<0>(result_column),
+                    tuptup::tuple_slice<tuptup::make_index_range<1, std::tuple_size_v<result_type>>>(result_column)
+                ));
+            }
+            else{
+                using result_type = std::tuple<typename Result::key_type, typename Result::mapped_type>;
+                auto result_column = active_record::sqlite3::detail::extract_column_data<result_type>(stmt);
+                result.insert(std::make_pair(std::move(std::get<0>(result_column)), std::move(std::get<1>(result_column))));
+            }
+        }
+    }
+
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     inline std::pair<std::optional<active_record::string>, Result> sqlite3_adaptor::exec(const query_relation<Result, BindAttrs>& query){
         Result result;
@@ -87,30 +117,7 @@ namespace active_record {
             while(true){
                 const auto status = sqlite3_step(stmt);
                 if(status == SQLITE_ROW){
-                    if constexpr (specialized_from<Result, std::vector>) {
-                        result.push_back(active_record::sqlite3::detail::extract_column_data<typename Result::value_type>(stmt));
-                    }
-                    else if constexpr (specialized_from<Result, std::unordered_map>) {
-                        if constexpr (specialized_from<typename Result::mapped_type, std::tuple>){
-                            using result_type = tuptup::tuple_cat_t<
-                                std::tuple<typename Result::key_type>,
-                                std::conditional_t<specialized_from<typename Result::mapped_type, std::tuple>, typename Result::mapped_type, std::tuple<>>
-                            >;
-                            auto result_column = active_record::sqlite3::detail::extract_column_data<result_type>(stmt);
-                            result.insert(std::make_pair(
-                                std::get<0>(result_column),
-                                tuptup::tuple_slice<tuptup::make_index_range<1, std::tuple_size_v<result_type>>>(result_column)
-                            ));
-                        }
-                        else{
-                            using result_type = std::tuple<typename Result::key_type, typename Result::mapped_type>;
-                            auto result_column = active_record::sqlite3::detail::extract_column_data<result_type>(stmt);
-                            result.insert(std::make_pair(std::move(std::get<0>(result_column)), std::move(std::get<1>(result_column))));
-                        }
-                    }
-                    else {
-                        result = active_record::sqlite3::detail::extract_column_data<Result>(stmt);
-                    }
+                    detail::set_result(result, stmt);
                 }
                 else if (status == SQLITE_DONE) break;
                 else return status;
@@ -152,11 +159,6 @@ namespace active_record {
 
         result_code = sqlite3_finalize(stmt);
         return error_msg = get_error_msg(result_code);
-    }
-
-    template<typename Result, specialized_from<std::tuple> BindAttrs>
-    inline auto sqlite3_adaptor::exec(const query_relation<Result, BindAttrs>&& query){
-        return exec(query);
     }
 
     template<is_model Mod>

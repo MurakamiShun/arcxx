@@ -57,9 +57,6 @@ namespace active_record {
         template<specialized_from<std::tuple> BindAttrs>
         std::optional<active_record::string> exec(const query_relation<bool, BindAttrs>& query);
 
-        template<typename Result, specialized_from<std::tuple> BindAttrs>
-        auto exec(const query_relation<Result, BindAttrs>&& query);
-
         template<is_model Mod>
         std::optional<active_record::string> create_table(bool abort_if_exist = true);
 

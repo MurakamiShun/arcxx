@@ -67,9 +67,6 @@ namespace active_record {
         template<is_model Mod>
         std::optional<active_record::string> drop_table();
 
-        template<typename T, specialized_from<std::tuple> BindAttrs>
-        auto exec(const query_relation<T, BindAttrs>&& query);
-
         template<specialized_from<std::tuple> BindAttrs>
         auto exec(const query_relation<bool, BindAttrs>& query);
 
