@@ -43,7 +43,7 @@ namespace active_record {
     }
 
     template<typename Derived>
-    inline query_relation<std::vector<Derived>, std::tuple<>> model<Derived>::all() {
+    inline auto model<Derived>::all() {
         query_relation<std::vector<Derived>, std::tuple<>> ret{ query_operation::select };
         ret.op_args.push_back(detail::model_column_full_names_to_string<Derived>());
         ret.tables.push_back(concat_strings("\"", Derived::table_name, "\""));
@@ -52,7 +52,7 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<Attribute... Attrs>
+    template<is_attribute... Attrs>
     inline query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> model<Derived>::select() {
         query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> ret{ query_operation::select };
         ret.op_args.push_back(detail::column_full_names_to_string<Attrs...>());
@@ -69,7 +69,7 @@ namespace active_record {
         return ret;
     }
     template<typename Derived>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     inline query_relation<std::vector<Attr>, std::tuple<>> model<Derived>::pluck() {
         query_relation<std::vector<Attr>, std::tuple<>> ret{ query_operation::select };
         ret.op_args.push_back(detail::column_full_names_to_string<Attr>());
@@ -85,7 +85,7 @@ namespace active_record {
         return ret;
     }
     template<typename Derived>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     inline query_relation<bool, std::tuple<Attr>> model<Derived>::destroy(const Attr&& attr){
         return destroy(Attr::cmp == attr);
     }
@@ -101,7 +101,7 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     inline query_relation<std::vector<Derived>, std::tuple<Attr>> model<Derived>::where(const Attr& attr) {
         return where(Attr::cmp == attr);
     }
@@ -119,7 +119,7 @@ namespace active_record {
     }
 
     template<typename Derived>
-    inline query_relation<std::vector<Derived>, std::tuple<>> model<Derived>::limit(const std::size_t lim) {
+    inline auto model<Derived>::limit(const std::size_t lim) {
         query_relation<std::vector<Derived>, std::tuple<>> ret{ query_operation::select };
         ret.op_args.push_back(detail::model_column_full_names_to_string<Derived>());
         ret.tables.push_back(concat_strings("\"", Derived::table_name, "\""));
@@ -129,8 +129,8 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<Attribute Attr>
-    inline query_relation<std::vector<Derived>, std::tuple<>> model<Derived>::order_by(const active_record::order order) {
+    template<is_attribute Attr>
+    inline auto model<Derived>::order_by(const active_record::order order) {
         query_relation<std::vector<Derived>, std::tuple<>> ret{ query_operation::select };
         ret.op_args.push_back(detail::model_column_full_names_to_string<Derived>());
         ret.tables.push_back(concat_strings("\"", Derived::table_name, "\""));
@@ -146,16 +146,16 @@ namespace active_record {
     namespace detail {
         template<is_model Referis_model>
         struct get_reference_attr{
-            template<Attribute Attr>
+            template<is_attribute Attr>
             requires std::same_as<typename Attr::foreign_key_type::model_type, Referis_model>
             auto operator()([[maybe_unused]]std::tuple<Attr&>) {
                 return Attr{};
             }
-            template<Attribute Attr>
+            template<is_attribute Attr>
             auto operator()([[maybe_unused]]std::tuple<Attr&>) {
                 return std::false_type{};
             }
-            template<Attribute Head, Attribute... Tail>
+            template<is_attribute Head, is_attribute... Tail>
             auto operator()([[maybe_unused]]std::tuple<Head&, Tail&...>) {
                 using head_type = std::invoke_result_t<get_reference_attr<Referis_model>, std::tuple<Head&>>;
                 if constexpr(std::is_same_v<head_type, std::false_type>) {
@@ -172,7 +172,7 @@ namespace active_record {
     template<typename Derived>
     template<typename Referis_model>
     requires std::derived_from<Referis_model, model<Referis_model>>
-    inline query_relation<std::vector<Derived>, std::tuple<>> model<Derived>::join() {
+    inline auto model<Derived>::join() {
         query_relation<std::vector<Derived>, std::tuple<>> ret{ query_operation::select };
 
         using ReferenceAttribute = std::invoke_result_t<detail::get_reference_attr<Referis_model>, decltype(Derived{}.attributes_as_tuple())>;
@@ -193,7 +193,7 @@ namespace active_record {
     template<typename Derived>
     template<typename Referis_model>
     requires std::derived_from<Referis_model, model<Referis_model>>
-    inline query_relation<std::vector<Derived>, std::tuple<>> model<Derived>::left_join() {
+    inline auto model<Derived>::left_join() {
         query_relation<std::vector<Derived>, std::tuple<>> ret{ query_operation::select };
 
         using ReferenceAttribute = std::invoke_result_t<detail::get_reference_attr<Referis_model>, decltype(Derived{}.attributes_as_tuple())>;
@@ -212,7 +212,7 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     inline query_relation<std::unordered_map<Attr, std::tuple<>>, std::tuple<>> model<Derived>::group_by() {
         query_relation<std::unordered_map<Attr, std::tuple<>>, std::tuple<>> ret{ query_operation::select };
         ret.op_args.push_back(detail::column_full_names_to_string<Attr>());
@@ -233,7 +233,7 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires requires{ typename Attr::sum; }
     inline query_relation<typename Attr::sum::attribute_type, std::tuple<>> model<Derived>::sum(){
         query_relation<typename Attr::sum::attribute_type, std::tuple<>> ret{ query_operation::select };
@@ -244,7 +244,7 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires requires{ typename Attr::avg; }
     inline query_relation<typename Attr::avg::attribute_type, std::tuple<>> model<Derived>::avg(){
         query_relation<typename Attr::avg::attribute_type, std::tuple<>> ret{ query_operation::select };
@@ -255,7 +255,7 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires requires{ typename Attr::max; }
     inline query_relation<typename Attr::max::attribute_type, std::tuple<>> model<Derived>::max(){
         query_relation<typename Attr::max::attribute_type, std::tuple<>> ret{ query_operation::select };
@@ -266,7 +266,7 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires requires{ typename Attr::min; }
     inline query_relation<typename Attr::min::attribute_type, std::tuple<>> model<Derived>::min(){
         query_relation<typename Attr::min::attribute_type, std::tuple<>> ret{ query_operation::select };

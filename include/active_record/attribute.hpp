@@ -15,16 +15,16 @@ namespace active_record {
     class attribute_common;
 
     template<typename T>
-    concept Attribute = requires {
+    concept is_attribute = requires {
         std::derived_from<T, attribute_common<typename T::model_type, typename T::attribute_type, typename T::value_type>>;
         requires T::has_column_name();
     };
     template<typename T>
-    struct is_attribute{ static constexpr bool value = Attribute<T>; };
+    struct is_attribute_type{ static constexpr bool value = is_attribute<T>; };
 
-    template<Attribute Attr>
-    constexpr std::size_t attribute_size([[maybe_unused]] const Attr&){ return sizeof(typename Attr::value_type); }
-    template<Attribute Attr>
+    template<is_attribute Attr>
+    constexpr std::size_t attribute_size([[maybe_unused]] const Attr&) noexcept { return sizeof(typename Attr::value_type); }
+    template<is_attribute Attr>
     requires std::invocable<typename Attr::value_type::size>
     constexpr std::size_t attribute_size(const Attr& attr){ return attr ? attr.value().size() : 0; }
 
@@ -34,16 +34,16 @@ namespace active_record {
     template<typename T>
     concept is_attribute_aggregator = std::derived_from<T, attribute_aggregator<typename T::model_type, typename T::attribute_type, typename T::aggregator_type>>;
 
-    template<std::derived_from<adaptor> Adaptor, Attribute Attr>
+    template<std::derived_from<adaptor> Adaptor, is_attribute Attr>
     requires false
     [[nodiscard]] active_record::string to_string(const Attr& attr);
 
-    template<std::derived_from<adaptor> Adaptor, Attribute Attr>
+    template<std::derived_from<adaptor> Adaptor, is_attribute Attr>
     requires false
     void from_string(Attr& attr, const active_record::string_view str);
 }
 
-template<active_record::Attribute Attr>
+template<active_record::is_attribute Attr>
 struct std::hash<Attr> {
     std::hash<std::optional<typename Attr::value_type>> inner_hash;
     std::size_t operator()(const Attr& key) const {

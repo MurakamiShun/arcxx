@@ -89,7 +89,7 @@ namespace active_record {
         template<std::convertible_to<std::function<active_record::transaction(postgresql_adaptor&)>> F>
         std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F&& func);
 
-        template<Attribute Attr>
+        template<is_attribute Attr>
         static active_record::string column_definition();
     };
 

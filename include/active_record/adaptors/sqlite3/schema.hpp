@@ -9,7 +9,7 @@
 
 namespace active_record::sqlite3 {
     namespace detail {
-        template<Attribute T>
+        template<is_attribute T>
         [[nodiscard]] inline active_record::string reference_definition(){
             if constexpr(requires { typename T::foreign_key_type; }){
                 return concat_strings(
@@ -22,7 +22,7 @@ namespace active_record::sqlite3 {
         }
     }
 
-    template<Attribute T>
+    template<is_attribute T>
     requires std::same_as<typename T::value_type, active_record::string>
     [[nodiscard]] inline active_record::string column_definition() {
         return concat_strings(
@@ -47,7 +47,7 @@ namespace active_record::sqlite3 {
         );
     }
 
-    template<Attribute T>
+    template<is_attribute T>
     requires std::integral<typename T::value_type>
     [[nodiscard]] inline active_record::string column_definition() {
         return concat_strings(
@@ -65,7 +65,7 @@ namespace active_record::sqlite3 {
         );
     }
 
-    template<Attribute T>
+    template<is_attribute T>
     requires std::floating_point<typename T::value_type>
     [[nodiscard]] inline active_record::string column_definition() {
         return concat_strings(
@@ -83,7 +83,7 @@ namespace active_record::sqlite3 {
         );
     }
 
-    template<Attribute T>
+    template<is_attribute T>
     requires std::same_as<typename T::value_type, active_record::datetime>
     [[nodiscard]] inline active_record::string column_definition() {
         return concat_strings(

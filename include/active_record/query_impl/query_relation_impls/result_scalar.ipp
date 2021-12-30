@@ -10,12 +10,12 @@ namespace active_record {
      * return type == Scalar
      */
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) && {
         return std::move(*this).where(Attr::cmp == attr);
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) const& {
         return this->where(Attr::cmp == attr);
     }

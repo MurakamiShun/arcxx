@@ -29,6 +29,6 @@ namespace active_record {
     struct query_condition;
 
     template<typename Result, typename... Args>
-    requires ((Attribute<Args> || std::convertible_to<Args, active_record::string_view>) && ...)
+    requires ((is_attribute<Args> || std::convertible_to<Args, active_record::string_view>) && ...)
     auto raw_query(Args&&... args);
 }

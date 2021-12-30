@@ -7,7 +7,7 @@
  */
 namespace active_record {
     /*
-     * return type == std::unordered_map<Attribute, specialized_from<std::tuple> or Attribute>
+     * return type == std::unordered_map<is_attribute, specialized_from<std::tuple> or Attribute>
      */
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute_aggregator... Attrs>
@@ -60,12 +60,12 @@ namespace active_record {
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) && requires specialized_from<Result, std::unordered_map>{
         return std::move(*this).where(Attr::cmp == attr);
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) const& requires specialized_from<Result, std::unordered_map>{
         return this->where(Attr::cmp == attr);
     }
@@ -134,7 +134,7 @@ namespace active_record {
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     query_relation<Result, BindAttrs> query_relation<Result, BindAttrs>::order_by(const active_record::order order) && requires specialized_from<Result, std::unordered_map>{
         this->options.push_back(concat_strings(
             " ORDER BY ", detail::column_full_names_to_string<Attr>(),
@@ -144,7 +144,7 @@ namespace active_record {
         return *this;
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     query_relation<Result, BindAttrs> query_relation<Result, BindAttrs>::order_by(const active_record::order order) const& requires specialized_from<Result, std::unordered_map>{
         query_relation<Result, BindAttrs> ret{ this->operation };
         ret.op_args = this->op_args;
@@ -185,56 +185,56 @@ namespace active_record {
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires requires{ typename Attr::sum; }
     query_relation<std::unordered_map<typename query_relation<Result, BindAttrs>::group_type, typename Attr::sum::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::sum() && requires specialized_from<Result, std::unordered_map>{
         return std::move(*this).template pluck<typename Attr::sum>();
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires requires{ typename Attr::sum; }
     query_relation<std::unordered_map<typename query_relation<Result, BindAttrs>::group_type, typename Attr::sum::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::sum() const& requires specialized_from<Result, std::unordered_map>{
         return this->pluck<typename Attr::sum>();
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires requires{ typename Attr::avg; }
     query_relation<std::unordered_map<typename query_relation<Result, BindAttrs>::group_type, typename Attr::avg::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::avg() && requires specialized_from<Result, std::unordered_map>{
         return std::move(*this).template pluck<typename Attr::avg>();
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires requires{ typename Attr::avg; }
     query_relation<std::unordered_map<typename query_relation<Result, BindAttrs>::group_type, typename Attr::avg::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::avg() const& requires specialized_from<Result, std::unordered_map>{
         return this->pluck<typename Attr::avg>();
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires requires{ typename Attr::max; }
     query_relation<std::unordered_map<typename query_relation<Result, BindAttrs>::group_type, typename Attr::max::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::max() && requires specialized_from<Result, std::unordered_map>{
         return std::move(*this).template pluck<typename Attr::max>();
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires requires{ typename Attr::max; }
     query_relation<std::unordered_map<typename query_relation<Result, BindAttrs>::group_type, typename Attr::max::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::max() const& requires specialized_from<Result, std::unordered_map>{
         return this->pluck<typename Attr::max>();
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires requires{ typename Attr::min; }
     query_relation<std::unordered_map<typename query_relation<Result, BindAttrs>::group_type, typename Attr::min::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::min() && requires specialized_from<Result, std::unordered_map>{
         return std::move(*this).template pluck<typename Attr::min>();
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires requires{ typename Attr::min; }
     query_relation<std::unordered_map<typename query_relation<Result, BindAttrs>::group_type, typename Attr::min::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::min() const& requires specialized_from<Result, std::unordered_map>{
         return this->pluck<typename Attr::min>();

@@ -202,7 +202,7 @@ namespace active_record {
         return transaction(func);
     }
 
-    template<Attribute Attr>
+    template<is_attribute Attr>
     inline active_record::string sqlite3_adaptor::column_definition() {
         return active_record::sqlite3::column_definition<Attr>();
     }

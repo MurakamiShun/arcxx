@@ -10,12 +10,12 @@ namespace active_record {
     };
 
     // integer
-    template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
+    template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::integral<typename Attr::value_type>
     [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
         return static_cast<bool>(attr) ? std::to_string(attr.value()) : "null";
     }
-    template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
+    template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::integral<typename Attr::value_type>
     inline void from_string(Attr& attr, const active_record::string_view str) {
         if(str != "null" && str != "NULL"){
@@ -26,13 +26,13 @@ namespace active_record {
     }
 
     // string
-    template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
+    template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::string>
     [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
         // require sanitize
         return static_cast<bool>(attr) ? concat_strings("\'", active_record::sanitize(attr.value()), "\'") : "null";
     }
-    template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
+    template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::string>
     inline void from_string(Attr& attr, const active_record::string_view str) {
         if(str != "null" && str != "NULL"){
@@ -41,12 +41,12 @@ namespace active_record {
     }
 
     // decimal
-    template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
+    template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::floating_point<typename Attr::value_type>
     [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
         return static_cast<bool>(attr) ? std::to_string(attr.value()) : "null";
     }
-    template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
+    template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::floating_point<typename Attr::value_type>
     inline void from_string(Attr& attr, const active_record::string_view str){
         if(str != "null" && str != "NULL"){
@@ -57,14 +57,14 @@ namespace active_record {
     }
 
     // datetime
-    template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
+    template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::datetime>
     [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
         // ISO 8601 yyyyMMddTHHmmss+09:00
         //return static_cast<bool>(attr) ? std::format("{%F}T{%T}{%z}", attr.value()) : "null";
         return active_record::string{ "" };
     }
-    template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
+    template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::datetime>
     inline void from_string(Attr& attr, const active_record::string_view str){
         active_record::datetime dt;
@@ -73,12 +73,12 @@ namespace active_record {
     }
 
     // boolean
-    template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
+    template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::same_as<typename Attr::value_type, bool>
     [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
         return static_cast<bool>(attr) ? (attr.value() ? "true" : "false") : "null";
     }
-    template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
+    template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::same_as<typename Attr::value_type, bool>
     inline void from_string(Attr& attr, const active_record::string_view str){
         if(str != "null" && str != "NULL"){
@@ -87,12 +87,12 @@ namespace active_record {
     }
 
     // bianry
-    template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
+    template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
     [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
         return static_cast<bool>(attr) ? "" : "null";
     }
-    template<std::same_as<common_adaptor> Adaptor, Attribute Attr>
+    template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
     inline void from_string(Attr& attr, const active_record::string_view str){
     }

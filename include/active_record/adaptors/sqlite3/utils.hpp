@@ -9,7 +9,7 @@
 #include "active_record/query_impl/query_relation.hpp"
 
 namespace active_record::sqlite3::detail {
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::string>
     inline bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, Attr& attr){
         const auto type = sqlite3_column_type(stmt, static_cast<int>(idx));
@@ -26,7 +26,7 @@ namespace active_record::sqlite3::detail {
             return false;
         }
     }
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires std::integral<typename Attr::value_type>
     inline bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, Attr& attr){
         const auto type = sqlite3_column_type(stmt, static_cast<int>(idx));
@@ -47,7 +47,7 @@ namespace active_record::sqlite3::detail {
             return false;
         }
     }
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires std::floating_point<typename Attr::value_type>
     inline bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, Attr& attr){
         const auto type = sqlite3_column_type(stmt, static_cast<int>(idx));
@@ -63,7 +63,7 @@ namespace active_record::sqlite3::detail {
             return false;
         }
     }
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
     inline bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, Attr& attr){
         const auto type = sqlite3_column_type(stmt, static_cast<int>(idx));
@@ -84,7 +84,7 @@ namespace active_record::sqlite3::detail {
         }
     }
     template<typename T>
-    requires (!Attribute<T>)
+    requires (!is_attribute<T>)
     inline bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, T& attr){
         const auto type = sqlite3_column_type(stmt, static_cast<int>(idx));
         if constexpr(std::is_floating_point_v<T>){
@@ -136,7 +136,7 @@ namespace active_record::sqlite3::detail {
      * variable binders
      */
 
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires std::integral<typename Attr::value_type>
     inline int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
         if(!attr) {
@@ -152,7 +152,7 @@ namespace active_record::sqlite3::detail {
         }
     }
 
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires std::floating_point<typename Attr::value_type>
     inline int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
         if(!attr) {
@@ -163,7 +163,7 @@ namespace active_record::sqlite3::detail {
         }
     }
 
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::string>
     inline int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
         if(!attr) {
@@ -174,7 +174,7 @@ namespace active_record::sqlite3::detail {
             return sqlite3_bind_text(stmt, static_cast<int>(index + 1), attr.value().c_str(), static_cast<int>(attr.value().length()), SQLITE_STATIC);
         }
     }
-    template<Attribute Attr>
+    template<is_attribute Attr>
     requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
     inline int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
         if(!attr) {
