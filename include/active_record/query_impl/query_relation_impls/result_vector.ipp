@@ -11,7 +11,7 @@ namespace active_record {
      */
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute... Attrs>
-    query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> query_relation<Result, BindAttrs>::select() const& requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::select() const& requires specialized_from<Result, std::vector>{
         query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> ret{ query_operation::select };
 
         ret.op_args.push_back(detail::column_full_names_to_string<Attrs...>());
@@ -24,7 +24,7 @@ namespace active_record {
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute... Attrs>
-    query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> query_relation<Result, BindAttrs>::select() && requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::select() && requires specialized_from<Result, std::vector>{
         query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> ret{ query_operation::select };
 
         ret.op_args.push_back(detail::column_full_names_to_string<Attrs...>());
@@ -38,7 +38,7 @@ namespace active_record {
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute_aggregator... Attrs>
-    query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> query_relation<Result, BindAttrs>::select() const& requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::select() const& requires specialized_from<Result, std::vector>{
         query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> ret{ query_operation::select };
 
         ret.op_args.push_back(detail::column_full_names_to_string<Attrs...>());
@@ -51,7 +51,7 @@ namespace active_record {
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute_aggregator... Attrs>
-    query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> query_relation<Result, BindAttrs>::select() && requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::select() && requires specialized_from<Result, std::vector>{
         query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> ret{ query_operation::select };
 
         ret.op_args.push_back(detail::column_full_names_to_string<Attrs...>());
@@ -65,7 +65,7 @@ namespace active_record {
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute Attr>
-    query_relation<std::vector<Attr>, BindAttrs> query_relation<Result, BindAttrs>::pluck() const& requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::pluck() const& requires specialized_from<Result, std::vector>{
         query_relation<std::vector<Attr>, BindAttrs> ret{ query_operation::select };
 
         ret.op_args.push_back(detail::column_full_names_to_string<Attr>());
@@ -78,7 +78,7 @@ namespace active_record {
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute Attr>
-    query_relation<std::vector<Attr>, BindAttrs> query_relation<Result, BindAttrs>::pluck() && requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::pluck() && requires specialized_from<Result, std::vector>{
         query_relation<std::vector<Attr>, BindAttrs> ret{ query_operation::select };
 
         ret.op_args.push_back(detail::column_full_names_to_string<Attr>());
@@ -91,7 +91,7 @@ namespace active_record {
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute_aggregator Attr>
-    query_relation<typename Attr::attribute_type, BindAttrs> query_relation<Result, BindAttrs>::pluck() && requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::pluck() && requires specialized_from<Result, std::vector>{
         query_relation<typename Attr::attribute_type, BindAttrs> ret{ query_operation::select };
 
         ret.op_args.push_back(detail::column_full_names_to_string<Attr>());
@@ -104,7 +104,7 @@ namespace active_record {
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute_aggregator Attr>
-    query_relation<typename Attr::attribute_type, BindAttrs> query_relation<Result, BindAttrs>::pluck() const& requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::pluck() const& requires specialized_from<Result, std::vector>{
         query_relation<typename Attr::attribute_type, BindAttrs> ret{ query_operation::select };
 
         ret.op_args.push_back(detail::column_full_names_to_string<Attr>());
@@ -148,7 +148,7 @@ namespace active_record {
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute... Attrs>
     requires is_model<typename Result::value_type>
-    query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> query_relation<Result, BindAttrs>::update(const Attrs&... attrs) && requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::update(const Attrs&... attrs) && requires specialized_from<Result, std::vector>{
         query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> ret{ query_operation::update };
 
         ret.tables.push_back(concat_strings("\"", Result::value_type::table_name, "\""));
@@ -161,7 +161,7 @@ namespace active_record {
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute... Attrs>
     requires is_model<typename Result::value_type>
-    query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> query_relation<Result, BindAttrs>::update(const Attrs&... attrs) const& requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::update(const Attrs&... attrs) const& requires specialized_from<Result, std::vector>{
         query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> ret{ query_operation::update };
 
         ret.tables.push_back(concat_strings("\"", Result::value_type::table_name, "\""));
@@ -174,18 +174,18 @@ namespace active_record {
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute Attr>
-    query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) && requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::where(const Attr& attr) && requires specialized_from<Result, std::vector>{
         return std::move(*this).where(Attr::cmp == attr);
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute Attr>
-    query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) const& requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::where(const Attr& attr) const& requires specialized_from<Result, std::vector>{
         return this->where(Attr::cmp == attr);
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<specialized_from<std::tuple> SrcBindAttrs>
-    query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) && requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) && requires specialized_from<Result, std::vector>{
         query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
         ret.op_args = std::move(this->op_args);
         ret.tables = std::move(this->tables);
@@ -209,7 +209,7 @@ namespace active_record {
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<specialized_from<std::tuple> SrcBindAttrs>
-    query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) const& requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) const& requires specialized_from<Result, std::vector>{
         query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
         ret.op_args = this->op_args;
         ret.tables = this->tables;
@@ -230,12 +230,12 @@ namespace active_record {
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    query_relation<Result, BindAttrs>& query_relation<Result, BindAttrs>::limit(const std::size_t lim) && requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::limit(const std::size_t lim) && requires specialized_from<Result, std::vector>{
         this->options.push_back(concat_strings(" LIMIT ", std::to_string(lim)));
         return *this;
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    query_relation<Result, BindAttrs> query_relation<Result, BindAttrs>::limit(const std::size_t lim) const& requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::limit(const std::size_t lim) const& requires specialized_from<Result, std::vector>{
         query_relation<Result, BindAttrs> ret{ this->operation };
 
         ret.op_args = this->op_args;
@@ -250,7 +250,7 @@ namespace active_record {
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute Attr>
-    query_relation<Result, BindAttrs>& query_relation<Result, BindAttrs>::order_by(const active_record::order order) && requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::order_by(const active_record::order order) && requires specialized_from<Result, std::vector>{
         this->options.push_back(concat_strings(
             " ORDER BY ", detail::column_full_names_to_string<Attr>(),
             order == active_record::order::asc ? " ASC" : " DESC"
@@ -260,7 +260,7 @@ namespace active_record {
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute Attr>
-    query_relation<Result, BindAttrs> query_relation<Result, BindAttrs>::order_by(const active_record::order order) const& requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::order_by(const active_record::order order) const& requires specialized_from<Result, std::vector>{
         query_relation<Result, BindAttrs> ret{ this->operation };
 
         ret.op_args = this->op_args;
@@ -278,7 +278,7 @@ namespace active_record {
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    query_relation<std::size_t, BindAttrs> query_relation<Result, BindAttrs>::count() && requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::count() && requires specialized_from<Result, std::vector>{
         query_relation<std::size_t, BindAttrs> ret{ query_operation::select };
 
         ret.op_args.push_back("count(*)");
@@ -290,7 +290,7 @@ namespace active_record {
         return ret;
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    query_relation<std::size_t, BindAttrs> query_relation<Result, BindAttrs>::count() const& requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::count() const& requires specialized_from<Result, std::vector>{
         query_relation<std::size_t, BindAttrs> ret{ query_operation::select };
 
         ret.op_args.push_back("count(*)");
@@ -333,7 +333,7 @@ namespace active_record {
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute Attr>
     requires requires{ typename Attr::sum; }
-    query_relation<typename Attr::sum::attribute_type, BindAttrs> query_relation<Result, BindAttrs>::sum() && requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::sum() && requires specialized_from<Result, std::vector>{
         return detail::vectored_aggregate_query<Result, BindAttrs, typename Attr::sum>(
             std::move(*this)
         );
@@ -341,7 +341,7 @@ namespace active_record {
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute Attr>
     requires requires{ typename Attr::sum; }
-    query_relation<typename Attr::sum::attribute_type, BindAttrs> query_relation<Result, BindAttrs>::sum() const& requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::sum() const& requires specialized_from<Result, std::vector>{
         return detail::vectored_aggregate_query<Result, BindAttrs, typename Attr::sum>(
             *this
         );
@@ -350,7 +350,7 @@ namespace active_record {
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute Attr>
     requires requires{ typename Attr::avg; }
-    query_relation<typename Attr::avg::attribute_type, BindAttrs> query_relation<Result, BindAttrs>::avg() && requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::avg() && requires specialized_from<Result, std::vector>{
         return detail::vectored_aggregate_query<Result, BindAttrs, typename Attr::avg>(
             std::move(*this)
         );
@@ -358,7 +358,7 @@ namespace active_record {
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute Attr>
     requires requires{ typename Attr::avg; }
-    query_relation<typename Attr::avg::attribute_type, BindAttrs> query_relation<Result, BindAttrs>::avg() const& requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::avg() const& requires specialized_from<Result, std::vector>{
         return detail::vectored_aggregate_query<Result, BindAttrs, typename Attr::avg>(
             *this
         );
@@ -367,7 +367,7 @@ namespace active_record {
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute Attr>
     requires requires{ typename Attr::max; }
-    query_relation<typename Attr::max::attribute_type, BindAttrs> query_relation<Result, BindAttrs>::max() && requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::max() && requires specialized_from<Result, std::vector>{
         return detail::vectored_aggregate_query<Result, BindAttrs, typename Attr::max>(
             std::move(*this)
         );
@@ -375,7 +375,7 @@ namespace active_record {
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute Attr>
     requires requires{ typename Attr::max; }
-    query_relation<typename Attr::max::attribute_type, BindAttrs> query_relation<Result, BindAttrs>::max() const& requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::max() const& requires specialized_from<Result, std::vector>{
         return detail::vectored_aggregate_query<Result, BindAttrs, typename Attr::max>(
             *this
         );
@@ -384,7 +384,7 @@ namespace active_record {
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute Attr>
     requires requires{ typename Attr::min; }
-    query_relation<typename Attr::min::attribute_type, BindAttrs> query_relation<Result, BindAttrs>::min() && requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::min() && requires specialized_from<Result, std::vector>{
         return detail::vectored_aggregate_query<Result, BindAttrs, typename Attr::min>(
             std::move(*this)
         );
@@ -392,7 +392,7 @@ namespace active_record {
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute Attr>
     requires requires{ typename Attr::min; }
-    query_relation<typename Attr::min::attribute_type, BindAttrs> query_relation<Result, BindAttrs>::min() const& requires specialized_from<Result, std::vector>{
+    inline auto query_relation<Result, BindAttrs>::min() const& requires specialized_from<Result, std::vector>{
         return detail::vectored_aggregate_query<Result, BindAttrs, typename Attr::min>(
             *this
         );

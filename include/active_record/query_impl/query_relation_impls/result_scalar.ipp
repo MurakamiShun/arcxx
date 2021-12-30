@@ -11,18 +11,18 @@ namespace active_record {
      */
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute Attr>
-    query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) && {
+    inline auto query_relation<Result, BindAttrs>::where(const Attr& attr) && {
         return std::move(*this).where(Attr::cmp == attr);
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<is_attribute Attr>
-    query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> query_relation<Result, BindAttrs>::where(const Attr& attr) const& {
+    inline auto query_relation<Result, BindAttrs>::where(const Attr& attr) const& {
         return this->where(Attr::cmp == attr);
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<specialized_from<std::tuple> SrcBindAttrs>
-    query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) &&{
+    inline auto query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) &&{
         query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
 
         ret.op_args = std::move(this->op_args);
@@ -46,7 +46,7 @@ namespace active_record {
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     template<specialized_from<std::tuple> SrcBindAttrs>
-    query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) const&{
+    inline auto query_relation<Result, BindAttrs>::where(query_condition<SrcBindAttrs>&& cond) const&{
         query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> ret{ this->operation };
 
         ret.op_args = this->op_args;

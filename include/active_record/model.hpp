@@ -41,26 +41,26 @@ namespace active_record {
         [[nodiscard]] static auto all();
 
         template<is_attribute... Attrs>
-        [[nodiscard]] static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> select();
+        [[nodiscard]] static auto select();
 
         template<is_attribute_aggregator... Aggregators>
-        [[nodiscard]] static query_relation<std::tuple<typename Aggregators::attribute_type...>, std::tuple<>> select();
+        [[nodiscard]] static auto select();
 
         template<is_attribute Attr>
-        [[nodiscard]] static query_relation<std::vector<Attr>, std::tuple<>> pluck();
+        [[nodiscard]] static auto pluck();
         template<is_attribute_aggregator Aggregator>
-        [[nodiscard]] static query_relation<typename Aggregator::attribute_type, std::tuple<>> pluck();
+        [[nodiscard]] static auto pluck();
 
         // delete is identifier word
         template<is_attribute Attr>
-        [[nodiscard]] static query_relation<bool, std::tuple<Attr>> destroy(const Attr&&);
+        [[nodiscard]] static auto destroy(const Attr&&);
         template<specialized_from<std::tuple> SrcBindAttrs>
-        [[nodiscard]] static query_relation<bool, SrcBindAttrs> destroy(query_condition<SrcBindAttrs>&&);
+        [[nodiscard]] static auto destroy(query_condition<SrcBindAttrs>&&);
 
         template<is_attribute Attr>
-        [[nodiscard]] static query_relation<std::vector<Derived>, std::tuple<Attr>> where(const Attr&);
+        [[nodiscard]] static auto where(const Attr&);
         template<specialized_from<std::tuple> SrcBindAttrs>
-        [[nodiscard]] static query_relation<std::vector<Derived>, SrcBindAttrs> where(query_condition<SrcBindAttrs>&&);
+        [[nodiscard]] static auto where(query_condition<SrcBindAttrs>&&);
 
         [[nodiscard]] static auto limit(const std::size_t);
 
@@ -76,25 +76,25 @@ namespace active_record {
         [[nodiscard]] static auto left_join();
 
         template<is_attribute Attr>
-        [[nodiscard]] static query_relation<std::unordered_map<Attr, std::tuple<>>, std::tuple<>> group_by();
+        [[nodiscard]] static auto group_by();
 
-        [[nodiscard]] static query_relation<std::size_t, std::tuple<>> count();
+        [[nodiscard]] static auto count();
 
         template<is_attribute Attr>
         requires requires{ typename Attr::sum; }
-        [[nodiscard]] static query_relation<typename Attr::sum::attribute_type, std::tuple<>> sum();
+        [[nodiscard]] static auto sum();
 
         template<is_attribute Attr>
         requires requires{ typename Attr::avg; }
-        [[nodiscard]] static query_relation<typename Attr::avg::attribute_type, std::tuple<>> avg();
+        [[nodiscard]] static auto avg();
 
         template<is_attribute Attr>
         requires requires{ typename Attr::max; }
-        [[nodiscard]] static query_relation<typename Attr::max::attribute_type, std::tuple<>> max();
+        [[nodiscard]] static auto max();
 
         template<is_attribute Attr>
         requires requires{ typename Attr::min; }
-        [[nodiscard]] static query_relation<typename Attr::min::attribute_type, std::tuple<>> min();
+        [[nodiscard]] static auto min();
     };
 
     template<typename T>

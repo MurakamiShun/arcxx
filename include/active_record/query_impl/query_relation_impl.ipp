@@ -16,164 +16,151 @@ namespace active_record {
 
         /* scalar */
         template<is_attribute Attr>
-        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) &&;
+        [[nodiscard]] auto where(const Attr&) &&;
         template<is_attribute Attr>
-        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) const&;
+        [[nodiscard]] auto where(const Attr&) const&;
 
         template<specialized_from<std::tuple> SrcBindAttrs>
-        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) &&;
+        [[nodiscard]] auto where(query_condition<SrcBindAttrs>&&) &&;
         template<specialized_from<std::tuple> SrcBindAttrs>
-        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const&;
+        [[nodiscard]] auto where(query_condition<SrcBindAttrs>&&) const&;
 
         /* vector */
         template<is_attribute... Attrs>
-        [[nodiscard]] query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> select() && requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto select() && requires specialized_from<Result, std::vector>;
         template<is_attribute... Attrs>
-        [[nodiscard]] query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> select() const & requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto select() const & requires specialized_from<Result, std::vector>;
 
         template<is_attribute_aggregator... Attrs>
-        [[nodiscard]] query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> select() && requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto select() && requires specialized_from<Result, std::vector>;
         template<is_attribute_aggregator... Attrs>
-        [[nodiscard]] query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> select() const& requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto select() const& requires specialized_from<Result, std::vector>;
 
         template<is_attribute Attr>
-        [[nodiscard]] query_relation<std::vector<Attr>, BindAttrs> pluck() && requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto pluck() && requires specialized_from<Result, std::vector>;
         template<is_attribute Attr>
-        [[nodiscard]] query_relation<std::vector<Attr>, BindAttrs> pluck() const& requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto pluck() const& requires specialized_from<Result, std::vector>;
         template<is_attribute_aggregator Attr>
-        [[nodiscard]] query_relation<typename Attr::attribute_type, BindAttrs> pluck() && requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto pluck() && requires specialized_from<Result, std::vector>;
         template<is_attribute_aggregator Attr>
-        [[nodiscard]] query_relation<typename Attr::attribute_type, BindAttrs> pluck() const& requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto pluck() const& requires specialized_from<Result, std::vector>;
 
         template<is_attribute... Attrs>
         requires is_model<typename Result::value_type>
-        [[nodiscard]] query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> update(const Attrs&...) && requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto update(const Attrs&...) && requires specialized_from<Result, std::vector>;
         template<is_attribute... Attrs>
         requires is_model<typename Result::value_type>
-        [[nodiscard]] query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> update(const Attrs&...) const& requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto update(const Attrs&...) const& requires specialized_from<Result, std::vector>;
 
 
         template<is_attribute Attr>
-        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) && requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto where(const Attr&) && requires specialized_from<Result, std::vector>;
         template<is_attribute Attr>
-        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) const& requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto where(const Attr&) const& requires specialized_from<Result, std::vector>;
 
         template<specialized_from<std::tuple> SrcBindAttrs>
-        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) && requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto where(query_condition<SrcBindAttrs>&&) && requires specialized_from<Result, std::vector>;
         template<specialized_from<std::tuple> SrcBindAttrs>
-        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const& requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto where(query_condition<SrcBindAttrs>&&) const& requires specialized_from<Result, std::vector>;
 
-        [[nodiscard]] query_relation<Result, BindAttrs>& limit(const std::size_t) && requires specialized_from<Result, std::vector>;
-        [[nodiscard]] query_relation<Result, BindAttrs> limit(const std::size_t) const& requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto limit(const std::size_t) && requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto limit(const std::size_t) const& requires specialized_from<Result, std::vector>;
 
         template<is_attribute Attr>
-        [[nodiscard]] query_relation<Result, BindAttrs>& order_by(const active_record::order = active_record::order::asc) && requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto order_by(const active_record::order = active_record::order::asc) && requires specialized_from<Result, std::vector>;
         template<is_attribute Attr>
-        [[nodiscard]] query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc) const& requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto order_by(const active_record::order = active_record::order::asc) const& requires specialized_from<Result, std::vector>;
 
-        [[nodiscard]] query_relation<std::size_t, BindAttrs> count() && requires specialized_from<Result, std::vector>;
-        [[nodiscard]] query_relation<std::size_t, BindAttrs> count() const& requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto count() && requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto count() const& requires specialized_from<Result, std::vector>;
 
         template<is_attribute Attr>
         requires requires{ typename Attr::sum; }
-        [[nodiscard]] query_relation<typename Attr::sum::attribute_type, BindAttrs> sum() && requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto sum() && requires specialized_from<Result, std::vector>;
         template<is_attribute Attr>
         requires requires{ typename Attr::sum; }
-        [[nodiscard]] query_relation<typename Attr::sum::attribute_type, BindAttrs> sum() const& requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto sum() const& requires specialized_from<Result, std::vector>;
 
         template<is_attribute Attr>
         requires requires{ typename Attr::avg; }
-        [[nodiscard]] query_relation<typename Attr::avg::attribute_type, BindAttrs> avg() && requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto avg() && requires specialized_from<Result, std::vector>;
         template<is_attribute Attr>
         requires requires{ typename Attr::avg; }
-        [[nodiscard]] query_relation<typename Attr::avg::attribute_type, BindAttrs> avg() const& requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto avg() const& requires specialized_from<Result, std::vector>;
 
         template<is_attribute Attr>
         requires requires{ typename Attr::max; }
-        [[nodiscard]] query_relation<typename Attr::max::attribute_type, BindAttrs> max() && requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto max() && requires specialized_from<Result, std::vector>;
         template<is_attribute Attr>
         requires requires{ typename Attr::max; }
-        [[nodiscard]] query_relation<typename Attr::max::attribute_type, BindAttrs> max() const& requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto max() const& requires specialized_from<Result, std::vector>;
 
         template<is_attribute Attr>
         requires requires{ typename Attr::min; }
-        [[nodiscard]] query_relation<typename Attr::min::attribute_type, BindAttrs> min() && requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto min() && requires specialized_from<Result, std::vector>;
         template<is_attribute Attr>
         requires requires{ typename Attr::min; }
-        [[nodiscard]] query_relation<typename Attr::min::attribute_type, BindAttrs> min() const& requires specialized_from<Result, std::vector>;
+        [[nodiscard]] auto min() const& requires specialized_from<Result, std::vector>;
 
         /* map */
-        template<typename T>
-        struct group_type_impl{ using type = int; };
-        template<specialized_from<std::unordered_map> T>
-        struct group_type_impl<T>{ using type = typename T::key_type; };
-
-        template<typename T>
-        struct mapped_type_impl{ using type = std::tuple<>; };
-        template<specialized_from<std::unordered_map> T>
-        struct mapped_type_impl<T>{ using type = typename T::mapped_type; };
-
-        using group_type = typename group_type_impl<Result>::type;
-        using mapped_type = typename mapped_type_impl<Result>::type;
-
         template<is_attribute_aggregator... Attrs>
-        [[nodiscard]] query_relation<std::unordered_map<group_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> select() && requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto select() && requires specialized_from<Result, std::unordered_map>;
         template<is_attribute_aggregator... Attrs>
-        [[nodiscard]] query_relation<std::unordered_map<group_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> select() const& requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto select() const& requires specialized_from<Result, std::unordered_map>;
 
         template<is_attribute_aggregator Attr>
-        [[nodiscard]] query_relation<std::unordered_map<group_type, typename Attr::attribute_type>, BindAttrs> pluck() && requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto pluck() && requires specialized_from<Result, std::unordered_map>;
         template<is_attribute_aggregator Attr>
-        [[nodiscard]] query_relation<std::unordered_map<group_type, typename Attr::attribute_type>, BindAttrs> pluck() const& requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto pluck() const& requires specialized_from<Result, std::unordered_map>;
 
         template<is_attribute Attr>
-        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) && requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto where(const Attr&) && requires specialized_from<Result, std::unordered_map>;
         template<is_attribute Attr>
-        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attr>>> where(const Attr&) const& requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto where(const Attr&) const& requires specialized_from<Result, std::unordered_map>;
 
         template<specialized_from<std::tuple> SrcBindAttrs>
-        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) && requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto where(query_condition<SrcBindAttrs>&&) && requires specialized_from<Result, std::unordered_map>;
         template<specialized_from<std::tuple> SrcBindAttrs>
-        [[nodiscard]] query_relation<Result, tuptup::tuple_cat_t<BindAttrs, SrcBindAttrs>> where(query_condition<SrcBindAttrs>&&) const& requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto where(query_condition<SrcBindAttrs>&&) const& requires specialized_from<Result, std::unordered_map>;
 
-        [[nodiscard]] query_relation<Result, BindAttrs> limit(const std::size_t) && requires specialized_from<Result, std::unordered_map>;
-        [[nodiscard]] query_relation<Result, BindAttrs> limit(const std::size_t) const& requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto limit(const std::size_t) && requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto limit(const std::size_t) const& requires specialized_from<Result, std::unordered_map>;
 
         template<is_attribute Attr>
-        [[nodiscard]] query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc) && requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto order_by(const active_record::order = active_record::order::asc) && requires specialized_from<Result, std::unordered_map>;
         template<is_attribute Attr>
-        [[nodiscard]] query_relation<Result, BindAttrs> order_by(const active_record::order = active_record::order::asc) const& requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto order_by(const active_record::order = active_record::order::asc) const& requires specialized_from<Result, std::unordered_map>;
 
-        [[nodiscard]] query_relation<std::unordered_map<group_type, std::size_t>, BindAttrs> count() && requires specialized_from<Result, std::unordered_map>;
-        [[nodiscard]] query_relation<std::unordered_map<group_type, std::size_t>, BindAttrs> count() const& requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto count() && requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto count() const& requires specialized_from<Result, std::unordered_map>;
 
         template<is_attribute Attr>
         requires requires{ typename Attr::sum; }
-        [[nodiscard]] query_relation<std::unordered_map<group_type, typename Attr::sum::attribute_type>, BindAttrs> sum() && requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto sum() && requires specialized_from<Result, std::unordered_map>;
         template<is_attribute Attr>
         requires requires{ typename Attr::sum; }
-        [[nodiscard]] query_relation<std::unordered_map<group_type, typename Attr::sum::attribute_type>, BindAttrs> sum() const& requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto sum() const& requires specialized_from<Result, std::unordered_map>;
 
         template<is_attribute Attr>
         requires requires{ typename Attr::avg; }
-        [[nodiscard]] query_relation<std::unordered_map<group_type, typename Attr::avg::attribute_type>, BindAttrs> avg() && requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto avg() && requires specialized_from<Result, std::unordered_map>;
         template<is_attribute Attr>
         requires requires{ typename Attr::avg; }
-        [[nodiscard]] query_relation<std::unordered_map<group_type, typename Attr::avg::attribute_type>, BindAttrs> avg() const& requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto avg() const& requires specialized_from<Result, std::unordered_map>;
 
         template<is_attribute Attr>
         requires requires{ typename Attr::max; }
-        [[nodiscard]] query_relation<std::unordered_map<group_type, typename Attr::max::attribute_type>, BindAttrs> max() && requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto max() && requires specialized_from<Result, std::unordered_map>;
         template<is_attribute Attr>
         requires requires{ typename Attr::max; }
-        [[nodiscard]] query_relation<std::unordered_map<group_type, typename Attr::max::attribute_type>, BindAttrs> max() const& requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto max() const& requires specialized_from<Result, std::unordered_map>;
 
         template<is_attribute Attr>
         requires requires{ typename Attr::min; }
-        [[nodiscard]] query_relation<std::unordered_map<group_type, typename Attr::min::attribute_type>, BindAttrs> min() && requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto min() && requires specialized_from<Result, std::unordered_map>;
         template<is_attribute Attr>
         requires requires{ typename Attr::min; }
-        [[nodiscard]] query_relation<std::unordered_map<group_type, typename Attr::min::attribute_type>, BindAttrs> min() const& requires specialized_from<Result, std::unordered_map>;
+        [[nodiscard]] auto min() const& requires specialized_from<Result, std::unordered_map>;
     };
 }
 
