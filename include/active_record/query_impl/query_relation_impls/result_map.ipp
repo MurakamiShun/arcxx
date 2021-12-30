@@ -10,7 +10,7 @@ namespace active_record {
      * return type == std::unordered_map<Attribute, specialized_from<std::tuple> or Attribute>
      */
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<AttributeAggregator... Attrs>
+    template<is_attribute_aggregator... Attrs>
     query_relation<std::unordered_map<typename query_relation<Result, BindAttrs>::group_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> query_relation<Result, BindAttrs>::select() const& requires specialized_from<Result, std::unordered_map>{
         query_relation<std::unordered_map<typename query_relation<Result, BindAttrs>::group_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> ret{ query_operation::select };
         ret.op_args.push_back(detail::column_full_names_to_string<typename query_relation<Result, BindAttrs>::group_type, Attrs...>());
@@ -22,7 +22,7 @@ namespace active_record {
         return ret;
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<AttributeAggregator... Attrs>
+    template<is_attribute_aggregator... Attrs>
     query_relation<std::unordered_map<typename query_relation<Result, BindAttrs>::group_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> query_relation<Result, BindAttrs>::select() && requires specialized_from<Result, std::unordered_map>{
         query_relation<std::unordered_map<typename query_relation<Result, BindAttrs>::group_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> ret{ query_operation::select };
         ret.op_args.push_back(detail::column_full_names_to_string<typename query_relation<Result, BindAttrs>::group_type, Attrs...>());
@@ -35,7 +35,7 @@ namespace active_record {
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<AttributeAggregator Attr>
+    template<is_attribute_aggregator Attr>
     query_relation<std::unordered_map<typename query_relation<Result, BindAttrs>::group_type, typename Attr::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::pluck() const& requires specialized_from<Result, std::unordered_map>{
         query_relation<std::unordered_map<typename query_relation<Result, BindAttrs>::group_type, typename Attr::attribute_type>, BindAttrs> ret{ query_operation::select };
         ret.op_args.push_back(detail::column_full_names_to_string<typename query_relation<Result, BindAttrs>::group_type, Attr>());
@@ -47,7 +47,7 @@ namespace active_record {
         return ret;
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<AttributeAggregator Attr>
+    template<is_attribute_aggregator Attr>
     query_relation<std::unordered_map<typename query_relation<Result, BindAttrs>::group_type, typename Attr::attribute_type>, BindAttrs> query_relation<Result, BindAttrs>::pluck() && requires specialized_from<Result, std::unordered_map>{
         query_relation<std::unordered_map<typename query_relation<Result, BindAttrs>::group_type, typename Attr::attribute_type>, BindAttrs> ret{ query_operation::select };
         ret.op_args.push_back(detail::column_full_names_to_string<typename query_relation<Result, BindAttrs>::group_type, Attr>());

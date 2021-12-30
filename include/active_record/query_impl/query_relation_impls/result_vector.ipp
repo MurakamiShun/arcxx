@@ -37,7 +37,7 @@ namespace active_record {
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<AttributeAggregator... Attrs>
+    template<is_attribute_aggregator... Attrs>
     query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> query_relation<Result, BindAttrs>::select() const& requires specialized_from<Result, std::vector>{
         query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> ret{ query_operation::select };
 
@@ -50,7 +50,7 @@ namespace active_record {
         return ret;
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<AttributeAggregator... Attrs>
+    template<is_attribute_aggregator... Attrs>
     query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> query_relation<Result, BindAttrs>::select() && requires specialized_from<Result, std::vector>{
         query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> ret{ query_operation::select };
 
@@ -90,7 +90,7 @@ namespace active_record {
         return ret;
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<AttributeAggregator Attr>
+    template<is_attribute_aggregator Attr>
     query_relation<typename Attr::attribute_type, BindAttrs> query_relation<Result, BindAttrs>::pluck() && requires specialized_from<Result, std::vector>{
         query_relation<typename Attr::attribute_type, BindAttrs> ret{ query_operation::select };
 
@@ -103,7 +103,7 @@ namespace active_record {
         return ret;
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    template<AttributeAggregator Attr>
+    template<is_attribute_aggregator Attr>
     query_relation<typename Attr::attribute_type, BindAttrs> query_relation<Result, BindAttrs>::pluck() const& requires specialized_from<Result, std::vector>{
         query_relation<typename Attr::attribute_type, BindAttrs> ret{ query_operation::select };
 
@@ -303,7 +303,7 @@ namespace active_record {
     }
 
     namespace detail {
-        template<typename Result, specialized_from<std::tuple> BindAttrs, AttributeAggregator T>
+        template<typename Result, specialized_from<std::tuple> BindAttrs, is_attribute_aggregator T>
         query_relation<typename T::attribute_type, BindAttrs> vectored_aggregate_query(const query_relation<Result, BindAttrs>& src) {
             query_relation<typename T::attribute_type, BindAttrs> ret{ query_operation::select };
 
@@ -316,7 +316,7 @@ namespace active_record {
             return ret;
         }
 
-        template<typename Result, specialized_from<std::tuple> BindAttrs, AttributeAggregator T>
+        template<typename Result, specialized_from<std::tuple> BindAttrs, is_attribute_aggregator T>
         query_relation<typename T::attribute_type, BindAttrs> vectored_aggregate_query(query_relation<Result, BindAttrs>&& src) {
             query_relation<typename T::attribute_type, BindAttrs> ret{ query_operation::select };
 

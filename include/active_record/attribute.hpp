@@ -32,7 +32,7 @@ namespace active_record {
     struct attribute_aggregator;
 
     template<typename T>
-    concept AttributeAggregator = std::derived_from<T, attribute_aggregator<typename T::model_type, typename T::attribute_type, typename T::aggregator_type>>;
+    concept is_attribute_aggregator = std::derived_from<T, attribute_aggregator<typename T::model_type, typename T::attribute_type, typename T::aggregator_type>>;
 
     template<std::derived_from<adaptor> Adaptor, Attribute Attr>
     requires false

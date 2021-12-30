@@ -61,7 +61,7 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<AttributeAggregator... Aggregators>
+    template<is_attribute_aggregator... Aggregators>
     inline query_relation<std::tuple<typename Aggregators::attribute_type...>, std::tuple<>> model<Derived>::select() {
         query_relation<std::tuple<typename Aggregators::attribute_type...>, std::tuple<>> ret{ query_operation::select };
         ret.op_args.push_back(detail::column_full_names_to_string<Aggregators...>());
@@ -77,7 +77,7 @@ namespace active_record {
         return ret;
     }
     template<typename Derived>
-    template<AttributeAggregator Aggregator>
+    template<is_attribute_aggregator Aggregator>
     inline query_relation<typename Aggregator::attribute_type, std::tuple<>> model<Derived>::pluck(){
         query_relation<typename Aggregator::attribute_type, std::tuple<>> ret{ query_operation::select };
         ret.op_args.push_back(detail::column_full_names_to_string<Aggregator>());

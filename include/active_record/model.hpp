@@ -19,7 +19,7 @@ namespace active_record {
 
         [[nodiscard]] static constexpr auto column_names() noexcept {
             return std::apply(
-                []<Attribute... Attrs>([[maybe_unused]]Attrs...) constexpr { return std::array<const active_record::string_view, sizeof...(Attrs)>{(Attrs::column_name)...}; },
+                []<Attribute... Attrs>([[maybe_unused]]Attrs...) constexpr noexcept { return std::array<const active_record::string_view, sizeof...(Attrs)>{(Attrs::column_name)...}; },
                 Derived{}.attributes_as_tuple()
             );
         }
@@ -43,12 +43,12 @@ namespace active_record {
         template<Attribute... Attrs>
         [[nodiscard]] static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> select();
 
-        template<AttributeAggregator... Aggregators>
+        template<is_attribute_aggregator... Aggregators>
         [[nodiscard]] static query_relation<std::tuple<typename Aggregators::attribute_type...>, std::tuple<>> select();
 
         template<Attribute Attr>
         [[nodiscard]] static query_relation<std::vector<Attr>, std::tuple<>> pluck();
-        template<AttributeAggregator Aggregator>
+        template<is_attribute_aggregator Aggregator>
         [[nodiscard]] static query_relation<typename Aggregator::attribute_type, std::tuple<>> pluck();
 
         // delete is identifier word

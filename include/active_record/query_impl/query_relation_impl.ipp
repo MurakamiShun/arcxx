@@ -31,18 +31,18 @@ namespace active_record {
         template<Attribute... Attrs>
         [[nodiscard]] query_relation<std::vector<std::tuple<Attrs...>>, BindAttrs> select() const & requires specialized_from<Result, std::vector>;
 
-        template<AttributeAggregator... Attrs>
+        template<is_attribute_aggregator... Attrs>
         [[nodiscard]] query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> select() && requires specialized_from<Result, std::vector>;
-        template<AttributeAggregator... Attrs>
+        template<is_attribute_aggregator... Attrs>
         [[nodiscard]] query_relation<std::tuple<typename Attrs::attribute_type...>, BindAttrs> select() const& requires specialized_from<Result, std::vector>;
 
         template<Attribute Attr>
         [[nodiscard]] query_relation<std::vector<Attr>, BindAttrs> pluck() && requires specialized_from<Result, std::vector>;
         template<Attribute Attr>
         [[nodiscard]] query_relation<std::vector<Attr>, BindAttrs> pluck() const& requires specialized_from<Result, std::vector>;
-        template<AttributeAggregator Attr>
+        template<is_attribute_aggregator Attr>
         [[nodiscard]] query_relation<typename Attr::attribute_type, BindAttrs> pluck() && requires specialized_from<Result, std::vector>;
-        template<AttributeAggregator Attr>
+        template<is_attribute_aggregator Attr>
         [[nodiscard]] query_relation<typename Attr::attribute_type, BindAttrs> pluck() const& requires specialized_from<Result, std::vector>;
 
         template<Attribute... Attrs>
@@ -116,14 +116,14 @@ namespace active_record {
         using group_type = typename group_type_impl<Result>::type;
         using mapped_type = typename mapped_type_impl<Result>::type;
 
-        template<AttributeAggregator... Attrs>
+        template<is_attribute_aggregator... Attrs>
         [[nodiscard]] query_relation<std::unordered_map<group_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> select() && requires specialized_from<Result, std::unordered_map>;
-        template<AttributeAggregator... Attrs>
+        template<is_attribute_aggregator... Attrs>
         [[nodiscard]] query_relation<std::unordered_map<group_type, std::tuple<typename Attrs::attribute_type...>>, BindAttrs> select() const& requires specialized_from<Result, std::unordered_map>;
 
-        template<AttributeAggregator Attr>
+        template<is_attribute_aggregator Attr>
         [[nodiscard]] query_relation<std::unordered_map<group_type, typename Attr::attribute_type>, BindAttrs> pluck() && requires specialized_from<Result, std::unordered_map>;
-        template<AttributeAggregator Attr>
+        template<is_attribute_aggregator Attr>
         [[nodiscard]] query_relation<std::unordered_map<group_type, typename Attr::attribute_type>, BindAttrs> pluck() const& requires specialized_from<Result, std::unordered_map>;
 
         template<Attribute Attr>
