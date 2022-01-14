@@ -39,7 +39,7 @@ active_record::sqlite3_adaptor
 
         Returns libsqlite3 version string.
 
-    .. cpp:function:: verison_number()
+    .. cpp:function:: version_number()
 
         .. code-block:: cpp
             
