@@ -3,7 +3,7 @@
  * Active Record C++: https://github.com/akisute514/active_record_cpp
  * Copyright (c) 2021 akisute514
  * 
- * Released under the MIT Lisence.
+ * Released under the MIT License.
  */
 #include "../attribute.hpp"
 

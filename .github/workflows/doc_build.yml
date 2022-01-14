@@ -18,7 +18,7 @@ jobs:
       - name: Install python
         uses: actions/setup-python@v1
         with:
-          python-verison: 3.9
+          python-version: 3.9
       
       - name: Install sphinx
         run: |

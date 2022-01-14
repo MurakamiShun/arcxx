@@ -1,5 +1,10 @@
 #pragma once
-
+/*
+ * Active Record C++: https://github.com/akisute514/active_record_cpp
+ * Copyright (c) 2021 akisute514
+ * 
+ * Released under the MIT License.
+ */
 namespace active_record {
     inline sqlite3_adaptor::sqlite3_adaptor(const active_record::string& file_name, const int flags){
         auto result = sqlite3_open_v2(file_name.c_str(), &db_obj, flags, nullptr);

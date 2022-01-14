@@ -3,7 +3,7 @@
  * Active Record C++: https://github.com/akisute514/active_record_cpp
  * Copyright (c) 2021 akisute514
  * 
- * Released under the MIT Lisence.
+ * Released under the MIT License.
  */
 //#if __cplusplus < 202002L
 //#error C++20 is required.

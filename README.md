@@ -85,7 +85,7 @@ Completed
 * PostgreSQL support
 
 WIP
-* Documentaion
+* Documentation
 * Translation of documents
 * Tests
 * Example codes
