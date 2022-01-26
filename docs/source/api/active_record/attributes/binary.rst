@@ -51,13 +51,14 @@ active_record::attributes::binary
           -
 
     .. list-table:: Constraints
+
         * - :cpp:func:`default_value`
           - generate a default value constraint
         * - :cpp:var:`not_null`
           -
         * - :cpp:var:`unique`
           -
-        * - ::cpp:var:`primary_key`
+        * - :cpp:var:`primary_key`
           -
 
     .. list-table:: String mutual converts
