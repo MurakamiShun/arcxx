@@ -132,7 +132,9 @@ namespace active_record {
 
     template<is_model Mod>
     inline bool postgresql_adaptor::exists_table(){
-        const auto result = exec(raw_query<int>("SELECT COUNT(*) SELECT FROM pg_tables AND tablename  = ", Mod::table_name, ";"));
+        const auto result = exec(raw_query<int>("SELECT COUNT(*) FROM information_schema.tables ",
+            "WHERE table_name = '", Mod::table_name, "';"
+        ));
         return result.second;
     }
 

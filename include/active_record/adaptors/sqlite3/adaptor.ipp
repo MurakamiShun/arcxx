@@ -178,7 +178,7 @@ namespace active_record {
 
     template<is_model Mod>
     inline bool sqlite3_adaptor::exists_table(){
-        const auto result = exec(raw_query<int>("SELECT COUNT(*) FROM sqlite_master WHERE type = \"table\" AND name = ", Mod::table_name, ";"));
+        const auto result = exec(raw_query<int>("SELECT COUNT(*) FROM sqlite_master WHERE type = \"table\" AND name = \"", Mod::table_name, "\";"));
         return result.second;
     }
 
