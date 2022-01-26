@@ -14,16 +14,14 @@ active_record::model
 
         struct ExampleTable : public active_record::model<ExampleTable> {
             static constexpr auto table_name = "example_table";
-            
-            std::tuple<> attributes;
         };
 
     .. list-table:: Member functions
 
         * - (constructor)
-          - :code:`model` has no internal state
+          - 
         * - (destructor)
-          - :code:`model` has no internal state
+          - 
 
     .. list-table:: Generates query functions
 
