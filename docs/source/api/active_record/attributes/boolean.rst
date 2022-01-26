@@ -51,6 +51,16 @@ active_record::attributes::boolean
         * - :cpp:func:`operator||`
           -
 
+    .. list-table:: Constraints
+        * - :cpp:func:`default_value`
+          - generate a default value constraint
+        * - :cpp:var:`not_null`
+          -
+        * - :cpp:var:`unique`
+          -
+        * - ::cpp:var:`primary_key`
+          -
+
     .. list-table:: String mutual converts
 
         * - :cpp:func:`to_string`
