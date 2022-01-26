@@ -78,8 +78,8 @@ active_record::model
 
       .. code-block:: cpp
 
-        static query_relation<bool, /*model attributes*/> insert(const Derived& model);
-        static query_relation<bool, /*model attributes*/> insert(Derived&& model);
+        static auto insert(const Derived& model) -> query_relation<bool, std::tuple<bind attributes...>>;
+        static auto insert(Derived&& model) -> query_relation<bool, std::tuple<bind attributes...>>;
 
     .. cpp:function:: all()
 
@@ -87,7 +87,7 @@ active_record::model
 
       .. code-block:: cpp
 
-        static query_relation<std::vector<Derived>, std::tuple<>> all();
+        static auto all() -> query_relation<std::vector<Derived>, std::tuple<>>;
 
     .. cpp:function:: select()
 
@@ -95,11 +95,10 @@ active_record::model
 
       .. code-block:: cpp
 
-        template<Attribute... Attrs>
-        static query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>> select();
-
-        template<AttributeAggregator... Attrs>
-        static query_relation<std::vector<std::tuple<typename Attrs::attribute_type...>>, std::tuple<>> select();
+        template<is_attribute... Attrs>
+        static auto select() -> query_relation<std::vector<std::tuple<Attrs...>>, std::tuple<>>;
+        template<is_attribute_aggregator... Aggregators>
+        static auto select() -> query_relation<std::tuple<Aggregators::attribute_type...>, std::tuple<>>;
 
     .. cpp:function:: pluck()
 
@@ -107,10 +106,10 @@ active_record::model
 
       .. code-block:: cpp
 
-        template<Attribute Attr>
-        static query_relation<std::vector<Attr>, std::tuple<>> pluck();
-        template<AttributeAggregator Attr>
-        static query_relation<std::vector<typename Attr::attribute_type>, std::tuple<>> pluck();
+        template<is_attribute Attr>
+        static auto pluck() -> query_relation<std::vector<Attr>, std::tuple<>>;
+        template<is_attribute_aggregator Aggregator>
+        static auto pluck() -> query_relation<Aggregator::attribute_type, std::tuple<>>;
 
     .. cpp:function:: where()
 
@@ -118,41 +117,43 @@ active_record::model
 
       .. code-block:: cpp
 
-        template<Attribute Attr>
-        static query_relation<std::vector<Derived>, std::tuple<const Attr*>> where(const Attr&&);
+        template<is_attribute Attr>
+        static auto where(const Attr&) -> query_relation<std::vector<Derived>, std::tuple<Attr>>;
         
-        template<Tuple SrcBindAttrs>
-        static query_relation<std::vector<Derived>, SrcBindAttrs> where(query_condition<SrcBindAttrs>&&);
+        template<specialized_from<std::tuple> SrcBindAttrs>
+        static auto where(query_condition<SrcBindAttrs>&&) -> query_relation<std::vector<Derived>, SrcBindAttrs>;
 
     .. cpp:function:: destroy()
 
       .. code-block:: cpp
 
-        template<Attribute Attr>
-        static query_relation<bool, std::tuple<const Attr*>> destroy(const Attr&&);
-        template<Tuple SrcBindAttrs>
-        static query_relation<bool, SrcBindAttrs> destroy(query_condition<SrcBindAttrs>&&);
+        template<is_attribute Attr>
+        static auto destroy(const Attr&&) -> query_relation<bool, std::tuple<Attr>>;
+        
+        template<specialized_from<std::tuple> SrcBindAttrs>
+        static auto destroy(query_condition<SrcBindAttrs>&&) -> query_relation<bool, SrcBindAttrs>;
 
 
     .. cpp:function:: limit()
 
       .. code-block:: cpp
 
-        static query_relation<std::vector<Derived>, std::tuple<>> limit(const std::size_t);
+        static auto limit(const std::size_t) -> query_relation<std::vector<Derived>, std::tuple<>>;
 
     .. cpp:function:: order_by()
 
       .. code-block:: cpp
 
-        template<Attribute Attr>
-        static query_relation<std::vector<Derived>, std::tuple<>> order_by(const active_record::order = active_record::order::asc);
+        template<is_attribute Attr>
+        static auto order_by(const active_record::order = active_record::order::asc) -> query_relation<std::vector<Derived>, std::tuple<>>;
 
     .. cpp:function:: join()
 
       .. code-block:: cpp
 
         template<typename ReferModel>
-        static query_relation<std::vector<Derived>, std::tuple<>> join();
+        requires std::derived_from<ReferModel, model<ReferModel>>
+        static auto join() -> query_relation<std::vector<Derived>, std::tuple<>>;
 
     .. cpp:function:: left_join()
 
@@ -160,59 +161,59 @@ active_record::model
 
         template<typename ReferModel>
         requires std::derived_from<ReferModel, model<ReferModel>>
-        static query_relation<std::vector<Derived>, std::tuple<>> left_join();
+        static auto left_join() -> query_relation<std::vector<Derived>, std::tuple<>>;
 
     .. cpp:function:: group_by()
 
       .. code-block:: cpp
 
-        template<Attribute Attr>
-        static query_relation<std::unordered_map<Attr, std::tuple<>>, std::tuple<>> group_by();
+        template<is_attribute Attr>
+        static auto group_by() -> query_relation<std::unordered_map<Attr, std::tuple<>>, std::tuple<>>;
 
     .. cpp:function:: count()
 
-      The aggregation examples is :doc:`here </tutorial/aggregation>`.
+      The aggregation example is :doc:`here </tutorial/aggregation>`.
 
       .. code-block:: cpp
 
-        static query_relation<std::size_t, std::tuple<>> count();
+        static auto count() -> query_relation<std::size_t, std::tuple<>>;
 
     .. cpp:function:: sum()
 
-      The aggregation examples is :doc:`here </tutorial/aggregation>`.
+      The aggregation example is :doc:`here </tutorial/aggregation>`.
 
       .. code-block:: cpp
 
-        template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        static query_relation<typename Attr::value_type, std::tuple<>> sum();
+        template<is_attribute Attr>
+        requires requires{ typename Attr::sum; }
+        static auto sum() -> query_relation<Attr::sum::attribute_type, std::tuple<>>;
 
     .. cpp:function:: avg()
 
-      The aggregation examples is :doc:`here </tutorial/aggregation>`.
+      The aggregation example is :doc:`here </tutorial/aggregation>`.
 
       .. code-block:: cpp
 
-        template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        static query_relation<typename Attr::value_type, std::tuple<>> avg();
+        template<is_attribute Attr>
+        requires requires{ typename Attr::avg; }
+        static auto avg() -> query_relation<Attr::avg::attribute_type, std::tuple<>>;
 
     .. cpp:function:: max()
 
-      The aggregation examples is :doc:`here </tutorial/aggregation>`.
+      The aggregation example is :doc:`here </tutorial/aggregation>`.
 
       .. code-block:: cpp
 
-        template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        static query_relation<typename Attr::value_type, std::tuple<>> max();
+        template<is_attribute Attr>
+        requires requires{ typename Attr::max; }
+        static auto max() -> query_relation<Attr::max::attribute_type, std::tuple<>>;
 
     .. cpp:function:: min()
 
-      The aggregation examples is :doc:`here </tutorial/aggregation>`.
+      The aggregation example is :doc:`here </tutorial/aggregation>`.
 
       .. code-block:: cpp
 
-        template<Attribute Attr>
-        requires std::integral<typename Attr::value_type> || std::floating_point<typename Attr::value_type>
-        static query_relation<typename Attr::value_type, std::tuple<>> min();
+        template<is_attribute Attr>
+        requires requires{ typename Attr::min; }
+        static auto min() -> query_relation<Attr::min::attribute_type, std::tuple<>>;

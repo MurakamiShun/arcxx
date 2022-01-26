@@ -18,16 +18,16 @@ Attributes
       - String attribute.
 
     * - :doc:`attributes/integer`
-      - Integer attribute. (default is `int32_t`)
+      - Integer attribute. (default value type is `int32_t`)
 
     * - :doc:`attributes/decimal`
-      - Decimal attribute. (default is `float`)
+      - Decimal attribute. (default value type is `double`)
 
     * - :doc:`attributes/boolean`
       - boolean attribute.
 
     * - :doc:`attributes/datetime`
-      - Datetime attribute. The value type is `std::utc_clock`.
+      - Datetime attribute. The value type is `std::chrono::system_clock`.
 
     * - :doc:`attributes/binary`
       - Datetime attribute. The value type is `std::vector<std::byte>`.
