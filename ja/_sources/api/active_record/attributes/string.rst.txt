@@ -53,6 +53,7 @@ active_record::attributes::string
           -
 
     .. list-table:: Constraints
+
         * - :cpp:func:`length`
           - generate a string length constraint
         * - :cpp:func:`default_value`
@@ -61,7 +62,7 @@ active_record::attributes::string
           -
         * - :cpp:var:`unique`
           -
-        * - ::cpp:var:`primary_key`
+        * - :cpp:var:`primary_key`
           -
 
     .. list-table:: String mutual converts

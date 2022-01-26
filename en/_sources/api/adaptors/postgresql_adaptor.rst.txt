@@ -44,6 +44,37 @@ active_record::postgresql_adaptor
 
     .. cpp:function:: exec()
 
+        .. code-block:: cpp
+            
+            template<specialized_from<std::tuple> BindAttrs>
+            auto exec(const query_relation<bool, BindAttrs>& query) -> std::optional<active_record::string>;
+
+            template<typename Result, specialized_from<std::tuple> BindAttrs>
+            auto exec(const query_relation<Result, BindAttrs>& query) -> std::pair<std::optional<active_record::string>, Result>;
+
     .. cpp:function:: create_table()
 
+        .. code-block:: cpp
+
+            template<is_model Mod>
+            std::optional<active_record::string> create_table(bool abort_if_exist = true);
+
+    .. cpp:function:: drop_table()
+
+        .. code-block:: cpp
+
+            template<is_model Mod>
+            std::optional<active_record::string> drop_table();
+
     .. cpp:function:: transaction()
+
+        .. code-block:: cpp
+
+            template<std::convertible_to<std::function<active_record::transaction(void)>> F>
+            std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F& func);
+            template<std::convertible_to<std::function<active_record::transaction(void)>> F>
+            std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F&& func);
+            template<std::convertible_to<std::function<active_record::transaction(postgresql_adaptor&)>> F>
+            std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F& func);
+            template<std::convertible_to<std::function<active_record::transaction(postgresql_adaptor&)>> F>
+            std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F&& func);
