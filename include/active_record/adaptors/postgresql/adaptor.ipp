@@ -130,6 +130,12 @@ namespace active_record {
         return exec(raw_query<bool>("DROP TABLE ", Mod::table_name,";"));
     }
 
+    template<is_model Mod>
+    inline bool postgresql_adaptor::exists_table(){
+        const auto result = exec(raw_query<int>("SELECT COUNT(*) SELECT FROM pg_tables AND tablename  = ", Mod::table_name, ";"));
+        return result.second;
+    }
+
     template<specialized_from<std::tuple> BindAttrs>
     inline auto postgresql_adaptor::exec(const query_relation<bool, BindAttrs>& query){
         PGresult* result = this->exec_sql(query);

@@ -59,9 +59,11 @@ namespace active_record {
 
         template<is_model Mod>
         std::optional<active_record::string> create_table(bool abort_if_exist = true);
-
         template<is_model Mod>
         std::optional<active_record::string> drop_table();
+
+        template<is_model Mod>
+        bool exists_table();
 
         std::optional<active_record::string> begin(const active_record::string_view transaction_name = "");
         std::optional<active_record::string> commit(const active_record::string_view transaction_name = "");

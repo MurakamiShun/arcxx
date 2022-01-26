@@ -38,6 +38,7 @@ endif()
 # Integrated Tests
 add_executable(active_record_IT
     main.cpp
+    table_creation_test.cpp
     select_test.cpp
     insert_test.cpp
     delete_test.cpp

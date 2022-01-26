@@ -175,6 +175,13 @@ namespace active_record {
     inline std::optional<active_record::string> sqlite3_adaptor::drop_table(){
         return exec(raw_query<bool>("DROP TABLE ", Mod::table_name, ";"));
     }
+
+    template<is_model Mod>
+    inline bool sqlite3_adaptor::exists_table(){
+        const auto result = exec(raw_query<int>("SELECT COUNT(*) FROM sqlite_master WHERE type = \"table\" AND name = ", Mod::table_name, ";"));
+        return result.second;
+    }
+
     inline std::optional<active_record::string> sqlite3_adaptor::begin(const active_record::string_view transaction_name){
         return exec(raw_query<bool>("BEGIN TRANSACTION ", transaction_name, ";"));
     }
