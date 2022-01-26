@@ -92,7 +92,7 @@ namespace active_record {
         }
     }
 
-    // bianry
+    // binary
     template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
     [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
