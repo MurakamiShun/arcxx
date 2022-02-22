@@ -101,3 +101,4 @@ Active Record C++ depends on third party libraries. To use these subcomponents i
 
 * libsqlite3 ([https://www.sqlite.org/copyright.html](https://www.sqlite.org/copyright.html))
 * libpq ([https://www.postgresql.org/about/licence/](https://www.postgresql.org/about/licence/))
+* tl::expected ([https://github.com/TartanLlama/expected](https://github.com/TartanLlama/expected))

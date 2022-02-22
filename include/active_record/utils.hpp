@@ -16,6 +16,7 @@
 #include <numeric>
 
 #include "third_party/tuptup.hpp"
+#include "third_party/tl/expected.hpp"
 /*
  * Active Record C++: https://github.com/akisute514/active_record_cpp
  * Copyright (c) 2021 akisute514
@@ -27,6 +28,9 @@ namespace active_record{
     using string = std::string;
     using string_view = std::basic_string_view<typename active_record::string::value_type>;
     using datetime = std::chrono::system_clock;
+
+    template <class T, class E>
+    using expected = tl::expected<T, E>;
 
     namespace detail{
         template<typename T, template<typename...>typename U>

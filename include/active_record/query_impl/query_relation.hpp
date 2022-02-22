@@ -13,12 +13,12 @@
 namespace active_record {
     template<specialized_from<std::tuple> BindAttrs>
     struct query_relation_common {
-    public:
-        using str_or_bind = std::variant<active_record::string, std::size_t>;
     private:
         template<std::derived_from<adaptor> Adaptor>
         struct sob_to_string_impl;
     public:
+        using str_or_bind = std::variant<active_record::string, std::size_t>;
+
         const query_operation operation;
         std::vector<str_or_bind> op_args;
         std::vector<str_or_bind> tables;
