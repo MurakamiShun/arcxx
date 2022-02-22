@@ -18,5 +18,8 @@ namespace active_record{
         commit
     };
 
+    // abort if a given table exists when called adaptor::create_table.
+    inline struct {} abort_if_exists;
+
     struct common_adaptor;
 }

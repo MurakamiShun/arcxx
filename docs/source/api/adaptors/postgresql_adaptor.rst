@@ -57,7 +57,9 @@ active_record::postgresql_adaptor
         .. code-block:: cpp
 
             template<is_model Mod>
-            std::optional<active_record::string> create_table(bool abort_if_exist = true);
+            std::optional<active_record::string> create_table(decltype(abort_if_exist));
+            template<is_model Mod>
+            std::optional<active_record::string> create_table();
 
     .. cpp:function:: drop_table()
 

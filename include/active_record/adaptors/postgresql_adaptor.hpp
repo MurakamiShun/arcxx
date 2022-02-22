@@ -63,7 +63,9 @@ namespace active_record {
         static active_record::string bind_variable_str(const std::size_t idx);
 
         template<is_model Mod>
-        std::optional<active_record::string> create_table(bool abort_if_exist = true);
+        std::optional<active_record::string> create_table(decltype(abort_if_exists));
+        template<is_model Mod>
+        std::optional<active_record::string> create_table();
         template<is_model Mod>
         std::optional<active_record::string> drop_table();
 

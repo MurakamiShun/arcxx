@@ -276,25 +276,39 @@ namespace active_record {
         return ret;
     }
 
+    namespace detail{
+        template<typename Derived, std::derived_from<adaptor> Adaptor>
+        inline auto schema_to_sql(bool abort){
+            const auto column_definitions = std::apply(
+                []<typename... Attrs>(const Attrs...){
+                    return std::array<active_record::string, sizeof...(Attrs)>{(Adaptor::template column_definition<Attrs>())...};
+                },
+                Derived{}.attributes_as_tuple()
+            );
+
+            active_record::string col_defs;
+            active_record::string_view delimiter = "";
+            for(const auto& col_def : column_definitions){
+                col_defs += delimiter;
+                col_defs += col_def;
+                delimiter = ",";
+            }
+
+            return concat_strings(
+                "CREATE TABLE ", abort ? "" : "IF NOT EXISTS ",
+                Derived::table_name, "(", col_defs, ");"
+            );
+        }
+    }
+
     template<typename Derived>
     template<std::derived_from<adaptor> Adaptor>
-    inline active_record::string model<Derived>::schema::to_sql(bool abort_if_exist) {
-        const auto column_definitions = std::apply(
-            []<typename... Attrs>(const Attrs&...){ return std::array<const active_record::string, sizeof...(Attrs)>{(Adaptor::template column_definition<Attrs>())...}; },
-            Derived{}.attributes_as_tuple()
-        );
-
-        active_record::string col_defs;
-        active_record::string_view delimiter = "";
-        for(const auto& col_def : column_definitions){
-            col_defs += delimiter;
-            col_defs += col_def;
-            delimiter = ",";
-        }
-
-        return concat_strings(
-            "CREATE TABLE ", abort_if_exist ? "" : "IF NOT EXISTS ",
-            Derived::table_name, "(", col_defs, ");"
-        );
+    inline active_record::string model<Derived>::schema::to_sql(decltype(abort_if_exists)) {
+        return detail::schema_to_sql<Derived, Adaptor>(true);
+    }
+    template<typename Derived>
+    template<std::derived_from<adaptor> Adaptor>
+    inline active_record::string model<Derived>::schema::to_sql() {
+        return detail::schema_to_sql<Derived, Adaptor>(false);
     }
 }

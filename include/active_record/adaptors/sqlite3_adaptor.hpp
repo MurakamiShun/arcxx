@@ -58,7 +58,9 @@ namespace active_record {
         std::optional<active_record::string> exec(const query_relation<bool, BindAttrs>& query);
 
         template<is_model Mod>
-        std::optional<active_record::string> create_table(bool abort_if_exist = true);
+        std::optional<active_record::string> create_table(decltype(abort_if_exists));
+        template<is_model Mod>
+        std::optional<active_record::string> create_table();
         template<is_model Mod>
         std::optional<active_record::string> drop_table();
 

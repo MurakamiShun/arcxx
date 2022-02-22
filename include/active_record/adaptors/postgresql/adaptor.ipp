@@ -121,8 +121,12 @@ namespace active_record {
     }
 
     template<is_model Mod>
-    inline std::optional<active_record::string> postgresql_adaptor::create_table(bool abort_if_exist){
-        return exec(raw_query<bool>(Mod::schema::template to_sql<postgresql_adaptor>(abort_if_exist)));
+    inline std::optional<active_record::string> postgresql_adaptor::create_table(decltype(abort_if_exists)){
+        return exec(raw_query<bool>(Mod::schema::template to_sql<postgresql_adaptor>(abort_if_exists)));
+    }
+    template<is_model Mod>
+    inline std::optional<active_record::string> postgresql_adaptor::create_table(){
+        return exec(raw_query<bool>(Mod::schema::template to_sql<postgresql_adaptor>()));
     }
 
     template<is_model Mod>

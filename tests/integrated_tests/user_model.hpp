@@ -50,7 +50,7 @@ public:
     UserModelTestsFixture() : conn(open_testfile()) {
         // Create test data
         conn.drop_table<User>();
-        if(const auto error = conn.create_table<User>(false); error) {
+        if(const auto error = conn.create_table<User>(); error) {
             FAIL(error.value());
         }
         const auto insert_transaction = [](auto& connection){

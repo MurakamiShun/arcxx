@@ -12,7 +12,9 @@ namespace active_record {
     struct model {
         struct schema {
             template<std::derived_from<adaptor> Adaptor>
-            [[nodiscard]] static active_record::string to_sql(bool abort_if_exist = true);
+            [[nodiscard]] static active_record::string to_sql(decltype(abort_if_exists));
+            template<std::derived_from<adaptor> Adaptor>
+            [[nodiscard]] static active_record::string to_sql();
         };
 
         static constexpr bool has_table_name() noexcept { return requires {Derived::table_name;}; }

@@ -5,7 +5,7 @@ TEST_CASE("Table creation tests", "[model]") {
 
     SECTION("create user model"){
         conn.drop_table<User>();
-        if(const auto error = conn.create_table<User>(false); error) {
+        if(const auto error = conn.create_table<User>(); error) {
             FAIL(error.value());
         }
         REQUIRE(conn.exists_table<User>() == true);
