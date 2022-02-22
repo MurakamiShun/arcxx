@@ -158,14 +158,11 @@ And column struct requires <code class="code docutils literal notranslate"><span
 </section>
 <section id="id1">
 <h2>Table Creation<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h2>
+<p>Use <code class="code docutils literal notranslate"><span class="pre">adaptor::create_table()</span></code> to create table into database.
+<code class="code docutils literal notranslate"><span class="pre">create_table()</span></code> will not cause error when a given table exists.
+<code class="code docutils literal notranslate"><span class="pre">create_table(abort_if_exists)</span></code> will return error message when exists the table.</p>
 <div class="literal-block-wrapper docutils container" id="id4">
-<div class="code-block-caption"><span class="caption-text">Generate table creation SQL code (SQLite3)</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">schema</span><span class="o">::</span><span class="n">to_sql</span><span class="o">&lt;</span><span class="n">active_record</span><span class="o">::</span><span class="n">sqlite3_adaptor</span><span class="o">&gt;</span><span class="p">()</span><span class="w"></span>
-</pre></div>
-</div>
-</div>
-<div class="literal-block-wrapper docutils container" id="id5">
-<div class="code-block-caption"><span class="caption-text">Generated SQL code (SQLite3)</span><a class="headerlink" href="#id5" title="Permalink to this code"></a></div>
+<div class="code-block-caption"><span class="caption-text">Generated SQL code (SQLite3)</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
 <div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">example_table</span><span class="p">(</span><span class="w"></span>
 <span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"></span>
@@ -173,10 +170,12 @@ And column struct requires <code class="code docutils literal notranslate"><span
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id6">
-<div class="code-block-caption"><span class="caption-text">Create table into Database file.</span><a class="headerlink" href="#id6" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">Create table into Database file.</span><a class="headerlink" href="#id5" title="Permalink to this code"></a></div>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">sqlite3_adaptor</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;example.sqlite3&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">sqlite3</span><span class="o">::</span><span class="n">options</span><span class="o">::</span><span class="n">create</span><span class="p">);</span><span class="w"></span>
 <span class="n">connection</span><span class="p">.</span><span class="n">create_table</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span><span class="p">();</span><span class="w"></span>
+
+<span class="n">connection</span><span class="p">.</span><span class="n">create_table</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">active_record</span><span class="o">::</span><span class="n">abort_if_exists</span><span class="p">);</span><span class="w"> </span><span class="c1">// return error message due to exists table</span>
 </pre></div>
 </div>
 </div>

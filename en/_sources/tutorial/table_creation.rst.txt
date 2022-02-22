@@ -50,10 +50,9 @@ Attribute details are written in :doc:`/api/active_record/attributes`.
 Table Creation
 ==============
 
-.. code-block:: cpp
-    :caption: Generate table creation SQL code (SQLite3)
-
-    ExampleTable::schema::to_sql<active_record::sqlite3_adaptor>()
+Use :code:`adaptor::create_table()` to create table into database.
+:code:`create_table()` will not cause error when a given table exists.
+:code:`create_table(abort_if_exists)` will return error message when exists the table.
 
 .. code-block:: sql
     :caption: Generated SQL code (SQLite3)
@@ -68,3 +67,5 @@ Table Creation
 
     auto connection = active_record::sqlite3_adaptor::open("example.sqlite3", active_record::sqlite3::options::create);
     connection.create_table<ExampleTable>();
+
+    connection.create_table<ExampleTable>(active_record::abort_if_exists); // return error message due to exists table
