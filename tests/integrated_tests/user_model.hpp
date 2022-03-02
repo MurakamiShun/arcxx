@@ -38,47 +38,42 @@ class UserModelTestsFixture {
 protected:
     adaptor conn;
     std::size_t get_data_count(){
-        if(const auto [error, data_count] = User::count().exec(conn); error){
-            FAIL(error.value());
+        if(const auto result = User::count().exec(conn); result.has_value()){
+            return result.value();
         }
-        else {
-            return data_count;
+        else { // error
+            FAIL(result.error());
         }
         return -1;
     }
 public:
     UserModelTestsFixture() : conn(open_testfile()) {
-        // Create test data
         conn.drop_table<User>();
-        if(const auto error = conn.create_table<User>(); error) {
-            FAIL(error.value());
+        // Create test data
+        if(const auto result = conn.create_table<User>(active_record::abort_if_exists); !result) {
+            FAIL(result.error());
         }
         const auto insert_transaction = [](auto& connection){
-            using transaction = active_record::transaction;
+            namespace trans = active_record::transaction;
 
             for(auto i = 0; i < 10; ++i){
                 User user;
                 user.id = i;
                 user.name = std::string{ "user" } + std::to_string(i);
                 user.height = 170.0 + i;
-                if(const auto error = User::insert(user).exec(connection); error) {
-                    FAIL(error.value());
-                    return transaction::rollback;
+                if(const auto result = User::insert(user).exec(connection); !result) {
+                    WARN(result.error());
+                    return trans::rollback(result.error());
                 }
             }
-            return transaction::commit;
+            return trans::commit;
         };
-
-        if(const auto [error, trans_result] = conn.transaction(insert_transaction); error) {
-            FAIL(error.value());
-        }    
-        else if(trans_result == active_record::transaction::rollback) {
-            FAIL("Insert error happned!!");
+        if(const auto trans_result = conn.transaction(insert_transaction); !trans_result) {
+            FAIL(trans_result.error());
         }
     }
     ~UserModelTestsFixture(){
-        const auto error = conn.drop_table<User>();
-        if(error) FAIL(error.value());
+        conn.drop_table<User>();
         close_testfile(conn);
     }
 };

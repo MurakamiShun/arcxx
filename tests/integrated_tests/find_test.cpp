@@ -6,30 +6,31 @@ TEST_CASE_METHOD(UserModelTestsFixture, "Find query tests", "[model][query_relat
         INFO(User::where(User::ID{1}).to_sql());
         INFO(User::where(User::ID::cmp == 1).to_sql());
 
-        if (const auto [error, user] = User::where(User::ID{1}).exec(conn); error) {
-            FAIL(error.value());
+        if (const auto result = User::where(User::ID{1}).exec(conn); !result) {
+            FAIL(result.error());
         }
         else {
-            REQUIRE(user.size() == 1);
-            REQUIRE(user[0].id.value() == 1);
+            REQUIRE(result.value().size() == 1);
+            REQUIRE(result.value()[0].id == 1);
         }
 
-        if (const auto [error, user] = User::where(User::ID::cmp == 1).exec(conn); error) {
-            FAIL(error.value());
+        if (const auto result = User::where(User::ID::cmp == 1).exec(conn); !result) {
+            FAIL(result.error());
         }
         else {
-            REQUIRE(user.size() == 1);
-            REQUIRE(user[0].id.value() == 1);
+            REQUIRE(result.value().size() == 1);
+            REQUIRE(result.value()[0].id == 1);
         }
     }
 
     SECTION("not equal condition test") {
         INFO(User::where(User::ID::cmp != 2).to_sql());
 
-        if (const auto [error, users] = User::where(User::ID::cmp < 2).exec(conn); error) {
-            FAIL(error.value());
+        if (const auto find_users_result = User::where(User::ID::cmp < 2).exec(conn); !find_users_result) {
+            FAIL(find_users_result.error());
         }
         else {
+            const auto& users = find_users_result.value();
             REQUIRE(users.size() == 2);
             REQUIRE(std::find_if(users.begin(), users.end(), [](const auto& user){ return user.id == 2; }) == users.end());
         }
@@ -38,65 +39,67 @@ TEST_CASE_METHOD(UserModelTestsFixture, "Find query tests", "[model][query_relat
     SECTION("less condition test") {
         INFO(User::where(User::ID::cmp < 2).to_sql());
 
-        if (const auto [error, users] = User::where(User::ID::cmp < 2).exec(conn); error) {
-            FAIL(error.value());
+        if (const auto find_users_result = User::where(User::ID::cmp < 2).exec(conn); !find_users_result) {
+            FAIL(find_users_result.error());
         }
         else {
-            REQUIRE(users.size() == 2);
-            REQUIRE(users[0].id.value() == 0);
-            REQUIRE(users[1].id.value() == 1);
+            REQUIRE(find_users_result.value().size() == 2);
+            REQUIRE(find_users_result.value()[0].id == 0);
+            REQUIRE(find_users_result.value()[1].id == 1);
         }
     }
 
     SECTION("less or equal condition test") {
         INFO(User::where(User::ID::cmp <= 2).to_sql());
 
-        if (const auto [error, users] = User::where(User::ID::cmp <= 2).exec(conn); error) {
-            FAIL(error.value());
+        if (const auto find_users_result = User::where(User::ID::cmp <= 2).exec(conn); !find_users_result) {
+            FAIL(find_users_result.error());
         }
         else {
-            REQUIRE(users.size() == 3);
-            REQUIRE(users[0].id.value() == 0);
-            REQUIRE(users[2].id.value() == 2);
+            REQUIRE(find_users_result.value().size() == 3);
+            REQUIRE(find_users_result.value()[0].id == 0);
+            REQUIRE(find_users_result.value()[2].id == 2);
         }
     }
     
     SECTION("greater condition test") {
         INFO(User::where(User::ID::cmp > 7).to_sql());
 
-        if (const auto [error, users] = User::where(User::ID::cmp > 7).exec(conn); error) {
-            FAIL(error.value());
+        if (const auto find_users_result = User::where(User::ID::cmp > 7).exec(conn); !find_users_result) {
+            FAIL(find_users_result.error());
         }
         else {
-            REQUIRE(users.size() == 2);
-            REQUIRE(users[0].id.value() == 8);
-            REQUIRE(users[1].id.value() == 9);
+            REQUIRE(find_users_result.value().size() == 2);
+            REQUIRE(find_users_result.value()[0].id == 8);
+            REQUIRE(find_users_result.value()[1].id == 9);
         }
     }
 
     SECTION("greater or equal condition test") {
         INFO(User::where(User::ID::cmp >= 7).to_sql());
 
-        if (const auto [error, users] = User::where(User::ID::cmp >= 7).exec(conn); error) {
-            FAIL(error.value());
+        if (const auto find_users_result = User::where(User::ID::cmp >= 7).exec(conn); !find_users_result) {
+            FAIL(find_users_result.error());
         }
         else {
-            REQUIRE(users.size() == 3);
-            REQUIRE(users[0].id.value() == 7);
-            REQUIRE(users[2].id.value() == 9);
+            REQUIRE(find_users_result.value().size() == 3);
+            REQUIRE(find_users_result.value()[0].id == 7);
+            REQUIRE(find_users_result.value()[2].id == 9);
         }
     }
 
     SECTION("find user with like condition and between id") {
         INFO(User::where(User::Name::like("user_")).where(User::ID{1}).to_sql());
-        if (const auto [error1, users1] = User::where(User::Name::like("user_")).where(User::ID{1}).exec(conn); error1) {
-            FAIL(error1.value());
+        if (const auto find_users_result1 = User::where(User::Name::like("user_")).where(User::ID{1}).exec(conn); !find_users_result1) {
+            FAIL(find_users_result1.error());
         }
         else{
-            if (const auto [error2, users2] = User::where(User::Name::like("user_") && User::ID::cmp == 1).exec(conn); error2) {
-                FAIL(error2.value());
+            if (const auto find_users_result2 = User::where(User::Name::like("user_") && User::ID::cmp == 1).exec(conn); !find_users_result2) {
+                FAIL(find_users_result2.error());
             }
             else {
+                const auto& users1 = find_users_result1.value();
+                const auto& users2 = find_users_result2.value();
                 REQUIRE(typeid(users1).name() == typeid(std::vector<User>).name());
                 //STATIC_REQUIRE(std::is_same_v<decltype(users), std::vector<User::Name>>);
                 REQUIRE(users1.size() == 1);

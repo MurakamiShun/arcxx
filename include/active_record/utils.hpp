@@ -31,6 +31,10 @@ namespace active_record{
 
     template <class T, class E>
     using expected = tl::expected<T, E>;
+    template<typename E>
+    decltype(auto) make_unexpected(E&& e){
+        return tl::make_unexpected(std::forward<E>(e));
+    }
 
     namespace detail{
         template<typename T, template<typename...>typename U>

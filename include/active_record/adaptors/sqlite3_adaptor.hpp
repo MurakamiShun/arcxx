@@ -30,9 +30,9 @@ namespace active_record {
 
         sqlite3_adaptor(const active_record::string& file_name, const int flags);
 
-        std::optional<active_record::string> get_error_msg(const char* msg_ptr);
-        std::optional<active_record::string> get_error_msg(const int result_code);
-        std::optional<active_record::string> get_error_msg();
+        std::optional<active_record::string> get_error_msg(const char* msg_ptr) const;
+        std::optional<active_record::string> get_error_msg(const int result_code) const;
+        std::optional<active_record::string> get_error_msg() const;
     public:
         bool has_error() const noexcept;
         const active_record::string& error_message() const;
@@ -52,33 +52,31 @@ namespace active_record {
         static active_record::string bind_variable_str(const std::size_t idx);
 
         template<typename Result, specialized_from<std::tuple> BindAttrs>
-        [[nodiscard]] std::pair<std::optional<active_record::string>, Result> exec(const query_relation<Result, BindAttrs>& query);
+        [[nodiscard]] active_record::expected<Result, active_record::string> exec(const query_relation<Result, BindAttrs>& query);
         
         template<specialized_from<std::tuple> BindAttrs>
-        std::optional<active_record::string> exec(const query_relation<bool, BindAttrs>& query);
+        active_record::expected<void, active_record::string> exec(const query_relation<void, BindAttrs>& query);
 
         template<is_model Mod>
-        std::optional<active_record::string> create_table(decltype(abort_if_exists));
+        active_record::expected<void, active_record::string> create_table(decltype(abort_if_exists));
         template<is_model Mod>
-        std::optional<active_record::string> create_table();
+        active_record::expected<void, active_record::string> create_table();
         template<is_model Mod>
-        std::optional<active_record::string> drop_table();
+        active_record::expected<void, active_record::string> drop_table();
 
         template<is_model Mod>
         bool exists_table();
 
-        std::optional<active_record::string> begin(const active_record::string_view transaction_name = "");
-        std::optional<active_record::string> commit(const active_record::string_view transaction_name = "");
-        std::optional<active_record::string> rollback(const active_record::string_view transaction_name = "");
+        active_record::expected<void, active_record::string> begin(const active_record::string_view transaction_name = "");
+        active_record::expected<void, active_record::string> commit(const active_record::string_view transaction_name = "");
+        active_record::expected<void, active_record::string> rollback(const active_record::string_view transaction_name = "");
 
-        template<std::convertible_to<std::function<active_record::transaction(void)>> F>
-        std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F& func);
-        template<std::convertible_to<std::function<active_record::transaction(void)>> F>
-        std::pair<std::optional<active_record::string>, active_record::transaction>  transaction(F&& func);
-        template<std::convertible_to<std::function<active_record::transaction(sqlite3_adaptor&)>> F>
-        std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F& func);
-        template<std::convertible_to<std::function<active_record::transaction(sqlite3_adaptor&)>> F>
-        std::pair<std::optional<active_record::string>, active_record::transaction>  transaction(F&& func);
+        template<typename F>
+        requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t()>>
+        active_record::expected<void, active_record::string> transaction(F&& func);
+        template<typename F>
+        requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t(sqlite3_adaptor&)>>
+        active_record::expected<void, active_record::string> transaction(F&& func);
 
         template<is_attribute Attr>
         static active_record::string column_definition();

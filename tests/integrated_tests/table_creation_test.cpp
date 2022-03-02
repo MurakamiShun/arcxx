@@ -5,13 +5,14 @@ TEST_CASE("Table creation tests", "[model]") {
 
     SECTION("create user model"){
         conn.drop_table<User>();
-        if(const auto error = conn.create_table<User>(); error) {
-            FAIL(error.value());
+        
+        if(const auto result = conn.create_table<User>(); !result) {
+            FAIL(result.error());
         }
         REQUIRE(conn.exists_table<User>() == true);
         
-        const auto error = conn.drop_table<User>();
-        if(error) FAIL(error.value());
+        const auto result = conn.drop_table<User>();
+        if(!result) FAIL(result.error());
         REQUIRE(conn.exists_table<User>() == false);
     }
     close_testfile(conn);

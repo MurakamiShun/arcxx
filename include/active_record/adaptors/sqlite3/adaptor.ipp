@@ -5,21 +5,22 @@
  * 
  * Released under the MIT License.
  */
+#include <iostream>
 namespace active_record {
     inline sqlite3_adaptor::sqlite3_adaptor(const active_record::string& file_name, const int flags){
         auto result = sqlite3_open_v2(file_name.c_str(), &db_obj, flags, nullptr);
         if(result != SQLITE_OK) error_msg = get_error_msg(result);
     }
 
-    inline std::optional<active_record::string> sqlite3_adaptor::get_error_msg(const char* msg_ptr){
+    inline std::optional<active_record::string> sqlite3_adaptor::get_error_msg(const char* msg_ptr) const {
         if(msg_ptr == nullptr) return std::nullopt;
-        else return active_record::string{ msg_ptr };
+        else return std::make_optional<active_record::string>(msg_ptr);
     }
-    inline std::optional<active_record::string> sqlite3_adaptor::get_error_msg(const int result_code){
-        if(result_code != SQLITE_OK) return get_error_msg();
-        else return std::nullopt;
+    inline std::optional<active_record::string> sqlite3_adaptor::get_error_msg(const int result_code) const {
+        if(result_code == SQLITE_OK) return std::nullopt;
+        else return get_error_msg();
     }
-    inline std::optional<active_record::string> sqlite3_adaptor::get_error_msg(){
+    inline std::optional<active_record::string> sqlite3_adaptor::get_error_msg() const {
         return get_error_msg(sqlite3_errmsg(db_obj));
     }
 
@@ -93,7 +94,7 @@ namespace active_record {
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    inline std::pair<std::optional<active_record::string>, Result> sqlite3_adaptor::exec(const query_relation<Result, BindAttrs>& query){
+    inline active_record::expected<Result, active_record::string> sqlite3_adaptor::exec(const query_relation<Result, BindAttrs>& query){
         Result result;
         const auto result_code = [this, &query, &result](){
             const auto sql = query.template to_sql<sqlite3_adaptor>();
@@ -131,93 +132,111 @@ namespace active_record {
             return result_code;
         }();
 
-        return {error_msg = get_error_msg(result_code), result};
+        if(error_msg = get_error_msg(result_code)){
+            return active_record::make_unexpected(error_msg.value());
+        }
+        else{
+            return result;
+        }
     }
 
     template<specialized_from<std::tuple> BindAttrs>
-    inline std::optional<active_record::string> sqlite3_adaptor::exec(const query_relation<bool, BindAttrs>& query){
-        const auto sql = query.template to_sql<sqlite3_adaptor>();
-        sqlite3_stmt* stmt = nullptr;
-        auto result_code = sqlite3_prepare_v2(
-            db_obj,
-            sql.c_str(),
-            static_cast<int>(sql.size()),
-            &stmt,
-            nullptr
-        );
-        if(result_code != SQLITE_OK) return error_msg = get_error_msg(result_code);
-
-        if constexpr(query.bind_attrs_count() != 0) {
-            result_code = SQLITE_OK;
-            tuptup::indexed_apply_each(
-                [stmt, &result_code]<std::size_t N, typename Attr>(const Attr& attr){
-                    const auto res = active_record::sqlite3::detail::bind_variable(stmt, N, attr);
-                    if (res != SQLITE_OK) result_code = res;
-                },
-                query.bind_attrs
+    inline active_record::expected<void, active_record::string> sqlite3_adaptor::exec(const query_relation<void, BindAttrs>& query){
+        const auto result_code = [this, &query](){
+            const auto sql = query.template to_sql<sqlite3_adaptor>();
+            sqlite3_stmt* stmt = nullptr;
+            auto result_code = sqlite3_prepare_v2(
+                db_obj,
+                sql.c_str(),
+                static_cast<int>(sql.size()),
+                &stmt,
+                nullptr
             );
+            if(result_code != SQLITE_OK) return result_code;
+
+            if constexpr(query.bind_attrs_count() != 0) {
+                result_code = SQLITE_OK;
+                tuptup::indexed_apply_each(
+                    [stmt, &result_code]<std::size_t N, typename Attr>(const Attr& attr){
+                        const auto res = active_record::sqlite3::detail::bind_variable(stmt, N, attr);
+                        if (res != SQLITE_OK) result_code = res;
+                    },
+                    query.bind_attrs
+                );
+            }
+            if(result_code != SQLITE_OK) return result_code;
+
+            result_code = sqlite3_step(stmt);
+            if(result_code != SQLITE_DONE) return result_code;
+
+            result_code = sqlite3_finalize(stmt);
+            return result_code;
+        }();
+        error_msg = get_error_msg(result_code);
+        if(error_msg){
+            return active_record::make_unexpected(error_msg.value());
         }
-        if(result_code != SQLITE_OK) return error_msg = get_error_msg(result_code);
-
-        result_code = sqlite3_step(stmt);
-        if(result_code != SQLITE_DONE) return error_msg = get_error_msg(result_code);
-
-        result_code = sqlite3_finalize(stmt);
-        return error_msg = get_error_msg(result_code);
+        else{
+            return active_record::expected<void, active_record::string>{};
+        }
     }
 
     template<is_model Mod>
-    inline std::optional<active_record::string> sqlite3_adaptor::create_table(decltype(abort_if_exists)){
-        return exec(raw_query<bool>(Mod::schema::template to_sql<sqlite3_adaptor>(abort_if_exists)));
+    inline active_record::expected<void, active_record::string> sqlite3_adaptor::create_table(decltype(abort_if_exists)){
+        return exec(raw_query<void>(Mod::schema::template to_sql<sqlite3_adaptor>(abort_if_exists)));
     }
     template<is_model Mod>
-    inline std::optional<active_record::string> sqlite3_adaptor::create_table(){
-        return exec(raw_query<bool>(Mod::schema::template to_sql<sqlite3_adaptor>()));
+    inline active_record::expected<void, active_record::string> sqlite3_adaptor::create_table(){
+        return exec(raw_query<void>(Mod::schema::template to_sql<sqlite3_adaptor>()));
     }
 
     template<is_model Mod>
-    inline std::optional<active_record::string> sqlite3_adaptor::drop_table(){
-        return exec(raw_query<bool>("DROP TABLE ", Mod::table_name, ";"));
+    inline active_record::expected<void, active_record::string> sqlite3_adaptor::drop_table(){
+        return exec(raw_query<void>("DROP TABLE ", Mod::table_name, ";"));
     }
 
     template<is_model Mod>
     inline bool sqlite3_adaptor::exists_table(){
         const auto result = exec(raw_query<int>("SELECT COUNT(*) FROM sqlite_master WHERE type = \"table\" AND name = \"", Mod::table_name, "\";"));
-        return result.second;
+        return result.value();
     }
 
-    inline std::optional<active_record::string> sqlite3_adaptor::begin(const active_record::string_view transaction_name){
-        return exec(raw_query<bool>("BEGIN TRANSACTION ", transaction_name, ";"));
+    inline active_record::expected<void, active_record::string> sqlite3_adaptor::begin(const active_record::string_view transaction_name){
+        return exec(raw_query<void>("BEGIN TRANSACTION ", transaction_name, ";"));
     }
-    inline std::optional<active_record::string> sqlite3_adaptor::commit(const active_record::string_view transaction_name){
-        return exec(raw_query<bool>("COMMIT TRANSACTION ", transaction_name, ";"));
+    inline active_record::expected<void, active_record::string> sqlite3_adaptor::commit(const active_record::string_view transaction_name){
+        return exec(raw_query<void>("COMMIT TRANSACTION ", transaction_name, ";"));
     }
-    inline std::optional<active_record::string> sqlite3_adaptor::rollback(const active_record::string_view transaction_name){
-        return exec(raw_query<bool>("ROLLBACK TRANSACTION ", transaction_name, ";"));
+    inline active_record::expected<void, active_record::string> sqlite3_adaptor::rollback(const active_record::string_view transaction_name){
+        return exec(raw_query<void>("ROLLBACK TRANSACTION ", transaction_name, ";"));
     }
 
-    template<std::convertible_to<std::function<active_record::transaction(void)>> F>
-    inline std::pair<std::optional<active_record::string>, active_record::transaction> sqlite3_adaptor::transaction(F& func) {
-        if(const auto errmsg = begin(); errmsg) return { errmsg, active_record::transaction::rollback };
-        const auto transaction_result = func();
-        switch (transaction_result) {
-        case active_record::transaction::commit:
-            return { commit(), active_record::transaction::commit };
-        default:
-            return { rollback(), active_record::transaction::rollback };
+    template<typename F>
+    requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t()>>
+    inline active_record::expected<void, active_record::string> sqlite3_adaptor::transaction(F&& func) {
+        if(auto begin_result = begin(); !begin_result) {
+            return active_record::make_unexpected(std::move(begin_result).error());
+        }
+        auto trans_result = func();
+        if(trans_result.should_rollback()) {
+            if(auto rollback_result = rollback(); !rollback_result) {
+                return active_record::make_unexpected(std::move(rollback_result).error());
+            }
+            else {
+                return active_record::make_unexpected(std::move(trans_result).rollback_reason.value());
+            }
+        }
+        else { // commit
+            if(auto commit_result = commit(); !commit_result){
+                return active_record::make_unexpected(std::move(commit_result).error());
+            }
+            return active_record::expected<void, active_record::string>{};
         }
     }
-    template<std::convertible_to<std::function<active_record::transaction(void)>> F>
-    inline std::pair<std::optional<active_record::string>, active_record::transaction> sqlite3_adaptor::transaction(F&& func) {
-        return transaction(func);
-    }
-    template<std::convertible_to<std::function<active_record::transaction(sqlite3_adaptor&)>> F>
-    inline std::pair<std::optional<active_record::string>, active_record::transaction> sqlite3_adaptor::transaction(F& func) {
-        return transaction(static_cast<std::function<active_record::transaction()>>(std::bind(func, std::ref(*this))));
-    }
-    template<std::convertible_to<std::function<active_record::transaction(sqlite3_adaptor&)>> F>
-    inline std::pair<std::optional<active_record::string>, active_record::transaction> sqlite3_adaptor::transaction(F&& func) {
-        return transaction(func);
+    template<typename F>
+    requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t(sqlite3_adaptor&)>>
+    inline active_record::expected<void, active_record::string> sqlite3_adaptor::transaction(F&& func) {
+        return transaction([this, &func](){ return func(*this); });
     }
 
     template<is_attribute Attr>
