@@ -43,7 +43,7 @@ namespace active_record {
 
 namespace active_record{
     template<specialized_from<std::tuple> BindAttrs>
-    struct query_relation<bool, BindAttrs> : public query_relation_common<BindAttrs> {
+    struct query_relation<void, BindAttrs> : public query_relation_common<BindAttrs> {
         using query_relation_common<BindAttrs>::query_relation_common;
         template<std::derived_from<adaptor> Adaptor>
         auto exec(Adaptor& adapt) const {

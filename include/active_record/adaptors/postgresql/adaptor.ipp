@@ -121,17 +121,17 @@ namespace active_record {
     }
 
     template<is_model Mod>
-    inline std::optional<active_record::string> postgresql_adaptor::create_table(decltype(abort_if_exists)){
-        return exec(raw_query<bool>(Mod::schema::template to_sql<postgresql_adaptor>(abort_if_exists)));
+    inline active_record::expected<void, active_record::string> postgresql_adaptor::create_table(decltype(abort_if_exists)){
+        return exec(raw_query<void>(Mod::schema::template to_sql<postgresql_adaptor>(abort_if_exists)));
     }
     template<is_model Mod>
-    inline std::optional<active_record::string> postgresql_adaptor::create_table(){
-        return exec(raw_query<bool>(Mod::schema::template to_sql<postgresql_adaptor>()));
+    inline active_record::expected<void, active_record::string> postgresql_adaptor::create_table(){
+        return exec(raw_query<void>(Mod::schema::template to_sql<postgresql_adaptor>()));
     }
 
     template<is_model Mod>
-    inline std::optional<active_record::string> postgresql_adaptor::drop_table(){
-        return exec(raw_query<bool>("DROP TABLE ", Mod::table_name,";"));
+    inline active_record::expected<void, active_record::string> postgresql_adaptor::drop_table(){
+        return exec(raw_query<void>("DROP TABLE ", Mod::table_name,";"));
     }
 
     template<is_model Mod>
@@ -139,20 +139,7 @@ namespace active_record {
         const auto result = exec(raw_query<int>("SELECT COUNT(*) FROM information_schema.tables ",
             "WHERE table_name = '", Mod::table_name, "';"
         ));
-        return result.second;
-    }
-
-    template<specialized_from<std::tuple> BindAttrs>
-    inline auto postgresql_adaptor::exec(const query_relation<bool, BindAttrs>& query){
-        PGresult* result = this->exec_sql(query);
-
-        if (const auto stat = PQresultStatus(result); stat == PGRES_COMMAND_OK || stat == PGRES_NONFATAL_ERROR){
-            error_msg = std::nullopt;
-        }
-        else error_msg = PQresultErrorMessage(result);
-
-        if(result != nullptr) PQclear(result);
-        return error_msg;
+        return result.value();
     }
 
     namespace detail{
@@ -182,7 +169,7 @@ namespace active_record {
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    inline auto postgresql_adaptor::exec(const query_relation<Result, BindAttrs>& query){
+    inline active_record::expected<Result, active_record::string> postgresql_adaptor::exec(const query_relation<Result, BindAttrs>& query){
         PGresult* result = this->exec_sql(query);
 
         Result ret;
@@ -190,7 +177,7 @@ namespace active_record {
         if (PQresultStatus(result) != PGRES_TUPLES_OK) {
             error_msg = PQresultErrorMessage(result);
             if(result != nullptr) PQclear(result);
-            return std::make_pair(error_msg, ret);
+            return active_record::make_unexpected(error_msg.value());
         }
 
         auto col_count = PQntuples(result);
@@ -200,41 +187,65 @@ namespace active_record {
 
         if(result != nullptr) PQclear(result);
         error_msg = std::nullopt;
-        return std::make_pair(error_msg, ret);
+        return ret;
     }
 
-    inline std::optional<active_record::string> postgresql_adaptor::begin(){
-        return exec(raw_query<bool>("BEGIN"));
-    }
-    inline std::optional<active_record::string> postgresql_adaptor::commit(){
-        return exec(raw_query<bool>("COMMIT"));
-    }
-    inline std::optional<active_record::string> postgresql_adaptor::rollback(){
-        return exec(raw_query<bool>("ROLLBACK"));
-    }
+    template<specialized_from<std::tuple> BindAttrs>
+    inline active_record::expected<void, active_record::string> postgresql_adaptor::exec(const query_relation<void, BindAttrs>& query){
+        PGresult* result = this->exec_sql(query);
 
-    template<std::convertible_to<std::function<active_record::transaction(void)>> F>
-    inline std::pair<std::optional<active_record::string>, active_record::transaction> postgresql_adaptor::transaction(F& func) {
-        if(const auto errmsg = begin(); errmsg) return { errmsg, active_record::transaction::rollback };
-        const auto transaction_result = func();
-        switch (transaction_result) {
-        case active_record::transaction::commit:
-            return { commit(), active_record::transaction::commit };
-        default:
-            return { rollback(), active_record::transaction::rollback };
+        if (const auto stat = PQresultStatus(result); stat == PGRES_COMMAND_OK || stat == PGRES_NONFATAL_ERROR){
+            error_msg = std::nullopt;
+        }
+        else error_msg = PQresultErrorMessage(result);
+
+        if(result != nullptr) PQclear(result);
+        
+        if(error_msg){
+            return active_record::make_unexpected(error_msg.value());
+        }
+        else{
+            return {};
         }
     }
-    template<std::convertible_to<std::function<active_record::transaction(void)>> F>
-    inline std::pair<std::optional<active_record::string>, active_record::transaction> postgresql_adaptor::transaction(F&& func) {
-        return transaction(func);
+
+    inline active_record::expected<void, active_record::string> postgresql_adaptor::begin(){
+        return exec(raw_query<void>("BEGIN"));
     }
-    template<std::convertible_to<std::function<active_record::transaction(postgresql_adaptor&)>> F>
-    inline std::pair<std::optional<active_record::string>, active_record::transaction> postgresql_adaptor::transaction(F& func) {
-        return transaction(static_cast<std::function<active_record::transaction()>>(std::bind(func, std::ref(*this))));
+    inline active_record::expected<void, active_record::string> postgresql_adaptor::commit(){
+        return exec(raw_query<void>("COMMIT"));
     }
-    template<std::convertible_to<std::function<active_record::transaction(postgresql_adaptor&)>> F>
-    inline std::pair<std::optional<active_record::string>, active_record::transaction> postgresql_adaptor::transaction(F&& func) {
-        return transaction(func);
+    inline active_record::expected<void, active_record::string> postgresql_adaptor::rollback(){
+        return exec(raw_query<void>("ROLLBACK"));
+    }
+
+    template<typename F>
+    requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t()>>
+    inline active_record::expected<void, active_record::string> postgresql_adaptor::transaction(F&& func) {
+        if(auto begin_result = begin(); !begin_result) {
+            return active_record::make_unexpected(std::move(begin_result).error());
+        }
+        auto trans_result = func();
+        if(trans_result.should_rollback()) {
+            if(auto rollback_result = rollback(); !rollback_result) {
+                return active_record::make_unexpected(std::move(rollback_result).error());
+            }
+            else {
+                return active_record::make_unexpected(std::move(trans_result).rollback_reason.value());
+            }
+        }
+        else { // commit
+            if(auto commit_result = commit(); !commit_result){
+                return active_record::make_unexpected(std::move(commit_result).error());
+            }
+            return active_record::expected<void, active_record::string>{};;
+        }
+    }
+
+    template<typename F>
+    requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t(postgresql_adaptor&)>>
+    inline active_record::expected<void, active_record::string> postgresql_adaptor::transaction(F&& func) {
+        return transaction([this, &func](){ return func(*this); });
     }
 
     template<is_attribute Attr>

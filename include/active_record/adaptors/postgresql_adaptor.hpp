@@ -63,33 +63,31 @@ namespace active_record {
         static active_record::string bind_variable_str(const std::size_t idx);
 
         template<is_model Mod>
-        std::optional<active_record::string> create_table(decltype(abort_if_exists));
+        active_record::expected<void, active_record::string> create_table(decltype(abort_if_exists));
         template<is_model Mod>
-        std::optional<active_record::string> create_table();
+        active_record::expected<void, active_record::string> create_table();
         template<is_model Mod>
-        std::optional<active_record::string> drop_table();
+        active_record::expected<void, active_record::string> drop_table();
 
         template<is_model Mod>
         bool exists_table();
 
-        template<specialized_from<std::tuple> BindAttrs>
-        auto exec(const query_relation<bool, BindAttrs>& query);
-
         template<typename Result, specialized_from<std::tuple> BindAttrs>
-        auto exec(const query_relation<Result, BindAttrs>& query);
+        active_record::expected<Result, active_record::string> exec(const query_relation<Result, BindAttrs>& query);
 
-        std::optional<active_record::string> begin();
-        std::optional<active_record::string> commit();
-        std::optional<active_record::string> rollback();
+        template<specialized_from<std::tuple> BindAttrs>
+        active_record::expected<void, active_record::string> exec(const query_relation<void, BindAttrs>& query);
 
-        template<std::convertible_to<std::function<active_record::transaction(void)>> F>
-        std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F& func);
-        template<std::convertible_to<std::function<active_record::transaction(void)>> F>
-        std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F&& func);
-        template<std::convertible_to<std::function<active_record::transaction(postgresql_adaptor&)>> F>
-        std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F& func);
-        template<std::convertible_to<std::function<active_record::transaction(postgresql_adaptor&)>> F>
-        std::pair<std::optional<active_record::string>, active_record::transaction> transaction(F&& func);
+        active_record::expected<void, active_record::string> begin();
+        active_record::expected<void, active_record::string> commit();
+        active_record::expected<void, active_record::string> rollback();
+
+        template<typename F>
+        requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t()>>
+        active_record::expected<void, active_record::string> transaction(F&& func);
+        template<typename F>
+        requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t(postgresql_adaptor&)>>
+        active_record::expected<void, active_record::string> transaction(F&& func);
 
         template<is_attribute Attr>
         static active_record::string column_definition();

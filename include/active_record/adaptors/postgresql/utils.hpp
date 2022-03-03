@@ -82,7 +82,14 @@ namespace active_record::PostgreSQL::detail {
         const char* const text_ptr = PQgetvalue(res, col, field);
         if (text_ptr == nullptr) return false;
         const auto value_text = active_record::string{ text_ptr };
-        std::from_chars(&(value_text.front()), &(value_text.back()) + 1, result);
+        if constexpr(std::is_same_v<std::remove_cvref_t<T>, bool>){
+            int result_tmp = 0;
+            std::from_chars(&(value_text.front()), &(value_text.back()) + 1, result_tmp);
+            result = static_cast<bool>(result_tmp);
+        }
+        else{
+            std::from_chars(&(value_text.front()), &(value_text.back()) + 1, result);
+        }
         return true;
     }
 

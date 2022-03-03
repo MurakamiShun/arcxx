@@ -149,7 +149,7 @@ namespace active_record {
     template<is_attribute... Attrs>
     requires is_model<typename Result::value_type>
     inline auto query_relation<Result, BindAttrs>::update(const Attrs&... attrs) && requires specialized_from<Result, std::vector>{
-        query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> ret{ query_operation::update };
+        query_relation<void, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> ret{ query_operation::update };
 
         ret.tables.push_back(concat_strings("\"", Result::value_type::table_name, "\""));
         ret.conditions = std::move(this->conditions);
@@ -162,7 +162,7 @@ namespace active_record {
     template<is_attribute... Attrs>
     requires is_model<typename Result::value_type>
     inline auto query_relation<Result, BindAttrs>::update(const Attrs&... attrs) const& requires specialized_from<Result, std::vector>{
-        query_relation<bool, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> ret{ query_operation::update };
+        query_relation<void, tuptup::tuple_cat_t<BindAttrs, std::tuple<Attrs...>>> ret{ query_operation::update };
 
         ret.tables.push_back(concat_strings("\"", Result::value_type::table_name, "\""));
         ret.conditions = this->conditions;

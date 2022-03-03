@@ -10,7 +10,7 @@ namespace active_record {
     inline auto model<Derived>::insert(const Derived& model) {
         using namespace tuptup::type_placeholders;
         using bindattr_t = tuptup::apply_type_t<std::remove_cvref<_1>, decltype(model.attributes_as_tuple())>;
-        query_relation<bool, bindattr_t> ret{ query_operation::insert };
+        query_relation<void, bindattr_t> ret{ query_operation::insert };
         // get attribute copy from model
         ret.bind_attrs = model.attributes_as_tuple();
         ret.tables.push_back(detail::insert_column_names_to_string<Derived>());
@@ -28,7 +28,7 @@ namespace active_record {
     inline auto model<Derived>::insert(Derived&& model) {
         using namespace tuptup::type_placeholders;
         using bindattr_t = tuptup::apply_type_t<std::remove_cvref<_1>, decltype(model.attributes_as_tuple())>;
-        query_relation<bool, bindattr_t> ret{ query_operation::insert };
+        query_relation<void, bindattr_t> ret{ query_operation::insert };
         // get attribute from model
         ret.bind_attrs = std::move(model.attributes_as_tuple());
         ret.tables.push_back(detail::insert_column_names_to_string<Derived>());
@@ -93,7 +93,7 @@ namespace active_record {
     template<typename Derived>
     template<specialized_from<std::tuple> SrcBindAttrs>
     inline auto model<Derived>::destroy(query_condition<SrcBindAttrs>&& cond) {
-        query_relation<bool, SrcBindAttrs> ret{ query_operation::destroy };
+        query_relation<void, SrcBindAttrs> ret{ query_operation::destroy };
         ret.tables.push_back(concat_strings("\"", Derived::table_name, "\""));
         ret.conditions = std::move(cond.condition);
         ret.bind_attrs = std::move(cond.bind_attrs);
