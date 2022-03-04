@@ -57,10 +57,10 @@ This example will insert the below values.
     std::cout << sql_stmt.to_sql() << std::endl;
 
     // Execute data inserting
-    const auto error = sql_stmt.exec(connection);
+    const auto result = sql_stmt.exec(connection);
     
-    // decltype(error) == std::optional<active_record::string>
-    if(error){
+    // decltype(result) == tl::expected<void, active_record::string>
+    if(!result){
         // error handling
     }
 

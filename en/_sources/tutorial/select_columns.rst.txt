@@ -17,11 +17,12 @@ which return selected columns as :code:`std::tuple<selected columns...>`.
     std::cout << sql_stmt.to_sql() << std::endl;
 
     // Execute data inserting
-    const auto [error, columns] = sql_stmt.exec(connection);
+    const auto id_name_result = sql_stmt.exec(connection);
     
-    // decltype(error) == std::optional<active_record::string>
-    if(error){
+    // decltype(id_name_result) == tl::expected<std::tuple<ExampleTable::ID, ExampleTable::Name>, active_record::string>
+    if(!id_name_result){
         // error handling
+        std::cout << "Error message:" << names_result.error() << std::endl;
     }
 
     // decltype(columns) == std::vector<std::tuple<ExampleTable::ID, ExampleTable::Name>>
@@ -43,12 +44,11 @@ which return only selected column.
     std::cout << sql_stmt.to_sql() << std::endl;
 
     // Execute data inserting
-    const auto [error, names] = sql_stmt.exec(connection);
+    const auto names_result = sql_stmt.exec(connection);
     
-    // decltype(error) == std::optional<active_record::string>
-    if(error){
+    // decltype(names_result) == tl::expected<std::vector<ExampleTable::Name>, active_record::string>
+    if(!names_result){
         // error handling
+        std::cout << "Error message:" << names_result.error() << std::endl;
     }
-
-    // decltype(names) == std::vector<ExampleTable::Name>
 

@@ -165,10 +165,10 @@
 <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">to_sql</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 
 <span class="c1">// Execute data inserting</span>
-<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
 
-<span class="c1">// decltype(error) == std::optional&lt;active_record::string&gt;</span>
-<span class="k">if</span><span class="p">(</span><span class="n">error</span><span class="p">){</span><span class="w"></span>
+<span class="c1">// decltype(result) == tl::expected&lt;void, active_record::string&gt;</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">result</span><span class="p">){</span><span class="w"></span>
 <span class="w">    </span><span class="c1">// error handling</span>
 <span class="p">}</span><span class="w"></span>
 </pre></div>

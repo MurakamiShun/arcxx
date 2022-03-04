@@ -114,32 +114,32 @@
 <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">to_sql</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 
 <span class="c1">// Execute data counting</span>
-<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">count_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
 
-<span class="c1">// decltype(error) == std::optional&lt;active_record::string&gt;</span>
-<span class="k">if</span><span class="p">(</span><span class="n">error</span><span class="p">){</span><span class="w"></span>
+<span class="c1">// decltype(count_result) == tl::expected&lt;size_t, active_record::string&gt;</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">count_result</span><span class="p">){</span><span class="w"></span>
 <span class="w">    </span><span class="c1">// error handling</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Error message:&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">count_result</span><span class="p">.</span><span class="n">error</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 
-<span class="c1">// decltype(count) == size_t</span>
-<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;columns count:&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;columns count:&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">count_result</span><span class="p">.</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
 <section id="column-aggregations">
 <h2>Column aggregations<a class="headerlink" href="#column-aggregations" title="Permalink to this headline"></a></h2>
 <p>Column aggregation functions, <code class="code docutils literal notranslate"><span class="pre">avg()</span></code> and <code class="code docutils literal notranslate"><span class="pre">max</span></code> etc… are used like <code class="code docutils literal notranslate"><span class="pre">count()</span></code> function.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// decltype(sum) == ExampleTable::ID</span>
-<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="n">max</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">max</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">&gt;</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
-<span class="n">sum</span><span class="p">.</span><span class="n">value</span><span class="p">();</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// decltype(max_result) == tl::expected&lt;ExampleTable::ID, active_record::string&gt;</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">max_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">max</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">&gt;</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
+<span class="n">max_result</span><span class="p">.</span><span class="n">value</span><span class="p">();</span><span class="w"></span>
 
 <span class="cm">/*</span>
-<span class="cm"> * decltype(avg) == ExampleTable::ID::avg_attribute</span>
+<span class="cm"> * decltype(avg_result) == tl::expected&lt;ExampleTable::ID::avg_attribute, active_record::string&gt;</span>
 <span class="cm"> * value_type of avg_attribute is std::optional&lt;double&gt;.</span>
 <span class="cm"> * Because the average type will be double.</span>
 <span class="cm"> */</span><span class="w"></span>
-<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="n">sum</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">avg</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">&gt;</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
-<span class="n">avg</span><span class="p">.</span><span class="n">value</span><span class="p">();</span><span class="w"></span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">avg_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">avg</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">&gt;</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
+<span class="n">avg_result</span><span class="p">.</span><span class="n">value</span><span class="p">();</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Also, aggregation functions can be used in select.</p>
@@ -148,8 +148,10 @@
 <span class="cm"> * The first element is max id.</span>
 <span class="cm"> * Second one is min id;</span>
 <span class="cm"> */</span><span class="w"></span>
-<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="n">aggrgated_tuple</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">aggrgated_tuple_result</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
 <span class="w">    </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">select</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">::</span><span class="n">max</span><span class="p">,</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">::</span><span class="n">min</span><span class="o">&gt;</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">aggrgated_tuple_result</span><span class="p">.</span><span class="n">value</span><span class="p">());</span><span class="w"></span>
 </pre></div>
 </div>
 </section>

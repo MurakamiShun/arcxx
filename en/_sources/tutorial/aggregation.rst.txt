@@ -17,15 +17,15 @@ To count columns, use :code:`count()`.
     std::cout << sql_stmt.to_sql() << std::endl;
 
     // Execute data counting
-    const auto [error, count] = sql_stmt.exec(connection);
+    const auto count_result = sql_stmt.exec(connection);
 
-    // decltype(error) == std::optional<active_record::string>
-    if(error){
+    // decltype(count_result) == tl::expected<size_t, active_record::string>
+    if(!count_result){
         // error handling
+        std::cout << "Error message:" << count_result.error() << std::endl;
     }
 
-    // decltype(count) == size_t
-    std::cout << "columns count:" << count << std::endl;
+    std::cout << "columns count:" << count_result.value() << std::endl;
 
 
 Column aggregations
@@ -35,17 +35,17 @@ Column aggregation functions, :code:`avg()` and :code:`max` etc... are used like
 
 .. code-block:: cpp
 
-    // decltype(sum) == ExampleTable::ID
-    const auto [error, max] = ExampleTable::max<ExampleTable::ID>().exec(connection);
-    sum.value();
+    // decltype(max_result) == tl::expected<ExampleTable::ID, active_record::string>
+    const auto max_result = ExampleTable::max<ExampleTable::ID>().exec(connection);
+    max_result.value();
 
     /*
-     * decltype(avg) == ExampleTable::ID::avg_attribute
+     * decltype(avg_result) == tl::expected<ExampleTable::ID::avg_attribute, active_record::string>
      * value_type of avg_attribute is std::optional<double>.
      * Because the average type will be double.
      */
-    const auto [error, sum] = ExampleTable::avg<ExampleTable::ID>().exec(connection);
-    avg.value();
+    const auto avg_result = ExampleTable::avg<ExampleTable::ID>().exec(connection);
+    avg_result.value();
 
 Also, aggregation functions can be used in select.
 
@@ -56,5 +56,7 @@ Also, aggregation functions can be used in select.
      * The first element is max id.
      * Second one is min id;
      */
-    const auto [error, aggrgated_tuple] =
+    const auto aggrgated_tuple_result =
         ExampleTable::select<ExampleTable::ID::max, ExampleTable::ID::min>().exec(connection);
+    
+    std::get<1>(aggrgated_tuple_result.value());
