@@ -7,7 +7,7 @@
 using adaptor = active_record::PostgreSQL::adaptor;
 inline adaptor open_testfile(){
     auto adpt = active_record::postgresql_adaptor::open(
-        active_record::PostgreSQL::endpoint{.server_name = "postgres", .db_name = "test_db"},
+        active_record::PostgreSQL::endpoint{.server_name = "localhost", .db_name = "test_db"},
         active_record::PostgreSQL::auth{.user = "postgres", .password = "root"}
     );
     if(adpt.has_error()) FAIL(adpt.error_message());
