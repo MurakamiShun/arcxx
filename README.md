@@ -39,16 +39,16 @@ if (connector.has_error()){
  *   name VARCHAR(128) DEFAULT 'unknown' NOT NULL
  * );
  */
-const std::optional<std::string> error = connector.create_table<User>();
-if (error){
+const tl::expected<void, std::string> result = connector.create_table<User>();
+if (!result){
     // print error
-    std::cout << error.value() << std::endl;
+    std::cout << result.error() << std::endl;
 }
 
-const std::optional<std::string> error = User::insert(User{ .id=1, .name="foo" }).exec(connector);
-if (error){
+const tl::expected<void, std::string> result = User::insert(User{ .id=1, .name="foo" }).exec(connector);
+if (!result){
     // print inserting error
-    std::cout << error.value() << std::endl;
+    std::cout << result.error() << std::endl;
 }
 
 connector.close();
@@ -57,8 +57,8 @@ connector.close();
 To get data, there are no SQL statements.
 
 ```cpp
-const auto [error, users] = User::where(User::ID::between(0,10)).exec(connector);
-for(const auto& user : users){
+const tl::expected<std::vector<User>, std::string> find_users_result = User::where(User::ID::between(0,10)).exec(connector);
+for(const auto& user : find_users_result.value()){
     std::cout << "user.id : " << user.id.value();
     std::cout << " user.name : ";
     if(user.name) std::cout << user.name.value() << std::endl; 
