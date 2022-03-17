@@ -24,19 +24,19 @@ struct Goods : public active_record::model<Goods> {
 
 int main(){
     using namespace active_record;
+
     auto connector = sqlite3::adaptor::open("create_table_example.sqlite3", sqlite3::options::create);
     if (connector.has_error()){
-        std::cout << connector.error_message() << std::endl;
+        std::cout << "Error message:" << connector.error_message() << std::endl;
         return -1;
     }
 
     std::cout << "SQL Statement:\n" << Goods::schema::to_sql<decltype(connector)>() << std::endl;
-    if(const auto error = connector.create_table<Goods>(); error){
-        std::cout << "Error:" << error.value() << std::endl;
+    if(const auto result = connector.create_table<Goods>(); !result){
+        std::cout << "Create table failed:" << result.error() << std::endl;
         return -1;
     }
-    else {
-        std::cout << "Done!!" << std::endl;
-    }
+    
+    std::cout << "Done!!" << std::endl;
     return 0;
 }

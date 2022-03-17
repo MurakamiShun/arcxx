@@ -22,30 +22,31 @@ struct Goods : public active_record::model<Goods> {
     } price;
 };
 
-std::optional<active_record::sqlite3::adaptor> setup(){
+auto setup() -> active_record::expected<active_record::sqlite3::adaptor, active_record::string>{
     using namespace active_record;
     // Connect and create table
     auto conn = sqlite3::adaptor::open("insert_data_example.sqlite3", sqlite3::options::create);
-    if (conn.has_error()){
-        std::cout << conn.error_message() << std::endl;
-        return std::nullopt;
-    }
+    if (conn.has_error()) return make_unexpected(conn.error_message());
 
-    if(const auto error = conn.template create_table<Goods>(); error){
-        std::cout << "Error:" << error.value() << std::endl;
-        std::cout << "SQL Statement:\n" << Goods::schema::template to_sql<decltype(conn)>() << std::endl;
-        return std::nullopt;
+    if(const auto result = conn.template create_table<Goods>(); result){
+        return conn;
     }
-    return conn;
+    else{
+        return make_unexpected(result.error());
+    }
 }
 
 int main(){
     using namespace active_record;
     
-    auto result = setup();
-    if(!result) { return -1; }
+    auto setup_result = setup();
+    if(!setup_result) {
+        std::cout << "Setup failed" << std::endl;
+        std::cout << "Error message:" << setup_result.error() << std::endl;
+        return -1;
+    }
 
-    auto conn = std::move(result.value());
+    auto conn = std::move(setup_result.value());
 
     // Inserting data
     Goods apple = {
@@ -57,13 +58,12 @@ int main(){
     const auto insert_stmt = Goods::insert(apple);
 
     std::cout << "SQL Statement:\n" << insert_stmt.to_sql<decltype(conn)>() << std::endl;
-    if(const auto error = insert_stmt.exec(conn); error){
-        std::cout << "Error:" << error.value() << std::endl;
+    if(const auto result = insert_stmt.exec(conn); !result){
+        std::cout << "Error message:" << result.error() << std::endl;
         return -1;
     }
-    else {
-        std::cout << "Done!!" << std::endl;
-    }
+
+    std::cout << "Done!!" << std::endl;
 
     return 0;
 }

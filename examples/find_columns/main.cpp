@@ -22,23 +22,18 @@ struct Goods : public active_record::model<Goods> {
     } price;
 };
 
-std::optional<active_record::sqlite3::adaptor> setup(){
+auto setup() -> active_record::expected<active_record::sqlite3::adaptor, active_record::string>{
     using namespace active_record;
     // Connect and create table
     auto conn = sqlite3::adaptor::open("find_column_example.sqlite3", sqlite3::options::create);
-    if (conn.has_error()){
-        std::cout << conn.error_message() << std::endl;
-        return std::nullopt;
-    }
+    if (conn.has_error()) return make_unexpected(conn.error_message());
 
-    if(const auto error = conn.template create_table<Goods>(); error){
-        std::cout << "Error:" << error.value() << std::endl;
-        std::cout << "SQL Statement:\n" << Goods::schema::template to_sql<decltype(conn)>() << std::endl;
-        return std::nullopt;
+    if(const auto result = conn.template create_table<Goods>(); !result){
+        return make_unexpected(result.error());
     }
 
     const auto insert_transaction = [](auto& conn){
-        using transaction = active_record::transaction;
+        namespace transaction = active_record::transaction;
         // Inserting data
         std::array<Goods, 4> goods = {
             Goods{.id = 1, .name = "apple",.price = 100},
@@ -47,19 +42,14 @@ std::optional<active_record::sqlite3::adaptor> setup(){
             Goods{.id = 4, .name = "pen",  .price = 5},
         };
         for(const auto& good : goods){
-            if(const auto error = Goods::insert(good).exec(conn); error){
-                return transaction::rollback;
+            if(const auto insert_result = Goods::insert(good).exec(conn); !insert_result){
+                return transaction::rollback(insert_result.error());
             }
         }
         return transaction::commit;
     };
-    if(const auto [error, transaction_result] = conn.transaction(insert_transaction); error){
-        std::cout << "Error:" << error.value() << std::endl;
-        return std::nullopt;
-    }
-    else if(transaction_result == active_record::transaction::rollback){
-        std::cout << "Insertion is rollbacked!!" << error.value() << std::endl;
-        return std::nullopt;
+    if(const auto transaction_result = conn.transaction(insert_transaction); !transaction_result){
+        return make_unexpected(transaction_result.error());
     }
     std::cout << "Setting up is done!!" << std::endl;
     return conn;
@@ -68,22 +58,30 @@ std::optional<active_record::sqlite3::adaptor> setup(){
 int main(){
     using namespace active_record;
     
-    auto result = setup();
-    if(!result) { return -1; }
+    auto setup_result = setup();
+    if(!setup_result) {
+        std::cout << "Setup failed:" << setup_result.error() << std::endl;
+        return -1;
+    }
 
-    auto conn = std::move(result.value());
+    auto conn = std::move(setup_result.value());
 
-    if(const auto [error, goods] = Goods::where(Goods::Price::cmp < 1000).exec(conn); error){
-        std::cout << "Error:" << error.value() << std::endl;
+    const auto find_goods_stmt = Goods::where(Goods::Price::cmp < 1000);
+    std::cout << "SQL statement:" << find_goods_stmt.to_sql<decltype(conn)>() << std::endl;
+    
+    if(const auto find_result = conn.exec(find_goods_stmt); !find_result){
+        std::cout << "Error message:" << find_result.error() << std::endl;
         return -1;
     }
     else {
-        std::cout << "Found count : " << goods.size() << std::endl;
+        auto& goods = find_result.value();
+        std::cout << "Found count:" << goods.size() << std::endl;
+        std::cout << "\"name\",\"price\"" << std::endl;
         for(const auto& g : goods){
-            std::cout << g.name.value() << " : " << g.price.value() << std::endl;
+            std::cout << g.name.value() << " , " << g.price.value() << std::endl;
         }
-        std::cout << "Done!!" << std::endl;
     }
 
+    std::cout << "Done!!" << std::endl;
     return 0;
 }
