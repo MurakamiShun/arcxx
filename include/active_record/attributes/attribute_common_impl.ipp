@@ -7,6 +7,11 @@
  */
 namespace active_record{
     template<typename Model, typename Attribute, typename Type>
+    inline constexpr attribute_common<Model, Attribute, Type>::attribute_common(std::convertible_to<std::optional<Type>> auto&& val)
+        : std::optional<Type>(std::forward<decltype(val)>(val)) {
+    }
+    
+    template<typename Model, typename Attribute, typename Type>
     inline constexpr bool attribute_common<Model, Attribute, Type>::has_column_name() noexcept {
         return requires {Attribute::column_name;};
     }
@@ -24,60 +29,6 @@ namespace active_record{
         const Type default_value;
         constexpr bool operator()(const std::optional<Type>&){ return true; }
     };
-
-    template<typename Model, typename Attribute, typename Type>
-    inline constexpr attribute_common<Model, Attribute, Type>::attribute_common() {
-    }
-    template<typename Model, typename Attribute, typename Type>
-    template<std::convertible_to<std::optional<Type>> T>
-    inline constexpr attribute_common<Model, Attribute, Type>::attribute_common(const T& default_value)
-        : data(static_cast<std::optional<Type>>(default_value)) {
-    }
-    template<typename Model, typename Attribute, typename Type>
-    template<std::convertible_to<std::optional<Type>> T>
-    inline constexpr attribute_common<Model, Attribute, Type>::attribute_common(T&& default_value)
-        : data(static_cast<std::optional<Type>>(std::move(default_value))) {
-    }
-
-    template<typename Model, typename Attribute, typename Type>
-    inline constexpr attribute_common<Model, Attribute, Type>::operator bool() const noexcept {
-        return static_cast<bool>(data);
-    }
-    template<typename Model, typename Attribute, typename Type>
-    inline const Type& attribute_common<Model, Attribute, Type>::value() const& {
-        return data.value();
-    }
-    template<typename Model, typename Attribute, typename Type>
-    inline Type& attribute_common<Model, Attribute, Type>::value()& {
-        return data.value();
-    }
-    template<typename Model, typename Attribute, typename Type>
-    inline Type&& attribute_common<Model, Attribute, Type>::value()&& {
-        return std::move(data.value());
-    }
-    template<typename Model, typename Attribute, typename Type>
-    inline constexpr attribute_common<Model, Attribute, Type>::operator const std::optional<Type>&() const& noexcept {
-        return data;
-    }
-    template<typename Model, typename Attribute, typename Type>
-    inline constexpr attribute_common<Model, Attribute, Type>::operator std::optional<Type>&()& noexcept {
-        return data;
-    }
-    template<typename Model, typename Attribute, typename Type>
-    inline constexpr attribute_common<Model, Attribute, Type>::operator std::optional<Type>()&& noexcept {
-        return std::move(data);
-    }
-
-    template<typename Model, typename Attribute, typename Type>
-    template<std::convertible_to<std::optional<Type>> T>
-    inline constexpr bool attribute_common<Model, Attribute, Type>::operator==(const T& cmp) const {
-        return data == static_cast<std::optional<Type>>(cmp);
-    }
-    template<typename Model, typename Attribute, typename Type>
-    template<std::convertible_to<std::optional<Type>> T>
-    inline constexpr bool attribute_common<Model, Attribute, Type>::operator!=(const T& cmp) const {
-        return data != static_cast<std::optional<Type>>(cmp);
-    }
 
     template<typename Model, typename Attribute, typename Type>
     inline const typename attribute_common<Model, Attribute, Type>::constraint attribute_common<Model, Attribute, Type>::default_value(const Type& def_val) {
@@ -105,16 +56,6 @@ namespace active_record{
             }
         }
         return nullptr;
-    }
-
-    template<typename Model, typename Attribute, typename Type>
-    inline constexpr bool attribute_common<Model, Attribute, Type>::is_valid() const {
-        if constexpr (has_constraints()) {
-            for (const auto& val : Attribute::constraints) {
-                if (!val(data)) return false;
-            }
-        }
-        return true;
     }
 
     namespace detail{
