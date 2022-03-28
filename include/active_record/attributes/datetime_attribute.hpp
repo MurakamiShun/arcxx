@@ -12,7 +12,7 @@ namespace active_record {
     struct attribute<Model, Attribute, active_record::datetime> : public attribute_common<Model, Attribute, active_record::datetime> {
         using attribute_common<Model, Attribute, active_record::datetime>::attribute_common;
 
-        inline static const attribute_common<Model, Attribute, active_record::datetime>::constraint current_timestamp = [](const std::optional<active_record::datetime>& t) constexpr { return true; };
+        inline static const typename attribute_common<Model, Attribute, active_record::datetime>::constraint current_timestamp = [](const std::optional<active_record::datetime>&) constexpr { return true; };
 
         struct max : public attribute_aggregator<Model, Attribute, max> {
             inline static decltype(auto) aggregation_func = "max";

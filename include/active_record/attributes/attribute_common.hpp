@@ -56,7 +56,7 @@ namespace active_record {
     };
 
     template<is_attribute Attribute1, is_attribute Attribute2>
-    requires requires(const typename Attribute1::value_type a, const Attribute2::value_type b){ { a == b }-> std::same_as<bool>; }
+    requires requires(const typename Attribute1::value_type a, const typename Attribute2::value_type b){ { a == b }-> std::same_as<bool>; }
     inline constexpr bool operator==(const Attribute1& a, const Attribute2& b){
         return static_cast<const std::optional<typename Attribute1::value_type>&>(a) == static_cast<const std::optional<typename Attribute2::value_type>&>(b);
     }

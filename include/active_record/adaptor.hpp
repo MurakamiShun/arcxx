@@ -22,7 +22,7 @@ namespace active_record{
                 }
             };
         }
-        inline const auto rollback(const active_record::string_view reason){
+        inline auto rollback(const active_record::string_view reason){
             return detail::commit_or_rollback_t{ std::make_optional<active_record::string>(reason) };
         }
         inline const detail::commit_or_rollback_t commit{ std::nullopt };

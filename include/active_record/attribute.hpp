@@ -12,7 +12,7 @@ namespace active_record {
     struct attribute;
 
     template<typename Model, typename Attribute, typename Type>
-    class attribute_common;
+    struct attribute_common;
 
     template<typename T>
     concept is_attribute = requires {

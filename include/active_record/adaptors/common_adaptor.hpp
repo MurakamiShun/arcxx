@@ -73,9 +73,8 @@ namespace active_record {
     template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::datetime>
     inline void from_string(Attr& attr, const active_record::string_view str){
-        active_record::datetime dt;
-        //std::chrono::parse("{%f}T{%T}{%z}", dt, str);
-        attr = dt;
+        //std::chrono::parse("{%f}T{%T}{%z}", attr.value(), str);
+        
     }
 
     // boolean
