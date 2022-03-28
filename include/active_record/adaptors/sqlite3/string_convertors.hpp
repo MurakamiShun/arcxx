@@ -27,18 +27,18 @@ namespace active_record {
 
         // datetime
         template<std::same_as<sqlite3_adaptor> Adaptor, is_attribute Attr>
-        requires std::same_as<typename Attr::value_type, active_record::datetime>
+        requires regarded_as_clock<typename Attr::value_type>
         [[nodiscard]] inline active_record::string to_string(const Attr&) {
             // yyyy-MM-dd HH:mm:ss (sqlite supports only utc)
             //return std::format("{:%F} {:%T}", attr.value());
             return "";
         }
         template<std::same_as<sqlite3_adaptor> Adaptor, is_attribute Attr>
-        requires std::same_as<typename Attr::value_type, active_record::datetime>
+        requires regarded_as_clock<typename Attr::value_type>
         inline void from_string(Attr& attr, const active_record::string_view){
-            active_record::datetime dt;
+            //active_record::datetime dt;
             //std::chrono::parse("{:%F} {:%T}", dt, str);
-            attr = dt;
+            //attr = dt;
         }
 
         // binary

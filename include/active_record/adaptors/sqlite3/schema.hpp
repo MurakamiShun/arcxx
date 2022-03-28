@@ -84,7 +84,7 @@ namespace active_record::sqlite3 {
     }
 
     template<is_attribute T>
-    requires std::same_as<typename T::value_type, active_record::datetime>
+    requires regarded_as_clock<typename T::value_type>
     [[nodiscard]] inline active_record::string column_definition() {
         return concat_strings(
             T::column_name, " DATETIME CHECK(", T::column_name, " LIKE '____-__-__ __:__:__')",

@@ -8,11 +8,18 @@
 #include "attribute_common.hpp"
 
 namespace active_record {
-    template<typename Model, typename Attribute>
-    struct attribute<Model, Attribute, active_record::datetime> : public attribute_common<Model, Attribute, active_record::datetime> {
-        using attribute_common<Model, Attribute, active_record::datetime>::attribute_common;
+    template<typename T>
+    concept regarded_as_clock = requires{
+        { T::now() } -> std::same_as<typename T::time_point>;
+        T::to_sys();
+        T::from_sys();
+    };
 
-        inline static const typename attribute_common<Model, Attribute, active_record::datetime>::constraint current_timestamp = [](const std::optional<active_record::datetime>&) constexpr { return true; };
+    template<typename Model, typename Attribute, regarded_as_clock DateTime>
+    struct attribute<Model, Attribute, DateTime> : public attribute_common<Model, Attribute, DateTime> {
+        using attribute_common<Model, Attribute, DateTime>::attribute_common;
+
+        inline static const typename attribute_common<Model, Attribute, DateTime>::constraint current_timestamp = [](const std::optional<DateTime>&) constexpr { return true; };
 
         struct max : public attribute_aggregator<Model, Attribute, max> {
             inline static decltype(auto) aggregation_func = "max";
@@ -24,8 +31,6 @@ namespace active_record {
 
     namespace attributes {
         template<typename Model, typename Attribute>
-        struct datetime : public attribute<Model, Attribute, active_record::datetime> {
-            using attribute<Model, Attribute, active_record::datetime>::attribute;
-        };
+        using utc_time = attribute<Model, Attribute, std::chrono::system_clock>;
     }
 }

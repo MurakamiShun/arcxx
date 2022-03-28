@@ -27,7 +27,6 @@
 namespace active_record{
     using string = std::string;
     using string_view = std::basic_string_view<typename active_record::string::value_type>;
-    using datetime = std::chrono::system_clock;
 
     template <class T, class E>
     using expected = tl::expected<T, E>;

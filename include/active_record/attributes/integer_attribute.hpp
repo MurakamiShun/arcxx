@@ -48,5 +48,46 @@ namespace active_record {
         struct integer : public attribute<Model, Attribute, Integer>{
             using attribute<Model, Attribute, Integer>::attribute;
         };
+
+        // int8
+        template<typename Model, typename Attribute>
+        struct i8_t : public attribute<Model, Attribute, int8_t>{
+            using attribute<Model, Attribute, int8_t>::attribute;
+        };
+        template<typename Model, typename Attribute>
+        struct u8_t : public attribute<Model, Attribute, uint8_t>{
+            using attribute<Model, Attribute, int8_t>::attribute;
+        };
+
+        // int16
+        template<typename Model, typename Attribute>
+        struct i16_t : public attribute<Model, Attribute, int16_t>{
+            using attribute<Model, Attribute, int8_t>::attribute;
+        };
+        template<typename Model, typename Attribute>
+        struct u16_t : public attribute<Model, Attribute, uint16_t>{
+            using attribute<Model, Attribute, int8_t>::attribute;
+        };
+
+        // int32
+        template<typename Model, typename Attribute>
+        struct i32_t : public attribute<Model, Attribute, int32_t>{
+            using attribute<Model, Attribute, int8_t>::attribute;
+        };
+        template<typename Model, typename Attribute>
+        struct u32_t : public attribute<Model, Attribute, uint32_t>{
+            using attribute<Model, Attribute, int8_t>::attribute;
+        };
+
+        // int64
+        template<typename Model, typename Attribute>
+        struct i64_t : public attribute<Model, Attribute, int64_t>{
+            using attribute<Model, Attribute, int8_t>::attribute;
+        };
+        template<typename Model, typename Attribute>
+        struct u64_t : public attribute<Model, Attribute, uint64_t>{
+            using attribute<Model, Attribute, int8_t>::attribute;
+        };
+
     }
 }

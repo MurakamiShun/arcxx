@@ -82,7 +82,7 @@ namespace active_record {
                 }
                 else{
                     return std::array<std::function<active_record::string()>, std::tuple_size_v<BindAttrs>>{
-                        [&attr = std::get<I>(attrs)]{ return active_record::to_string<Adaptor>(attr); }...
+                        ([&attr = std::get<I>(attrs)]{ return active_record::to_string<Adaptor>(attr); })...
                     };
                 }
             }(std::make_index_sequence<std::tuple_size_v<BindAttrs>>{})){

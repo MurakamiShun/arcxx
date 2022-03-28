@@ -42,5 +42,14 @@ namespace active_record {
         struct decimal : public attribute<Model, Attribute, FP>{
             using attribute<Model, Attribute, FP>::attribute;
         };
+
+        template<typename Model, typename Attribute>
+        struct f32_t : public attribute<Model, Attribute, float>{
+            using attribute<Model, Attribute, float>::attribute;
+        };
+        template<typename Model, typename Attribute>
+        struct f64_t : public attribute<Model, Attribute, double>{
+            using attribute<Model, Attribute, double>::attribute;
+        };
     }
 }
