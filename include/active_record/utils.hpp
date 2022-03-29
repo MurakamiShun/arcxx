@@ -97,7 +97,7 @@ namespace active_record{
     template<typename CharT, std::size_t N>
     struct basic_string_literal {
         using traits_type = std::char_traits<CharT>;
-        CharT data[N]; // including null charactor
+        const CharT data[N]; // including null charactor
         static constexpr std::size_t size() noexcept { return N; } 
         consteval basic_string_literal() = delete;
         template<std::size_t... I>
@@ -113,13 +113,16 @@ namespace active_record{
         constexpr const CharT (&c_str() const noexcept)[N]{
             return data;
         }
+        
         template<std::size_t M>
         consteval basic_string_literal<CharT, N+M-1> operator+(const basic_string_literal<CharT, M>& arg) const noexcept {
-            basic_string_literal<CharT, N+M-1> tmp(data, std::make_index_sequence<N - 1>{}); // remove null charactor
-            traits_type::copy(tmp.data + N - 1, arg.data, M);
-            return tmp;
+            CharT tmp[N+M-1];
+            for(std::size_t i = 0; i < N-1; ++i) tmp[i] = data[i];
+            for(std::size_t i = 0; i < M; ++i) tmp[i+N-1] = arg.data[i];
+            return basic_string_literal<CharT, N+M-1>(tmp);
         }
     };
+
 
     template<std::size_t N>
     using string_literal = basic_string_literal<typename active_record::string::value_type, N>;

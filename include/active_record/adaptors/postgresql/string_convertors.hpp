@@ -62,18 +62,18 @@ namespace active_record {
 
         // datetime
         template<std::same_as<postgresql_adaptor> Adaptor, is_attribute Attr>
-        requires std::same_as<typename Attr::value_type, active_record::datetime>
+        requires regarded_as_clock<typename Attr::value_type>
         [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
             // ISO 8601 yyyyMMddTHHmmss (sqlite supports only utc)
             //return static_cast<bool>(attr) ? std::format("%FT%T", attr.value()) : "null";
             return "";
         }
         template<std::same_as<postgresql_adaptor> Adaptor, is_attribute Attr>
-        requires std::same_as<typename Attr::value_type, active_record::datetime>
+        requires regarded_as_clock<typename Attr::value_type>
         inline void from_string(Attr& attr, const active_record::string_view str){
-            active_record::datetime dt;
+            //active_record::datetime dt;
             //std::chrono::parse("%fT%T", dt, str);
-            attr = dt;
+            //attr = dt;
         }
 
         // binary

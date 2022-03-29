@@ -52,7 +52,7 @@ namespace active_record {
                     const auto is_not_text_format = []<typename Attr>([[maybe_unused]]const Attr&){
                         return static_cast<int>(
                             !(std::is_same_v<typename Attr::value_type, active_record::string> ||
-                            std::is_same_v<typename Attr::value_type, active_record::datetime>) ||
+                            regarded_as_clock<typename Attr::value_type>) ||
                             std::floating_point<typename Attr::value_type>
                         );
                     };
