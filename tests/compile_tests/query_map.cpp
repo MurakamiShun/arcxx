@@ -27,7 +27,7 @@ struct Have_a_Test : public active_record::model<Have_a_Test>{
     struct TestID : public active_record::attributes::foreign_key<Have_a_Test, TestID, Test::Int>{
         using foreign_key<Have_a_Test, TestID, Test::Int>::foreign_key;
         static inline decltype(auto) column_name = "test_id";
-        static inline const auto constraints = { not_null, default_value(0.0) };
+        static inline const auto constraints = { not_null, default_value(0) };
     } test_id;
 };
 
