@@ -24,6 +24,13 @@ struct User : public active_record::model<User> {
 };
 ```
 
+To get data, there are no SQL statements.
+
+```cpp
+const auto find_users_query = User::where(User::ID::between(0,10));   
+}
+```
+
 The below example is how to create a user table and insert new data into a database.
 
 ```cpp
@@ -52,18 +59,6 @@ if (!result){
 }
 
 connector.close();
-```
-
-To get data, there are no SQL statements.
-
-```cpp
-const tl::expected<std::vector<User>, std::string> find_users_result = User::where(User::ID::between(0,10)).exec(connector);
-for(const auto& user : find_users_result.value()){
-    std::cout << "user.id : " << user.id.value();
-    std::cout << " user.name : ";
-    if(user.name) std::cout << user.name.value() << std::endl; 
-    else          std::cout << "null" << std::endl;     
-}
 ```
 
 
