@@ -9,11 +9,7 @@
 
 namespace active_record {
     template<typename T>
-    concept regarded_as_clock = requires{
-        { T::now() } -> std::same_as<typename T::time_point>;
-        T::to_sys();
-        T::from_sys();
-    };
+    concept regarded_as_clock = std::chrono::is_clock_v<T>;
 
     template<typename Model, typename Attribute, regarded_as_clock DateTime>
     struct attribute<Model, Attribute, DateTime> : public attribute_common<Model, Attribute, DateTime> {
@@ -31,6 +27,8 @@ namespace active_record {
 
     namespace attributes {
         template<typename Model, typename Attribute>
-        using utc_time = attribute<Model, Attribute, std::chrono::system_clock>;
+        struct utc_datetime : attribute<Model, Attribute, std::chrono::system_clock>{
+            using attribute<Model, Attribute, std::chrono::system_clock>::attribute;
+        };
     }
 }

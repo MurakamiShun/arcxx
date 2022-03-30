@@ -30,15 +30,15 @@ namespace active_record {
         requires regarded_as_clock<typename Attr::value_type>
         [[nodiscard]] inline active_record::string to_string(const Attr&) {
             // yyyy-MM-dd HH:mm:ss (sqlite supports only utc)
-            //return std::format("{:%F} {:%T}", attr.value());
+            // return std::format("{:%F} {:%T}", std::chrono::clock_cast<std::chrono::utc_clock>(attr.value()));
             return "";
         }
         template<std::same_as<sqlite3_adaptor> Adaptor, is_attribute Attr>
         requires regarded_as_clock<typename Attr::value_type>
         inline void from_string(Attr& attr, const active_record::string_view){
-            //active_record::datetime dt;
-            //std::chrono::parse("{:%F} {:%T}", dt, str);
-            //attr = dt;
+            //std::chrono::utc_clock u_c;
+            //std::chrono::parse("{:%F} {:%T}", u_c, str);
+            //attr.value() = std::chrono::clock_cast<typename Attr::value_type>(u_c);
         }
 
         // binary
