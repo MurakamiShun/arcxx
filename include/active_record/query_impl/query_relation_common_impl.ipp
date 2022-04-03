@@ -81,8 +81,13 @@ namespace active_record {
                     return std::array<std::function<active_record::string()>, std::tuple_size_v<BindAttrs>>{};
                 }
                 else{
+                    const auto lambda_generator = [&attrs]<std::size_t N>(std::integral_constant<std::size_t, N>) -> std::function<active_record::string()>{
+                        return [&attrs]{
+                            return active_record::to_string<Adaptor>(std::get<N>(attrs));
+                        };
+                    };
                     return std::array<std::function<active_record::string()>, std::tuple_size_v<BindAttrs>>{
-                        [&attrs]{ return active_record::to_string<Adaptor>(std::get<I>(attrs)); }...
+                        lambda_generator(std::integral_constant<std::size_t, I>{})...
                     };
                 }
             }(std::make_index_sequence<std::tuple_size_v<BindAttrs>>{})){

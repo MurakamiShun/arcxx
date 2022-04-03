@@ -1,5 +1,5 @@
-//#include <active_record.hpp>
-#include "../../include/active_record.hpp"
+#include <active_record.hpp>
+//#include "../../include/active_record.hpp"
 
 struct Test : public active_record::model<Test>{
     static inline decltype(auto) table_name = "test_table";

@@ -132,7 +132,8 @@ namespace active_record {
             return result_code;
         }();
 
-        if(error_msg = get_error_msg(result_code)){
+        error_msg = get_error_msg(result_code);
+        if(error_msg){
             return active_record::make_unexpected(error_msg.value());
         }
         else{

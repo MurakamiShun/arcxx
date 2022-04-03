@@ -6,7 +6,7 @@
  * Released under the MIT License.
  */
 #include <sqlite3.h>
-#include "active_record/query_impl/query_relation.hpp"
+#include "../../query_impl/query_relation.hpp"
 
 namespace active_record::sqlite3::detail {
     template<is_attribute Attr>
