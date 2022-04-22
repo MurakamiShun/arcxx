@@ -61,7 +61,7 @@ namespace active_record {
     inline active_record::string sqlite3_adaptor::bind_variable_str(const std::size_t idx, active_record::string&& buff) {
         // variable number must be between ?1 and ?250000
         std::array<active_record::string::value_type, 8> char_buff{0};
-        std::to_chars(char_buff.begin(), char_buff.end(), idx+1);
+        std::to_chars(&(*char_buff.begin()), &(*char_buff.end()), idx+1);
         buff.reserve(buff.size() + 8);
         buff += "?";
         buff += char_buff.data();

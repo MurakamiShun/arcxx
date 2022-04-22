@@ -21,7 +21,7 @@ namespace active_record {
     [[nodiscard]] inline active_record::string to_string(const Attr& attr, active_record::string&& buff = {}) {
         if(attr){
             std::array<active_record::string::value_type, std::numeric_limits<typename Attr::value_type>::digits10 + 2> str_buff{0};
-            std::to_chars(str_buff.begin(), str_buff.end(), attr.value());
+            std::to_chars(&(*str_buff.begin()), &(*str_buff.end()), attr.value());
             buff += str_buff.data();
         }
         else{
@@ -34,7 +34,7 @@ namespace active_record {
     inline void from_string(Attr& attr, const active_record::string_view str) {
         if(str != "null" && str != "NULL"){
             typename Attr::value_type tmp = static_cast<typename Attr::value_type>(0);
-            std::from_chars(&*str.begin(), &*str.end(), tmp);
+            std::from_chars(&(*str.begin()), &(*str.end()), tmp);
             attr = tmp;
         }
     }
@@ -66,7 +66,7 @@ namespace active_record {
     [[nodiscard]] inline active_record::string to_string(const Attr& attr, active_record::string&& buff = {}) {
         if(attr){
             std::array<active_record::string::value_type, 32> str_buff{0};
-            std::to_chars(str_buff.begin(), str_buff.end(), attr.value());
+            std::to_chars(&(*str_buff.begin()), &(*str_buff.end()), attr.value());
             buff += str_buff.data();
         }
         else{
@@ -79,7 +79,7 @@ namespace active_record {
     inline void from_string(Attr& attr, const active_record::string_view str){
         if(str != "null" && str != "NULL"){
             typename Attr::value_type tmp = static_cast<typename Attr::value_type>(0);
-            std::from_chars(&*str.begin(), &*str.end(), tmp);
+            std::from_chars(&(*str.begin()), &(*str.end()), tmp);
             attr = tmp;
         }
     }

@@ -17,16 +17,16 @@ struct Clothes : public active_record::model<Clothes> {
         inline static const auto constraints = { not_null };
     } user_id;
 
-    struct Name : public active_record::attributes::string<User, Name> {
+    struct Name : public active_record::attributes::string<Clothes, Name> {
         inline static decltype(auto) column_name = "name";
-        using string<User, Name>::string;
+        using string<Clothes, Name>::string;
 
         inline static const auto constraints = { not_null, default_value("unknow") };
     } name;
 
-    struct Price : public active_record::attributes::integer<User, Price, uint32_t>{
+    struct Price : public active_record::attributes::integer<Clothes, Price, uint32_t>{
         inline static decltype(auto) column_name = "price";
-        using integer<User, Price, uint32_t>::integer;
+        using integer<Clothes, Price, uint32_t>::integer;
     } price;
 };
 
