@@ -82,7 +82,7 @@ namespace active_record{
     requires requires (Strings... strs){
         (std::convertible_to<Strings, active_record::string_view> && ...);
     }
-    [[nodiscard]] active_record::string concat_strings(const Strings&... strings) {
+    [[nodiscard]] active_record::string concat_strings(Strings&&... strings) {
         const std::array<active_record::string_view, sizeof...(Strings)> str_views = { static_cast<active_record::string_view>(strings)... };
         active_record::string buff;
         buff.reserve(std::transform_reduce(

@@ -18,8 +18,16 @@ namespace active_record {
     // integer
     template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::integral<typename Attr::value_type>
-    [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
-        return static_cast<bool>(attr) ? std::to_string(attr.value()) : "null";
+    [[nodiscard]] inline active_record::string to_string(const Attr& attr, active_record::string&& buff = active_record::string{}) {
+        if(attr){
+            std::array<active_record::string::value_type, std::numeric_limits<typename Attr::value_type>::digits10 + 2> str_buff{0};
+            std::to_chars(str_buff.begin(), str_buff.end(), attr.value());
+            buff += str_buff.data();
+        }
+        else{
+            buff += "null";
+        }
+        return std::move(buff);
     }
     template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::integral<typename Attr::value_type>
@@ -34,9 +42,15 @@ namespace active_record {
     // string
     template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::string>
-    [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
+    [[nodiscard]] inline active_record::string to_string(const Attr& attr, active_record::string&& buff = active_record::string{}) {
         // require sanitize
-        return static_cast<bool>(attr) ? concat_strings("\'", active_record::sanitize(attr.value()), "\'") : "null";
+        if(attr){
+            buff = concat_strings(std::move(buff), "\'", active_record::sanitize(attr.value()), "\'");
+        }
+        else{
+            buff += "null";
+        }
+        return std::move(buff);
     }
     template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::string>

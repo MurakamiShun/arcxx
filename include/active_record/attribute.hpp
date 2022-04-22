@@ -36,7 +36,7 @@ namespace active_record {
 
     template<std::derived_from<adaptor> Adaptor, is_attribute Attr>
     requires false
-    [[nodiscard]] active_record::string to_string(const Attr& attr);
+    [[nodiscard]] active_record::string to_string(const Attr& attr, active_record::string&& buff = active_record::string{});
 
     template<std::derived_from<adaptor> Adaptor, is_attribute Attr>
     requires false
