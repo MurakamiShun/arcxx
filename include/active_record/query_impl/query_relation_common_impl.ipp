@@ -72,21 +72,21 @@ namespace active_record {
     template<std::derived_from<adaptor> Adaptor>
     struct query_relation_common<BindAttrs>::sob_to_string_impl {
         const BindAttrs& bind_attrs;
-        const std::array<std::function<active_record::string()>, std::tuple_size_v<BindAttrs>> to_string_func;
+        const std::array<std::function<active_record::string(active_record::string&&)>, std::tuple_size_v<BindAttrs>> to_string_func;
 
         sob_to_string_impl(const BindAttrs& attrs) :
             bind_attrs(attrs),
             to_string_func([&attrs]<std::size_t... I>(std::index_sequence<I...>){
                 if constexpr(Adaptor::bindable){
-                    return std::array<std::function<active_record::string()>, std::tuple_size_v<BindAttrs>>{};
+                    return std::array<std::function<active_record::string(active_record::string&&)>, std::tuple_size_v<BindAttrs>>{};
                 }
                 else{
-                    const auto lambda_generator = [&attrs]<std::size_t N>(std::integral_constant<std::size_t, N>) -> std::function<active_record::string()>{
-                        return [&attrs]{
-                            return active_record::to_string<Adaptor>(std::get<N>(attrs));
+                    const auto lambda_generator = [&attrs]<std::size_t N>(std::integral_constant<std::size_t, N>) -> std::function<active_record::string(active_record::string&&)>{
+                        return [&attrs](active_record::string&& buff){
+                            return active_record::to_string<Adaptor>(std::get<N>(attrs), std::move(buff));
                         };
                     };
-                    return std::array<std::function<active_record::string()>, std::tuple_size_v<BindAttrs>>{
+                    return std::array<std::function<active_record::string(active_record::string&&)>, std::tuple_size_v<BindAttrs>>{
                         lambda_generator(std::integral_constant<std::size_t, I>{})...
                     };
                 }
@@ -109,7 +109,7 @@ namespace active_record {
                 for(const auto& sob : sobs) {
                     visit_by_lambda(sob,
                         [&buff](const active_record::string& str) { buff += str; },
-                        [&buff, this](const std::size_t idx) { buff += this->to_string_func[idx](); }
+                        [&buff, this](const std::size_t idx) { buff = this->to_string_func[idx](std::move(buff)); }
                     );
                 }
             }

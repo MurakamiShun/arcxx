@@ -49,7 +49,7 @@ namespace active_record {
         static int version_number();
 
         static constexpr bool bindable = true;
-        static active_record::string bind_variable_str(const std::size_t idx);
+        static active_record::string bind_variable_str(const std::size_t idx, active_record::string&& buff = {});
 
         template<typename Result, specialized_from<std::tuple> BindAttrs>
         [[nodiscard]] active_record::expected<Result, active_record::string> exec(const query_relation<Result, BindAttrs>& query);

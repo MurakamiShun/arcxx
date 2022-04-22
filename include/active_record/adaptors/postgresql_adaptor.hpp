@@ -60,7 +60,7 @@ namespace active_record {
         void close();
 
         static constexpr bool bindable = true;
-        static active_record::string bind_variable_str(const std::size_t idx);
+        static active_record::string bind_variable_str(const std::size_t idx, active_record::string&& buff = {});
 
         template<is_model Mod>
         active_record::expected<void, active_record::string> create_table(decltype(abort_if_exists));

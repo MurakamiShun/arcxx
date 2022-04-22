@@ -10,15 +10,15 @@
 namespace active_record {
     struct common_adaptor : public adaptor {
         static constexpr bool bindable = false;
-        static active_record::string bind_variable_str(const std::size_t idx) {
-            return active_record::string{ "'common_adaptor can not bind parameters. Library has some problems.'" } + std::to_string(idx);
+        static active_record::string bind_variable_str(const std::size_t, active_record::string&& buff = {}) {
+            return std::move(buff += "'common_adaptor can not bind parameters. Library has some problems.'");
         }
     };
 
     // integer
     template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::integral<typename Attr::value_type>
-    [[nodiscard]] inline active_record::string to_string(const Attr& attr, active_record::string&& buff = active_record::string{}) {
+    [[nodiscard]] inline active_record::string to_string(const Attr& attr, active_record::string&& buff = {}) {
         if(attr){
             std::array<active_record::string::value_type, std::numeric_limits<typename Attr::value_type>::digits10 + 2> str_buff{0};
             std::to_chars(str_buff.begin(), str_buff.end(), attr.value());
@@ -42,7 +42,7 @@ namespace active_record {
     // string
     template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::same_as<typename Attr::value_type, active_record::string>
-    [[nodiscard]] inline active_record::string to_string(const Attr& attr, active_record::string&& buff = active_record::string{}) {
+    [[nodiscard]] inline active_record::string to_string(const Attr& attr, active_record::string&& buff = {}) {
         // require sanitize
         if(attr){
             buff = concat_strings(std::move(buff), "\'", active_record::sanitize(attr.value()), "\'");
@@ -63,8 +63,16 @@ namespace active_record {
     // decimal
     template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::floating_point<typename Attr::value_type>
-    [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
-        return static_cast<bool>(attr) ? std::to_string(attr.value()) : "null";
+    [[nodiscard]] inline active_record::string to_string(const Attr& attr, active_record::string&& buff = {}) {
+        if(attr){
+            std::array<active_record::string::value_type, 32> str_buff{0};
+            std::to_chars(str_buff.begin(), str_buff.end(), attr.value());
+            buff += str_buff.data();
+        }
+        else{
+            buff += "null";
+        }
+        return std::move(buff);
     }
     template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::floating_point<typename Attr::value_type>
@@ -94,8 +102,14 @@ namespace active_record {
     // boolean
     template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::same_as<typename Attr::value_type, bool>
-    [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
-        return static_cast<bool>(attr) ? (attr.value() ? "true" : "false") : "null";
+    [[nodiscard]] inline active_record::string to_string(const Attr& attr, active_record::string&& buff = {}) {
+        if(attr){
+            buff += (attr.value() ? "true" : "false");
+        }
+        else{
+            buff += "null";
+        }
+        return std::move(buff);
     }
     template<std::same_as<common_adaptor> Adaptor, is_attribute Attr>
     requires std::same_as<typename Attr::value_type, bool>
