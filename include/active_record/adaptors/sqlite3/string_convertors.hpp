@@ -25,21 +25,52 @@ namespace active_record {
             }
         }
 
-        // datetime
+        // datetime(seconds)
         template<std::same_as<sqlite3_adaptor> Adaptor, is_attribute Attr>
         requires regarded_as_clock<typename Attr::value_type>
-        [[nodiscard]] inline active_record::string to_string(const Attr&) {
+        [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
             // yyyy-MM-dd HH:mm:ss (sqlite supports only utc)
-            // return std::format("{:%F} {:%T}", std::chrono::clock_cast<std::chrono::utc_clock>(attr.value()));
-            return "";
+            /*
+            namespace chrono = std::chrono;
+            if(attr){
+                using duration = typename Attr::value_type::duration;
+                const auto utc_time = chrono::clock_cast<chrono::utc_clock>(attr.value());
+                if constexpr(std::is_same_v<duration, chrono::seconds>){
+                    return std::format("{:%F %T}", chrono::floor<chrono::seconds>(utc_time));
+                }
+                else if constexpr(std::is_same_v<duration, chrono::days>){
+                    return std::format("{:%F}", chrono::floor<chrono::days>(utc_time));
+                }
+            }
+            */
+            return "null";
         }
         template<std::same_as<sqlite3_adaptor> Adaptor, is_attribute Attr>
         requires regarded_as_clock<typename Attr::value_type>
-        inline void from_string(Attr& attr, const active_record::string_view){
-            //std::chrono::utc_clock u_c;
-            //std::chrono::parse("{:%F} {:%T}", u_c, str);
-            //attr.value() = std::chrono::clock_cast<typename Attr::value_type>(u_c);
+        inline void from_string(Attr& attr, const active_record::string_view str){
+            /*
+            if(str != "null"){
+                namespace chrono = std::chrono;
+                if constexpr(std::is_same_v<duration, chrono::seconds>){
+                    chrono::time_point<chrono::utc_clock, chrono::seconds> result;
+                    std::basic_istringstream<typename active_record::string::value_type> iss{ active_record::string{str} };
+                    ss >> std::chrono::parse("%F %T", result);
+                    if (ss) chrono::clock_cast<typename Attr::value_type>(result);
+                    else return "unavailable clock format";
+                }
+                else if constexpr(std::is_same_v<duration, chrono::days>){
+                    chrono::time_point<chrono::utc_clock, chrono::seconds> result;
+                    std::basic_istringstream<typename active_record::string::value_type> iss{ active_record::string{str} };
+                    ss >> std::chrono::parse("%F", result);
+                    if (ss) chrono::clock_cast<typename Attr::value_type>(result);
+                    else return "unavailable clock format";
+                }
+            }
+            return std::nullopt;
+            */
         }
+        
+
 
         // binary
         template<std::same_as<sqlite3_adaptor> Adaptor, is_attribute Attr>

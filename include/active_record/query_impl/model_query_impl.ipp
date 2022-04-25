@@ -15,6 +15,7 @@ namespace active_record {
         ret.bind_attrs = model.attributes_as_tuple();
         ret.tables.push_back(detail::insert_column_names_to_string<Derived>());
         // insert values
+        ret.op_args.reserve(2 + std::tuple_size_v<decltype(model.attributes_as_tuple())> * 2);
         ret.op_args.push_back("(");
         for(std::size_t i = 0; i < std::tuple_size_v<decltype(model.attributes_as_tuple())>; ++i){
             if (i != 0) ret.op_args.push_back(",");
@@ -33,6 +34,7 @@ namespace active_record {
         ret.bind_attrs = std::move(model.attributes_as_tuple());
         ret.tables.push_back(detail::insert_column_names_to_string<Derived>());
         // insert values
+        ret.op_args.reserve(2 + std::tuple_size_v<decltype(model.attributes_as_tuple())> * 2);
         ret.op_args.push_back("(");
         for(std::size_t i = 0; i < std::tuple_size_v<decltype(model.attributes_as_tuple())>; ++i){
             if (i != 0) ret.op_args.push_back(",");

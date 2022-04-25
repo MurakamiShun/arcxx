@@ -27,8 +27,7 @@ struct User : public active_record::model<User> {
 To get data, there are no SQL statements.
 
 ```cpp
-const auto find_users_query = User::where(User::ID::between(0,10));   
-}
+const auto find_users_query = User::where(User::ID::between(0,10));
 ```
 
 The below example is how to create a user table and insert new data into a database.
