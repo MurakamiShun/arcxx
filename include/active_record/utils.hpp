@@ -16,6 +16,10 @@
 #include <numeric>
 #include <stdexcept>
 
+#ifdef _MSC_VER
+#include <format>
+#endif
+
 #include "third_party/tuptup.hpp"
 #include "third_party/tl/expected.hpp"
 /*

@@ -97,10 +97,10 @@ namespace active_record {
             #ifdef _MSC_VER
             using duration = typename Attr::value_type::duration;
             if constexpr(std::is_same_v<duration, chrono::days>){
-                std::format_to(std::back_inserter(buff),"{:%F}", attr.value());
+                std::format_to(std::back_inserter(buff),"\'{:%F}\'", attr.value());
             }
             else {
-                std::format_to(std::back_inserter(buff), "{:%F %T}", chrono::floor<chrono::seconds>(attr.value()));
+                std::format_to(std::back_inserter(buff), "\'{:%F %T}\'", chrono::floor<chrono::seconds>(attr.value()));
             }
             #else
             const std::time_t t = clock::to_time_t(attr.value());
@@ -108,8 +108,8 @@ namespace active_record {
             if(gmt == nullptr) throw std::runtime_error("std::gmtime causes error");
             char str[32]{0};
             const char* const fmt_str = [](){
-                if constexpr(std::is_same_v<duration, chrono::days>) return "%F";
-                else return "%F %T";
+                if constexpr(std::is_same_v<duration, chrono::days>) return "\'%F\'";
+                else return "\'%F %T\'";
             }();
             if(std::strftime(str, 32, fmt_str, gmt) == 0) throw std::runtime_error("std::strftime causes error");
             buff += str;
@@ -133,12 +133,12 @@ namespace active_record {
             chrono::time_point<clock, duration> result;
             std::basic_istringstream<typename active_record::string::value_type> iss{ active_record::string{str} };
             if constexpr((std::is_same_v<duration, chrono::days>)){
-                ss >> std::chrono::parse("%F", result);
+                iss >> std::chrono::parse("%F", result);
             }
             else {
-                ss >> std::chrono::parse("%F %T", result);
+                iss >> std::chrono::parse("%F %T", result);
             }
-            if (!ss) throw std::runtime_error("unavailable clock format");
+            if (!iss) throw std::runtime_error("unavailable clock format");
             #else
             std::tm gmt;
             const char* const fmt_str = [](){
