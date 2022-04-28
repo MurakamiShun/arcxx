@@ -14,6 +14,7 @@
 #include <charconv>
 #include <unordered_map>
 #include <numeric>
+#include <stdexcept>
 
 #include "third_party/tuptup.hpp"
 #include "third_party/tl/expected.hpp"

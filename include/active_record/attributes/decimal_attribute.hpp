@@ -16,7 +16,8 @@ namespace active_record {
         [[nodiscard]] static auto between(const ArgType1 value1, const ArgType2 value2){
             query_condition<std::tuple<Attribute, Attribute>> ret;
             ret.bind_attrs = std::make_tuple(static_cast<Attribute>(value1), static_cast<Attribute>(value2));
-            ret.condition.push_back(concat_strings(Attribute::column_full_name(), "\" BETWEEN "));
+            ret.condition.reserve(4);
+            ret.condition.push_back(concat_strings(Attribute::column_full_name(), " BETWEEN "));
             ret.condition.push_back(0UL);
             ret.condition.push_back(" AND ");
             ret.condition.push_back(1UL);

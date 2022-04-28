@@ -28,15 +28,26 @@ struct Clothes : public active_record::model<Clothes> {
         inline static decltype(auto) column_name = "price";
         using integer<Clothes, Price, uint32_t>::integer;
     } price;
+
+    struct UpdateAt : public active_record::attributes::datetime<Clothes, UpdateAt>{
+        inline static decltype(auto) column_name = "update_at";
+        using datetime<Clothes, UpdateAt>::datetime;
+    } update_at;
 };
 
 TEST_CASE("Long SQL statement benchmark"){
     // Benchmark
+    using namespace std::chrono;
+    using namespace std::chrono_literals;
     WARN(
         Clothes::join<User>().where(
             User::Name::like("user%") &&
             User::Height::cmp < 175.0 &&
-            Clothes::Price::between(10'000,50'000)
+            Clothes::Price::between(10'000,50'000) &&
+            Clothes::UpdateAt::between(
+                sys_days(2022y/April/1d) + 00s,
+                sys_days(2022y/April/last) + 23h + 59min + 59s
+            )
         ).order_by<Clothes::Price>().to_sql()
     );
 
@@ -50,7 +61,11 @@ TEST_CASE("Long SQL statement benchmark"){
                 t += Clothes::join<User>().where(
                     User::Name::like("user%") &&
                     User::Height::cmp < 175.0 &&
-                    Clothes::Price::between(10'000,50'000)
+                    Clothes::Price::between(10'000,50'000) &&
+                    Clothes::UpdateAt::between(
+                        sys_days(2022y/April/1d) + 00s,
+                        sys_days(2022y/April/last) + 23h + 59min + 59s
+                    )
                 ).order_by<Clothes::Price>().to_sql().length();
             }
             return t;
