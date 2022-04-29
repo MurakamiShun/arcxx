@@ -7,6 +7,7 @@
  */
 #include <sqlite3.h>
 #include "../../query_impl/query_relation.hpp"
+#include "string_convertors.hpp"
 
 namespace active_record::sqlite3::detail {
     template<is_attribute Attr>
@@ -15,7 +16,7 @@ namespace active_record::sqlite3::detail {
         const auto type = sqlite3_column_type(stmt, static_cast<int>(idx));
         if(type == SQLITE_TEXT){
             auto text_ptr = sqlite3_column_text(stmt, static_cast<int>(idx));
-            attr = active_record::string{ reinterpret_cast<const char*>(text_ptr) };
+            attr = active_record::string{ reinterpret_cast<const active_record::string::value_type*>(text_ptr) };
             return true;
         }
         else if(type == SQLITE_NULL){
@@ -53,6 +54,23 @@ namespace active_record::sqlite3::detail {
         const auto type = sqlite3_column_type(stmt, static_cast<int>(idx));
         if(type == SQLITE_FLOAT){
             attr = sqlite3_column_double(stmt, static_cast<int>(idx));
+            return true;
+        }
+        else if(type == SQLITE_NULL){
+            attr = std::nullopt;
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    template<is_attribute Attr>
+    requires regarded_as_clock<typename Attr::value_type>
+    inline bool set_column_data(sqlite3_stmt* stmt, const std::size_t idx, Attr& attr){
+        const auto type = sqlite3_column_type(stmt, static_cast<int>(idx));
+        if(type == SQLITE_TEXT){
+            auto text_ptr = sqlite3_column_text(stmt, static_cast<int>(idx));
+            from_string<sqlite3_adaptor>(attr, reinterpret_cast<const active_record::string::value_type*>(text_ptr));
             return true;
         }
         else if(type == SQLITE_NULL){
@@ -172,6 +190,18 @@ namespace active_record::sqlite3::detail {
         else {
             // not copy text
             return sqlite3_bind_text(stmt, static_cast<int>(index + 1), attr.value().c_str(), static_cast<int>(attr.value().length()), SQLITE_STATIC);
+        }
+    }
+    template<is_attribute Attr>
+    requires regarded_as_clock<typename Attr::value_type>
+    inline int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
+        if(!attr) {
+            return sqlite3_bind_null(stmt, static_cast<int>(index + 1));
+        }
+        else {
+            const active_record::string time_str = to_string<sqlite3_adaptor>(attr.value());
+            // copy text
+            return sqlite3_bind_text(stmt, static_cast<int>(index + 1), time_str.c_str(), static_cast<int>(time_str.length()), SQLITE_TRANSIENT);
         }
     }
     template<is_attribute Attr>

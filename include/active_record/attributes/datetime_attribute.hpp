@@ -18,6 +18,12 @@ namespace active_record {
     struct attribute<Model, Attribute, DateTime> : public attribute_common<Model, Attribute, DateTime> {
         using attribute_common<Model, Attribute, DateTime>::attribute_common;
 
+        template<typename T>
+        requires requires { {std::chrono::duration_cast<typename DateTime::duration>(std::declval<T>())}->std::same_as<DateTime>; }
+        attribute(T&& t) : 
+            attribute_common<Model, Attribute, DateTime>(std::chrono::duration_cast<typename DateTime::duration>(std::forward<T>(t))){
+        }
+
         inline static const typename attribute_common<Model, Attribute, DateTime>::constraint current_timestamp = [](const std::optional<DateTime>&) constexpr { return true; };
 
         struct max : public attribute_aggregator<Model, Attribute, max> {
