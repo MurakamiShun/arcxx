@@ -87,16 +87,17 @@ namespace active_record::sqlite3 {
     requires regarded_as_clock<typename T::value_type>
     [[nodiscard]] inline active_record::string column_definition() {
         return concat_strings(
-            T::column_name, " DATETIME CHECK(", T::column_name, " LIKE '____-__-__ __:__:__')",
+            T::column_name, " DATETIME CHECK(", T::column_name,
+            std::is_same_v<typename T::value_type::duration, std::chrono::days> ? " LIKE '____-__-__')": " LIKE '____-__-__ __:__:__')",
             T::has_constraint(T::unique) ? " UNIQUE" : "",
             T::has_constraint(T::primary_key) ? " PRIMARY KEY" : "",
             T::has_constraint(T::not_null) ? " NOT NULL" : "",
-            (T::has_constraint(typename T::constraint_default_value_impl{}) ?
-                concat_strings(
-                    T::has_constraint(T::not_null) ? " ON CONFLICT REPLACE" : "",
+            /*
+            (T::has_constraint(T::current_time) ?
+                concat_strings(T::has_constraint(T::not_null) ? " ON CONFLICT REPLACE" : "",
                     " DEFAULT ",
-                    std::to_string(T::template get_constraint<typename T::constraint_default_value_impl>()->default_value)
-                ) : ""),
+                    (std::is_same_v<T::value_type::duration, std::chrono::days>) ? "CURRENT_DATE" : "CURRENT_TIMESTAMP"
+                ) : ""),*/
             detail::reference_definition<T>()
         );
     }

@@ -36,6 +36,24 @@ namespace active_record {
             const auto attributes_tuple = tuptup::struct_binder<Derived>{}(*reinterpret_cast<const Derived*>(this));
             return tuptup::tuple_filter<is_attribute_type<defer<std::remove_reference<_1>>>>(attributes_tuple);
         }
+        template<std::derived_from<std::function<void()>> T>
+        void exec_callbacks(){
+            using namespace tuptup::type_placeholders;
+            const auto attributes_tuple = tuptup::struct_binder<Derived>{}(*reinterpret_cast<const Derived*>(this));
+            tuptup::apply_each(
+                [](const auto& callback){ callback(); },
+                tuptup::tuple_filter<std::is_same<T, defer<std::remove_reference<_1>>>>(attributes_tuple)
+            );
+        }
+
+        struct before_create  : std::function<void()>{ using function<void()>::function; };
+        struct after_create   : std::function<void()>{ using function<void()>::function; };
+        struct before_update  : std::function<void()>{ using function<void()>::function; };
+        struct after_update   : std::function<void()>{ using function<void()>::function; };
+        struct before_save    : std::function<void()>{ using function<void()>::function; };
+        struct after_save     : std::function<void()>{ using function<void()>::function; };
+        struct before_destroy : std::function<void()>{ using function<void()>::function; };
+        struct after_destroy  : std::function<void()>{ using function<void()>::function; };
 
         [[nodiscard]] static auto insert(const Derived& model);
         [[nodiscard]] static auto insert(Derived&& model);

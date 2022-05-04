@@ -199,7 +199,7 @@ namespace active_record::sqlite3::detail {
             return sqlite3_bind_null(stmt, static_cast<int>(index + 1));
         }
         else {
-            const active_record::string time_str = to_string<sqlite3_adaptor>(attr.value());
+            const active_record::string time_str = to_string<sqlite3_adaptor>(attr);
             // copy text
             return sqlite3_bind_text(stmt, static_cast<int>(index + 1), time_str.c_str(), static_cast<int>(time_str.length()), SQLITE_TRANSIENT);
         }

@@ -24,7 +24,7 @@ namespace active_record {
             attribute_common<Model, Attribute, DateTime>(std::chrono::duration_cast<typename DateTime::duration>(std::forward<T>(t))){
         }
 
-        inline static const typename attribute_common<Model, Attribute, DateTime>::constraint current_timestamp = [](const std::optional<DateTime>&) constexpr { return true; };
+        inline static const typename attribute_common<Model, Attribute, DateTime>::constraint current_time = [](const std::optional<DateTime>&) constexpr { return true; };
 
         struct max : public attribute_aggregator<Model, Attribute, max> {
             inline static decltype(auto) aggregation_func = "max";

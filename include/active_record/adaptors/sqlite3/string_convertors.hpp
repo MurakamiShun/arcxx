@@ -28,7 +28,7 @@ namespace active_record {
         // datetime
         template<std::same_as<sqlite3_adaptor> Adaptor, is_attribute Attr>
         requires regarded_as_clock<typename Attr::value_type>
-        [[nodiscard]] inline active_record::string to_string(const Attr& attr, active_record::string&& buff) {
+        [[nodiscard]] inline active_record::string to_string(const Attr& attr, active_record::string&& buff = {}) {
             // YYYY-MM-DD hh:mm:ss (UTC or GMT)
             using clock = Attr::value_type::clock;
             using duration = typename Attr::value_type::duration;
@@ -38,10 +38,10 @@ namespace active_record {
                 #ifdef _MSC_VER
                 using duration = typename Attr::value_type::duration;
                 if constexpr(std::is_same_v<duration, chrono::days>){
-                    std::format_to(std::back_inserter(buff),"\'{:%F}\'", attr.value());
+                    std::format_to(std::back_inserter(buff),"{:%F}", attr.value());
                 }
                 else {
-                    std::format_to(std::back_inserter(buff), "\'{:%F %T}\'", chrono::floor<chrono::seconds>(attr.value()));
+                    std::format_to(std::back_inserter(buff), "{:%F %T}", chrono::floor<chrono::seconds>(attr.value()));
                 }
                 #else
                 const std::time_t t = clock::to_time_t(attr.value());
@@ -49,8 +49,8 @@ namespace active_record {
                 if(gmt == nullptr) throw std::runtime_error("std::gmtime causes error");
                 char str[32]{0};
                 const char* const fmt_str = [](){
-                    if constexpr(std::is_same_v<duration, chrono::days>) return "\'%F\'";
-                    else return "\'%F %T\'";
+                    if constexpr(std::is_same_v<duration, chrono::days>) return "%F";
+                    else return "%F %T";
                 }();
                 if(std::strftime(str, 32, fmt_str, gmt) == 0) throw std::runtime_error("std::strftime causes error");
                 buff += str;
@@ -89,7 +89,7 @@ namespace active_record {
                 if(strptime(&str.front(), fmt_str, &gmt) == &str.front()) throw std::runtime_error("unavailable clock format");
                 const time_t t = timegm(&gmt);
                 if(t == time_t(-1)) throw std::runtime_error("unavailable clock format");
-                attr = clock::from_time_t(t);
+                attr = time_point_cast<duration>(clock::from_time_t(t));
                 #endif
             }
         }

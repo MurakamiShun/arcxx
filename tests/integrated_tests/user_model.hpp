@@ -27,6 +27,14 @@ struct User : public active_record::model<User> {
         using decimal<User, Height>::decimal;
     } height;
 
+    struct CreatedAt : public active_record::attributes::datetime<User, CreatedAt>{
+        using datetime<User, CreatedAt>::datetime;
+        inline static decltype(auto) column_name = "created_at";
+        inline static const auto constraints = { not_null };
+
+        CreatedAt(){ *this = time_point_cast<value_type::duration>(active_record::system_datetime::clock::now()); }
+    } created_at;
+
     int i_am_structure_noise = 0;
 };
 
