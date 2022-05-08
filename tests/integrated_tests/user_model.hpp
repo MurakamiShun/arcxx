@@ -12,14 +12,14 @@ struct User : public active_record::model<User> {
         inline static decltype(auto) column_name = "id";
         using integer<User, ID, size_t>::integer;
 
-        inline static const auto constraints = { primary_key };
+        inline static const auto constraints = primary_key;
     } id;
 
     struct Name : public active_record::attributes::string<User, Name> {
         inline static decltype(auto) column_name = "name";
         using string<User, Name>::string;
 
-        inline static const auto constraints = { not_null, default_value("unknow") };
+        inline static const auto constraints = not_null & default_value("unknow");
     } name;
 
     struct Height : public active_record::attributes::decimal<User, Height>{
@@ -30,7 +30,7 @@ struct User : public active_record::model<User> {
     struct CreatedAt : public active_record::attributes::datetime<User, CreatedAt>{
         using datetime<User, CreatedAt>::datetime;
         inline static decltype(auto) column_name = "created_at";
-        inline static const auto constraints = { not_null };
+        inline static const auto constraints = not_null;
 
         CreatedAt(){ *this = time_point_cast<value_type::duration>(active_record::system_datetime::clock::now()); }
     } created_at;

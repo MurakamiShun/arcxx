@@ -6,19 +6,19 @@ struct Test : public active_record::model<Test>{
     struct Int : public active_record::attributes::integer<Test, Int>{
         using integer<Test, Int>::integer;
         static inline decltype(auto) column_name = "int_col";
-        static inline const auto constraints = { primary_key, not_null, default_value(0) };
+        static constexpr auto constraints = primary_key & not_null & default_value(0);
     } int_col;
 
     struct String : public active_record::attributes::string<Test, String>{
         using string<Test, String>::string;
         static inline decltype(auto) column_name = "string_col";
-        static inline const auto constraints = { not_null, default_value("unknown") };
+        static constexpr auto constraints = not_null & default_value("unknown");
     } str_col;
 
     struct Decimal : public active_record::attributes::decimal<Test, Decimal>{
         using decimal<Test, Decimal>::decimal;
         static inline decltype(auto) column_name = "decimal_col";
-        static inline const auto constraints = { not_null, default_value(0.0) };
+        static constexpr auto constraints = not_null & default_value(0.0);
     } decimal_col;
 };
 
@@ -27,7 +27,7 @@ struct Have_a_Test : public active_record::model<Have_a_Test>{
     struct TestID : public active_record::attributes::foreign_key<Have_a_Test, TestID, Test::Int>{
         using foreign_key<Have_a_Test, TestID, Test::Int>::foreign_key;
         static inline decltype(auto) column_name = "test_id";
-        static inline const auto constraints = { not_null, default_value(0) };
+        static constexpr auto constraints = not_null & default_value(0);
     } test_id;
 };
 

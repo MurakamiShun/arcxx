@@ -14,6 +14,9 @@ namespace active_record {
     template<typename Model, typename Attribute, typename Type>
     struct attribute_common;
 
+    template<typename Type>
+    struct constraint{ using value_type = Type; };
+
     template<typename T>
     concept is_attribute = requires {
         std::derived_from<T, attribute_common<typename T::model_type, typename T::attribute_type, typename T::value_type>>;

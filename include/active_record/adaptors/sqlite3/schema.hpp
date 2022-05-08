@@ -30,17 +30,17 @@ namespace active_record::sqlite3 {
             T::has_constraint(T::unique) ? " UNIQUE" : "",
             T::has_constraint(T::primary_key) ? " PRIMARY KEY" : "",
             T::has_constraint(T::not_null) ? " NOT NULL" : "",
-            (T::has_constraint(typename T::constraint_default_value_impl{}) ?
+            (T::has_constraint(T::default_value("")) ?
                 concat_strings(
                     T::has_constraint(T::not_null) ? " ON CONFLICT REPLACE" : "",
                     " DEFAULT '",
-                    T::template get_constraint<typename T::constraint_default_value_impl>()->default_value,
+                    T::get_constraint(T::default_value(""))->default_value,
                     "'"
                 ) : ""),
-            (T::has_constraint(typename T::constraint_length_impl{}) ?
+            (T::has_constraint(T::length(0)) ?
                 concat_strings(
                     " CHECK(length(", T::column_name, ")<=",
-                    std::to_string(T::template get_constraint<typename T::constraint_length_impl>()->length),
+                    std::to_string(T::get_constraint(T::length(0))->length),
                     ")"
                 ) : ""),
             detail::reference_definition<T>()
@@ -55,11 +55,11 @@ namespace active_record::sqlite3 {
             T::has_constraint(T::unique) ? " UNIQUE" : "",
             T::has_constraint(T::primary_key) ? " PRIMARY KEY" : "",
             T::has_constraint(T::not_null) ? " NOT NULL" : "",
-            (T::has_constraint(typename T::constraint_default_value_impl{}) ?
+            (T::has_constraint(T::default_value(0)) ?
                 concat_strings(
                     T::has_constraint(T::not_null) ? " ON CONFLICT REPLACE" : "",
                     " DEFAULT ",
-                    std::to_string(T::template get_constraint<typename T::constraint_default_value_impl>()->default_value)
+                    std::to_string(T::get_constraint(T::default_value(0))->default_value)
                 ) : ""),
             detail::reference_definition<T>()
         );
@@ -73,11 +73,11 @@ namespace active_record::sqlite3 {
             T::has_constraint(T::unique) ? " UNIQUE" : "",
             T::has_constraint(T::primary_key) ? " PRIMARY KEY" : "",
             T::has_constraint(T::not_null) ? " NOT NULL" : "",
-            (T::has_constraint(typename T::constraint_default_value_impl{}) ?
+            (T::has_constraint(T::default_value(0.0)) ?
                 concat_strings(
                     T::has_constraint(T::not_null) ? " ON CONFLICT REPLACE" : "",
                     " DEFAULT ",
-                    std::to_string(T::template get_constraint<typename T::constraint_default_value_impl>()->default_value)
+                    std::to_string(T::get_constraint(T::default_value(0.0))->default_value)
                 ) : ""),
             detail::reference_definition<T>()
         );

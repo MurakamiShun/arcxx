@@ -6,7 +6,7 @@ struct UserLog : public active_record::model<UserLog>{
     struct ID : public active_record::attributes::integer<UserLog, ID, std::size_t> {
         constexpr static auto column_name = "id";
         using integer<UserLog, ID, std::size_t>::integer;
-        inline static const auto constraints = { primary_key };
+        inline static const auto constraints = primary_key;
     } id;
 
     struct UserID : public active_record::attributes::foreign_key<UserLog, UserID, User::ID> {

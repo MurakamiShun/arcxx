@@ -36,24 +36,13 @@ namespace active_record {
             const auto attributes_tuple = tuptup::struct_binder<Derived>{}(*reinterpret_cast<const Derived*>(this));
             return tuptup::tuple_filter<is_attribute_type<defer<std::remove_reference<_1>>>>(attributes_tuple);
         }
-        template<std::derived_from<std::function<void()>> T>
-        void exec_callbacks(){
-            using namespace tuptup::type_placeholders;
-            const auto attributes_tuple = tuptup::struct_binder<Derived>{}(*reinterpret_cast<const Derived*>(this));
-            tuptup::apply_each(
-                [](const auto& callback){ callback(); },
-                tuptup::tuple_filter<std::is_same<T, defer<std::remove_reference<_1>>>>(attributes_tuple)
-            );
-        }
 
-        struct before_create  : std::function<void()>{ using function<void()>::function; };
-        struct after_create   : std::function<void()>{ using function<void()>::function; };
-        struct before_update  : std::function<void()>{ using function<void()>::function; };
-        struct after_update   : std::function<void()>{ using function<void()>::function; };
-        struct before_save    : std::function<void()>{ using function<void()>::function; };
-        struct after_save     : std::function<void()>{ using function<void()>::function; };
-        struct before_destroy : std::function<void()>{ using function<void()>::function; };
-        struct after_destroy  : std::function<void()>{ using function<void()>::function; };
+        static constexpr bool has_before_insert_method() noexcept { return requires { Derived::before_insert(); }; }
+        static constexpr bool has_after_insert_method() noexcept { return requires { Derived::after_insert(); }; }
+        static constexpr bool has_before_update_method() noexcept { return requires { Derived::before_update(); }; }
+        static constexpr bool has_after_update_method() noexcept { return requires { Derived::after_update(); }; }
+        static constexpr bool has_before_destroy_method() noexcept { return requires { Derived::before_destroy(); }; }
+        static constexpr bool has_after_destroy_method() noexcept { return requires { Derived::after_destroy(); }; }
 
         [[nodiscard]] static auto insert(const Derived& model);
         [[nodiscard]] static auto insert(Derived&& model);

@@ -16,16 +16,19 @@ namespace active_record {
         };
         using attribute_common<Model, Attribute, Integer>::attribute_common;
 
-        inline static const typename attribute_common<Model, Attribute, Integer>::constraint auto_increment = [](const std::optional<Integer>&) constexpr { return false; };
+        static constexpr struct auto_imcrement_impl : constraint<Integer>{
+            constexpr bool operator()(const std::optional<Integer>&) noexcept { return false; }
+        } auto_increment{};
 
         template<std::convertible_to<Integer> ArgType1, std::convertible_to<Integer> ArgType2>
         [[nodiscard]] static auto between(const ArgType1 value1, const ArgType2 value2){
             query_condition<std::tuple<Attribute, Attribute>> ret;
             ret.bind_attrs =std::make_tuple(static_cast<Attribute>(value1), static_cast<Attribute>(value2));
+            ret.condition.reserve(4);
             ret.condition.push_back(concat_strings(Attribute::column_full_name(), " BETWEEN "));
-            ret.condition.push_back(0UL);
+            ret.condition.push_back(static_cast<std::size_t>(0));
             ret.condition.push_back(" AND ");
-            ret.condition.push_back(1UL);
+            ret.condition.push_back(static_cast<std::size_t>(1));
             return ret;
         }
 

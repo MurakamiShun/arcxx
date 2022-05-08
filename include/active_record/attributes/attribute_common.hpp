@@ -12,7 +12,6 @@
 namespace active_record {
     template<typename Model, typename Attribute, typename Type>
     struct attribute_common : public std::optional<Type>{
-        using constraint = std::function<bool(const std::optional<Type>&)>;
         using model_type = Model;
         using attribute_type = Attribute;
 
@@ -24,17 +23,21 @@ namespace active_record {
         static constexpr bool has_constraints() noexcept;
         [[nodiscard]] static constexpr auto column_full_name();
 
+        struct not_null_impl;
+        struct unique_impl;
+        struct primary_key_impl;
+        struct default_value_impl;
+        static constexpr auto not_null    = std::tuple<not_null_impl>{};
+        static constexpr auto unique      = std::tuple<unique_impl>{};
+        static constexpr auto primary_key = std::tuple<primary_key_impl>{};
+        static constexpr auto default_value = [](const std::convertible_to<Type> auto& def_val) constexpr {
+            return std::make_tuple(default_value_impl{ {}, def_val });
+        };
 
-        // constexpr std::type_info::operator== is C++23
-        inline static const constraint not_null = [](const std::optional<Type>& t) constexpr { return static_cast<bool>(t); };
-        inline static const constraint unique = [](const std::optional<Type>&) constexpr { return true; };
-        inline static const constraint primary_key = [](const std::optional<Type>& t) { return not_null(t) && unique(t); };
-        struct constraint_default_value_impl;
-        [[nodiscard]] static const constraint default_value(const Type& def_val);
-
-        [[nodiscard]] static bool has_constraint(const constraint&) noexcept;
         template<typename Constraint>
-        [[nodiscard]] static const Constraint* get_constraint();
+        [[nodiscard]] static constexpr bool has_constraint(Constraint) noexcept;
+        template<typename Constraint>
+        [[nodiscard]] static constexpr const std::tuple_element_t<0, Constraint>* get_constraint(Constraint) noexcept;
 
         [[nodiscard]] constexpr bool is_valid() const;
 

@@ -15,15 +15,21 @@ namespace active_record {
         template<std::convertible_to<active_record::string> StringType>
         requires (!std::convertible_to<StringType, std::optional<active_record::string>>)
         constexpr attribute(const StringType& default_value) : attribute_common<Model, Attribute, active_record::string>(active_record::string{ default_value }) {}
-
-        struct constraint_length_impl {
-            const std::size_t length;
-            constexpr bool operator()(const std::optional<active_record::string>& t) {
-                return static_cast<bool>(t) && t.value().length() <= length;
-            }
+    
+        static constexpr auto length = [](const std::size_t len) constexpr noexcept {
+            struct constraint_length_impl : constraint<active_record::string>{
+                const std::size_t length;
+                constexpr bool operator()(const std::optional<active_record::string>& t){ return t ? (length <= t.value().length()) : true; }
+            } result{ {}, len };
+            return std::make_tuple(result);
         };
-        [[nodiscard]] static const typename attribute_common<Model, Attribute, active_record::string>::constraint length(const std::size_t len) noexcept {
-            return constraint_length_impl{ len };
+
+        struct string_default_value_impl : constraint<active_record::string>{
+            const active_record::string_view default_value; // basic_string is not constexpr literal
+            constexpr bool operator()(const std::optional<active_record::string>&) noexcept { return true; }
+        };
+        static constexpr auto default_value = [](const std::convertible_to<active_record::string> auto& def_val) constexpr {
+            return std::make_tuple(string_default_value_impl{ {}, def_val });
         };
 
         template<std::convertible_to<active_record::string> StringType>

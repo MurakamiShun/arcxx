@@ -7,6 +7,37 @@
  */
 namespace active_record{
     template<typename Model, typename Attribute, typename Type>
+    struct attribute_common<Model, Attribute, Type>::not_null_impl : constraint<Type>{
+        constexpr bool operator()(const std::optional<Type>& t) noexcept { return static_cast<bool>(t); }
+    };
+    template<typename Model, typename Attribute, typename Type>
+    struct attribute_common<Model, Attribute, Type>::unique_impl : constraint<Type>{
+        constexpr bool operator()(const std::optional<Type>&) noexcept { return true; }
+    };
+    template<typename Model, typename Attribute, typename Type>
+    struct attribute_common<Model, Attribute, Type>::primary_key_impl : constraint<Type>{
+        constexpr bool operator()(const std::optional<Type>& t) noexcept { return not_null(t) && unique(t); }
+    };
+
+    template<typename Model, typename Attribute, typename Type>
+    struct attribute_common<Model, Attribute, Type>::default_value_impl : constraint<Type>{
+        const Type default_value;
+        constexpr bool operator()(const std::optional<Type>&) noexcept { return true; }
+    };
+
+    namespace detail{
+        template<typename T>
+        concept is_constraint = specialized_from<T, std::tuple>
+            && std::invocable<std::tuple_element_t<0, T>, const std::optional<typename std::tuple_element_t<0, T>::value_type>>
+            && std::derived_from<std::tuple_element_t<0, T>, constraint<typename std::tuple_element_t<0, T>::value_type>>;
+    }
+    template<detail::is_constraint A, detail::is_constraint B>
+    requires std::same_as<typename std::tuple_element_t<0, A>::value_type, typename std::tuple_element_t<0, B>::value_type>
+    constexpr auto operator&(const A a, const B b){
+        return std::tuple_cat(a, b);
+    }
+
+    template<typename Model, typename Attribute, typename Type>
     inline constexpr attribute_common<Model, Attribute, Type>::attribute_common(std::convertible_to<std::optional<Type>> auto&& val)
         : std::optional<Type>(std::forward<decltype(val)>(val)) {
     }
@@ -25,34 +56,20 @@ namespace active_record{
     }
 
     template<typename Model, typename Attribute, typename Type>
-    struct attribute_common<Model, Attribute, Type>::constraint_default_value_impl{
-        const Type default_value;
-        constexpr bool operator()(const std::optional<Type>&){ return true; }
-    };
-
-    template<typename Model, typename Attribute, typename Type>
-    inline const typename attribute_common<Model, Attribute, Type>::constraint attribute_common<Model, Attribute, Type>::default_value(const Type& def_val) {
-        return constraint_default_value_impl{ def_val };
-    }
-
-    template<typename Model, typename Attribute, typename Type>
-    inline bool attribute_common<Model, Attribute, Type>::has_constraint(const constraint& c) noexcept {
+    template<typename Constraint>
+    inline constexpr bool attribute_common<Model, Attribute, Type>::has_constraint([[maybe_unused]]Constraint) noexcept {
         if constexpr (has_constraints()){
-            for(const auto& con : Attribute::constraints){
-                if(con.target_type() == c.target_type()) return true;
-            }
+            return tuptup::contains_in_tuple<std::tuple_element_t<0, Constraint>, decltype(Attribute::constraints)>::value;
         }
         return false;
     }
-    
+
     template<typename Model, typename Attribute, typename Type>
     template<typename Constraint>
-    inline const Constraint* attribute_common<Model, Attribute, Type>::get_constraint() {
+    inline constexpr const std::tuple_element_t<0, Constraint>* attribute_common<Model, Attribute, Type>::get_constraint(Constraint) noexcept {
         if constexpr(has_constraints()) {
-            for(const auto& con : Attribute::constraints){
-                if(con.target_type() == typeid(Constraint)){
-                    return con.template target<Constraint>();
-                }
+            if constexpr(tuptup::contains_in_tuple<std::tuple_element_t<0, Constraint>, decltype(Attribute::constraints)>::value){
+                return &std::get<std::tuple_element_t<0, Constraint>>(Attribute::constraints);
             }
         }
         return nullptr;
