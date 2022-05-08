@@ -64,6 +64,13 @@ namespace active_record::PostgreSQL::detail {
             static_assert(std::bool_constant<(Attr{},false)>{}/*lazy instantiation*/, "Buy a machine that using IEE 754 as float format!");
         }
     }
+    template<is_attribute Attr>
+    requires regarded_as_clock<typename Attr::value_type>
+    [[nodiscard]] inline auto get_value_ptr(const Attr& attr, [[maybe_unused]]std::any& tmp) {
+        if (!attr) return static_cast<const char*>(nullptr);
+        tmp = to_string<postgresql_adaptor>(attr);
+        return reinterpret_cast<const char*>(std::any_cast<active_record::string&>(tmp).c_str());
+    }
 
     template<is_attribute Attr>
     inline bool set_column_data(PGresult* res, int col, int field, Attr& attr) {
