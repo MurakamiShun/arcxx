@@ -29,7 +29,7 @@ namespace active_record {
             constexpr bool operator()(const std::optional<active_record::string>&) noexcept { return true; }
         };
         static constexpr auto default_value = [](const std::convertible_to<active_record::string> auto& def_val) constexpr {
-            return std::make_tuple(string_default_value_impl{ {}, def_val });
+            return std::make_tuple(string_default_value_impl{ {}, static_cast<active_record::string_view>(def_val) });
         };
 
         template<std::convertible_to<active_record::string> StringType>

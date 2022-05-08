@@ -31,7 +31,7 @@ namespace active_record {
         static constexpr auto unique      = std::tuple<unique_impl>{};
         static constexpr auto primary_key = std::tuple<primary_key_impl>{};
         static constexpr auto default_value = [](const std::convertible_to<Type> auto& def_val) constexpr {
-            return std::make_tuple(default_value_impl{ {}, def_val });
+            return std::make_tuple(default_value_impl{ {}, static_cast<Type>(def_val) });
         };
 
         template<typename Constraint>
