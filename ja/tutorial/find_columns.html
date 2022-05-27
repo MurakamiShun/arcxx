@@ -76,8 +76,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/active_record/attributes/foreign_key.html">active_record::attributes::foreign_key</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/active_record/attributes/integer.html">active_record::attributes::integer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/active_record/attributes/string.html">active_record::attributes::string</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/adaptors/postgresql_adaptor.html">active_record::postgresql_adaptor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/adaptors/sqlite3_adaptor.html">active_record::sqlite3_adaptor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/connectors/postgresql_connector.html">active_record::postgresql_connector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/connectors/sqlite3_connector.html">active_record::sqlite3_connector</a></li>
 </ul>
 
         </div>
@@ -109,7 +109,7 @@
 <section id="where-clause">
 <h2>Where句<a class="headerlink" href="#where-clause" title="このヘッドラインへのパーマリンク"></a></h2>
 <p>カラムの検索・取得には <code class="code docutils literal notranslate"><span class="pre">where()</span></code> を使用します。</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">sqlite3</span><span class="o">::</span><span class="n">adaptor</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;example.sqlite3&quot;</span><span class="p">);</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">sqlite3</span><span class="o">::</span><span class="n">connector</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;example.sqlite3&quot;</span><span class="p">);</span><span class="w"></span>
 
 <span class="k">auto</span><span class="w"> </span><span class="n">sql_stmt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">where</span><span class="p">(</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="p">{</span><span class="mi">1</span><span class="p">});</span><span class="w"></span>
 

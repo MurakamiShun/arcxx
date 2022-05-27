@@ -43,19 +43,19 @@ active_record::query_relation
 
         .. code-block:: cpp
 
-            template<std::derived_from<adaptor> Adaptor>
-            auto exec(Adaptor& adapt) const -> std::pair<std::optional<active_record::string>, Result>;
+            template<std::derived_from<connector> Connector>
+            auto exec(Connector& adapt) const -> std::pair<std::optional<active_record::string>, Result>;
 
-            template<std::derived_from<adaptor> Adaptor>
+            template<std::derived_from<connector> Connector>
             requires std::same_as<Result, bool>
-            auto exec(Adaptor& adapt) const -> std::optional<active_record::string>;
+            auto exec(Connector& adapt) const -> std::optional<active_record::string>;
 
 
     .. cpp:function:: to_sql()
 
         .. code-block:: cpp
 
-            template<std::derived_from<adaptor> Adaptor = common_adaptor>
+            template<std::derived_from<connector> Connector = common_connector>
             const active_record::string to_sql() const 
 
     .. cpp:function:: where()

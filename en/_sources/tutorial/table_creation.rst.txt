@@ -50,7 +50,7 @@ Attribute details are written in :doc:`/api/active_record/attributes`.
 Table Creation
 ==============
 
-Use :code:`adaptor::create_table()` to create table into database.
+Use :code:`connector::create_table()` to create table into database.
 :code:`create_table()` will not cause error when a given table exists.
 :code:`create_table(abort_if_exists)` will return error message when exists the table.
 
@@ -65,7 +65,7 @@ Use :code:`adaptor::create_table()` to create table into database.
 .. code-block:: cpp
     :caption: Create table into Database file.
 
-    auto connection = active_record::sqlite3_adaptor::open("example.sqlite3", active_record::sqlite3::options::create);
+    auto connection = active_record::sqlite3_connector::open("example.sqlite3", active_record::sqlite3::options::create);
     connection.create_table<ExampleTable>();
 
     connection.create_table<ExampleTable>(active_record::abort_if_exists); // return error message due to exists table

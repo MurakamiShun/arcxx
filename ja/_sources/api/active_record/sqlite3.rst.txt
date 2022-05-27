@@ -3,13 +3,13 @@ namespace active_record::sqlite3
 ================================
 
 
-.. cpp:struct:: active_record::sqlite3::adaptor
+.. cpp:struct:: active_record::sqlite3::connector
 
-    Details are :doc:`/api/adaptors/sqlite3_adaptor`
+    Details are :doc:`/api/connectors/sqlite3_connector`
 
 .. object:: namespace active_record::sqlite3::options
     
-    :cpp:func:`sqlite3_adaptor::open` flags are hear.
+    :cpp:func:`sqlite3_connector::open` flags are hear.
 
     .. code-block:: cpp
 

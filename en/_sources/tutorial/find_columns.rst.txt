@@ -10,7 +10,7 @@ To find and get columns, use :code:`where()`.
 
 .. code-block:: cpp
 
-    auto connection = active_record::sqlite3::adaptor::open("example.sqlite3");
+    auto connection = active_record::sqlite3::connector::open("example.sqlite3");
     
     auto sql_stmt = ExampleTable::where(ExampleTable::ID{1});
 

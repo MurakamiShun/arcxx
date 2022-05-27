@@ -46,5 +46,5 @@ API
    api/active_record/query_condition
    api/active_record/query_relation
    api/active_record/attributes/*
-   api/adaptors/*
+   api/connectors/*
 

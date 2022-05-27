@@ -71,8 +71,8 @@
 <li class="toctree-l1"><a class="reference internal" href="attributes/foreign_key.html">active_record::attributes::foreign_key</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attributes/integer.html">active_record::attributes::integer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attributes/string.html">active_record::attributes::string</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../adaptors/postgresql_adaptor.html">active_record::postgresql_adaptor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../adaptors/sqlite3_adaptor.html">active_record::sqlite3_adaptor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors/postgresql_connector.html">active_record::postgresql_connector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors/sqlite3_connector.html">active_record::sqlite3_connector</a></li>
 </ul>
 
         </div>
@@ -103,15 +103,15 @@
   <section id="namespace-active-record-sqlite3">
 <h1>namespace active_record::sqlite3<a class="headerlink" href="#namespace-active-record-sqlite3" title="このヘッドラインへのパーマリンク"></a></h1>
 <dl class="cpp struct">
-<dt class="sig sig-object cpp" id="_CPPv4N13active_record7sqlite37adaptorE">
-<span id="_CPPv3N13active_record7sqlite37adaptorE"></span><span id="_CPPv2N13active_record7sqlite37adaptorE"></span><span id="active_record::sqlite3::adaptor"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">sqlite3</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">adaptor</span></span></span><a class="headerlink" href="#_CPPv4N13active_record7sqlite37adaptorE" title="この定義へのパーマリンク"></a><br /></dt>
-<dd><p>Details are <a class="reference internal" href="../adaptors/sqlite3_adaptor.html"><span class="doc">active_record::sqlite3_adaptor</span></a></p>
+<dt class="sig sig-object cpp" id="_CPPv4N13active_record7sqlite39connectorE">
+<span id="_CPPv3N13active_record7sqlite39connectorE"></span><span id="_CPPv2N13active_record7sqlite39connectorE"></span><span id="active_record::sqlite3::connector"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">active_record</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">sqlite3</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">connector</span></span></span><a class="headerlink" href="#_CPPv4N13active_record7sqlite39connectorE" title="この定義へのパーマリンク"></a><br /></dt>
+<dd><p>Details are <a class="reference internal" href="../connectors/sqlite3_connector.html"><span class="doc">active_record::sqlite3_connector</span></a></p>
 </dd></dl>
 
 <dl class="object">
 <dt class="sig sig-object">
 <span class="sig-name descname"><span class="pre">namespace</span> <span class="pre">active_record::sqlite3::options</span></span></dt>
-<dd><p><a class="reference internal" href="../adaptors/sqlite3_adaptor.html#_CPPv4N15sqlite3_adaptor4openEv" title="sqlite3_adaptor::open"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">sqlite3_adaptor::open()</span></code></a> flags are hear.</p>
+<dd><p><a class="reference internal" href="../connectors/sqlite3_connector.html#_CPPv4N17sqlite3_connector4openEv" title="sqlite3_connector::open"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">sqlite3_connector::open()</span></code></a> flags are hear.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">readonly</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">SQLITE_OPEN_READONLY</span><span class="p">;</span><span class="w"></span>
 <span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">readwrite</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">SQLITE_OPEN_READWRITE</span><span class="p">;</span><span class="w"></span>
 <span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">create</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">SQLITE_OPEN_CREATE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">SQLITE_OPEN_READWRITE</span><span class="p">;</span><span class="w"></span>

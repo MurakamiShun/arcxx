@@ -3,9 +3,9 @@ namespace active_record::PostgreSQL
 ===================================
 
 
-.. cpp:struct:: active_record::PostgreSQL::adaptor
+.. cpp:struct:: active_record::PostgreSQL::connector
 
-    Details are :doc:`/api/adaptors/postgresql_adaptor`
+    Details are :doc:`/api/connectors/postgresql_connector`
 
 .. cpp:struct:: active_record::PostgreSQL::endpoint
 

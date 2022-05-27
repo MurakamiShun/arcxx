@@ -70,8 +70,8 @@
 <li class="toctree-l1"><a class="reference internal" href="attributes/foreign_key.html">active_record::attributes::foreign_key</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attributes/integer.html">active_record::attributes::integer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attributes/string.html">active_record::attributes::string</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../adaptors/postgresql_adaptor.html">active_record::postgresql_adaptor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../adaptors/sqlite3_adaptor.html">active_record::sqlite3_adaptor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors/postgresql_connector.html">active_record::postgresql_connector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectors/sqlite3_connector.html">active_record::sqlite3_connector</a></li>
 </ul>
 
         </div>
@@ -205,7 +205,7 @@ CRTP(Curiously Recurring Template Pattern).</p>
 <dd><dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model6schema6to_sqlEv">
 <span id="_CPPv3N5model6schema6to_sqlEv"></span><span id="_CPPv2N5model6schema6to_sqlEv"></span><span id="model::schema::to_sql"></span><span class="sig-name descname"><span class="n"><span class="pre">to_sql</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model6schema6to_sqlEv" title="Permalink to this definition"></a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">derived_from</span><span class="o">&lt;</span><span class="n">adaptor</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Adaptor</span><span class="o">&gt;</span><span class="w"></span>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">derived_from</span><span class="o">&lt;</span><span class="n">connector</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Connector</span><span class="o">&gt;</span><span class="w"></span>
 <span class="k">static</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">to_sql</span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">create_if_not_exist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>

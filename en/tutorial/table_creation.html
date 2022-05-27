@@ -19,7 +19,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Data Inserting" href="inserting.html" />
-    <link rel="prev" title="active_record::sqlite3_adaptor" href="../api/adaptors/sqlite3_adaptor.html" /> 
+    <link rel="prev" title="active_record::sqlite3_connector" href="../api/connectors/sqlite3_connector.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -74,8 +74,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/active_record/attributes/foreign_key.html">active_record::attributes::foreign_key</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/active_record/attributes/integer.html">active_record::attributes::integer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/active_record/attributes/string.html">active_record::attributes::string</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/adaptors/postgresql_adaptor.html">active_record::postgresql_adaptor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/adaptors/sqlite3_adaptor.html">active_record::sqlite3_adaptor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/connectors/postgresql_connector.html">active_record::postgresql_connector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/connectors/sqlite3_connector.html">active_record::sqlite3_connector</a></li>
 </ul>
 
         </div>
@@ -158,7 +158,7 @@ And column struct requires <code class="code docutils literal notranslate"><span
 </section>
 <section id="id1">
 <h2>Table Creation<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h2>
-<p>Use <code class="code docutils literal notranslate"><span class="pre">adaptor::create_table()</span></code> to create table into database.
+<p>Use <code class="code docutils literal notranslate"><span class="pre">connector::create_table()</span></code> to create table into database.
 <code class="code docutils literal notranslate"><span class="pre">create_table()</span></code> will not cause error when a given table exists.
 <code class="code docutils literal notranslate"><span class="pre">create_table(abort_if_exists)</span></code> will return error message when exists the table.</p>
 <div class="literal-block-wrapper docutils container" id="id4">
@@ -172,7 +172,7 @@ And column struct requires <code class="code docutils literal notranslate"><span
 </div>
 <div class="literal-block-wrapper docutils container" id="id5">
 <div class="code-block-caption"><span class="caption-text">Create table into Database file.</span><a class="headerlink" href="#id5" title="Permalink to this code"></a></div>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">sqlite3_adaptor</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;example.sqlite3&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">sqlite3</span><span class="o">::</span><span class="n">options</span><span class="o">::</span><span class="n">create</span><span class="p">);</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">sqlite3_connector</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;example.sqlite3&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">sqlite3</span><span class="o">::</span><span class="n">options</span><span class="o">::</span><span class="n">create</span><span class="p">);</span><span class="w"></span>
 <span class="n">connection</span><span class="p">.</span><span class="n">create_table</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span><span class="p">();</span><span class="w"></span>
 
 <span class="n">connection</span><span class="p">.</span><span class="n">create_table</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">active_record</span><span class="o">::</span><span class="n">abort_if_exists</span><span class="p">);</span><span class="w"> </span><span class="c1">// return error message due to exists table</span>
@@ -188,7 +188,7 @@ And column struct requires <code class="code docutils literal notranslate"><span
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="inserting.html" class="btn btn-neutral float-right" title="Data Inserting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../api/adaptors/sqlite3_adaptor.html" class="btn btn-neutral float-left" title="active_record::sqlite3_adaptor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api/connectors/sqlite3_connector.html" class="btn btn-neutral float-left" title="active_record::sqlite3_connector" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

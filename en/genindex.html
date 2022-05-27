@@ -67,8 +67,8 @@
 <li class="toctree-l1"><a class="reference internal" href="api/active_record/attributes/foreign_key.html">active_record::attributes::foreign_key</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/active_record/attributes/integer.html">active_record::attributes::integer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/active_record/attributes/string.html">active_record::attributes::string</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/adaptors/postgresql_adaptor.html">active_record::postgresql_adaptor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/adaptors/sqlite3_adaptor.html">active_record::sqlite3_adaptor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/connectors/postgresql_connector.html">active_record::postgresql_connector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/connectors/sqlite3_connector.html">active_record::sqlite3_connector</a></li>
 </ul>
 
         </div>
@@ -112,13 +112,13 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/active_record/PostgreSQL.html#_CPPv4N13active_record10PostgreSQL7adaptorE">active_record::PostgreSQL::adaptor (C++ struct)</a>
-</li>
       <li><a href="api/active_record/PostgreSQL.html#_CPPv4N13active_record10PostgreSQL4authE">active_record::PostgreSQL::auth (C++ struct)</a>
 </li>
       <li><a href="api/active_record/PostgreSQL.html#_CPPv4N13active_record10PostgreSQL4auth8passwordE">active_record::PostgreSQL::auth::password (C++ member)</a>
 </li>
       <li><a href="api/active_record/PostgreSQL.html#_CPPv4N13active_record10PostgreSQL4auth4userE">active_record::PostgreSQL::auth::user (C++ member)</a>
+</li>
+      <li><a href="api/active_record/PostgreSQL.html#_CPPv4N13active_record10PostgreSQL9connectorE">active_record::PostgreSQL::connector (C++ struct)</a>
 </li>
       <li><a href="api/active_record/PostgreSQL.html#_CPPv4N13active_record10PostgreSQL8endpointE">active_record::PostgreSQL::endpoint (C++ struct)</a>
 </li>
@@ -136,7 +136,7 @@
 </li>
       <li><a href="api/active_record/PostgreSQL.html#_CPPv4N13active_record10PostgreSQL7options6optionE">active_record::PostgreSQL::options::option (C++ member)</a>
 </li>
-      <li><a href="api/active_record/sqlite3.html#_CPPv4N13active_record7sqlite37adaptorE">active_record::sqlite3::adaptor (C++ struct)</a>
+      <li><a href="api/active_record/sqlite3.html#_CPPv4N13active_record7sqlite39connectorE">active_record::sqlite3::connector (C++ struct)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -364,25 +364,25 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/adaptors/postgresql_adaptor.html#_CPPv418postgresql_adaptor">postgresql_adaptor (C++ class)</a>
+      <li><a href="api/connectors/postgresql_connector.html#_CPPv420postgresql_connector">postgresql_connector (C++ class)</a>
 </li>
-      <li><a href="api/adaptors/postgresql_adaptor.html#_CPPv4N18postgresql_adaptor5closeEv">postgresql_adaptor::close (C++ function)</a>
+      <li><a href="api/connectors/postgresql_connector.html#_CPPv4N20postgresql_connector5closeEv">postgresql_connector::close (C++ function)</a>
 </li>
-      <li><a href="api/adaptors/postgresql_adaptor.html#_CPPv4N18postgresql_adaptor12create_tableEv">postgresql_adaptor::create_table (C++ function)</a>
+      <li><a href="api/connectors/postgresql_connector.html#_CPPv4N20postgresql_connector12create_tableEv">postgresql_connector::create_table (C++ function)</a>
 </li>
-      <li><a href="api/adaptors/postgresql_adaptor.html#_CPPv4N18postgresql_adaptor10drop_tableEv">postgresql_adaptor::drop_table (C++ function)</a>
+      <li><a href="api/connectors/postgresql_connector.html#_CPPv4N20postgresql_connector10drop_tableEv">postgresql_connector::drop_table (C++ function)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/adaptors/postgresql_adaptor.html#_CPPv4N18postgresql_adaptor4execEv">postgresql_adaptor::exec (C++ function)</a>
+      <li><a href="api/connectors/postgresql_connector.html#_CPPv4N20postgresql_connector4execEv">postgresql_connector::exec (C++ function)</a>
 </li>
-      <li><a href="api/adaptors/postgresql_adaptor.html#_CPPv4N18postgresql_adaptor4openEv">postgresql_adaptor::open (C++ function)</a>
+      <li><a href="api/connectors/postgresql_connector.html#_CPPv4N20postgresql_connector4openEv">postgresql_connector::open (C++ function)</a>
 </li>
-      <li><a href="api/adaptors/postgresql_adaptor.html#_CPPv4N18postgresql_adaptor16protocol_versionEv">postgresql_adaptor::protocol_version (C++ function)</a>
+      <li><a href="api/connectors/postgresql_connector.html#_CPPv4N20postgresql_connector16protocol_versionEv">postgresql_connector::protocol_version (C++ function)</a>
 </li>
-      <li><a href="api/adaptors/postgresql_adaptor.html#_CPPv4N18postgresql_adaptor14server_versionEv">postgresql_adaptor::server_version (C++ function)</a>
+      <li><a href="api/connectors/postgresql_connector.html#_CPPv4N20postgresql_connector14server_versionEv">postgresql_connector::server_version (C++ function)</a>
 </li>
-      <li><a href="api/adaptors/postgresql_adaptor.html#_CPPv4N18postgresql_adaptor11transactionEv">postgresql_adaptor::transaction (C++ function)</a>
+      <li><a href="api/connectors/postgresql_connector.html#_CPPv4N20postgresql_connector11transactionEv">postgresql_connector::transaction (C++ function)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -432,23 +432,23 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/adaptors/sqlite3_adaptor.html#_CPPv415sqlite3_adaptor">sqlite3_adaptor (C++ class)</a>
+      <li><a href="api/connectors/sqlite3_connector.html#_CPPv417sqlite3_connector">sqlite3_connector (C++ class)</a>
 </li>
-      <li><a href="api/adaptors/sqlite3_adaptor.html#_CPPv4N15sqlite3_adaptor5closeEv">sqlite3_adaptor::close (C++ function)</a>
+      <li><a href="api/connectors/sqlite3_connector.html#_CPPv4N17sqlite3_connector5closeEv">sqlite3_connector::close (C++ function)</a>
 </li>
-      <li><a href="api/adaptors/sqlite3_adaptor.html#_CPPv4N15sqlite3_adaptor12create_tableEv">sqlite3_adaptor::create_table (C++ function)</a>
+      <li><a href="api/connectors/sqlite3_connector.html#_CPPv4N17sqlite3_connector12create_tableEv">sqlite3_connector::create_table (C++ function)</a>
 </li>
-      <li><a href="api/adaptors/sqlite3_adaptor.html#_CPPv4N15sqlite3_adaptor10drop_tableEv">sqlite3_adaptor::drop_table (C++ function)</a>
+      <li><a href="api/connectors/sqlite3_connector.html#_CPPv4N17sqlite3_connector10drop_tableEv">sqlite3_connector::drop_table (C++ function)</a>
 </li>
-      <li><a href="api/adaptors/sqlite3_adaptor.html#_CPPv4N15sqlite3_adaptor4execEv">sqlite3_adaptor::exec (C++ function)</a>
+      <li><a href="api/connectors/sqlite3_connector.html#_CPPv4N17sqlite3_connector4execEv">sqlite3_connector::exec (C++ function)</a>
 </li>
-      <li><a href="api/adaptors/sqlite3_adaptor.html#_CPPv4N15sqlite3_adaptor4openEv">sqlite3_adaptor::open (C++ function)</a>
+      <li><a href="api/connectors/sqlite3_connector.html#_CPPv4N17sqlite3_connector4openEv">sqlite3_connector::open (C++ function)</a>
 </li>
-      <li><a href="api/adaptors/sqlite3_adaptor.html#_CPPv4N15sqlite3_adaptor11transactionEv">sqlite3_adaptor::transaction (C++ function)</a>
+      <li><a href="api/connectors/sqlite3_connector.html#_CPPv4N17sqlite3_connector11transactionEv">sqlite3_connector::transaction (C++ function)</a>
 </li>
-      <li><a href="api/adaptors/sqlite3_adaptor.html#_CPPv4N15sqlite3_adaptor7versionEv">sqlite3_adaptor::version (C++ function)</a>
+      <li><a href="api/connectors/sqlite3_connector.html#_CPPv4N17sqlite3_connector7versionEv">sqlite3_connector::version (C++ function)</a>
 </li>
-      <li><a href="api/adaptors/sqlite3_adaptor.html#_CPPv4N15sqlite3_adaptor14version_numberEv">sqlite3_adaptor::version_number (C++ function)</a>
+      <li><a href="api/connectors/sqlite3_connector.html#_CPPv4N17sqlite3_connector14version_numberEv">sqlite3_connector::version_number (C++ function)</a>
 </li>
       <li><a href="api/active_record/attributes/string.html#_CPPv4I00E6string">string (C++ struct)</a>
 </li>

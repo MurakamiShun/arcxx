@@ -45,7 +45,7 @@ This example will insert the below values.
 .. code-block:: cpp
     :caption: inserting example code
 
-    auto connection = active_record::sqlite3::adaptor::open("example.sqlite3");
+    auto connection = active_record::sqlite3::connector::open("example.sqlite3");
     ExampleTable data = {
         .id = 1,
         .name = "unknown"
