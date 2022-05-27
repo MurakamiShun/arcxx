@@ -8,6 +8,7 @@
 namespace active_record {
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     struct query_relation : public query_relation_common<BindAttrs> {
+        using result_type = Result;
         using query_relation_common<BindAttrs>::query_relation_common;
         template<std::derived_from<adaptor> Adaptor>
         [[nodiscard]] auto exec(Adaptor& adapt) const {

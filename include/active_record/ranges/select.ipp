@@ -17,34 +17,19 @@ namespace active_record::ranges{
         constexpr select_view(const ViewSource& vs) : source(vs){};
 
         auto make_query_relation() const {
-            return source.make_query_relation().select<SelectedColumns...>();
+            return source.make_query_relation().template select<SelectedColumns...>();
         }
 
         decltype(auto) db_adaptor() const {
             return source.db_adaptor();
         }
-
-        struct sentinel{};
-        struct iterator{
-            friend sentinel;
-            using value_type = std::tuple<SelectedColumns...>;
-
-            select_view& parent;
-            iterator& operator++(){
-
-            }
-            bool operator==(sentinel){ return false; }
-        };
-
-        auto begin();
-        auto end();
     };
-    
+
     namespace views{
         // range adaptor factory
         namespace detail{
             template<typename... Columns>
-            struct select_adaptor{
+            struct select_adaptor : query_range_adaptor_interface<select_adaptor<Columns...>>{
                 template<query_range_view RV>
                 constexpr auto operator()(RV&& view) const {
                     return select_view<std::remove_cvref_t<RV>, Columns...>{ std::forward<RV>(view) };
@@ -69,6 +54,6 @@ namespace active_record::ranges{
                 return select_view<std::remove_cvref_t<RV>, std::tuple<Columns...>>{ std::forward<RV>(view) };
             }
         }
-        inline constexpr auto select = select_adaptor_closure{};
+        inline constexpr auto select = detail::select_adaptor_closure{};
     }
 }
