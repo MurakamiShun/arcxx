@@ -70,7 +70,7 @@ namespace active_record::sqlite3::detail {
         const auto type = sqlite3_column_type(stmt, static_cast<int>(idx));
         if(type == SQLITE_TEXT){
             auto text_ptr = sqlite3_column_text(stmt, static_cast<int>(idx));
-            from_string<sqlite3_adaptor>(attr, reinterpret_cast<const active_record::string::value_type*>(text_ptr));
+            from_string<sqlite3_connector>(attr, reinterpret_cast<const active_record::string::value_type*>(text_ptr));
             return true;
         }
         else if(type == SQLITE_NULL){
@@ -199,7 +199,7 @@ namespace active_record::sqlite3::detail {
             return sqlite3_bind_null(stmt, static_cast<int>(index + 1));
         }
         else {
-            const active_record::string time_str = to_string<sqlite3_adaptor>(attr);
+            const active_record::string time_str = to_string<sqlite3_connector>(attr);
             // copy text
             return sqlite3_bind_text(stmt, static_cast<int>(index + 1), time_str.c_str(), static_cast<int>(time_str.length()), SQLITE_TRANSIENT);
         }

@@ -10,9 +10,9 @@ namespace active_record {
     struct query_relation : public query_relation_common<BindAttrs> {
         using result_type = Result;
         using query_relation_common<BindAttrs>::query_relation_common;
-        template<std::derived_from<adaptor> Adaptor>
-        [[nodiscard]] auto exec(Adaptor& adapt) const {
-            return adapt.exec(*this);
+        template<std::derived_from<connector> Connector>
+        [[nodiscard]] auto exec(Connector& conn) const {
+            return conn.exec(*this);
         }
 
         /* scalar */

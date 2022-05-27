@@ -30,9 +30,9 @@ namespace active_record {
     }
 
     template<specialized_from<std::tuple> BindAttrs>
-    template<std::derived_from<adaptor> Adaptor>
+    template<std::derived_from<connector> Connector>
     [[nodiscard]] const active_record::string query_relation_common<BindAttrs>::to_sql() const {
-        sob_to_string_impl<Adaptor> convertor{ bind_attrs };
+        sob_to_string_impl<Connector> convertor{ bind_attrs };
         if (operation == query_operation::select) {
             return concat_strings("SELECT ", convertor.to_string(op_args),
                 " FROM ", convertor.to_string(tables),
@@ -69,7 +69,7 @@ namespace active_record {
     }
 
     template<specialized_from<std::tuple> BindAttrs>
-    template<std::derived_from<adaptor> Adaptor>
+    template<std::derived_from<connector> Connector>
     struct query_relation_common<BindAttrs>::sob_to_string_impl {
         const BindAttrs& bind_attrs;
         const std::array<std::function<active_record::string(active_record::string&&)>, std::tuple_size_v<BindAttrs>> to_string_func;
@@ -77,13 +77,13 @@ namespace active_record {
         sob_to_string_impl(const BindAttrs& attrs) :
             bind_attrs(attrs),
             to_string_func([&attrs]<std::size_t... I>(std::index_sequence<I...>){
-                if constexpr(Adaptor::bindable){
+                if constexpr(Connector::bindable){
                     return std::array<std::function<active_record::string(active_record::string&&)>, std::tuple_size_v<BindAttrs>>{};
                 }
                 else{
                     const auto lambda_generator = [&attrs]<std::size_t N>(std::integral_constant<std::size_t, N>) -> std::function<active_record::string(active_record::string&&)>{
                         return [&attrs](active_record::string&& buff){
-                            return active_record::to_string<Adaptor>(std::get<N>(attrs), std::move(buff));
+                            return active_record::to_string<Connector>(std::get<N>(attrs), std::move(buff));
                         };
                     };
                     return std::array<std::function<active_record::string(active_record::string&&)>, std::tuple_size_v<BindAttrs>>{
@@ -97,11 +97,11 @@ namespace active_record {
             active_record::string buff;
             buff.reserve(std::bit_ceil(sobs.size()*2));
 
-            if constexpr (Adaptor::bindable){
+            if constexpr (Connector::bindable){
                 for(const auto& sob : sobs) {
                     visit_by_lambda(sob,
                         [&buff](const active_record::string& str) { buff += str; },
-                        [&buff](const std::size_t idx) { buff += Adaptor::bind_variable_str(idx); }
+                        [&buff](const std::size_t idx) { buff += Connector::bind_variable_str(idx); }
                     );
                 }
             }

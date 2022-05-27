@@ -69,7 +69,7 @@ active_record::model
 
             .. code-block:: cpp
 
-                template<std::derived_from<adaptor> Adaptor>
+                template<std::derived_from<connector> Connector>
                 static active_record::string to_sql(bool create_if_not_exist = false);
 
     .. cpp:function:: insert()

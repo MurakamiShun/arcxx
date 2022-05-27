@@ -1,7 +1,7 @@
 #include "user_model.hpp"
 
 TEST_CASE("Table creation tests", "[model]") {
-    adaptor conn = open_testfile();
+    connector conn = open_testfile();
 
     SECTION("create user model"){
         conn.drop_table<User>();

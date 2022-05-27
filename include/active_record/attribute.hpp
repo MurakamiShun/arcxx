@@ -5,7 +5,7 @@
  * 
  * Released under the MIT License.
  */
-#include "adaptor.hpp"
+#include "connector.hpp"
 
 namespace active_record {
     template<typename Model, typename Attribute, typename Type>
@@ -37,11 +37,11 @@ namespace active_record {
     template<typename T>
     concept is_attribute_aggregator = std::derived_from<T, attribute_aggregator<typename T::model_type, typename T::attribute_type, typename T::aggregator_type>>;
 
-    template<std::derived_from<adaptor> Adaptor, is_attribute Attr>
+    template<std::derived_from<connector> Connector, is_attribute Attr>
     requires false
     [[nodiscard]] active_record::string to_string(const Attr& attr, active_record::string&& buff = {});
 
-    template<std::derived_from<adaptor> Adaptor, is_attribute Attr>
+    template<std::derived_from<connector> Connector, is_attribute Attr>
     requires false
     void from_string(Attr& attr, const active_record::string_view str);
 }

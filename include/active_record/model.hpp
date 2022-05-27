@@ -11,9 +11,9 @@ namespace active_record {
     template<typename Derived>
     struct model {
         struct schema {
-            template<std::derived_from<adaptor> Adaptor>
+            template<std::derived_from<connector> Connector>
             [[nodiscard]] static active_record::string to_sql(decltype(abort_if_exists));
-            template<std::derived_from<adaptor> Adaptor>
+            template<std::derived_from<connector> Connector>
             [[nodiscard]] static active_record::string to_sql();
         };
 

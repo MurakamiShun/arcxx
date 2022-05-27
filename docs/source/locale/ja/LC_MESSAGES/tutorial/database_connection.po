@@ -28,8 +28,8 @@ msgstr "データベースへの接続"
 
 #: ../../source/tutorial/database_connection.rst:5
 msgid ""
-"Use :code:`open` method on adaptors to make a database connection. The "
-"method detail is different between each adaptor. See adaptor details."
+"Use :code:`open` method on connectors to make a database connection. The "
+"method detail is different between each connector. See connector details."
 msgstr ""
-"データベースへのコネクションを作成するにはadaptorの :code:`open` 関数を使用してください。"
-"関数の詳細は各adaptorごとに異なるため、adaptorの詳細を参照してください。"
+"データベースへのコネクションを作成するにはconnectorの :code:`open` 関数を使用してください。"
+"関数の詳細は各connectorごとに異なるため、connectorの詳細を参照してください。"

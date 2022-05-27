@@ -1,46 +1,51 @@
-=======================================
-active_record::postgresql_adaptor
-=======================================
+==============================
+active_record::sqlite3_connector
+==============================
 
-.. cpp:class:: postgresql_adaptor
+
+.. cpp:class:: sqlite3_connector
 
     .. code-block:: cpp
 
-        class postgresql_adaptor : public adaptor;
+        class sqlite3_connector : public connector;
 
-    This class is database connector class for PostgreSQL.
-    "libpq-dev" is required to use this class.
-
+    This class is database connector class for SQLite3.
+    "libsqlite3" is required to use this class.
 
     .. cpp:function:: open()
 
         .. code-block:: cpp
+            
+            static sqlite3_connector open(
+                const active_record::string& file_name,
+                const int flags = active_record::sqlite3::options::readwrite
+            );
 
-            static postgresql_adaptor open(
-                const PostgreSQL::endpoint endpoint_info,
-                const std::optional<PostgreSQL::auth> auth_info = std::nullopt,
-                const std::optional<PostgreSQL::options> option = std::nullopt
-            )
-            static postgresql_adaptor open(const active_record::string& connection_info)
+        The flag details are on :doc:`active_record::sqlite3::options </api/active_record/sqlite3>`
 
     .. cpp:function:: close()
 
-
-    .. cpp:function:: protocol_version()
-
-        Return PQprotocolVersion.
-
         .. code-block:: cpp
 
-            int protocol_version() const;
+            bool close();
 
-    .. cpp:function:: server_version()
+        Close SQLite3 connection.
 
-        Return PQserverVersion.
+    .. cpp:function:: version()
 
         .. code-block:: cpp
+            
+            static active_record::string_view version();
 
-            int server_version() const;
+        Returns libsqlite3 version string.
+
+    .. cpp:function:: version_number()
+
+        .. code-block:: cpp
+            
+            static int version_number();
+
+        Returns libsqlite3 version number.
 
     .. cpp:function:: exec()
 
@@ -64,7 +69,7 @@ active_record::postgresql_adaptor
         .. code-block:: cpp
 
             template<is_model Mod>
-            auto drop_table() -> -> active_record::expected<void, active_record::string>;
+            auto drop_table() -> active_record::expected<void, active_record::string>;
 
     .. cpp:function:: transaction()
 
@@ -75,5 +80,5 @@ active_record::postgresql_adaptor
             auto transaction(F&& func) -> active_record::expected<void, active_record::string>;
             
             template<typename F>
-            requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t(postgresql_adaptor&)>>
+            requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t(sqlite3_connector&)>>
             auto transaction(F&& func) -> active_record::expected<void, active_record::string>;

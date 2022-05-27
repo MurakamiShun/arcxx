@@ -68,7 +68,7 @@ namespace active_record::PostgreSQL::detail {
     requires regarded_as_clock<typename Attr::value_type>
     [[nodiscard]] inline auto get_value_ptr(const Attr& attr, [[maybe_unused]]std::any& tmp) {
         if (!attr) return static_cast<const char*>(nullptr);
-        tmp = to_string<postgresql_adaptor>(attr);
+        tmp = to_string<postgresql_connector>(attr);
         return reinterpret_cast<const char*>(std::any_cast<active_record::string&>(tmp).c_str());
     }
 
@@ -80,7 +80,7 @@ namespace active_record::PostgreSQL::detail {
         }
         const char* const value_text = PQgetvalue(res, col, field);
         if (value_text == nullptr) return false;
-        from_string<postgresql_adaptor>(attr, active_record::string_view{ value_text });
+        from_string<postgresql_connector>(attr, active_record::string_view{ value_text });
         return true;
     }
     template<typename T>

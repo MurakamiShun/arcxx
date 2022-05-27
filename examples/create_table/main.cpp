@@ -25,7 +25,7 @@ struct Goods : public active_record::model<Goods> {
 int main(){
     using namespace active_record;
 
-    auto connector = sqlite3::adaptor::open("create_table_example.sqlite3", sqlite3::options::create);
+    auto connector = sqlite3::connector::open("create_table_example.sqlite3", sqlite3::options::create);
     if (connector.has_error()){
         std::cout << "Error message:" << connector.error_message() << std::endl;
         return -1;

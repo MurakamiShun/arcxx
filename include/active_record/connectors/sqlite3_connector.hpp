@@ -23,12 +23,12 @@ namespace active_record {
         }
     }
 
-    class sqlite3_adaptor : public adaptor {
+    class sqlite3_connector : public connector {
     private:
         ::sqlite3* db_obj = nullptr;
         std::optional<active_record::string> error_msg = std::nullopt;
 
-        sqlite3_adaptor(const active_record::string& file_name, const int flags);
+        sqlite3_connector(const active_record::string& file_name, const int flags);
 
         std::optional<active_record::string> get_error_msg(const char* msg_ptr) const;
         std::optional<active_record::string> get_error_msg(const int result_code) const;
@@ -37,13 +37,13 @@ namespace active_record {
         bool has_error() const noexcept;
         const active_record::string& error_message() const;
 
-        static sqlite3_adaptor open(const active_record::string& file_name, const int flags = active_record::sqlite3::options::readwrite);
+        static sqlite3_connector open(const active_record::string& file_name, const int flags = active_record::sqlite3::options::readwrite);
         void close();
 
-        sqlite3_adaptor() = delete;
-        sqlite3_adaptor(const sqlite3_adaptor&) = delete;
-        sqlite3_adaptor(sqlite3_adaptor&& adpt);
-        ~sqlite3_adaptor();
+        sqlite3_connector() = delete;
+        sqlite3_connector(const sqlite3_connector&) = delete;
+        sqlite3_connector(sqlite3_connector&&);
+        ~sqlite3_connector();
 
         static active_record::string_view version();
         static int version_number();
@@ -75,7 +75,7 @@ namespace active_record {
         requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t()>>
         active_record::expected<void, active_record::string> transaction(F&& func);
         template<typename F>
-        requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t(sqlite3_adaptor&)>>
+        requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t(sqlite3_connector&)>>
         active_record::expected<void, active_record::string> transaction(F&& func);
 
         template<is_attribute Attr>
@@ -83,8 +83,8 @@ namespace active_record {
     };
 
     namespace sqlite3 {
-        using adaptor = sqlite3_adaptor;
+        using connector = sqlite3_connector;
     }
 }
 
-#include "sqlite3/adaptor.ipp"
+#include "sqlite3/connector.ipp"

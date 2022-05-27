@@ -8,7 +8,7 @@
 #include "utils.hpp"
 
 namespace active_record{
-    struct adaptor {
+    struct connector {
         //static constexpr bool bindable = false;
         //static active_record::string bind_variable_str(const std::size_t idx);
     };
@@ -28,8 +28,8 @@ namespace active_record{
         inline const detail::commit_or_rollback_t commit{ std::nullopt };
     }
 
-    // abort if a given table exists when called adaptor::create_table.
+    // abort if a given table exists when called connector::create_table.
     constexpr struct {} abort_if_exists;
 
-    struct common_adaptor;
+    struct common_connector;
 }

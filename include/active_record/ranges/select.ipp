@@ -20,8 +20,8 @@ namespace active_record::ranges{
             return source.make_query_relation().template select<SelectedColumns...>();
         }
 
-        decltype(auto) db_adaptor() const {
-            return source.db_adaptor();
+        decltype(auto) get_connector() const {
+            return source.get_connector();
         }
     };
 

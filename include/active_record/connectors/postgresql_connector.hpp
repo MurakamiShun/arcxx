@@ -33,14 +33,14 @@ namespace active_record {
         };
     }
 
-    class postgresql_adaptor : public adaptor {
+    class postgresql_connector : public connector {
     private:
         ::PGconn* conn = nullptr;
         std::optional<active_record::string> error_msg = std::nullopt;
 
-        postgresql_adaptor() = delete;
-        postgresql_adaptor(const PostgreSQL::endpoint& endpoint_info, const std::optional<PostgreSQL::auth>& auth_info, const std::optional<PostgreSQL::options> option);
-        postgresql_adaptor(const active_record::string& info);
+        postgresql_connector() = delete;
+        postgresql_connector(const PostgreSQL::endpoint& endpoint_info, const std::optional<PostgreSQL::auth>& auth_info, const std::optional<PostgreSQL::options> option);
+        postgresql_connector(const active_record::string& info);
 
         template<typename Result, specialized_from<std::tuple> BindAttrs>
         PGresult* exec_sql(const query_relation<Result, BindAttrs>& query);
@@ -49,13 +49,13 @@ namespace active_record {
         bool has_error() const noexcept;
         const active_record::string& error_message() const;
 
-        static postgresql_adaptor open(const PostgreSQL::endpoint endpoint_info, const std::optional<PostgreSQL::auth> auth_info = std::nullopt, const std::optional<PostgreSQL::options> option = std::nullopt);
-        static postgresql_adaptor open(const active_record::string& connection_info);
+        static postgresql_connector open(const PostgreSQL::endpoint endpoint_info, const std::optional<PostgreSQL::auth> auth_info = std::nullopt, const std::optional<PostgreSQL::options> option = std::nullopt);
+        static postgresql_connector open(const active_record::string& connection_info);
 
         int protocol_version() const;
         int server_version() const;
 
-        ~postgresql_adaptor();
+        ~postgresql_connector();
 
         void close();
 
@@ -86,7 +86,7 @@ namespace active_record {
         requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t()>>
         active_record::expected<void, active_record::string> transaction(F&& func);
         template<typename F>
-        requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t(postgresql_adaptor&)>>
+        requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t(postgresql_connector&)>>
         active_record::expected<void, active_record::string> transaction(F&& func);
 
         template<is_attribute Attr>
@@ -94,8 +94,8 @@ namespace active_record {
     };
 
     namespace PostgreSQL {
-        using adaptor = postgresql_adaptor;
+        using connector = postgresql_connector;
     }
 }
 
-#include "postgresql/adaptor.ipp"
+#include "postgresql/connector.ipp"

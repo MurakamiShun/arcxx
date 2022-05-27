@@ -8,16 +8,16 @@
 #include "../../attributes/attributes.hpp"
 
 namespace active_record {
-    class sqlite3_adaptor;
+    class sqlite3_connector;
 
     inline namespace sqlite3_string_convertors{
         // boolean
-        template<std::same_as<sqlite3_adaptor> Adaptor, is_attribute Attr>
+        template<std::same_as<sqlite3_connector> Connector, is_attribute Attr>
         requires std::same_as<typename Attr::value_type, bool>
         [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
             return static_cast<bool>(attr) ? (attr.value() ? "1" : "0") : "null";
         }
-        template<std::same_as<sqlite3_adaptor> Adaptor, is_attribute Attr>
+        template<std::same_as<sqlite3_connector> Connector, is_attribute Attr>
         requires std::same_as<typename Attr::value_type, bool>
         inline void from_string(Attr& attr, const active_record::string_view str){
             if(str != "null"){
@@ -26,7 +26,7 @@ namespace active_record {
         }
 
         // datetime
-        template<std::same_as<sqlite3_adaptor> Adaptor, is_attribute Attr>
+        template<std::same_as<sqlite3_connector> Connector, is_attribute Attr>
         requires regarded_as_clock<typename Attr::value_type>
         [[nodiscard]] inline active_record::string to_string(const Attr& attr, active_record::string&& buff = {}) {
             // YYYY-MM-DD hh:mm:ss (UTC or GMT)
@@ -61,7 +61,7 @@ namespace active_record {
             }
             return std::move(buff);
         }
-        template<std::same_as<sqlite3_adaptor> Adaptor, is_attribute Attr>
+        template<std::same_as<sqlite3_connector> Connector, is_attribute Attr>
         requires regarded_as_clock<typename Attr::value_type>
         inline void from_string(Attr& attr, const active_record::string_view str){
             using clock = Attr::value_type::clock;
@@ -95,7 +95,7 @@ namespace active_record {
         }
 
         // binary
-        template<std::same_as<sqlite3_adaptor> Adaptor, is_attribute Attr>
+        template<std::same_as<sqlite3_connector> Connector, is_attribute Attr>
         requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
         [[nodiscard]] inline active_record::string to_string(const Attr& attr) {
             active_record::string hex = "x'";
@@ -105,7 +105,7 @@ namespace active_record {
             }
             return static_cast<bool>(attr) ? hex + "'" : "null";
         }
-        template<std::same_as<sqlite3_adaptor> Adaptor, is_attribute Attr>
+        template<std::same_as<sqlite3_connector> Connector, is_attribute Attr>
         requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
         inline void from_string(Attr& attr, const active_record::string_view str){
             attr = std::vector<std::byte>{};

@@ -8,13 +8,13 @@
 #include "../model.hpp"
 #include "query_utils.hpp"
 #include "query_condition.hpp"
-#include "../adaptors/common_adaptor.hpp"
+#include "../connectors/common_connector.hpp"
 
 namespace active_record {
     template<specialized_from<std::tuple> BindAttrs>
     struct query_relation_common {
     private:
-        template<std::derived_from<adaptor> Adaptor>
+        template<std::derived_from<connector> Connector>
         struct sob_to_string_impl;
     public:
         using str_or_bind = std::variant<active_record::string, std::size_t>;
@@ -35,7 +35,7 @@ namespace active_record {
             operation(op) {
         }
 
-        template<std::derived_from<adaptor> Adaptor = common_adaptor>
+        template<std::derived_from<connector> Connector = common_connector>
         [[nodiscard]] const active_record::string to_sql() const;
     };
 }
@@ -45,9 +45,9 @@ namespace active_record{
     template<specialized_from<std::tuple> BindAttrs>
     struct query_relation<void, BindAttrs> : public query_relation_common<BindAttrs> {
         using query_relation_common<BindAttrs>::query_relation_common;
-        template<std::derived_from<adaptor> Adaptor>
-        auto exec(Adaptor& adapt) const {
-            return adapt.exec(*this);
+        template<std::derived_from<connector> Connector>
+        auto exec(Connector& conn) const {
+            return conn.exec(*this);
         }
     };
 }

@@ -13,10 +13,10 @@
 #include "active_record/query_impl/query_relation.hpp"
 
 #if __has_include(<sqlite3.h>)
-#include "active_record/adaptors/sqlite3_adaptor.hpp"
+#include "active_record/connectors/sqlite3_connector.hpp"
 #endif
 
 #if __has_include(<libpq-fe.h>)
-#include "active_record/adaptors/postgresql_adaptor.hpp"
+#include "active_record/connectors/postgresql_connector.hpp"
 #endif
 //#endif

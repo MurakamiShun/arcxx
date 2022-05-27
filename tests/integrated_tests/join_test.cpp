@@ -4,7 +4,7 @@
 
 TEST_CASE_METHOD(UserModelTestsFixture, "Join query tests", "[model][query_relation][select][join][insert]") {
     if (const auto result = conn.create_table<UserLog>(); !result){
-        INFO(UserLog::schema::to_sql<adaptor>());
+        INFO(UserLog::schema::to_sql<connector>());
         FAIL(result.error());
     }
     auto users = User::where(User::ID::between(2,3)).exec(conn).value();

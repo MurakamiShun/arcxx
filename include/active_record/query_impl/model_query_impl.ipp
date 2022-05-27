@@ -279,11 +279,11 @@ namespace active_record {
     }
 
     namespace detail{
-        template<typename Derived, std::derived_from<adaptor> Adaptor>
+        template<typename Derived, std::derived_from<connector> Connector>
         inline auto schema_to_sql(bool abort){
             const auto column_definitions = std::apply(
                 []<typename... Attrs>(const Attrs...){
-                    return std::array<active_record::string, sizeof...(Attrs)>{(Adaptor::template column_definition<Attrs>())...};
+                    return std::array<active_record::string, sizeof...(Attrs)>{(Connector::template column_definition<Attrs>())...};
                 },
                 Derived{}.attributes_as_tuple()
             );
@@ -304,13 +304,13 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<std::derived_from<adaptor> Adaptor>
+    template<std::derived_from<connector> Connector>
     inline active_record::string model<Derived>::schema::to_sql(decltype(abort_if_exists)) {
-        return detail::schema_to_sql<Derived, Adaptor>(true);
+        return detail::schema_to_sql<Derived, Connector>(true);
     }
     template<typename Derived>
-    template<std::derived_from<adaptor> Adaptor>
+    template<std::derived_from<connector> Connector>
     inline active_record::string model<Derived>::schema::to_sql() {
-        return detail::schema_to_sql<Derived, Adaptor>(false);
+        return detail::schema_to_sql<Derived, Connector>(false);
     }
 }

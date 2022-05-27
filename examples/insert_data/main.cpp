@@ -22,10 +22,10 @@ struct Goods : public active_record::model<Goods> {
     } price;
 };
 
-auto setup() -> active_record::expected<active_record::sqlite3::adaptor, active_record::string>{
+auto setup() -> active_record::expected<active_record::sqlite3::connector, active_record::string>{
     using namespace active_record;
     // Connect and create table
-    auto conn = sqlite3::adaptor::open("insert_data_example.sqlite3", sqlite3::options::create);
+    auto conn = sqlite3::connector::open("insert_data_example.sqlite3", sqlite3::options::create);
     if (conn.has_error()) return make_unexpected(conn.error_message());
 
     if(const auto result = conn.template create_table<Goods>(); result){

@@ -44,7 +44,7 @@ struct User : public active_record::model<User> {
 
 class UserModelTestsFixture {
 protected:
-    adaptor conn;
+    connector conn;
     std::size_t get_data_count(){
         if(const auto result = User::count().exec(conn); result.has_value()){
             return result.value();

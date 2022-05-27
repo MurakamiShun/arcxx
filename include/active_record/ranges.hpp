@@ -6,7 +6,7 @@
  * Released under the MIT License.
  */
 #include <ranges>
-#include "adaptor.hpp"
+#include "connector.hpp"
 
 namespace active_record::ranges{
 
@@ -15,12 +15,12 @@ namespace active_record::ranges{
         using derived_type = Derived;
 
         static_assert(requires(Derived d){ d.make_query_relation(); });
-        static_assert(requires(Derived d){ d.db_adaptor(); });
+        static_assert(requires(Derived d){ d.get_connector(); });
         
         struct sentinel{};
         class iterator{
         public:
-            using dbadaptor_type = std::remove_cvref_t<decltype(std::declval<Derived>().db_adaptor())>;
+            using connector_type = std::remove_cvref_t<decltype(std::declval<Derived>().get_connector())>;
             using query_relation_type = std::remove_cvref_t<decltype(std::declval<Derived>().make_query_relation())>;
             using result_type = decltype(std::declval<Derived>().make_query_relation())::result_type;
             using value_type = std::conditional_t<
@@ -29,14 +29,14 @@ namespace active_record::ranges{
             >;
 
             iterator() = delete;
-            iterator(dbadaptor_type& adpt, query_relation_type&& q) : db_adpt(adpt), query(std::move(q)){}
-            iterator(dbadaptor_type& adpt, const query_relation_type& q): db_adpt(adpt), query(std::move(q)){}
+            iterator(connector_type& conn, query_relation_type&& q) : connector_ref(conn), query(std::move(q)){}
+            iterator(connector_type& conn, const query_relation_type& q): connector_ref(conn), query(std::move(q)){}
             
             bool operator==(const sentinel);
             value_type operator*();
             iterator& operator++();
         private:
-            dbadaptor_type& db_adpt;
+            connector_type& connector_ref;
             query_relation_type query;
             value_type result_buffer;
         };
@@ -67,23 +67,23 @@ namespace active_record::ranges{
         static_assert(requires(Derived d){ d([]{ struct A : query_range_view_interface<A>{}a{};return a; }()); });
     };
 
-    template<std::derived_from<adaptor> DBAdaptor, specialized_from<query_relation_common> QueryRelation>
-    class db_adaptor_view : query_range_view_interface<db_adaptor_view<DBAdaptor, QueryRelation>>{
+    template<std::derived_from<connector> Connector, specialized_from<query_relation_common> QueryRelation>
+    class connector_view : query_range_view_interface<connector_view<Connector, QueryRelation>>{
     private:
         QueryRelation query_relation;
-        DBAdaptor& adaptor_ref;
+        Connector& connector_ref;
     public:
-        db_adaptor_view() = delete;
-        db_adaptor_view(DBAdaptor& adpt, QueryRelation&& relation) : adaptor_ref(adpt), query_relation(std::move(relation)){}
-        db_adaptor_view(DBAdaptor& adpt, const QueryRelation& relation) : adaptor_ref(adpt), query_relation(relation){}
+        connector_view() = delete;
+        connector_view(Connector& conn, QueryRelation&& relation) : connector_ref(conn), query_relation(std::move(relation)){}
+        connector_view(Connector& conn, const QueryRelation& relation) : connector_ref(conn), query_relation(relation){}
         auto make_query_relation() && { return std::move(query_relation); }
         auto make_query_relation() const& { return query_relation; }
-        DBAdaptor& db_adaptor() noexcept { return adaptor_ref; }
+        Connector& get_connector() noexcept { return connector_ref; }
     };
 
-    template<std::derived_from<adaptor> DBAdaptor, specialized_from<query_relation_common> QueryRelation>
-    auto operator|(DBAdaptor& db_adpt, QueryRelation&& relation){
-        return db_adaptor_view<DBAdaptor, std::remove_cvref_t<QueryRelation>>(db_adpt, std::forward<QueryRelation>(relation));
+    template<std::derived_from<connector> Connector, specialized_from<query_relation_common> QueryRelation>
+    auto operator|(Connector& conn, QueryRelation&& relation){
+        return connector_view<Connector, std::remove_cvref_t<QueryRelation>>(conn, std::forward<QueryRelation>(relation));
     }
 }
 
