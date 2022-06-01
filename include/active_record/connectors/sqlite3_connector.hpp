@@ -6,7 +6,6 @@
  * Released under the MIT License.
  */
 #include <sqlite3.h>
-#include "sqlite3/utils.hpp"
 #include "sqlite3/schema.hpp"
 #include "sqlite3/string_convertors.hpp"
 
@@ -28,22 +27,27 @@ namespace active_record {
         ::sqlite3* db_obj = nullptr;
         std::optional<active_record::string> error_msg = std::nullopt;
 
-        sqlite3_connector(const active_record::string& file_name, const int flags);
-
         std::optional<active_record::string> get_error_msg(const char* msg_ptr) const;
         std::optional<active_record::string> get_error_msg(const int result_code) const;
         std::optional<active_record::string> get_error_msg() const;
+
+        template<typename Result, specialized_from<std::tuple> BindAttrs>
+        active_record::expected<::sqlite3_stmt*, active_record::string> make_stmt_and_bind(const query_relation<Result, BindAttrs>& query);
+
+        template<typename ResultType>
+        class executer;
     public:
+        sqlite3_connector() = delete;
+        sqlite3_connector(const sqlite3_connector&) = delete;
+        sqlite3_connector(sqlite3_connector&&);
+        sqlite3_connector(const active_record::string& file_name, const int flags = active_record::sqlite3::options::readwrite);
+        ~sqlite3_connector();
+
         bool has_error() const noexcept;
         const active_record::string& error_message() const;
 
         static sqlite3_connector open(const active_record::string& file_name, const int flags = active_record::sqlite3::options::readwrite);
         void close();
-
-        sqlite3_connector() = delete;
-        sqlite3_connector(const sqlite3_connector&) = delete;
-        sqlite3_connector(sqlite3_connector&&);
-        ~sqlite3_connector();
 
         static active_record::string_view version();
         static int version_number();
@@ -51,11 +55,17 @@ namespace active_record {
         static constexpr bool bindable = true;
         static active_record::string bind_variable_str(const std::size_t idx, active_record::string&& buff = {});
 
+        template<specialized_from<std::vector> Result, specialized_from<std::tuple> BindAttrs>
+        [[nodiscard]] auto make_executer(const query_relation<Result, BindAttrs>& query) -> active_record::expected<executer<typename Result::value_type>, active_record::string>;
+        template<specialized_from<std::unordered_map> Result, specialized_from<std::tuple> BindAttrs>
+        [[nodiscard]] auto make_executer(const query_relation<Result, BindAttrs>& query) -> active_record::expected<executer<std::pair<typename Result::key_type, typename Result::mapped_type>>, active_record::string>;
         template<typename Result, specialized_from<std::tuple> BindAttrs>
-        [[nodiscard]] active_record::expected<Result, active_record::string> exec(const query_relation<Result, BindAttrs>& query);
-        
+        [[nodiscard]] auto make_executer(const query_relation<Result, BindAttrs>& query) -> active_record::expected<executer<Result>, active_record::string>;
+
         template<specialized_from<std::tuple> BindAttrs>
         active_record::expected<void, active_record::string> exec(const query_relation<void, BindAttrs>& query);
+        template<typename Result, specialized_from<std::tuple> BindAttrs>
+        [[nodiscard]] active_record::expected<Result, active_record::string> exec(const query_relation<Result, BindAttrs>& query);
 
         template<is_model Mod>
         active_record::expected<void, active_record::string> create_table(decltype(abort_if_exists));
@@ -87,4 +97,5 @@ namespace active_record {
     }
 }
 
+#include "sqlite3/executer.ipp"
 #include "sqlite3/connector.ipp"

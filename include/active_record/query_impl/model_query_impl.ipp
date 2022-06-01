@@ -279,7 +279,7 @@ namespace active_record {
     }
 
     namespace detail{
-        template<typename Derived, std::derived_from<connector> Connector>
+        template<typename Derived, is_connector Connector>
         inline auto schema_to_sql(bool abort){
             const auto column_definitions = std::apply(
                 []<typename... Attrs>(const Attrs...){
@@ -304,12 +304,12 @@ namespace active_record {
     }
 
     template<typename Derived>
-    template<std::derived_from<connector> Connector>
+    template<is_connector Connector>
     inline active_record::string model<Derived>::schema::to_sql(decltype(abort_if_exists)) {
         return detail::schema_to_sql<Derived, Connector>(true);
     }
     template<typename Derived>
-    template<std::derived_from<connector> Connector>
+    template<is_connector Connector>
     inline active_record::string model<Derived>::schema::to_sql() {
         return detail::schema_to_sql<Derived, Connector>(false);
     }

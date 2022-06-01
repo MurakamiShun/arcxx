@@ -8,10 +8,10 @@
 #include "utils.hpp"
 
 namespace active_record{
-    struct connector {
-        //static constexpr bool bindable = false;
-        //static active_record::string bind_variable_str(const std::size_t idx);
-    };
+    struct connector {};
+
+    template<typename T>
+    concept is_connector = std::derived_from<T, connector>;
 
     namespace transaction {
         namespace detail{

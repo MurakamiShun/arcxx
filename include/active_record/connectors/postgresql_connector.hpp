@@ -38,14 +38,19 @@ namespace active_record {
         ::PGconn* conn = nullptr;
         std::optional<active_record::string> error_msg = std::nullopt;
 
-        postgresql_connector() = delete;
-        postgresql_connector(const PostgreSQL::endpoint& endpoint_info, const std::optional<PostgreSQL::auth>& auth_info, const std::optional<PostgreSQL::options> option);
-        postgresql_connector(const active_record::string& info);
-
         template<typename Result, specialized_from<std::tuple> BindAttrs>
         PGresult* exec_sql(const query_relation<Result, BindAttrs>& query);
 
+        template<typename ResultType>
+        struct executer;
     public:
+        postgresql_connector(const PostgreSQL::endpoint& endpoint_info, const std::optional<PostgreSQL::auth>& auth_info, const std::optional<PostgreSQL::options> option);
+        postgresql_connector(const active_record::string& info);
+        postgresql_connector() = delete;
+        postgresql_connector(const postgresql_connector&) = delete;
+        postgresql_connector(postgresql_connector&&);
+        ~postgresql_connector();
+
         bool has_error() const noexcept;
         const active_record::string& error_message() const;
 
@@ -54,8 +59,6 @@ namespace active_record {
 
         int protocol_version() const;
         int server_version() const;
-
-        ~postgresql_connector();
 
         void close();
 

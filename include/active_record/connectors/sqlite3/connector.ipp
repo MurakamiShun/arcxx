@@ -5,8 +5,71 @@
  * 
  * Released under the MIT License.
  */
-#include <iostream>
 namespace active_record {
+    namespace sqlite3::detail{
+        template<is_attribute Attr>
+        requires std::integral<typename Attr::value_type>
+        inline int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
+            if(!attr) {
+                return sqlite3_bind_null(stmt, static_cast<int>(index + 1));
+            }
+            else {
+                if constexpr (sizeof(typename Attr::value_type) == sizeof(int64_t)) {
+                    return sqlite3_bind_int64(stmt, static_cast<int>(index + 1), attr.value());
+                }
+                else {
+                    return sqlite3_bind_int(stmt, static_cast<int>(index + 1), attr.value());
+                }
+            }
+        }
+
+        template<is_attribute Attr>
+        requires std::floating_point<typename Attr::value_type>
+        inline int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
+            if(!attr) {
+                return sqlite3_bind_null(stmt, static_cast<int>(index + 1));
+            }
+            else {
+                return sqlite3_bind_double(stmt, static_cast<int>(index + 1), static_cast<double>(attr.value()));
+            }
+        }
+
+        template<is_attribute Attr>
+        requires std::same_as<typename Attr::value_type, active_record::string>
+        inline int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
+            if(!attr) {
+                return sqlite3_bind_null(stmt, static_cast<int>(index + 1));
+            }
+            else {
+                // not copy text
+                return sqlite3_bind_text(stmt, static_cast<int>(index + 1), attr.value().c_str(), static_cast<int>(attr.value().length()), SQLITE_STATIC);
+            }
+        }
+        template<is_attribute Attr>
+        requires regarded_as_clock<typename Attr::value_type>
+        inline int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
+            if(!attr) {
+                return sqlite3_bind_null(stmt, static_cast<int>(index + 1));
+            }
+            else {
+                const active_record::string time_str = to_string<sqlite3_connector>(attr);
+                // copy text
+                return sqlite3_bind_text(stmt, static_cast<int>(index + 1), time_str.c_str(), static_cast<int>(time_str.length()), SQLITE_TRANSIENT);
+            }
+        }
+        template<is_attribute Attr>
+        requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
+        inline int bind_variable(sqlite3_stmt* stmt, const std::size_t index, const Attr& attr) {
+            if(!attr) {
+                return sqlite3_bind_null(stmt, static_cast<int>(index + 1));
+            }
+            else {
+                // not copy text
+                return sqlite3_bind_blob(stmt, static_cast<int>(index + 1), attr.value().data(), static_cast<int>(attr.value().size()), SQLITE_STATIC);
+            }
+        }
+    }
+
     inline sqlite3_connector::sqlite3_connector(const active_record::string& file_name, const int flags){
         auto result = sqlite3_open_v2(file_name.c_str(), &db_obj, flags, nullptr);
         if(result != SQLITE_OK) error_msg = get_error_msg(result);
@@ -68,123 +131,106 @@ namespace active_record {
         return std::move(buff);
     }
 
-    namespace detail{
-        template<typename Result>
-        inline void set_result(Result& result, sqlite3_stmt* stmt){
-            result = active_record::sqlite3::detail::extract_column_data<Result>(stmt);
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
+    inline active_record::expected<::sqlite3_stmt*, active_record::string> sqlite3_connector::make_stmt_and_bind(const query_relation<Result, BindAttrs>& query){
+        const auto sql = query.template to_sql<sqlite3_connector>();
+        ::sqlite3_stmt* stmt = nullptr;
+        auto result_code = sqlite3_prepare_v2(
+            db_obj,
+            sql.c_str(),
+            static_cast<int>(sql.size()),
+            &stmt,
+            nullptr
+        );
+        if(result_code != SQLITE_OK){
+            return active_record::make_unexpected(get_error_msg(result_code).value());
         }
-        template<specialized_from<std::vector> Result>
-        inline void set_result(Result& result, sqlite3_stmt* stmt){
-            result.push_back(active_record::sqlite3::detail::extract_column_data<typename Result::value_type>(stmt));
+
+        if constexpr(query.bind_attrs_count() != 0) {
+            result_code = SQLITE_OK;
+            tuptup::indexed_apply_each(
+                [stmt, &result_code]<std::size_t N, typename Attr>(const Attr& attr){
+                    const auto res = active_record::sqlite3::detail::bind_variable(stmt, N, attr);
+                    if(res != SQLITE_OK) result_code = res;
+                },
+                query.bind_attrs
+            );
+            if(result_code != SQLITE_OK){
+                return active_record::make_unexpected(get_error_msg(result_code).value());
+            }
         }
-        template<specialized_from<std::unordered_map> Result>
-        inline void set_result(Result& result, sqlite3_stmt* stmt){
-            if constexpr (specialized_from<typename Result::mapped_type, std::tuple>){
-                using result_type = tuptup::tuple_cat_t<
-                    std::tuple<typename Result::key_type>,
-                    std::conditional_t<specialized_from<typename Result::mapped_type, std::tuple>, typename Result::mapped_type, std::tuple<>>
-                >;
-                auto result_column = active_record::sqlite3::detail::extract_column_data<result_type>(stmt);
-                result.insert(std::make_pair(
-                    std::get<0>(result_column),
-                    tuptup::tuple_slice<tuptup::make_index_range<1, std::tuple_size_v<result_type>>>(result_column)
-                ));
-            }
-            else{
-                using result_type = std::tuple<typename Result::key_type, typename Result::mapped_type>;
-                auto result_column = active_record::sqlite3::detail::extract_column_data<result_type>(stmt);
-                result.insert(std::make_pair(std::move(std::get<0>(result_column)), std::move(std::get<1>(result_column))));
-            }
+        return stmt;
+    }
+    template<specialized_from<std::vector> Result, specialized_from<std::tuple> BindAttrs>
+    inline auto sqlite3_connector::make_executer(const query_relation<Result, BindAttrs>& query) -> active_record::expected<executer<typename Result::value_type>, active_record::string>{
+        auto stmt_result = make_stmt_and_bind(query);
+        if(!stmt_result){
+            error_msg = stmt_result.error();
+            return active_record::make_unexpected(std::move(stmt_result.error()));
+        }
+        else return executer<typename Result::value_type>(stmt_result.value());
+    }
+    template<specialized_from<std::unordered_map> Result, specialized_from<std::tuple> BindAttrs>
+    inline auto sqlite3_connector::make_executer(const query_relation<Result, BindAttrs>& query) -> active_record::expected<executer<std::pair<typename Result::key_type, typename Result::mapped_type>>, active_record::string>{
+        auto stmt_result = make_stmt_and_bind(query);
+        if(!stmt_result){
+            error_msg = stmt_result.error();
+            return active_record::make_unexpected(std::move(stmt_result.error()));
+        }
+        else return executer<std::pair<typename Result::key_type, typename Result::mapped_type>>(stmt_result.value());
+    }
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
+    inline auto sqlite3_connector::make_executer(const query_relation<Result, BindAttrs>& query) -> active_record::expected<executer<Result>, active_record::string>{
+        auto stmt_result = make_stmt_and_bind(query);
+        if(!stmt_result){
+            error_msg = stmt_result.error();
+            return active_record::make_unexpected(std::move(stmt_result.error()));
+        }
+        else{
+            ::sqlite3_stmt* stmt = stmt_result.value();
+            return executer<Result>(stmt);
         }
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     inline active_record::expected<Result, active_record::string> sqlite3_connector::exec(const query_relation<Result, BindAttrs>& query){
+        auto make_executer_result = make_executer(query);
+        if(!make_executer_result){
+            error_msg = make_executer_result.error();
+            return active_record::make_unexpected(std::move(make_executer_result.error()));
+        }
+
         Result result;
-        const auto result_code = [this, &query, &result](){
-            const auto sql = query.template to_sql<sqlite3_connector>();
-            sqlite3_stmt* stmt = nullptr;
-            auto result_code = sqlite3_prepare_v2(
-                db_obj,
-                sql.c_str(),
-                static_cast<int>(sql.size()),
-                &stmt,
-                nullptr
-            );
-            if(result_code != SQLITE_OK) return result_code;
-
-            if constexpr(query.bind_attrs_count() != 0) {
-                result_code = SQLITE_OK;
-                tuptup::indexed_apply_each(
-                    [stmt, &result_code]<std::size_t N, typename Attr>(const Attr& attr){
-                        const auto res = active_record::sqlite3::detail::bind_variable(stmt, N, attr);
-                        if(res != SQLITE_OK) result_code = res;
-                    },
-                    query.bind_attrs
-                );
-                if(result_code != SQLITE_OK) return result_code;
-            }
-
-            while(true){
-                const auto status = sqlite3_step(stmt);
-                if(status == SQLITE_ROW){
-                    detail::set_result(result, stmt);
+        for(auto exec_result : make_executer_result.value()){
+            if(!exec_result) return active_record::make_unexpected(exec_result.error());
+            else{
+                if constexpr(specialized_from<Result, std::vector>){
+                    result.push_back(exec_result.value().get());
                 }
-                else if (status == SQLITE_DONE) break;
-                else return status;
+                else if constexpr(specialized_from<Result, std::unordered_map>){
+                    result.insert(exec_result.value().get());
+                }
+                else{
+                    result = exec_result.value().get();
+                }
             }
-            result_code = sqlite3_finalize(stmt);
-            return result_code;
-        }();
-
-        error_msg = get_error_msg(result_code);
-        if(error_msg){
-            return active_record::make_unexpected(error_msg.value());
         }
-        else{
-            return result;
-        }
+        return result;
     }
 
     template<specialized_from<std::tuple> BindAttrs>
     inline active_record::expected<void, active_record::string> sqlite3_connector::exec(const query_relation<void, BindAttrs>& query){
-        const auto result_code = [this, &query](){
-            const auto sql = query.template to_sql<sqlite3_connector>();
-            sqlite3_stmt* stmt = nullptr;
-            auto result_code = sqlite3_prepare_v2(
-                db_obj,
-                sql.c_str(),
-                static_cast<int>(sql.size()),
-                &stmt,
-                nullptr
-            );
-            if(result_code != SQLITE_OK) return result_code;
-
-            if constexpr(query.bind_attrs_count() != 0) {
-                result_code = SQLITE_OK;
-                tuptup::indexed_apply_each(
-                    [stmt, &result_code]<std::size_t N, typename Attr>(const Attr& attr){
-                        const auto res = active_record::sqlite3::detail::bind_variable(stmt, N, attr);
-                        if (res != SQLITE_OK) result_code = res;
-                    },
-                    query.bind_attrs
-                );
-            }
-            if(result_code != SQLITE_OK) return result_code;
-
-            result_code = sqlite3_step(stmt);
-            if(result_code != SQLITE_DONE) return result_code;
-
-            result_code = sqlite3_finalize(stmt);
-            return result_code;
-        }();
-        error_msg = get_error_msg(result_code);
-        if(error_msg){
-            return active_record::make_unexpected(error_msg.value());
+        auto make_executer_result = make_executer(query);
+        if(!make_executer_result){
+            error_msg = make_executer_result.error();
+            return active_record::make_unexpected(std::move(make_executer_result.error()));
         }
-        else{
-            return active_record::expected<void, active_record::string>{};
+
+        if(auto exec_result = make_executer_result.value().execute(); !exec_result){
+            error_msg = exec_result.error();
+            active_record::make_unexpected(std::move(exec_result.error()));
         }
+        else return active_record::expected<void, active_record::string>{};
     }
 
     template<is_model Mod>

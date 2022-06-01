@@ -30,7 +30,7 @@ namespace active_record {
     }
 
     template<specialized_from<std::tuple> BindAttrs>
-    template<std::derived_from<connector> Connector>
+    template<is_connector Connector>
     [[nodiscard]] const active_record::string query_relation_common<BindAttrs>::to_sql() const {
         sob_to_string_impl<Connector> convertor{ bind_attrs };
         if (operation == query_operation::select) {
@@ -69,7 +69,7 @@ namespace active_record {
     }
 
     template<specialized_from<std::tuple> BindAttrs>
-    template<std::derived_from<connector> Connector>
+    template<is_connector Connector>
     struct query_relation_common<BindAttrs>::sob_to_string_impl {
         const BindAttrs& bind_attrs;
         const std::array<std::function<active_record::string(active_record::string&&)>, std::tuple_size_v<BindAttrs>> to_string_func;

@@ -22,7 +22,7 @@ namespace active_record::ranges{
         public:
             using connector_type = std::remove_cvref_t<decltype(std::declval<Derived>().get_connector())>;
             using query_relation_type = std::remove_cvref_t<decltype(std::declval<Derived>().make_query_relation())>;
-            using result_type = decltype(std::declval<Derived>().make_query_relation())::result_type;
+            using result_type = typename decltype(std::declval<Derived>().make_query_relation())::result_type;
             using value_type = std::conditional_t<
                 specialized_from<result_type, std::vector> || specialized_from<result_type, std::unordered_map>,
                 typename result_type::value_type, result_type
@@ -67,7 +67,7 @@ namespace active_record::ranges{
         static_assert(requires(Derived d){ d([]{ struct A : query_range_view_interface<A>{}a{};return a; }()); });
     };
 
-    template<std::derived_from<connector> Connector, specialized_from<query_relation_common> QueryRelation>
+    template<is_connector Connector, specialized_from<query_relation_common> QueryRelation>
     class connector_view : query_range_view_interface<connector_view<Connector, QueryRelation>>{
     private:
         QueryRelation query_relation;
@@ -81,7 +81,7 @@ namespace active_record::ranges{
         Connector& get_connector() noexcept { return connector_ref; }
     };
 
-    template<std::derived_from<connector> Connector, specialized_from<query_relation_common> QueryRelation>
+    template<is_connector Connector, specialized_from<query_relation_common> QueryRelation>
     auto operator|(Connector& conn, QueryRelation&& relation){
         return connector_view<Connector, std::remove_cvref_t<QueryRelation>>(conn, std::forward<QueryRelation>(relation));
     }

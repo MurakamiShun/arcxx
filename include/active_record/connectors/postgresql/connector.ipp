@@ -29,6 +29,17 @@ namespace active_record {
         }
     }
 
+    inline postgresql_connector::postgresql_connector(postgresql_connector&& src){
+        conn = src.conn;
+        src.conn = nullptr;
+
+        this->error_msg = std::move(src.error_msg);
+    }
+
+    inline postgresql_connector::~postgresql_connector() {
+        this->close();
+    }
+
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     inline PGresult* postgresql_connector::exec_sql(const query_relation<Result, BindAttrs>& query) {
         const auto sql = query.template to_sql<postgresql_connector>();
@@ -104,10 +115,6 @@ namespace active_record {
     }
     inline int postgresql_connector::server_version() const {
         return PQserverVersion(conn);
-    }
-
-    inline postgresql_connector::~postgresql_connector() {
-        this->close();
     }
 
     inline void postgresql_connector::close() {

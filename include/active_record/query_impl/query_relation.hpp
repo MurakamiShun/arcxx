@@ -14,7 +14,7 @@ namespace active_record {
     template<specialized_from<std::tuple> BindAttrs>
     struct query_relation_common {
     private:
-        template<std::derived_from<connector> Connector>
+        template<is_connector Connector>
         struct sob_to_string_impl;
     public:
         using str_or_bind = std::variant<active_record::string, std::size_t>;
@@ -35,7 +35,7 @@ namespace active_record {
             operation(op) {
         }
 
-        template<std::derived_from<connector> Connector = common_connector>
+        template<is_connector Connector = common_connector>
         [[nodiscard]] const active_record::string to_sql() const;
     };
 }
@@ -45,7 +45,7 @@ namespace active_record{
     template<specialized_from<std::tuple> BindAttrs>
     struct query_relation<void, BindAttrs> : public query_relation_common<BindAttrs> {
         using query_relation_common<BindAttrs>::query_relation_common;
-        template<std::derived_from<connector> Connector>
+        template<is_connector Connector>
         auto exec(Connector& conn) const {
             return conn.exec(*this);
         }
