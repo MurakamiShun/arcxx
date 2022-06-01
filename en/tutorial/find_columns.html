@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -104,9 +105,9 @@
            <div itemprop="articleBody">
              
   <section id="find-columns">
-<h1>Find columns<a class="headerlink" href="#find-columns" title="Permalink to this headline"></a></h1>
+<h1>Find columns<a class="headerlink" href="#find-columns" title="Permalink to this heading"></a></h1>
 <section id="where-clause">
-<h2>Where clause<a class="headerlink" href="#where-clause" title="Permalink to this headline"></a></h2>
+<h2>Where clause<a class="headerlink" href="#where-clause" title="Permalink to this heading"></a></h2>
 <p>To find and get columns, use <code class="code docutils literal notranslate"><span class="pre">where()</span></code>.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">sqlite3</span><span class="o">::</span><span class="n">connector</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;example.sqlite3&quot;</span><span class="p">);</span><span class="w"></span>
 
@@ -138,7 +139,7 @@ The below codes will be the same result.</p>
 </div>
 </section>
 <section id="between-clause">
-<h2>Between clause<a class="headerlink" href="#between-clause" title="Permalink to this headline"></a></h2>
+<h2>Between clause<a class="headerlink" href="#between-clause" title="Permalink to this heading"></a></h2>
 <p>Between member function in <code class="code docutils literal notranslate"><span class="pre">attributes</span></code> generates <code class="code docutils literal notranslate"><span class="pre">Between</span></code> clause.
 The result type <code class="code docutils literal notranslate"><span class="pre">query_condition</span></code> is used as argument of <code class="code docutils literal notranslate"><span class="pre">where()</span></code>.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">where</span><span class="p">(</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">::</span><span class="n">between</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">));</span><span class="w"></span>
@@ -146,7 +147,7 @@ The result type <code class="code docutils literal notranslate"><span class="pre
 </div>
 </section>
 <section id="like-clause">
-<h2>Like clause<a class="headerlink" href="#like-clause" title="Permalink to this headline"></a></h2>
+<h2>Like clause<a class="headerlink" href="#like-clause" title="Permalink to this heading"></a></h2>
 <p>Like member function in <code class="code docutils literal notranslate"><span class="pre">string</span> <span class="pre">attribute</span></code> generates <code class="code docutils literal notranslate"><span class="pre">LIKE</span></code> clause.
 The result type <code class="code docutils literal notranslate"><span class="pre">query_condition</span></code> is put into where clause.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">where</span><span class="p">(</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">Name</span><span class="o">::</span><span class="n">like</span><span class="p">(</span><span class="s">&quot;user_&quot;</span><span class="p">));</span><span class="w"></span>

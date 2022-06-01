@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/translations.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -105,9 +106,9 @@
            <div itemprop="articleBody">
              
   <section id="find-columns">
-<h1>カラム検索<a class="headerlink" href="#find-columns" title="このヘッドラインへのパーマリンク"></a></h1>
+<h1>カラム検索<a class="headerlink" href="#find-columns" title="Permalink to this heading"></a></h1>
 <section id="where-clause">
-<h2>Where句<a class="headerlink" href="#where-clause" title="このヘッドラインへのパーマリンク"></a></h2>
+<h2>Where句<a class="headerlink" href="#where-clause" title="Permalink to this heading"></a></h2>
 <p>カラムの検索・取得には <code class="code docutils literal notranslate"><span class="pre">where()</span></code> を使用します。</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">active_record</span><span class="o">::</span><span class="n">sqlite3</span><span class="o">::</span><span class="n">connector</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;example.sqlite3&quot;</span><span class="p">);</span><span class="w"></span>
 
@@ -138,14 +139,14 @@
 </div>
 </section>
 <section id="between-clause">
-<h2>Between句<a class="headerlink" href="#between-clause" title="このヘッドラインへのパーマリンク"></a></h2>
+<h2>Between句<a class="headerlink" href="#between-clause" title="Permalink to this heading"></a></h2>
 <p><code class="code docutils literal notranslate"><span class="pre">attributes</span></code> 内のBetweenメンバ関数は <code class="code docutils literal notranslate"><span class="pre">Between</span></code> 句を生成します。返り値の型である <code class="code docutils literal notranslate"><span class="pre">query_condition</span></code> はwhere関数の引数として使用されます。</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">where</span><span class="p">(</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">::</span><span class="n">between</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">));</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
 <section id="like-clause">
-<h2>Like句<a class="headerlink" href="#like-clause" title="このヘッドラインへのパーマリンク"></a></h2>
+<h2>Like句<a class="headerlink" href="#like-clause" title="Permalink to this heading"></a></h2>
 <p><code class="code docutils literal notranslate"><span class="pre">string</span> <span class="pre">attribute</span></code> 内のLikeメンバ関数は <code class="code docutils literal notranslate"><span class="pre">Like</span></code> 句を生成します。返り値の型である <code class="code docutils literal notranslate"><span class="pre">query_condition</span></code> はwhere関数の引数として使用されます。</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">where</span><span class="p">(</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">Name</span><span class="o">::</span><span class="n">like</span><span class="p">(</span><span class="s">&quot;user_&quot;</span><span class="p">));</span><span class="w"></span>
 </pre></div>
