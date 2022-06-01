@@ -9,35 +9,34 @@ if(MSVC)
     if(TARGET_SQL MATCHES "PostgreSQL")
         find_package(PostgreSQL REQUIRED)
         set(compile_options /W3 /DPOSTGRESQL_TEST)
-        set(link_library Catch2::Catch2 PostgreSQL::PostgreSQL)
+        set(link_library Catch2::Catch2 Catch2::Catch2WithMain PostgreSQL::PostgreSQL)
     else()
         find_package(unofficial-sqlite3 CONFIG REQUIRED)
         set(compile_options /W3 /DSQLITE_TEST)
-        set(link_library Catch2::Catch2 unofficial::sqlite3::sqlite3)
+        set(link_library Catch2::Catch2 Catch2::Catch2WithMain unofficial::sqlite3::sqlite3)
     endif()
 else()
     include(FetchContent)
     FetchContent_Declare(
         Catch2
         GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-        GIT_TAG        v2.13.7
+        GIT_TAG        v3.0.1
     )
     FetchContent_MakeAvailable(Catch2)
     set(compile_feature cxx_std_20)
     if(TARGET_SQL MATCHES "PostgreSQL")
         find_package(PostgreSQL REQUIRED)
         set(compile_options -Wall -Wextra -pedantic -Werror -DPOSTGRESQL_TEST)
-        set(link_library Catch2::Catch2 PostgreSQL::PostgreSQL)
+        set(link_library Catch2::Catch2 Catch2::Catch2WithMain PostgreSQL::PostgreSQL)
     else()
         set(compile_options -Wall -Wextra -pedantic -Werror -DSQLITE_TEST)
-        set(link_library Catch2::Catch2 sqlite3)
+        set(link_library Catch2::Catch2 Catch2::Catch2WithMain sqlite3)
     endif()
 endif()
 
 
 # Integrated Tests
 add_executable(active_record_IT
-    main.cpp
     table_creation_test.cpp
     select_test.cpp
     insert_test.cpp

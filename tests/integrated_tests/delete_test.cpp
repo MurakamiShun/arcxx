@@ -7,7 +7,7 @@ TEST_CASE_METHOD(UserModelTestsFixture, "Delete query tests", "[model][query_rel
         std::size_t data_count_before_delete = get_data_count();
         REQUIRE(data_count_before_delete > 0);
         
-        std::size_t expect_delete_count;
+        std::size_t expect_delete_count = 0;
         if(const auto data_count_result = User::where(User::ID::between(0,3)).count().exec(conn); !data_count_result){
             FAIL(data_count_result.error());
         }

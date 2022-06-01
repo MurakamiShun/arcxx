@@ -11,7 +11,7 @@ else()
     FetchContent_Declare(
         Catch2
         GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-        GIT_TAG        v2.13.7
+        GIT_TAG        v3.0.1
     )
 
     FetchContent_MakeAvailable(Catch2)
@@ -21,11 +21,10 @@ endif()
 
 # Benchmark
 add_executable(active_record_bench
-    main.cpp
     inserting_benchmark.cpp
     long_SQL_statement_benchmark.cpp
 )
-target_link_libraries(active_record_bench PRIVATE Catch2::Catch2)
+target_link_libraries(active_record_bench PRIVATE Catch2::Catch2 Catch2::Catch2WithMain)
 target_compile_options(active_record_bench PUBLIC ${compile_options})
 target_include_directories(active_record_bench PUBLIC ../../include)
 target_compile_features(active_record_bench PRIVATE ${compile_feature})

@@ -1,6 +1,6 @@
 #include <active_record.hpp>
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 #include <ranges>
 
 struct User : public active_record::model<User> {

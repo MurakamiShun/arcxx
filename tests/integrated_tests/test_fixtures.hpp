@@ -1,7 +1,7 @@
 #pragma once
 #include <active_record.hpp>
 #include <filesystem>
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 
 #ifdef POSTGRESQL_TEST
 using connector = active_record::PostgreSQL::connector;
