@@ -48,10 +48,10 @@ add_executable(active_record_IT
     find_test.cpp
 )
 target_link_libraries(active_record_IT PRIVATE ${link_library})
-target_compile_options(active_record_IT PUBLIC ${compile_options})
-target_include_directories(active_record_IT PUBLIC ../../include)
+target_compile_options(active_record_IT PRIVATE ${compile_options})
+target_include_directories(active_record_IT PRIVATE ../../include)
 target_compile_features(active_record_IT PRIVATE ${compile_feature})
-target_precompile_headers(active_record_IT PUBLIC <active_record.hpp> <filesystem>)
+target_precompile_headers(active_record_IT PRIVATE <active_record.hpp> <filesystem>)
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
 include(CTest)
 

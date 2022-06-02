@@ -14,4 +14,4 @@ find_package(SQLite3 REQUIRED)
 
 add_executable(insert_data main.cpp)
 target_link_libraries(insert_data PRIVATE ActiveRecord::ActiveRecord SQLite::SQLite3)
-target_compile_features(insert_data PUBLIC cxx_std_20)
+target_compile_features(insert_data PRIVATE cxx_std_20)

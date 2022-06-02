@@ -25,8 +25,8 @@ add_executable(active_record_bench
     long_SQL_statement_benchmark.cpp
 )
 target_link_libraries(active_record_bench PRIVATE Catch2::Catch2 Catch2::Catch2WithMain)
-target_compile_options(active_record_bench PUBLIC ${compile_options})
-target_include_directories(active_record_bench PUBLIC ../../include)
+target_compile_options(active_record_bench PRIVATE ${compile_options})
+target_include_directories(active_record_bench PRIVATE ../../include)
 target_compile_features(active_record_bench PRIVATE ${compile_feature})
 
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
