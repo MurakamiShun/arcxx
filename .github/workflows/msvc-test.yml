@@ -29,6 +29,9 @@ jobs:
   sqlite3-tests:
     runs-on: windows-2022
     needs: [compile_tests]
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
     steps:
       - uses: actions/checkout@v2
       - uses: microsoft/setup-msbuild@v1.1
@@ -45,7 +48,7 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}/tests/integrated_tests
-        run: cmake --build build --config ${{env.BUILD_TYPE}} --parallel
+        run: cmake --build build --config ${{ matrix.build_type }} --parallel
 
       - name: Run integrated tests
         working-directory: ${{github.workspace}}/tests/integrated_tests/build/${{env.BUILD_TYPE}}

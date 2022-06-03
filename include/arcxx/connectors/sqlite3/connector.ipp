@@ -200,7 +200,7 @@ namespace arcxx {
             return arcxx::make_unexpected(std::move(make_executer_result.error()));
         }
 
-        Result result;
+        Result result{};
         for(auto exec_result : make_executer_result.value()){
             if(!exec_result) return arcxx::make_unexpected(exec_result.error());
             else{
