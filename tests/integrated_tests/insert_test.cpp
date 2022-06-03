@@ -8,7 +8,7 @@ TEST_CASE("Insert query tests", "[model][query_relation][insert][select]") {
     connection.create_table<User>();
 
     const auto insert_transaction = [](auto& connection){
-        namespace transaction = active_record::transaction;
+        namespace transaction = arcxx::transaction;
 
         for(auto i = 0; i < 10; ++i){
             User user;

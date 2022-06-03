@@ -9,21 +9,21 @@ Example Table
 .. code-block:: cpp
     :caption: example_table code
 
-    #include <active_record.hpp>
+    #include <arcxx.hpp>
 
-    struct ExampleTable : public active_record::model<ExampleTable> {
+    struct ExampleTable : public arcxx::model<ExampleTable> {
         static constexpr auto table_name = "example_table";
         
         // id column
-        struct ID : public active_record::attributes::integer<ExampleTable, ID> {
-            using active_record::attributes::integer<ExampleTable, ID>::integer;
+        struct ID : public arcxx::attributes::integer<ExampleTable, ID> {
+            using arcxx::attributes::integer<ExampleTable, ID>::integer;
             static constexpr auto column_name = "id";
             inline static const auto constraints = { primary_key };
         } id;
 
         // name column
-        struct Name : public active_record::attributes::string<ExampleTable, Name> {
-            using active_record::attributes::string<ExampleTable, Name>::string;
+        struct Name : public arcxx::attributes::string<ExampleTable, Name> {
+            using arcxx::attributes::string<ExampleTable, Name>::string;
             static constexpr auto column_name = "name";
         } name;
     };
@@ -45,7 +45,7 @@ This example will insert the below values.
 .. code-block:: cpp
     :caption: inserting example code
 
-    auto connection = active_record::sqlite3::connector::open("example.sqlite3");
+    auto connection = arcxx::sqlite3::connector::open("example.sqlite3");
     ExampleTable data = {
         .id = 1,
         .name = "unknown"
@@ -59,7 +59,7 @@ This example will insert the below values.
     // Execute data inserting
     const auto result = sql_stmt.exec(connection);
     
-    // decltype(result) == tl::expected<void, active_record::string>
+    // decltype(result) == tl::expected<void, arcxx::string>
     if(!result){
         // error handling
     }

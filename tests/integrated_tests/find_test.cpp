@@ -104,8 +104,8 @@ TEST_CASE_METHOD(UserModelTestsFixture, "Find query tests", "[model][query_relat
                 //STATIC_REQUIRE(std::is_same_v<decltype(users), std::vector<User::Name>>);
                 REQUIRE(users1.size() == 1);
                 REQUIRE(users2.size() == 1);
-                REQUIRE(users1[0].name.value() == active_record::string{ "user1" });
-                REQUIRE(users2[0].name.value() == active_record::string{ "user1" });
+                REQUIRE(users1[0].name.value() == arcxx::string{ "user1" });
+                REQUIRE(users2[0].name.value() == arcxx::string{ "user1" });
             }
         }
     }

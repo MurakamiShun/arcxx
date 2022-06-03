@@ -7,7 +7,7 @@ TEST_CASE("User model inserting benchmark"){
     );
 
     BENCHMARK_ADVANCED("10000 data inserting bench")(Catch::Benchmark::Chronometer meter){
-        using namespace active_record;
+        using namespace arcxx;
         namespace ranges = std::ranges;
 
         const auto users = []{

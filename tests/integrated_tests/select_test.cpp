@@ -9,7 +9,7 @@ TEST_CASE_METHOD(UserModelTestsFixture, "Select column query tests", "[model][qu
         else {
             REQUIRE(typeid(result.value()).name() == typeid(std::vector<std::tuple<User::Name>>).name());
             REQUIRE(result.value().size() == 1);
-            REQUIRE(std::get<0>(result.value()[0]).value() == active_record::string{ "user1" });
+            REQUIRE(std::get<0>(result.value()[0]).value() == arcxx::string{ "user1" });
         }
     }
 
@@ -21,7 +21,7 @@ TEST_CASE_METHOD(UserModelTestsFixture, "Select column query tests", "[model][qu
         else {
             REQUIRE(typeid(result.value()).name() == typeid(std::vector<User::Name>).name());
             REQUIRE(result.value().size() == 1);
-            REQUIRE(result.value()[0].value() == active_record::string{ "user1" });
+            REQUIRE(result.value()[0].value() == arcxx::string{ "user1" });
         }
     }
 }

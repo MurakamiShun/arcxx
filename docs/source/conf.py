@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Active Record C++'
+project = 'ARCXX'
 copyright = '2021, MurakamiShun'
 author = 'MurakamiShun'
 

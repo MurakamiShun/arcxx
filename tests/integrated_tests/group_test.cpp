@@ -11,7 +11,7 @@ TEST_CASE_METHOD(UserModelTestsFixture, "group_by query tests", "[model][select]
 
     // insert user logs
     const auto insert_transaction = [&users](auto& connection){
-        namespace transaction = active_record::transaction;
+        namespace transaction = arcxx::transaction;
 
         for(auto i = 0; i < 9; ++i){
             UserLog log;

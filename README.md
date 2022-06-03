@@ -1,21 +1,21 @@
-# Active Record C++ [![gcc](https://github.com/akisute514/active_record_cpp/actions/workflows/gcc-test.yml/badge.svg)](https://github.com/akisute514/active_record_cpp/actions/workflows/gcc-test.yml) [![msvc](https://github.com/akisute514/active_record_cpp/actions/workflows/msvc-test.yml/badge.svg)](https://github.com/akisute514/active_record_cpp/actions/workflows/msvc-test.yml) [![doc_build](https://github.com/akisute514/active_record_cpp/actions/workflows/doc_build.yml/badge.svg)](https://github.com/akisute514/active_record_cpp/actions/workflows/doc_build.yml)
+# ARCXX [![gcc](https://github.com/akisute514/arcxx/actions/workflows/gcc-test.yml/badge.svg)](https://github.com/akisute514/arcxx/actions/workflows/gcc-test.yml) [![msvc](https://github.com/akisute514/arcxx/actions/workflows/msvc-test.yml/badge.svg)](https://github.com/akisute514/arcxx/actions/workflows/msvc-test.yml) [![doc_build](https://github.com/akisute514/arcxx/actions/workflows/doc_build.yml/badge.svg)](https://github.com/akisute514/arcxx/actions/workflows/doc_build.yml)
 
-Active Record C++ is an Open Source C++20 O/R mapper of Active Record pattern.
+ARCXX is an Open Source C++20 O/R mapper of Active Record pattern.
 
 Here is a simple Model definition example. There are no magic macros in this library.
 
 ```cpp
-struct User : public active_record::model<User> {
+struct User : public arcxx::model<User> {
     static constexpr auto table_name = "user_table";
 
-    struct ID : public active_record::attributes::integer<User, ID, std::size_t> {
+    struct ID : public arcxx::attributes::integer<User, ID, std::size_t> {
         static constexpr auto column_name = "id";
         using integer<User, ID, size_t>::integer;
 
         inline static const auto constraints = { primary_key };
     } id;
 
-    struct Name : public active_record::attributes::string<User, Name> {
+    struct Name : public arcxx::attributes::string<User, Name> {
         static constexpr auto column_name = "name";
         using string<User, Name>::string;
 
@@ -33,7 +33,7 @@ const auto find_users_query = User::where(User::ID::between(0,10));
 The below example is how to create a user table and insert new data into a database.
 
 ```cpp
-auto connector = active_record::sqlite3::adaptor::open("test.sqlite3");
+auto connector = arcxx::sqlite3::adaptor::open("test.sqlite3");
 if (connector.has_error()){
     // connection error handling
     std::cout << connector.error_message() << std::endl;
@@ -63,14 +63,14 @@ connector.close();
 
 # Install
 
-Have a look at the [Installation document](https://akisute514.github.io/active_record_cpp/en/installation/cmake.html) to build and install Active Record C++.
+Have a look at the [Installation document](https://akisute514.github.io/arcxx/en/installation/cmake.html) to build and install ARCXX.
 
 # Documentation
 
 See below documentation. English is full documentation. Also, Japanese is available.
 
-* [English](https://akisute514.github.io/active_record_cpp/en)
-* [Japanese](https://akisute514.github.io/active_record_cpp/ja)
+* [English](https://akisute514.github.io/arcxx/en)
+* [Japanese](https://akisute514.github.io/arcxx/ja)
 
 # Developing Status
 
@@ -91,7 +91,7 @@ Waiting
 # License
 This software is released under the MIT License, see [LICENSE](LICENSE).
 
-Active Record C++ depends on third party libraries. To use these subcomponents is subject to the terms and conditions of the following licenses.
+ARCXX depends on third party libraries. To use these subcomponents is subject to the terms and conditions of the following licenses.
 
 * libsqlite3 ([https://www.sqlite.org/copyright.html](https://www.sqlite.org/copyright.html))
 * libpq ([https://www.postgresql.org/about/licence/](https://www.postgresql.org/about/licence/))

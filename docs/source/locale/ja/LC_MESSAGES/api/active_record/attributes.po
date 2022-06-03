@@ -1,13 +1,13 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2021, MurakamiShun
-# This file is distributed under the same license as the Active Record C++
+# This file is distributed under the same license as the ARCXX
 # package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Active Record C++ \n"
+"Project-Id-Version: ARCXX \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-09 02:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -18,67 +18,67 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: ../../source/api/active_record/attributes.rst:3
-msgid "namespace active_record::attributes"
+#: ../../source/api/arcxx/attributes.rst:3
+msgid "namespace arcxx::attributes"
 msgstr ""
 
-#: ../../source/api/active_record/attributes.rst:13
+#: ../../source/api/arcxx/attributes.rst:13
 msgid "Attributes"
 msgstr ""
 
-#: ../../source/api/active_record/attributes.rst:17
+#: ../../source/api/arcxx/attributes.rst:17
 msgid ":doc:`attributes/string`"
 msgstr ""
 
-#: ../../source/api/active_record/attributes.rst:18
+#: ../../source/api/arcxx/attributes.rst:18
 msgid "String attribute."
 msgstr ""
 
-#: ../../source/api/active_record/attributes.rst:20
+#: ../../source/api/arcxx/attributes.rst:20
 msgid ":doc:`attributes/integer`"
 msgstr ""
 
-#: ../../source/api/active_record/attributes.rst:21
+#: ../../source/api/arcxx/attributes.rst:21
 msgid "Integer attribute. (default is `int32_t`)"
 msgstr ""
 
-#: ../../source/api/active_record/attributes.rst:23
+#: ../../source/api/arcxx/attributes.rst:23
 msgid ":doc:`attributes/decimal`"
 msgstr ""
 
-#: ../../source/api/active_record/attributes.rst:24
+#: ../../source/api/arcxx/attributes.rst:24
 msgid "Decimal attribute. (default is `float`)"
 msgstr ""
 
-#: ../../source/api/active_record/attributes.rst:26
+#: ../../source/api/arcxx/attributes.rst:26
 msgid ":doc:`attributes/boolean`"
 msgstr ""
 
-#: ../../source/api/active_record/attributes.rst:27
+#: ../../source/api/arcxx/attributes.rst:27
 msgid "boolean attribute."
 msgstr ""
 
-#: ../../source/api/active_record/attributes.rst:29
+#: ../../source/api/arcxx/attributes.rst:29
 msgid ":doc:`attributes/datetime`"
 msgstr ""
 
-#: ../../source/api/active_record/attributes.rst:30
+#: ../../source/api/arcxx/attributes.rst:30
 msgid "Datetime attribute. The value type is `std::utc_clock`."
 msgstr ""
 
-#: ../../source/api/active_record/attributes.rst:32
+#: ../../source/api/arcxx/attributes.rst:32
 msgid ":doc:`attributes/binary`"
 msgstr ""
 
-#: ../../source/api/active_record/attributes.rst:33
+#: ../../source/api/arcxx/attributes.rst:33
 msgid "Datetime attribute. The value type is `std::vector<std::byte>`."
 msgstr ""
 
-#: ../../source/api/active_record/attributes.rst:35
+#: ../../source/api/arcxx/attributes.rst:35
 msgid ":doc:`attributes/foreign_key`"
 msgstr ""
 
-#: ../../source/api/active_record/attributes.rst:36
+#: ../../source/api/arcxx/attributes.rst:36
 msgid "Foreign key attribute."
 msgstr ""
 

@@ -19,7 +19,7 @@ which return selected columns as :code:`std::tuple<selected columns...>`.
     // Execute data inserting
     const auto id_name_result = sql_stmt.exec(connection);
     
-    // decltype(id_name_result) == tl::expected<std::tuple<ExampleTable::ID, ExampleTable::Name>, active_record::string>
+    // decltype(id_name_result) == tl::expected<std::tuple<ExampleTable::ID, ExampleTable::Name>, arcxx::string>
     if(!id_name_result){
         // error handling
         std::cout << "Error message:" << names_result.error() << std::endl;
@@ -46,7 +46,7 @@ which return only selected column.
     // Execute data inserting
     const auto names_result = sql_stmt.exec(connection);
     
-    // decltype(names_result) == tl::expected<std::vector<ExampleTable::Name>, active_record::string>
+    // decltype(names_result) == tl::expected<std::vector<ExampleTable::Name>, arcxx::string>
     if(!names_result){
         // error handling
         std::cout << "Error message:" << names_result.error() << std::endl;

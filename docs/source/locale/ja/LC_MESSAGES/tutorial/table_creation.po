@@ -1,13 +1,13 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2021, MurakamiShun
-# This file is distributed under the same license as the Active Record C++
+# This file is distributed under the same license as the ARCXX
 # package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Active Record C++ \n"
+"Project-Id-Version: ARCXX \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-04 16:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -40,12 +40,12 @@ msgstr ""
 
 #: ../../source/tutorial/table_creation.rst:12
 msgid ""
-"base classes, :doc:`active_record::model </api/active_record/model>` and "
-":doc:`active_record::attribute </api/active_record/attributes>` are using"
+"base classes, :doc:`arcxx::model </api/arcxx/model>` and "
+":doc:`arcxx::attribute </api/arcxx/attributes>` are using"
 " CRTP(Curiously Recurring Template Pattern)."
 msgstr ""
-"基底クラスである :doc:`active_record::model </api/active_record/model>` および "
-":doc:`active_record::attribute </api/active_record/attributes>` "
+"基底クラスである :doc:`arcxx::model </api/arcxx/model>` および "
+":doc:`arcxx::attribute </api/arcxx/attributes>` "
 "はCRTP(奇妙に再帰したテンプレートパターン)を使用しています。"
 
 #: ../../source/tutorial/table_creation.rst:14
@@ -89,8 +89,8 @@ msgid "example_table code"
 msgstr ""
 
 #: ../../source/tutorial/table_creation.rst:48
-msgid "Attribute details are written in :doc:`/api/active_record/attributes`."
-msgstr "Attributeの詳細は :doc:`/api/active_record/attributes` に書いてあります。"
+msgid "Attribute details are written in :doc:`/api/arcxx/attributes`."
+msgstr "Attributeの詳細は :doc:`/api/arcxx/attributes` に書いてあります。"
 
 #: ../../source/tutorial/table_creation.rst:53
 msgid "Generate table creation SQL code (SQLite3)"

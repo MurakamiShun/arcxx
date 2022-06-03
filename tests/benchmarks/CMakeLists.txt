@@ -20,20 +20,20 @@ else()
 endif()
 
 # Benchmark
-add_executable(active_record_bench
+add_executable(arcxx_bench
     inserting_benchmark.cpp
     long_SQL_statement_benchmark.cpp
 )
-target_link_libraries(active_record_bench PRIVATE Catch2::Catch2 Catch2::Catch2WithMain)
-target_compile_options(active_record_bench PRIVATE ${compile_options})
-target_include_directories(active_record_bench PRIVATE ../../include)
-target_compile_features(active_record_bench PRIVATE ${compile_feature})
+target_link_libraries(arcxx_bench PRIVATE Catch2::Catch2 Catch2::Catch2WithMain)
+target_compile_options(arcxx_bench PRIVATE ${compile_options})
+target_include_directories(arcxx_bench PRIVATE ../../include)
+target_compile_features(arcxx_bench PRIVATE ${compile_feature})
 
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
 include(CTest)
 
 if(MSVC)
-    add_test(NAME active_record_bench COMMAND active_record_bench.exe)
+    add_test(NAME arcxx_bench COMMAND arcxx_bench.exe)
 else()
-    add_test(NAME active_record_bench COMMAND active_record_bench)
+    add_test(NAME arcxx_bench COMMAND arcxx_bench)
 endif()

@@ -36,7 +36,7 @@ endif()
 
 
 # Integrated Tests
-add_executable(active_record_IT
+add_executable(arcxx_IT
     table_creation_test.cpp
     select_test.cpp
     insert_test.cpp
@@ -47,16 +47,16 @@ add_executable(active_record_IT
     group_test.cpp
     find_test.cpp
 )
-target_link_libraries(active_record_IT PRIVATE ${link_library})
-target_compile_options(active_record_IT PRIVATE ${compile_options})
-target_include_directories(active_record_IT PRIVATE ../../include)
-target_compile_features(active_record_IT PRIVATE ${compile_feature})
-target_precompile_headers(active_record_IT PRIVATE <active_record.hpp> <filesystem>)
+target_link_libraries(arcxx_IT PRIVATE ${link_library})
+target_compile_options(arcxx_IT PRIVATE ${compile_options})
+target_include_directories(arcxx_IT PRIVATE ../../include)
+target_compile_features(arcxx_IT PRIVATE ${compile_feature})
+target_precompile_headers(arcxx_IT PRIVATE <arcxx.hpp> <filesystem>)
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
 include(CTest)
 
 if(MSVC)
-    add_test(NAME active_record_IT COMMAND active_record_IT.exe)
+    add_test(NAME arcxx_IT COMMAND arcxx_IT.exe)
 else()
-    add_test(NAME active_record_IT COMMAND active_record_IT)
+    add_test(NAME arcxx_IT COMMAND arcxx_IT)
 endif()

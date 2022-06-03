@@ -1,31 +1,31 @@
-//#include <active_record.hpp>
-#include "../../include/active_record.hpp"
+//#include <arcxx.hpp>
+#include "../../include/arcxx.hpp"
 
-struct Test : public active_record::model<Test>{
+struct Test : public arcxx::model<Test>{
     static inline decltype(auto) table_name = "test_table";
 
-    struct Int : public active_record::attributes::integer<Test, Int>{
+    struct Int : public arcxx::attributes::integer<Test, Int>{
         using integer<Test, Int>::integer;
         static inline decltype(auto) column_name = "int_col";
         static inline const auto constraints = primary_key & not_null & default_value(0);
     } int_col;
 
-    struct String : public active_record::attributes::string<Test, String>{
+    struct String : public arcxx::attributes::string<Test, String>{
         using string<Test, String>::string;
         static inline decltype(auto) column_name = "string_col";
         static inline const auto constraints = not_null & default_value("unknown");
     } str_col;
 
-    struct Decimal : public active_record::attributes::decimal<Test, Decimal>{
+    struct Decimal : public arcxx::attributes::decimal<Test, Decimal>{
         using decimal<Test, Decimal>::decimal;
         static inline decltype(auto) column_name = "decimal_col";
         static inline const auto constraints = not_null & default_value(0.0);
     } decimal_col;
 };
 
-struct Have_a_Test : public active_record::model<Have_a_Test>{
+struct Have_a_Test : public arcxx::model<Have_a_Test>{
     static inline decltype(auto) table_name = "belongs_to_test";
-    struct TestID : public active_record::attributes::foreign_key<Have_a_Test, TestID, Test::Int>{
+    struct TestID : public arcxx::attributes::foreign_key<Have_a_Test, TestID, Test::Int>{
         using foreign_key<Have_a_Test, TestID, Test::Int>::foreign_key;
         static inline decltype(auto) column_name = "test_id";
         static constexpr auto constraints = not_null & default_value(0);
@@ -79,7 +79,7 @@ int main(){
     query_test(query.limit(100));
 
     query_test(query.order_by<Test::Int>()); // asc
-    query_test(query.order_by<Test::Int>(active_record::order::desc));
+    query_test(query.order_by<Test::Int>(arcxx::order::desc));
     query_test(query.order_by<Test::String>()); // asc
     query_test(query.order_by<Test::Decimal>()); // asc
     
@@ -134,7 +134,7 @@ int main(){
     query_test(Test::where(Test::Int::cmp > 0).limit(100));
 
     query_test(Test::where(Test::Int::cmp > 0).order_by<Test::Int>()); // asc
-    query_test(Test::where(Test::Int::cmp > 0).order_by<Test::Int>(active_record::order::desc));
+    query_test(Test::where(Test::Int::cmp > 0).order_by<Test::Int>(arcxx::order::desc));
     query_test(Test::where(Test::Int::cmp > 0).order_by<Test::String>()); // asc
     query_test(Test::where(Test::Int::cmp > 0).order_by<Test::Decimal>()); // asc
     

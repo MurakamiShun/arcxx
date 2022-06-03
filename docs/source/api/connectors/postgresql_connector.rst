@@ -1,5 +1,5 @@
 =======================================
-active_record::postgresql_connector
+arcxx::postgresql_connector
 =======================================
 
 .. cpp:class:: postgresql_connector
@@ -21,7 +21,7 @@ active_record::postgresql_connector
                 const std::optional<PostgreSQL::auth> auth_info = std::nullopt,
                 const std::optional<PostgreSQL::options> option = std::nullopt
             )
-            static postgresql_connector open(const active_record::string& connection_info)
+            static postgresql_connector open(const arcxx::string& connection_info)
 
     .. cpp:function:: close()
 
@@ -47,24 +47,24 @@ active_record::postgresql_connector
         .. code-block:: cpp
             
             template<typename Result, specialized_from<std::tuple> BindAttrs>
-            auto exec(const query_relation<Result, BindAttrs>& query) -> active_record::expected<Result, active_record::string>;
+            auto exec(const query_relation<Result, BindAttrs>& query) -> arcxx::expected<Result, arcxx::string>;
 
     .. cpp:function:: create_table()
 
         .. code-block:: cpp
 
             template<is_model Mod>
-            auto create_table(decltype(abort_if_exist)) -> active_record::expected<void, active_record::string>;
+            auto create_table(decltype(abort_if_exist)) -> arcxx::expected<void, arcxx::string>;
             
             template<is_model Mod>
-            auto create_table() -> active_record::expected<void, active_record::string>;
+            auto create_table() -> arcxx::expected<void, arcxx::string>;
 
     .. cpp:function:: drop_table()
 
         .. code-block:: cpp
 
             template<is_model Mod>
-            auto drop_table() -> -> active_record::expected<void, active_record::string>;
+            auto drop_table() -> -> arcxx::expected<void, arcxx::string>;
 
     .. cpp:function:: transaction()
 
@@ -72,8 +72,8 @@ active_record::postgresql_connector
 
             template<typename F>
             requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t()>>
-            auto transaction(F&& func) -> active_record::expected<void, active_record::string>;
+            auto transaction(F&& func) -> arcxx::expected<void, arcxx::string>;
             
             template<typename F>
             requires std::convertible_to<F, std::function<transaction::detail::commit_or_rollback_t(postgresql_connector&)>>
-            auto transaction(F&& func) -> active_record::expected<void, active_record::string>;
+            auto transaction(F&& func) -> arcxx::expected<void, arcxx::string>;

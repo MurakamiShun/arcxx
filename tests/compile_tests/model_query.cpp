@@ -1,42 +1,42 @@
-//#include <active_record.hpp>
-#include "../../include/active_record.hpp"
+//#include <arcxx.hpp>
+#include "../../include/arcxx.hpp"
 
-struct Test : public active_record::model<Test>{
+struct Test : public arcxx::model<Test>{
     static inline decltype(auto) table_name = "test_table";
 
-    struct Int : public active_record::attributes::integer<Test, Int>{
+    struct Int : public arcxx::attributes::integer<Test, Int>{
         using integer<Test, Int>::integer;
         static inline decltype(auto) column_name = "int_col";
         static constexpr auto constraints = primary_key & not_null & default_value(0);
     } int_col;
 
-    struct String : public active_record::attributes::string<Test, String>{
+    struct String : public arcxx::attributes::string<Test, String>{
         using string<Test, String>::string;
         static inline decltype(auto) column_name = "string_col";
         static constexpr auto constraints = not_null & default_value("unknown");
     } str_col;
 
-    struct Decimal : public active_record::attributes::decimal<Test, Decimal>{
+    struct Decimal : public arcxx::attributes::decimal<Test, Decimal>{
         using decimal<Test, Decimal>::decimal;
         static inline decltype(auto) column_name = "decimal_col";
         static constexpr auto constraints = not_null & default_value(0.0);
     } decimal_col;
 
-    struct DateTime : public active_record::attributes::datetime<Test, DateTime>{
+    struct DateTime : public arcxx::attributes::datetime<Test, DateTime>{
         using datetime<Test, DateTime>::datetime;
         static inline decltype(auto) column_name = "datetime_col";
         static constexpr auto constraints = not_null;
     } datetime;
-    struct Date : public active_record::attributes::date<Test, Date>{
+    struct Date : public arcxx::attributes::date<Test, Date>{
         using date<Test, Date>::date;
         static inline decltype(auto) column_name = "date_col";
         static constexpr auto constraints = not_null;
     } date;
 };
 
-struct Have_a_Test : public active_record::model<Have_a_Test>{
+struct Have_a_Test : public arcxx::model<Have_a_Test>{
     static inline decltype(auto) table_name = "belongs_to_test";
-    struct TestID : public active_record::attributes::foreign_key<Have_a_Test, TestID, Test::Int>{
+    struct TestID : public arcxx::attributes::foreign_key<Have_a_Test, TestID, Test::Int>{
         using foreign_key<Have_a_Test, TestID, Test::Int>::foreign_key;
         static inline decltype(auto) column_name = "test_id";
         static constexpr auto constraints = not_null & default_value(0);
@@ -118,7 +118,7 @@ int main(){
     query_test(Test::limit(100));
 
     query_test(Test::order_by<Test::Int>()); // asc
-    query_test(Test::order_by<Test::Int>(active_record::order::desc));
+    query_test(Test::order_by<Test::Int>(arcxx::order::desc));
     query_test(Test::order_by<Test::String>()); // asc
     query_test(Test::order_by<Test::Decimal>()); // asc
     query_test(Test::order_by<Test::DateTime>()); // asc

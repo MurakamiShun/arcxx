@@ -1,35 +1,35 @@
 #include "user_model.hpp"
 
-struct Clothes : public active_record::model<Clothes> {
+struct Clothes : public arcxx::model<Clothes> {
     inline static decltype(auto) table_name = "clothes_table";
 
-    struct ID : public active_record::attributes::integer<Clothes, ID, std::size_t> {
+    struct ID : public arcxx::attributes::integer<Clothes, ID, std::size_t> {
         inline static decltype(auto) column_name = "id";
         using integer<Clothes, ID, size_t>::integer;
 
         inline static const auto constraints = primary_key;
     } id;
 
-    struct UserID : public active_record::attributes::foreign_key<Clothes, UserID, User::ID> {
+    struct UserID : public arcxx::attributes::foreign_key<Clothes, UserID, User::ID> {
         inline static decltype(auto) column_name = "user_id";
         using foreign_key<Clothes, UserID, User::ID>::foreign_key;
 
         inline static const auto constraints = not_null;
     } user_id;
 
-    struct Name : public active_record::attributes::string<Clothes, Name> {
+    struct Name : public arcxx::attributes::string<Clothes, Name> {
         inline static decltype(auto) column_name = "name";
         using string<Clothes, Name>::string;
 
         inline static const auto constraints = not_null & default_value("unknow");
     } name;
 
-    struct Price : public active_record::attributes::integer<Clothes, Price, uint32_t>{
+    struct Price : public arcxx::attributes::integer<Clothes, Price, uint32_t>{
         inline static decltype(auto) column_name = "price";
         using integer<Clothes, Price, uint32_t>::integer;
     } price;
 
-    struct UpdateAt : public active_record::attributes::datetime<Clothes, UpdateAt>{
+    struct UpdateAt : public arcxx::attributes::datetime<Clothes, UpdateAt>{
         inline static decltype(auto) column_name = "update_at";
         using datetime<Clothes, UpdateAt>::datetime;
     } update_at;
@@ -52,7 +52,7 @@ TEST_CASE("Long SQL statement benchmark"){
     );
 
     BENCHMARK_ADVANCED("Long SQL statement bench")(Catch::Benchmark::Chronometer meter){
-        using namespace active_record;
+        using namespace arcxx;
         namespace ranges = std::ranges;
 
         meter.measure([](){

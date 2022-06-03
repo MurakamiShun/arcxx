@@ -1,29 +1,29 @@
-#include <active_record.hpp>
+#include <arcxx.hpp>
 #include <iostream>
 
-struct Goods : public active_record::model<Goods> {
+struct Goods : public arcxx::model<Goods> {
     static constexpr auto table_name = "goods_table";
-    struct ID : public active_record::attributes::integer<Goods, ID, std::size_t> {
+    struct ID : public arcxx::attributes::integer<Goods, ID, std::size_t> {
         using integer<Goods, ID, std::size_t>::integer;
         static constexpr auto column_name = "id";
         inline static const auto constraints = { primary_key, not_null };
     } id;
 
-    struct Name : public active_record::attributes::string<Goods, Name> {
+    struct Name : public arcxx::attributes::string<Goods, Name> {
         using string<Goods, Name>::string;
         static constexpr auto column_name = "name";
         inline static const auto constraints = { not_null };
     } name;
 
-    struct Price : public active_record::attributes::integer<Goods, Price, uint32_t> {
+    struct Price : public arcxx::attributes::integer<Goods, Price, uint32_t> {
         using integer<Goods, Price, uint32_t>::integer;
         static constexpr auto column_name = "price";
         inline static const auto constraints = { not_null };
     } price;
 };
 
-auto setup() -> active_record::expected<active_record::sqlite3::connector, active_record::string>{
-    using namespace active_record;
+auto setup() -> arcxx::expected<arcxx::sqlite3::connector, arcxx::string>{
+    using namespace arcxx;
     // Connect and create table
     auto conn = sqlite3::connector::open("insert_data_example.sqlite3", sqlite3::options::create);
     if (conn.has_error()) return make_unexpected(conn.error_message());
@@ -37,7 +37,7 @@ auto setup() -> active_record::expected<active_record::sqlite3::connector, activ
 }
 
 int main(){
-    using namespace active_record;
+    using namespace arcxx;
     
     auto setup_result = setup();
     if(!setup_result) {

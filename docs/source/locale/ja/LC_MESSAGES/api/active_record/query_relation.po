@@ -1,13 +1,13 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2021, MurakamiShun
-# This file is distributed under the same license as the Active Record C++
+# This file is distributed under the same license as the ARCXX
 # package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Active Record C++ \n"
+"Project-Id-Version: ARCXX \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-06 00:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -18,88 +18,88 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: ../../source/api/active_record/query_relation.rst:3
-msgid "active_record::query_relation"
+#: ../../source/api/arcxx/query_relation.rst:3
+msgid "arcxx::query_relation"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:8
+#: ../../source/api/arcxx/query_relation.rst:8
 msgid ":code:`Result` is returned type of :cpp:func:`exec`."
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:10
+#: ../../source/api/arcxx/query_relation.rst:10
 msgid "Member functions"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:12
+#: ../../source/api/arcxx/query_relation.rst:12
 msgid ":cpp:func:`exec`"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:14
+#: ../../source/api/arcxx/query_relation.rst:14
 msgid ":cpp:func:`to_sql`"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:17
+#: ../../source/api/arcxx/query_relation.rst:17
 msgid "Generates query functions"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:19
+#: ../../source/api/arcxx/query_relation.rst:19
 msgid ":cpp:func:`select`"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:20
-#: ../../source/api/active_record/query_relation.rst:22
-#: ../../source/api/active_record/query_relation.rst:24
-#: ../../source/api/active_record/query_relation.rst:28
-#: ../../source/api/active_record/query_relation.rst:30
-#: ../../source/api/active_record/query_relation.rst:32
-#: ../../source/api/active_record/query_relation.rst:34
-#: ../../source/api/active_record/query_relation.rst:36
-#: ../../source/api/active_record/query_relation.rst:38
-#: ../../source/api/active_record/query_relation.rst:40
+#: ../../source/api/arcxx/query_relation.rst:20
+#: ../../source/api/arcxx/query_relation.rst:22
+#: ../../source/api/arcxx/query_relation.rst:24
+#: ../../source/api/arcxx/query_relation.rst:28
+#: ../../source/api/arcxx/query_relation.rst:30
+#: ../../source/api/arcxx/query_relation.rst:32
+#: ../../source/api/arcxx/query_relation.rst:34
+#: ../../source/api/arcxx/query_relation.rst:36
+#: ../../source/api/arcxx/query_relation.rst:38
+#: ../../source/api/arcxx/query_relation.rst:40
 msgid "requires Container<Result>"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:21
+#: ../../source/api/arcxx/query_relation.rst:21
 msgid ":cpp:func:`pluck`"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:23
+#: ../../source/api/arcxx/query_relation.rst:23
 msgid ":cpp:func:`update`"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:25
+#: ../../source/api/arcxx/query_relation.rst:25
 msgid ":cpp:func:`where`"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:26
+#: ../../source/api/arcxx/query_relation.rst:26
 msgid "requires !std::same_as<Result, bool>"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:27
+#: ../../source/api/arcxx/query_relation.rst:27
 msgid ":cpp:func:`limit`"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:29
+#: ../../source/api/arcxx/query_relation.rst:29
 msgid ":cpp:func:`order_by`"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:31
+#: ../../source/api/arcxx/query_relation.rst:31
 msgid ":cpp:func:`count`"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:33
+#: ../../source/api/arcxx/query_relation.rst:33
 msgid ":cpp:func:`sum`"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:35
+#: ../../source/api/arcxx/query_relation.rst:35
 msgid ":cpp:func:`avg`"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:37
+#: ../../source/api/arcxx/query_relation.rst:37
 msgid ":cpp:func:`max`"
 msgstr ""
 
-#: ../../source/api/active_record/query_relation.rst:39
+#: ../../source/api/arcxx/query_relation.rst:39
 msgid ":cpp:func:`min`"
 msgstr ""
 

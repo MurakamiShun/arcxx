@@ -6,10 +6,10 @@ else()
     set(ARCXX_NOT_SUBPROJECT OFF)
 endif()
 
-project(ActiveRecord
+project(ARCXX
     VERSION 0.1
     LANGUAGES CXX
-    HOMEPAGE_URL "https://github.com/akisute514/active_record_cpp"
+    HOMEPAGE_URL "https://github.com/akisute514/arcxx"
 )
 
 include(GNUInstallDirs)
@@ -26,11 +26,11 @@ target_include_directories(
 
 if(ARCXX_NOT_SUBPROJECT)
     install(
-        FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/active_record.hpp
+        FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/arcxx.hpp
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
     install(
-        DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/active_record
+        DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/arcxx
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
     install(

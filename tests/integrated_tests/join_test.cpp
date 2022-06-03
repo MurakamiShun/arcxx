@@ -12,7 +12,7 @@ TEST_CASE_METHOD(UserModelTestsFixture, "Join query tests", "[model][query_relat
 
     // insert user logs
     const auto insert_transaction = [&users](auto& connection){
-        namespace transaction = active_record::transaction;
+        namespace transaction = arcxx::transaction;
 
         for(auto i = 0; i < 10; ++i){
             UserLog log;

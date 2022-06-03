@@ -1,13 +1,13 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2021, MurakamiShun
-# This file is distributed under the same license as the Active Record C++
+# This file is distributed under the same license as the ARCXX
 # package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Active Record C++ \n"
+"Project-Id-Version: ARCXX \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-08 02:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Generated-By: Babel 2.9.1\n"
 
 #: ../../source/api/adaptors/sqlite3_adaptor.rst:3
-msgid "active_record::sqlite3_adaptor"
+msgid "arcxx::sqlite3_adaptor"
 msgstr ""
 
 #: ../../source/api/adaptors/sqlite3_adaptor.rst:12
@@ -30,11 +30,11 @@ msgstr "このクラスはSQLite3の接続のためのクラスです。この�
 
 #: ../../source/api/adaptors/sqlite3_adaptor.rst:24
 msgid ""
-"The flag details are on :doc:`active_record::sqlite3::options "
-"</api/active_record/sqlite3>`"
+"The flag details are on :doc:`arcxx::sqlite3::options "
+"</api/arcxx/sqlite3>`"
 msgstr ""
-"各フラグの詳細は :doc:`active_record::sqlite3::options "
-"</api/active_record/sqlite3>` にあります。"
+"各フラグの詳細は :doc:`arcxx::sqlite3::options "
+"</api/arcxx/sqlite3>` にあります。"
 
 #: ../../source/api/adaptors/sqlite3_adaptor.rst:32
 msgid "Close SQLite3 connection."

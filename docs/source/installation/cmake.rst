@@ -17,12 +17,12 @@ And make CMakeLists.txt under your project folder.
 
     include(FetchContent)
     FetchContent_Declare(
-        ActiveRecord
-        GIT_REPOSITORY https://github.com/akisute514/active_record_cpp
+        ARCXX
+        GIT_REPOSITORY https://github.com/akisute514/arcxx
         GIT_TAG main
     )
-    FetchContent_MakeAvailable(ActiveRecord)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ActiveRecord::ActiveRecord)
+    FetchContent_MakeAvailable(ARCXX::ARCXX)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ARCXX::ARCXX)
 
 
 Type below commands to build your project.
@@ -36,11 +36,11 @@ Type below commands to build your project.
 Installation
 ============
 
-You can use CMake to install Active Record C++ package.
+You can use CMake to install ARCXX package.
 
 .. code-block:: bash
 
-    $ git clone https://github.com/akisute514/active_record_cpp.git
-    $ cd active_record_cpp
+    $ git clone https://github.com/akisute514/arcxx.git
+    $ cd arcxx
     $ cmake -S . -B build
     $ cmake --install build

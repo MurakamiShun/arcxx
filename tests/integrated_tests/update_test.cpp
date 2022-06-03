@@ -11,7 +11,7 @@ TEST_CASE_METHOD(UserModelTestsFixture, "Update query tests", "[model][query_rel
             FAIL(result.error());
         }
         else {
-            REQUIRE(result.value()[0] == active_record::string{ "my user1" });
+            REQUIRE(result.value()[0] == arcxx::string{ "my user1" });
         }
     }
 }
