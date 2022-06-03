@@ -10,7 +10,7 @@ To find and get columns, use :code:`where()`.
 
 .. code-block:: cpp
 
-    auto connection = active_record::sqlite3::connector::open("example.sqlite3");
+    auto connection = arcxx::sqlite3::connector::open("example.sqlite3");
     
     auto sql_stmt = ExampleTable::where(ExampleTable::ID{1});
 
@@ -20,13 +20,13 @@ To find and get columns, use :code:`where()`.
     // Execute data finding
     const auto find_result = sql_stmt.exec(connection);
 
-    // decltype(error) == std::optional<active_record::string>
+    // decltype(error) == std::optional<arcxx::string>
     if(!find_result){
         // error handling
         std::cout << "Error message:" << names_result.error() << std::endl;
     }
 
-    // decltype(find_result) == tl::expected<std::vector<ExampleTable>, active_record::string>
+    // decltype(find_result) == tl::expected<std::vector<ExampleTable>, arcxx::string>
     std::cout << "column count:" << find_result.value().size() << std::endl;
     std::cout << "column name:" << find_result.value()[0].name << std::endl;
 

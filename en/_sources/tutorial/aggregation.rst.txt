@@ -10,7 +10,7 @@ To count columns, use :code:`count()`.
 
 .. code-block:: cpp
 
-    auto connection = active_record::sqlite3::connector::open("example.sqlite3");
+    auto connection = arcxx::sqlite3::connector::open("example.sqlite3");
     auto sql_stmt = ExampleTable::count();
 
     // print SQL code
@@ -19,7 +19,7 @@ To count columns, use :code:`count()`.
     // Execute data counting
     const auto count_result = sql_stmt.exec(connection);
 
-    // decltype(count_result) == tl::expected<size_t, active_record::string>
+    // decltype(count_result) == tl::expected<size_t, arcxx::string>
     if(!count_result){
         // error handling
         std::cout << "Error message:" << count_result.error() << std::endl;
@@ -35,12 +35,12 @@ Column aggregation functions, :code:`avg()` and :code:`max` etc... are used like
 
 .. code-block:: cpp
 
-    // decltype(max_result) == tl::expected<ExampleTable::ID, active_record::string>
+    // decltype(max_result) == tl::expected<ExampleTable::ID, arcxx::string>
     const auto max_result = ExampleTable::max<ExampleTable::ID>().exec(connection);
     max_result.value();
 
     /*
-     * decltype(avg_result) == tl::expected<ExampleTable::ID::avg_attribute, active_record::string>
+     * decltype(avg_result) == tl::expected<ExampleTable::ID::avg_attribute, arcxx::string>
      * value_type of avg_attribute is std::optional<double>.
      * Because the average type will be double.
      */

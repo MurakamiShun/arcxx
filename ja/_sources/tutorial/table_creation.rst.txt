@@ -9,7 +9,7 @@ Model Definition
 :code:`table_name` is required in model struct definition. Also, the model needs to be structured bindable.
 And column struct requires :code:`column_name` and inheriting constructors in the definition.
 
-base classes, :doc:`active_record::model </api/active_record/model>` and :doc:`active_record::attribute </api/active_record/attributes>` are using CRTP(Curiously Recurring Template Pattern).
+base classes, :doc:`arcxx::model </api/arcxx/model>` and :doc:`arcxx::attribute </api/arcxx/attributes>` are using CRTP(Curiously Recurring Template Pattern).
 
 .. list-table:: example_table
 
@@ -26,26 +26,26 @@ base classes, :doc:`active_record::model </api/active_record/model>` and :doc:`a
 .. code-block:: cpp
     :caption: example_table code
 
-    #include <active_record.hpp>
+    #include <arcxx.hpp>
 
-    struct ExampleTable : public active_record::model<ExampleTable> {
+    struct ExampleTable : public arcxx::model<ExampleTable> {
         static constexpr auto table_name = "example_table";
         
         // id column
-        struct ID : public active_record::attributes::integer<ExampleTable, ID> {
-            using active_record::attributes::integer<ExampleTable, ID>::integer;
+        struct ID : public arcxx::attributes::integer<ExampleTable, ID> {
+            using arcxx::attributes::integer<ExampleTable, ID>::integer;
             static constexpr auto column_name = "id";
             inline static const auto constraints = { primary_key };
         } id;
 
         // name column
-        struct Name : public active_record::attributes::string<ExampleTable, Name> {
-            using active_record::attributes::string<ExampleTable, Name>::string;
+        struct Name : public arcxx::attributes::string<ExampleTable, Name> {
+            using arcxx::attributes::string<ExampleTable, Name>::string;
             static constexpr auto column_name = "name";
         } name;
     };
 
-Attribute details are written in :doc:`/api/active_record/attributes`.
+Attribute details are written in :doc:`/api/arcxx/attributes`.
 
 Table Creation
 ==============
@@ -65,7 +65,7 @@ Use :code:`connector::create_table()` to create table into database.
 .. code-block:: cpp
     :caption: Create table into Database file.
 
-    auto connection = active_record::sqlite3_connector::open("example.sqlite3", active_record::sqlite3::options::create);
+    auto connection = arcxx::sqlite3_connector::open("example.sqlite3", arcxx::sqlite3::options::create);
     connection.create_table<ExampleTable>();
 
-    connection.create_table<ExampleTable>(active_record::abort_if_exists); // return error message due to exists table
+    connection.create_table<ExampleTable>(arcxx::abort_if_exists); // return error message due to exists table
