@@ -15,6 +15,15 @@
 #include "string_convertors.hpp"
 
 namespace arcxx::PostgreSQL::detail {
+    template<is_attribute Attr>
+    constexpr std::size_t attribute_size([[maybe_unused]] const Attr&) noexcept { return sizeof(typename Attr::value_type); }
+    template<is_attribute Attr>
+    requires regarded_as_clock<typename Attr::value_type>
+    constexpr std::size_t attribute_size(const Attr&){ return sizeof("YYYY-MM-DD hh:mm:ss"); }
+    template<is_attribute Attr>
+    requires std::invocable<typename Attr::value_type::size>
+    constexpr std::size_t attribute_size(const Attr& attr){ return attr ? attr.value().size() : 0; }
+
     template<std::size_t Bytes> struct uint{};
     template<> struct uint<2> { using type = uint16_t; };
     template<> struct uint<4> { using type = uint32_t; };
@@ -67,6 +76,7 @@ namespace arcxx::PostgreSQL::detail {
     template<is_attribute Attr>
     requires regarded_as_clock<typename Attr::value_type>
     [[nodiscard]] inline auto get_value_ptr(const Attr& attr, [[maybe_unused]]std::any& tmp) {
+        // YYYY-MM-DD hh:mm:ss (UTC or GMT)
         if (!attr) return static_cast<const char*>(nullptr);
         tmp = to_string<postgresql_connector>(attr);
         return reinterpret_cast<const char*>(std::any_cast<arcxx::string&>(tmp).c_str());

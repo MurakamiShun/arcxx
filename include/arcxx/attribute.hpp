@@ -25,12 +25,6 @@ namespace arcxx {
     template<typename T>
     struct is_attribute_type{ static constexpr bool value = is_attribute<T>; };
 
-    template<is_attribute Attr>
-    constexpr std::size_t attribute_size([[maybe_unused]] const Attr&) noexcept { return sizeof(typename Attr::value_type); }
-    template<is_attribute Attr>
-    requires std::invocable<typename Attr::value_type::size>
-    constexpr std::size_t attribute_size(const Attr& attr){ return attr ? attr.value().size() : 0; }
-
     template<typename Model, typename Attribute, typename Aggregator>
     struct attribute_aggregator;
 

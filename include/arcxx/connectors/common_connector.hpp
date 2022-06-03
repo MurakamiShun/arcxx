@@ -21,7 +21,7 @@ namespace arcxx {
     [[nodiscard]] inline arcxx::string to_string(const Attr& attr, arcxx::string&& buff = {}) {
         if(attr){
             std::array<arcxx::string::value_type, std::numeric_limits<typename Attr::value_type>::digits10 + 2> str_buff{0};
-            std::to_chars(&(*str_buff.begin()), &(*str_buff.end()), attr.value());
+            std::to_chars(std::to_address(str_buff.begin()), std::to_address(str_buff.end()), attr.value());
             buff += str_buff.data();
         }
         else{
@@ -34,7 +34,7 @@ namespace arcxx {
     inline void from_string(Attr& attr, const arcxx::string_view str) {
         if(str != "null" && str != "NULL"){
             typename Attr::value_type tmp = static_cast<typename Attr::value_type>(0);
-            std::from_chars(&(*str.begin()), &(*str.end()), tmp);
+            std::from_chars(std::to_address(str.begin()), std::to_address(str.end()), tmp);
             attr = tmp;
         }
     }
@@ -66,7 +66,7 @@ namespace arcxx {
     [[nodiscard]] inline arcxx::string to_string(const Attr& attr, arcxx::string&& buff = {}) {
         if(attr){
             std::array<arcxx::string::value_type, 32> str_buff{0};
-            std::to_chars(&(*str_buff.begin()), &(*str_buff.end()), attr.value());
+            std::to_chars(std::to_address(str_buff.begin()), std::to_address(str_buff.end()), attr.value());
             buff += str_buff.data();
         }
         else{
@@ -79,7 +79,7 @@ namespace arcxx {
     inline void from_string(Attr& attr, const arcxx::string_view str){
         if(str != "null" && str != "NULL"){
             typename Attr::value_type tmp = static_cast<typename Attr::value_type>(0);
-            std::from_chars(&(*str.begin()), &(*str.end()), tmp);
+            std::from_chars(std::to_address(str.begin()), std::to_address(str.end()), tmp);
             attr = tmp;
         }
     }

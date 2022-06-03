@@ -54,7 +54,7 @@ namespace arcxx {
         else{
             const auto param_length = std::apply(
                 []<typename... Attrs>(const Attrs&... attrs){
-                    return std::array<int, sizeof...(Attrs)>{ static_cast<int>(attribute_size(attrs))... };
+                    return std::array<int, sizeof...(Attrs)>{ static_cast<int>(PostgreSQL::detail::attribute_size(attrs))... };
                 },
                 query.bind_attrs
             );
@@ -125,7 +125,7 @@ namespace arcxx {
     }
     inline arcxx::string postgresql_connector::bind_variable_str(const std::size_t idx, arcxx::string&& buff) {
         std::array<arcxx::string::value_type, 8> char_buff{0};
-        std::to_chars(&(*char_buff.begin()), &(*char_buff.end()), idx+1);
+        std::to_chars(std::to_address(char_buff.begin()), std::to_address(char_buff.end()), idx+1);
         buff.reserve(buff.size() + 8);
         buff += "$";
         buff += char_buff.data();
@@ -184,7 +184,7 @@ namespace arcxx {
     inline arcxx::expected<Result, arcxx::string> postgresql_connector::exec(const query_relation<Result, BindAttrs>& query){
         PGresult* result = this->exec_sql(query);
 
-        Result ret;
+        Result ret{};
         // error handling
         if (PQresultStatus(result) != PGRES_TUPLES_OK) {
             error_msg = PQresultErrorMessage(result);
