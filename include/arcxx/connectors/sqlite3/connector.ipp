@@ -228,7 +228,7 @@ namespace arcxx {
 
         if(auto exec_result = make_executer_result.value().execute(); !exec_result){
             error_msg = exec_result.error();
-            arcxx::make_unexpected(std::move(exec_result.error()));
+            return arcxx::make_unexpected(std::move(exec_result.error()));
         }
         else return arcxx::expected<void, arcxx::string>{};
     }

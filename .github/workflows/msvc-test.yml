@@ -21,6 +21,11 @@ jobs:
         working-directory: ${{github.workspace}}/tests/compile_tests
         run: cmake --build build --config ${{env.BUILD_TYPE}} --parallel
 
+      - name: Run
+        working-directory: ${{github.workspace}}/tests/compile_tests/build
+        run: ./query_scalar.exe && ./query_vector.exe && ./model_query.exe
+
+
   sqlite3-tests:
     runs-on: windows-2022
     needs: [compile_tests]

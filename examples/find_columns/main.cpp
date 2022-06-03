@@ -6,19 +6,19 @@ struct Goods : public arcxx::model<Goods> {
     struct ID : public arcxx::attributes::integer<Goods, ID, std::size_t> {
         using integer<Goods, ID, std::size_t>::integer;
         static constexpr auto column_name = "id";
-        inline static const auto constraints = { primary_key, not_null };
+        inline static const auto constraints = primary_key & not_null;
     } id;
 
     struct Name : public arcxx::attributes::string<Goods, Name> {
         using string<Goods, Name>::string;
         static constexpr auto column_name = "name";
-        inline static const auto constraints = { not_null };
+        inline static const auto constraints = not_null;
     } name;
 
     struct Price : public arcxx::attributes::integer<Goods, Price, uint32_t> {
         using integer<Goods, Price, uint32_t>::integer;
         static constexpr auto column_name = "price";
-        inline static const auto constraints = { not_null };
+        inline static const auto constraints = not_null;
     } price;
 };
 

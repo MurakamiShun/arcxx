@@ -51,7 +51,7 @@ target_link_libraries(arcxx_IT PRIVATE ${link_library})
 target_compile_options(arcxx_IT PRIVATE ${compile_options})
 target_include_directories(arcxx_IT PRIVATE ../../include)
 target_compile_features(arcxx_IT PRIVATE ${compile_feature})
-target_precompile_headers(arcxx_IT PRIVATE <arcxx.hpp> <filesystem>)
+target_precompile_headers(arcxx_IT PRIVATE <catch2/catch_all.hpp> <filesystem>)
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
 include(CTest)
 
