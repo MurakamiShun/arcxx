@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Find columns &mdash; ARCXX  ドキュメント</title>
+  <title>カラム検索 &mdash; ARCXX  ドキュメント</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -48,10 +48,10 @@
 <li class="toctree-l1"><a class="reference internal" href="database_connection.html">Database Connection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="table_creation.html">Table Creation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="inserting.html">Data Inserting</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Find columns</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#where-clause">Where clause</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#between-clause">Between clause</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#like-clause">Like clause</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">カラム検索</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#where-clause">Where句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#between-clause">Between句</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#like-clause">Like句</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="select_columns.html">Select columns</a></li>
@@ -95,7 +95,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Find columns</li>
+      <li>カラム検索</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/tutorial/find_columns.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -106,10 +106,10 @@
            <div itemprop="articleBody">
              
   <section id="find-columns">
-<h1>Find columns<a class="headerlink" href="#find-columns" title="Permalink to this heading"></a></h1>
+<h1>カラム検索<a class="headerlink" href="#find-columns" title="Permalink to this heading"></a></h1>
 <section id="where-clause">
-<h2>Where clause<a class="headerlink" href="#where-clause" title="Permalink to this heading"></a></h2>
-<p>To find and get columns, use <code class="code docutils literal notranslate"><span class="pre">where()</span></code>.</p>
+<h2>Where句<a class="headerlink" href="#where-clause" title="Permalink to this heading"></a></h2>
+<p>カラムの検索・取得には <code class="code docutils literal notranslate"><span class="pre">where()</span></code> を使用します。</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">sqlite3</span><span class="o">::</span><span class="n">connector</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;example.sqlite3&quot;</span><span class="p">);</span><span class="w"></span>
 
 <span class="k">auto</span><span class="w"> </span><span class="n">sql_stmt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">where</span><span class="p">(</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="p">{</span><span class="mi">1</span><span class="p">});</span><span class="w"></span>
@@ -131,8 +131,7 @@
 <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;column name:&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">find_result</span><span class="p">.</span><span class="n">value</span><span class="p">()[</span><span class="mi">0</span><span class="p">].</span><span class="n">name</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
-<p>Where clause can chain the conditions. The conditions will join with AND.
-The below codes will be the same result.</p>
+<p>Where句はつなげて使用することができます。その場合、条件はANDで結合されます。下記のコードは同じ結果になります。</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">where</span><span class="p">(</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">::</span><span class="n">between</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">)).</span><span class="n">where</span><span class="p">(</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">Name</span><span class="o">::</span><span class="n">like</span><span class="p">(</span><span class="s">&quot;user_&quot;</span><span class="p">));</span><span class="w"></span>
 
 <span class="n">ExampleTable</span><span class="o">::</span><span class="n">where</span><span class="p">(</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">::</span><span class="n">between</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">Name</span><span class="o">::</span><span class="n">like</span><span class="p">(</span><span class="s">&quot;user_&quot;</span><span class="p">));</span><span class="w"></span>
@@ -140,17 +139,15 @@ The below codes will be the same result.</p>
 </div>
 </section>
 <section id="between-clause">
-<h2>Between clause<a class="headerlink" href="#between-clause" title="Permalink to this heading"></a></h2>
-<p>Between member function in <code class="code docutils literal notranslate"><span class="pre">attributes</span></code> generates <code class="code docutils literal notranslate"><span class="pre">Between</span></code> clause.
-The result type <code class="code docutils literal notranslate"><span class="pre">query_condition</span></code> is used as argument of <code class="code docutils literal notranslate"><span class="pre">where()</span></code>.</p>
+<h2>Between句<a class="headerlink" href="#between-clause" title="Permalink to this heading"></a></h2>
+<p><code class="code docutils literal notranslate"><span class="pre">attributes</span></code> 内のBetweenメンバ関数は <code class="code docutils literal notranslate"><span class="pre">Between</span></code> 句を生成します。返り値の型である <code class="code docutils literal notranslate"><span class="pre">query_condition</span></code> はwhere関数の引数として使用されます。</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">where</span><span class="p">(</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">::</span><span class="n">between</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">));</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
 <section id="like-clause">
-<h2>Like clause<a class="headerlink" href="#like-clause" title="Permalink to this heading"></a></h2>
-<p>Like member function in <code class="code docutils literal notranslate"><span class="pre">string</span> <span class="pre">attribute</span></code> generates <code class="code docutils literal notranslate"><span class="pre">LIKE</span></code> clause.
-The result type <code class="code docutils literal notranslate"><span class="pre">query_condition</span></code> is put into where clause.</p>
+<h2>Like句<a class="headerlink" href="#like-clause" title="Permalink to this heading"></a></h2>
+<p><code class="code docutils literal notranslate"><span class="pre">string</span> <span class="pre">attribute</span></code> 内のLikeメンバ関数は <code class="code docutils literal notranslate"><span class="pre">Like</span></code> 句を生成します。返り値の型である <code class="code docutils literal notranslate"><span class="pre">query_condition</span></code> はwhere関数の引数として使用されます。</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">where</span><span class="p">(</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">Name</span><span class="o">::</span><span class="n">like</span><span class="p">(</span><span class="s">&quot;user_&quot;</span><span class="p">));</span><span class="w"></span>
 </pre></div>
 </div>
