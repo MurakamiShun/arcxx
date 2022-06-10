@@ -65,6 +65,19 @@ namespace arcxx {
         static constexpr bool bindable = true;
         static arcxx::string bind_variable_str(const std::size_t idx, arcxx::string&& buff = {});
 
+        template<specialized_from<std::vector> Result, specialized_from<std::tuple> BindAttrs>
+        [[nodiscard]] auto make_executer(const query_relation<Result, BindAttrs>& query) -> arcxx::expected<executer<typename Result::value_type>, arcxx::string>;
+        template<specialized_from<std::vector> Result, specialized_from<std::tuple> BindAttrs>
+        [[nodiscard]] auto make_executer(query_relation<Result, BindAttrs>&& query) -> arcxx::expected<executer<typename Result::value_type>, arcxx::string>;
+        template<specialized_from<std::unordered_map> Result, specialized_from<std::tuple> BindAttrs>
+        [[nodiscard]] auto make_executer(const query_relation<Result, BindAttrs>& query) -> arcxx::expected<executer<std::pair<typename Result::key_type, typename Result::mapped_type>>, arcxx::string>;
+        template<specialized_from<std::unordered_map> Result, specialized_from<std::tuple> BindAttrs>
+        [[nodiscard]] auto make_executer(query_relation<Result, BindAttrs>&& query) -> arcxx::expected<executer<std::pair<typename Result::key_type, typename Result::mapped_type>>, arcxx::string>;
+        template<typename Result, specialized_from<std::tuple> BindAttrs>
+        [[nodiscard]] auto make_executer(const query_relation<Result, BindAttrs>& query) -> arcxx::expected<executer<Result>, arcxx::string>;
+        template<typename Result, specialized_from<std::tuple> BindAttrs>
+        [[nodiscard]] auto make_executer(query_relation<Result, BindAttrs>&& query) -> arcxx::expected<executer<Result>, arcxx::string>;
+
         template<is_model Mod>
         arcxx::expected<void, arcxx::string> create_table(decltype(abort_if_exists));
         template<is_model Mod>

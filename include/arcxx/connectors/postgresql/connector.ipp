@@ -132,6 +132,33 @@ namespace arcxx {
         return std::move(buff);
     }
 
+    template<specialized_from<std::vector> Result, specialized_from<std::tuple> BindAttrs>
+    inline auto postgresql_connector::make_executer(const query_relation<Result, BindAttrs>& query) -> arcxx::expected<executer<typename Result::value_type>, arcxx::string>{
+        return 
+    }
+    template<specialized_from<std::vector> Result, specialized_from<std::tuple> BindAttrs>
+    inline auto postgresql_connector::make_executer(query_relation<Result, BindAttrs>&& query) -> arcxx::expected<executer<typename Result::value_type>, arcxx::string>{
+
+    }
+
+    template<specialized_from<std::unordered_map> Result, specialized_from<std::tuple> BindAttrs>
+    inline auto postgresql_connector::make_executer(const query_relation<Result, BindAttrs>& query) -> arcxx::expected<executer<std::pair<typename Result::key_type, typename Result::mapped_type>>, arcxx::string>{
+
+    }
+    template<specialized_from<std::unordered_map> Result, specialized_from<std::tuple> BindAttrs>
+    inline auto postgresql_connector::make_executer(query_relation<Result, BindAttrs>&& query) -> arcxx::expected<executer<std::pair<typename Result::key_type, typename Result::mapped_type>>, arcxx::string>{
+
+    }
+
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
+    inline auto postgresql_connector::make_executer(const query_relation<Result, BindAttrs>& query) -> arcxx::expected<executer<Result>, arcxx::string>{
+
+    }
+    template<typename Result, specialized_from<std::tuple> BindAttrs>
+    inline auto postgresql_connector::make_executer(query_relation<Result, BindAttrs>&& query) -> arcxx::expected<executer<Result>, arcxx::string>{
+
+    }
+
     template<is_model Mod>
     inline arcxx::expected<void, arcxx::string> postgresql_connector::create_table(decltype(abort_if_exists)){
         return exec(raw_query<void>(Mod::schema::template to_sql<postgresql_connector>(abort_if_exists)));

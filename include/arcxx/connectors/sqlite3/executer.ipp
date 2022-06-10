@@ -14,9 +14,9 @@ namespace arcxx {
     public:
         executer() = delete;
         executer(const executer&) = delete;
-        executer(executer&&);
+        executer(executer&&) noexcept;
 
-        executer(::sqlite3_stmt*);
+        executer(::sqlite3_stmt*) noexcept;
         ~executer();
         
         struct sentinel{};
@@ -39,7 +39,7 @@ namespace arcxx {
         };
 
         iterator begin();
-        sentinel end();
+        sentinel end() const noexcept;
     };
     template<>
     class sqlite3_connector::executer<void>{
@@ -48,20 +48,20 @@ namespace arcxx {
     public:
         executer() = delete;
         executer(const executer&) = delete;
-        executer(executer&&);
+        executer(executer&&) noexcept;
 
-        executer(::sqlite3_stmt*);
+        executer(::sqlite3_stmt*) noexcept;
         ~executer();
 
         arcxx::expected<void, arcxx::string> execute();
     };
 
     template<typename ResultType>
-    inline sqlite3_connector::executer<ResultType>::executer(::sqlite3_stmt* s){
+    inline sqlite3_connector::executer<ResultType>::executer(::sqlite3_stmt* s) noexcept {
         stmt = s;
     }
     template<typename ResultType>
-    inline sqlite3_connector::executer<ResultType>::executer(executer<ResultType>&& src){
+    inline sqlite3_connector::executer<ResultType>::executer(executer<ResultType>&& src) noexcept {
         stmt = src.stmt;
         src.stmt = nullptr;
     }
@@ -70,10 +70,10 @@ namespace arcxx {
         sqlite3_finalize(stmt);
     }
 
-    inline sqlite3_connector::executer<void>::executer(::sqlite3_stmt* s){
+    inline sqlite3_connector::executer<void>::executer(::sqlite3_stmt* s) noexcept {
         stmt = s;
     }
-    inline sqlite3_connector::executer<void>::executer(executer<void>&& src){
+    inline sqlite3_connector::executer<void>::executer(executer<void>&& src) noexcept {
         stmt = src.stmt;
         src.stmt = nullptr;
     }
@@ -96,7 +96,7 @@ namespace arcxx {
         return iterator{ stmt };
     }
     template<typename ResultType>
-    inline sqlite3_connector::executer<ResultType>::sentinel sqlite3_connector::executer<ResultType>::end(){
+    inline sqlite3_connector::executer<ResultType>::sentinel sqlite3_connector::executer<ResultType>::end() const noexcept {
         return sentinel{};
     }
 
