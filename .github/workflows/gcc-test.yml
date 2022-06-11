@@ -56,6 +56,7 @@ jobs:
         run: cmake --build build --config ${{ matrix.build_type }} --parallel
 
       - name: Run integrated tests
+        timeout-minutes: 5
         working-directory: ${{github.workspace}}/tests/integrated_tests/build
         run: ./arcxx_IT
 
@@ -97,6 +98,7 @@ jobs:
         run: cmake --build build --config ${{ matrix.build_type }} --parallel
 
       - name: Run integrated tests
+        timeout-minutes: 5
         working-directory: ${{github.workspace}}/tests/integrated_tests/build
         run: ./arcxx_IT
 
@@ -121,5 +123,6 @@ jobs:
         run: cmake --build build --config ${{env.BUILD_TYPE}} --parallel
 
       - name: Run benchmarks
+        timeout-minutes: 5
         working-directory: ${{github.workspace}}/tests/benchmarks/build
         run: ./arcxx_bench

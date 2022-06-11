@@ -22,6 +22,7 @@ jobs:
         run: cmake --build build --config ${{env.BUILD_TYPE}} --parallel
 
       - name: Run
+        timeout-minutes: 5
         working-directory: ${{github.workspace}}/tests/compile_tests/build/${{env.BUILD_TYPE}}
         run: ./query_scalar.exe && ./query_vector.exe && ./model_query.exe
 
@@ -51,6 +52,7 @@ jobs:
         run: cmake --build build --config ${{ matrix.build_type }} --parallel
 
       - name: Run integrated tests
+        timeout-minutes: 5
         working-directory: ${{github.workspace}}/tests/integrated_tests/build/${{ matrix.build_type }}
         run: ./arcxx_IT.exe
 
@@ -84,6 +86,7 @@ jobs:
         run: cmake --build build --config ${{ matrix.build_type }} --parallel
 
       - name: Run integrated tests
+        timeout-minutes: 5
         working-directory: ${{github.workspace}}/tests/integrated_tests/build/${{ matrix.build_type }}
         run: ./arcxx_IT.exe
 
@@ -109,5 +112,6 @@ jobs:
         run: cmake --build build --config ${{env.BUILD_TYPE}} --parallel
 
       - name: Run benchmarks
+        timeout-minutes: 5
         working-directory: ${{github.workspace}}/tests/benchmarks/build/${{env.BUILD_TYPE}}
         run: ./arcxx_bench.exe
