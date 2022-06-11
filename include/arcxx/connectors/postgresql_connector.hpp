@@ -42,7 +42,7 @@ namespace arcxx {
         static PGresult* exec_sql(const query_relation<Result, BindAttrs>& query, ::PGconn* conn);
 
         template<typename ResultType>
-        struct executer;
+        class executer;
     public:
         postgresql_connector(const PostgreSQL::endpoint& endpoint_info, const std::optional<PostgreSQL::auth>& auth_info, const std::optional<PostgreSQL::options> option);
         postgresql_connector(const arcxx::string& info);
