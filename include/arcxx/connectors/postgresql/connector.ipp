@@ -5,6 +5,7 @@
  * 
  * Released under the MIT License.
  */
+
 namespace arcxx {
     inline postgresql_connector::postgresql_connector(const PostgreSQL::endpoint& endpoint_info, const std::optional<PostgreSQL::auth>& auth_info, const std::optional<PostgreSQL::options> option) {
         conn = PQsetdbLogin(
@@ -41,7 +42,7 @@ namespace arcxx {
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
-    inline PGresult* postgresql_connector::exec_sql(const query_relation<Result, BindAttrs>& query) {
+    inline PGresult* postgresql_connector::exec_sql(const query_relation<Result, BindAttrs>& query, ::PGconn* conn) {
         const auto sql = query.template to_sql<postgresql_connector>();
 
         PGresult* result = nullptr;
@@ -134,29 +135,41 @@ namespace arcxx {
 
     template<specialized_from<std::vector> Result, specialized_from<std::tuple> BindAttrs>
     inline auto postgresql_connector::make_executer(const query_relation<Result, BindAttrs>& query) -> arcxx::expected<executer<typename Result::value_type>, arcxx::string>{
-        return 
+        return executer<typename Result::value_type>{
+            [query, conn = this->conn]{ return postgresql_connector::exec_sql(query, conn); }
+        };
     }
     template<specialized_from<std::vector> Result, specialized_from<std::tuple> BindAttrs>
     inline auto postgresql_connector::make_executer(query_relation<Result, BindAttrs>&& query) -> arcxx::expected<executer<typename Result::value_type>, arcxx::string>{
-
+        return executer<typename Result::value_type>{
+            [query = std::move(query), conn = this->conn]{ return postgresql_connector::exec_sql(query, conn); }
+        };
     }
 
     template<specialized_from<std::unordered_map> Result, specialized_from<std::tuple> BindAttrs>
     inline auto postgresql_connector::make_executer(const query_relation<Result, BindAttrs>& query) -> arcxx::expected<executer<std::pair<typename Result::key_type, typename Result::mapped_type>>, arcxx::string>{
-
+        return executer<std::pair<typename Result::key_type, typename Result::mapped_type>>{
+            [query, conn = this->conn]{ return postgresql_connector::exec_sql(query, conn); }
+        };
     }
     template<specialized_from<std::unordered_map> Result, specialized_from<std::tuple> BindAttrs>
     inline auto postgresql_connector::make_executer(query_relation<Result, BindAttrs>&& query) -> arcxx::expected<executer<std::pair<typename Result::key_type, typename Result::mapped_type>>, arcxx::string>{
-
+        return executer<std::pair<typename Result::key_type, typename Result::mapped_type>>{
+            [query = std::move(query), conn = this->conn]{ return postgresql_connector::exec_sql(query, conn); }
+        };
     }
 
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     inline auto postgresql_connector::make_executer(const query_relation<Result, BindAttrs>& query) -> arcxx::expected<executer<Result>, arcxx::string>{
-
+        return executer<Result>{
+            [query, conn = this->conn]{ return postgresql_connector::exec_sql(query, conn); }
+        };
     }
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     inline auto postgresql_connector::make_executer(query_relation<Result, BindAttrs>&& query) -> arcxx::expected<executer<Result>, arcxx::string>{
-
+        return executer<Result>{
+            [query = std::move(query), conn = this->conn]{ return postgresql_connector::exec_sql(query, conn); }
+        };
     }
 
     template<is_model Mod>
@@ -181,71 +194,47 @@ namespace arcxx {
         return result.value();
     }
 
-    namespace detail{
-        template<typename Result>
-        inline void set_result(Result& ret, PGresult* result, const auto col){
-            ret = arcxx::PostgreSQL::detail::extract_column_data<Result>(result, col);
-        }
-        template<specialized_from<std::vector> Result>
-        inline void set_result(Result& ret, PGresult* result, const auto col){
-            ret.push_back(PostgreSQL::detail::extract_column_data<typename Result::value_type>(result, col));
-        }
-        template<specialized_from<std::unordered_map> Result>
-        inline void set_result(Result& ret, PGresult* result, const auto col){
-            if constexpr (specialized_from<typename Result::mapped_type, std::tuple>){
-                using result_type = tuptup::tuple_cat_t<std::tuple<typename Result::key_type>, typename Result::mapped_type>;
-                auto result_column = arcxx::PostgreSQL::detail::extract_column_data<result_type>(result, col);
-                ret.insert(std::make_pair(
-                    std::get<0>(result_column),
-                    tuptup::tuple_slice<tuptup::make_index_range<1, std::tuple_size_v<result_type>>>(result_column)
-                ));
-            }
-            else{
-                auto result_column = arcxx::PostgreSQL::detail::extract_column_data<std::tuple<typename Result::key_type, typename Result::mapped_type>>(result, col);
-                ret.insert(std::make_pair(std::move(std::get<0>(result_column)), std::move(std::get<1>(result_column))));
-            }
-        }
-    }
-
     template<typename Result, specialized_from<std::tuple> BindAttrs>
     inline arcxx::expected<Result, arcxx::string> postgresql_connector::exec(const query_relation<Result, BindAttrs>& query){
-        PGresult* result = this->exec_sql(query);
-
-        Result ret{};
-        // error handling
-        if (PQresultStatus(result) != PGRES_TUPLES_OK) {
-            error_msg = PQresultErrorMessage(result);
-            if(result != nullptr) PQclear(result);
-            return arcxx::make_unexpected(error_msg.value());
+        auto make_executer_result = make_executer(query);
+        if(!make_executer_result){
+            error_msg = make_executer_result.error();
+            return arcxx::make_unexpected(std::move(make_executer_result.error()));
         }
 
-        auto col_count = PQntuples(result);
-        for(decltype(col_count) col = 0; col < col_count; ++col){
-            detail::set_result(ret, result, col);
+        Result result{};
+        for(auto exec_result : make_executer_result.value()){
+            if(!exec_result){
+                return arcxx::make_unexpected(std::move(exec_result.error()));
+            }
+            else{
+                if constexpr(specialized_from<Result, std::vector>){
+                    result.push_back(exec_result.value().get());
+                }
+                else if constexpr(specialized_from<Result, std::unordered_map>){
+                    result.insert(exec_result.value().get());
+                }
+                else{
+                    result = exec_result.value().get();
+                }
+            }
         }
-
-        if(result != nullptr) PQclear(result);
-        error_msg = std::nullopt;
-        return ret;
+        return result;
     }
 
     template<specialized_from<std::tuple> BindAttrs>
     inline arcxx::expected<void, arcxx::string> postgresql_connector::exec(const query_relation<void, BindAttrs>& query){
-        PGresult* result = this->exec_sql(query);
+        auto make_executer_result = make_executer(query);
+        if(!make_executer_result){
+            error_msg = make_executer_result.error();
+            return arcxx::make_unexpected(std::move(make_executer_result.error()));
+        }
 
-        if (const auto stat = PQresultStatus(result); stat == PGRES_COMMAND_OK || stat == PGRES_NONFATAL_ERROR){
-            error_msg = std::nullopt;
+        if(auto exec_result = make_executer_result.value().execute(); !exec_result){
+            error_msg = exec_result.error();
+            return arcxx::make_unexpected(std::move(exec_result.error()));
         }
-        else error_msg = PQresultErrorMessage(result);
-
-        if(result != nullptr) PQclear(result);
-        
-        if(error_msg){
-            return arcxx::make_unexpected(error_msg.value());
-        }
-        else{
-            return {};
-        }
+        else return arcxx::expected<void, arcxx::string>{};
     }
 
     inline arcxx::expected<void, arcxx::string> postgresql_connector::begin(){

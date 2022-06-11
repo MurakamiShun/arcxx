@@ -39,7 +39,7 @@ namespace arcxx {
         std::optional<arcxx::string> error_msg = std::nullopt;
 
         template<typename Result, specialized_from<std::tuple> BindAttrs>
-        PGresult* exec_sql(const query_relation<Result, BindAttrs>& query);
+        static PGresult* exec_sql(const query_relation<Result, BindAttrs>& query, ::PGconn* conn);
 
         template<typename ResultType>
         struct executer;
@@ -114,4 +114,5 @@ namespace arcxx {
     }
 }
 
+#include "postgresql/executer.ipp"
 #include "postgresql/connector.ipp"

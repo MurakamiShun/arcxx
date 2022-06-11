@@ -7,7 +7,7 @@
 using connector = arcxx::PostgreSQL::connector;
 inline connector open_testfile(){
     auto adpt = arcxx::postgresql_connector::open(
-        arcxx::PostgreSQL::endpoint{.server_name = "postgres", .db_name = "test_db"},
+        arcxx::PostgreSQL::endpoint{.server_name = "localhost", .db_name = "test_db"},
         arcxx::PostgreSQL::auth{.user = "postgres", .password = "root"}
     );
     if(adpt.has_error()) FAIL(adpt.error_message());

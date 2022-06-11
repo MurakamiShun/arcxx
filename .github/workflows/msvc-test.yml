@@ -22,7 +22,7 @@ jobs:
         run: cmake --build build --config ${{env.BUILD_TYPE}} --parallel
 
       - name: Run
-        working-directory: ${{github.workspace}}/tests/compile_tests/build
+        working-directory: ${{github.workspace}}/tests/compile_tests/build/${{env.BUILD_TYPE}}
         run: ./query_scalar.exe && ./query_vector.exe && ./model_query.exe
 
 
@@ -44,19 +44,22 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}/tests/integrated_tests
-        run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake .
+        run: cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake .
 
       - name: Build
         working-directory: ${{github.workspace}}/tests/integrated_tests
         run: cmake --build build --config ${{ matrix.build_type }} --parallel
 
       - name: Run integrated tests
-        working-directory: ${{github.workspace}}/tests/integrated_tests/build/${{env.BUILD_TYPE}}
+        working-directory: ${{github.workspace}}/tests/integrated_tests/build/${{ matrix.build_type }}
         run: ./arcxx_IT.exe
 
   postgresql-tests:
     runs-on: windows-2022
     needs: [compile_tests]
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
     steps:
       - uses: actions/checkout@v2
       - uses: microsoft/setup-msbuild@v1.1
@@ -74,14 +77,14 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{github.workspace}}/tests/integrated_tests
-        run: cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DTARGET_SQL=PostgreSQL -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake .
+        run: cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DTARGET_SQL=PostgreSQL -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake .
 
       - name: Build
         working-directory: ${{github.workspace}}/tests/integrated_tests
-        run: cmake --build build --config ${{env.BUILD_TYPE}} --parallel
+        run: cmake --build build --config ${{ matrix.build_type }} --parallel
 
       - name: Run integrated tests
-        working-directory: ${{github.workspace}}/tests/integrated_tests/build/${{env.BUILD_TYPE}}
+        working-directory: ${{github.workspace}}/tests/integrated_tests/build/${{ matrix.build_type }}
         run: ./arcxx_IT.exe
 
   benchmarks:
