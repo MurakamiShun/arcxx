@@ -8,10 +8,10 @@
 #include "utils.hpp"
 
 namespace arcxx{
-    struct connector {};
+    struct connector{};
 
     template<typename T>
-    concept is_connector = std::derived_from<T, connector>;
+    concept is_connector = std::derived_from<std::remove_cvref_t<T>, connector>;
 
     namespace transaction {
         namespace detail{
@@ -29,7 +29,7 @@ namespace arcxx{
     }
 
     // abort if a given table exists when called connector::create_table.
-    constexpr struct {} abort_if_exists;
+    constexpr struct{} abort_if_exists;
 
     struct common_connector;
 }

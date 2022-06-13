@@ -1,5 +1,4 @@
-//#include <arcxx.hpp>
-#include "../../include/arcxx.hpp"
+#include <arcxx.hpp>
 
 struct Test : public arcxx::model<Test>{
     static inline decltype(auto) table_name = "test_table";

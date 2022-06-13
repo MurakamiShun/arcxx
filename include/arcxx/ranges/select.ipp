@@ -25,35 +25,19 @@ namespace arcxx::ranges{
         }
     };
 
-    namespace views{
-        // range adaptor factory
-        namespace detail{
-            template<typename... Columns>
-            struct select_adaptor : query_range_adaptor_interface<select_adaptor<Columns...>>{
-                template<query_range_view RV>
-                constexpr auto operator()(RV&& view) const {
-                    return select_view<std::remove_cvref_t<RV>, Columns...>{ std::forward<RV>(view) };
-                }
-            };
-
-            struct select_adaptor_closure{
-                template<typename... Columns>
-                requires (sizeof...(Columns) > 0)
-                constexpr auto operator()() const noexcept {
-                    return select_adaptor<Columns...>{};
-                }
-                template<query_range_view RV, typename... Columns>
-                requires (sizeof...(Columns) > 0)
-                constexpr auto operator()(RV&& view) const {
-                    return select_view<std::remove_cvref_t<RV>, std::tuple<Columns...>>{ std::forward<RV>(view) };
-                }
-            };
-
-            template<query_range_view RV, typename... Columns>
-            constexpr auto operator|(RV&& view, const select_adaptor<Columns...>){
-                return select_view<std::remove_cvref_t<RV>, std::tuple<Columns...>>{ std::forward<RV>(view) };
+    namespace adaptor{
+        template<typename... Columns>
+        struct select_adaptor : public query_range_adaptor_interface<select_adaptor<Columns...>>{
+            template<query_range_view RV>
+            auto operator()(RV&& view) const {
+                return select_view<std::remove_cvref_t<RV>, Columns...>{ std::forward<RV>(view) };
             }
-        }
-        inline constexpr auto select = detail::select_adaptor_closure{};
+        };
+    }
+
+    namespace views{
+        template<typename... Columns>
+        requires (is_attribute<Columns> && ...) || (is_attribute_aggregator<Columns> && ...)
+        inline constexpr auto select = adaptor::select_adaptor<Columns...>{};
     }
 }

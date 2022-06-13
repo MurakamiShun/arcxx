@@ -12,14 +12,14 @@ struct User : public arcxx::model<User> {
         static constexpr auto column_name = "id";
         using integer<User, ID, size_t>::integer;
 
-        inline static const auto constraints = { primary_key };
+        inline static const auto constraints = primary_key;
     } id;
 
     struct Name : public arcxx::attributes::string<User, Name> {
         static constexpr auto column_name = "name";
         using string<User, Name>::string;
 
-        inline static const auto constraints = { default_value("unknow"), length(128) };
+        inline static const auto constraints = default_value("unknow") & length(128);
     } name;
 };
 ```
@@ -83,6 +83,7 @@ WIP
 * Translation of documents
 * Tests
 * Example codes
+* std::range like access
 
 Waiting
 * Public Relations
