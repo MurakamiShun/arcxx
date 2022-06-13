@@ -37,5 +37,8 @@ struct Test : public arcxx::model<Test>{
 int main(){
     using namespace arcxx;
     arcxx::sqlite3::connector conn{"test.sqlite3"};
-    conn | Test::all() | arcxx::ranges::views::select<Test::Int, Test::Decimal>;
+    auto view = conn | Test::all() | arcxx::ranges::views::select<Test::Int, Test::Decimal>;
+    auto adaptor = Test::all() | arcxx::ranges::views::select<Test::Int, Test::Decimal>;
+
+
 }

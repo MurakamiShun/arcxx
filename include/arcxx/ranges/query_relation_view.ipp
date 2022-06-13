@@ -24,8 +24,12 @@ namespace arcxx{
         namespace adaptor{
             template<typename QueryRelation>
             requires (specialized_from<QueryRelation, query_relation> && std::same_as<std::remove_cvref_t<QueryRelation>, QueryRelation>)
-            struct query_relation_adaptor{
+            class query_relation_adaptor : public query_range_adaptor_interface<query_relation_adaptor<QueryRelation>>{
+            private:
                 QueryRelation query;
+            public:
+                query_relation_adaptor(const QueryRelation& q) : query(q){}
+                query_relation_adaptor(QueryRelation&& q) : query(std::move(q)){}
                 template<is_connector Connector>
                 constexpr auto operator()(Connector& conn) const& {
                     return query_relation_view<Connector, QueryRelation>{ conn, query };
@@ -47,7 +51,7 @@ namespace arcxx{
     template<specialized_from<query_relation> QueryRelation, ranges::query_range_adaptor QRA>
     auto operator|(QueryRelation&& query, QRA&& query_range_adpt){
         return ranges::adaptor::query_range_adaptor_pipe{
-            ranges::adaptor::query_relation_adaptor<std::remove_cvref_t<QueryRelation>>(std::forward<QueryRelation>(query)),
+            ranges::adaptor::query_relation_adaptor<std::remove_cvref_t<QueryRelation>>{ std::forward<QueryRelation>(query) },
             std::forward<QRA>(query_range_adpt)
         };
     }

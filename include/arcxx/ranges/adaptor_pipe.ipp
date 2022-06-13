@@ -11,8 +11,7 @@ namespace arcxx::ranges::adaptor{
         static constexpr std::size_t adaptor_size = sizeof...(RAs);
 
         query_range_adaptor_pipe() = delete;
-        template<std::convertible_to<RAs>... Args>
-        constexpr explicit query_range_adaptor_pipe(Args&&... args) : std::tuple<RAs...>{std::forward<Args>(args)...}{}
+        using std::tuple<RAs...>::tuple;
 
         // view | adaptor_pipe -> view
         template<query_range_view RV>
@@ -28,6 +27,9 @@ namespace arcxx::ranges::adaptor{
             }(std::make_index_sequence<adaptor_size>{});
         }
     };
+
+    template<typename... Args>
+    query_range_adaptor_pipe(Args&&...) -> query_range_adaptor_pipe<std::remove_cvref_t<Args>...>;
 
     // view | adaptor_pipe -> view
     template<query_range_view RV, specialized_from<query_range_adaptor_pipe> RAP>
