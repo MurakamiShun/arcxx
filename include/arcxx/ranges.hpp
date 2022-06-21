@@ -61,3 +61,4 @@ namespace arcxx::ranges{
 #include "ranges/adaptor_pipe.ipp"
 #include "ranges/query_relation_view.ipp"
 #include "ranges/select.ipp"
+#include "ranges/where.ipp"

@@ -9,19 +9,22 @@
 namespace arcxx::ranges{
     template<query_range_view ViewSource, typename... SelectedColumns>
     struct select_view : public query_range_view_interface<select_view<ViewSource, SelectedColumns...>>{
-        using result_type = std::tuple<SelectedColumns...>;
-        ViewSource source = ViewSource{};
+        using result_type = decltype(std::declval<ViewSource>().make_query_relation().template select<SelectedColumns...>());
+        ViewSource view_source;
 
         constexpr select_view() = delete;
-        constexpr select_view(ViewSource&& vs) : source(std::move(vs)){};
-        constexpr select_view(const ViewSource& vs) : source(vs){};
+        constexpr select_view(ViewSource&& vs) : view_source(std::move(vs)){};
+        constexpr select_view(const ViewSource& vs) : view_source(vs){};
 
-        auto make_query_relation() const {
-            return source.make_query_relation().template select<SelectedColumns...>();
+        auto make_query_relation() const& {
+            return view_source.make_query_relation().template select<SelectedColumns...>();
+        }
+        auto make_query_relation() && {
+            return std::move(view_source).make_query_relation().template select<SelectedColumns...>();
         }
 
-        decltype(auto) get_connector() const {
-            return source.get_connector();
+        auto& get_connector() const noexcept {
+            return view_source.get_connector();
         }
     };
 
@@ -30,7 +33,9 @@ namespace arcxx::ranges{
         struct select_adaptor : public query_range_adaptor_interface<select_adaptor<Columns...>>{
             template<query_range_view RV>
             auto operator()(RV&& view) const {
-                return select_view<std::remove_cvref_t<RV>, Columns...>{ std::forward<RV>(view) };
+                return select_view<std::remove_cvref_t<RV>, Columns...>{
+                    std::forward<RV>(view)
+                };
             }
         };
     }

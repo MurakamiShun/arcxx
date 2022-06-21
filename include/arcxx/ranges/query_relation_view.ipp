@@ -14,12 +14,15 @@ namespace arcxx{
             QueryRelation query_relation;
             Connector& connector_ref;
         public:
+            using result_type = typename QueryRelation::result_type;
             query_relation_view() = delete;
-            query_relation_view(Connector& conn, QueryRelation&& relation) : connector_ref(conn), query_relation(std::move(relation)){}
-            query_relation_view(Connector& conn, const QueryRelation& relation) : connector_ref(conn), query_relation(relation){}
+            query_relation_view(Connector& conn, auto&& relation)
+            : connector_ref(conn),
+              query_relation(std::forward<decltype(relation)>(relation)){
+            }
             auto make_query_relation() && { return std::move(query_relation); }
             auto make_query_relation() const& { return query_relation; }
-            Connector& get_connector() noexcept { return connector_ref; }
+            Connector& get_connector() const noexcept { return connector_ref; }
         };
         namespace adaptor{
             template<typename QueryRelation>
