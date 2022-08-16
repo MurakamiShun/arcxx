@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation with CMake &mdash; ARCXX  ドキュメント</title>
+  <title>CMakeを利用したライブラリの導入 &mdash; ARCXX  ドキュメント</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -41,16 +41,16 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation with CMake</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#quick-start">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CMakeを利用したライブラリの導入</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quick-start">クイックスタート</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">インストール</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/database_connection.html">Database Connection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorial/table_creation.html">Table Creation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/table_creation.html">テーブルの作成</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/inserting.html">Data Inserting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/find_columns.html">Find columns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/select_columns.html">Select columns</a></li>
@@ -94,7 +94,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Installation with CMake</li>
+      <li>CMakeを利用したライブラリの導入</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/installation/cmake.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -105,11 +105,10 @@
            <div itemprop="articleBody">
              
   <section id="installation-with-cmake">
-<h1>Installation with CMake<a class="headerlink" href="#installation-with-cmake" title="Permalink to this heading"></a></h1>
+<h1>CMakeを利用したライブラリの導入<a class="headerlink" href="#installation-with-cmake" title="この見出しへのパーマリンク"></a></h1>
 <section id="quick-start">
-<h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading"></a></h2>
-<p>Make your project folder and source files.
-And make CMakeLists.txt under your project folder.</p>
+<h2>クイックスタート<a class="headerlink" href="#quick-start" title="この見出しへのパーマリンク"></a></h2>
+<p>main.cppの存在するフォルダ内に、以下のCMakeLists.txtを作成してください。</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.14</span><span class="p">)</span>
 <span class="nb">project</span><span class="p">(</span><span class="s">your_prject_name</span><span class="w"> </span><span class="s">LANGUAGES</span><span class="w"> </span><span class="s">CXX</span><span class="p">)</span>
 <span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="s">main.cpp</span><span class="p">)</span>
@@ -125,14 +124,14 @@ And make CMakeLists.txt under your project folder.</p>
 <span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">PROJECT_NAME</span><span class="o">}</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">ARCXX::ARCXX</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Type below commands to build your project.</p>
+<p>以下のコマンドを実行し、プロジェクトをビルドしてください。</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ cmake -S . -B build
 $ cmake --build build
 </pre></div>
 </div>
 </section>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<h2>インストール<a class="headerlink" href="#installation" title="この見出しへのパーマリンク"></a></h2>
 <p>You can use CMake to install ARCXX package.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/akisute514/arcxx.git
 $ <span class="nb">cd</span> arcxx

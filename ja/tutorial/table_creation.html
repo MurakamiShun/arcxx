@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Table Creation &mdash; ARCXX  ドキュメント</title>
+  <title>テーブルの作成 &mdash; ARCXX  ドキュメント</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -41,14 +41,14 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../installation/cmake.html">Installation with CMake</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/cmake.html">CMakeを利用したライブラリの導入</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="database_connection.html">Database Connection</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Table Creation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#model-definition">Model Definition</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id1">Table Creation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">テーブルの作成</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#model-definition">モデル定義</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">テーブルの作成</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="inserting.html">Data Inserting</a></li>
@@ -94,7 +94,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Table Creation</li>
+      <li>テーブルの作成</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/tutorial/table_creation.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -105,12 +105,11 @@
            <div itemprop="articleBody">
              
   <section id="table-creation">
-<h1>Table Creation<a class="headerlink" href="#table-creation" title="Permalink to this heading"></a></h1>
+<h1>テーブルの作成<a class="headerlink" href="#table-creation" title="この見出しへのパーマリンク"></a></h1>
 <section id="model-definition">
-<h2>Model Definition<a class="headerlink" href="#model-definition" title="Permalink to this heading"></a></h2>
-<p><code class="code docutils literal notranslate"><span class="pre">table_name</span></code> is required in model struct definition. Also, the model needs to be structured bindable.
-And column struct requires <code class="code docutils literal notranslate"><span class="pre">column_name</span></code> and inheriting constructors in the definition.</p>
-<p>base classes, <a class="reference internal" href="../api/arcxx/model.html"><span class="doc">arcxx::model</span></a> and <a class="reference internal" href="../api/arcxx/attributes.html"><span class="doc">arcxx::attribute</span></a> are using CRTP(Curiously Recurring Template Pattern).</p>
+<h2>モデル定義<a class="headerlink" href="#model-definition" title="この見出しへのパーマリンク"></a></h2>
+<p>モデルの定義には、その構造体中に <code class="code docutils literal notranslate"><span class="pre">table_name</span></code> が必要です。また、モデルは構造化束縛が可能である必要があります加えて、カラムの定義には <code class="code docutils literal notranslate"><span class="pre">column_name</span></code> と継承コンストラクタが必要です。</p>
+<p>基底クラスである <a class="reference internal" href="../api/arcxx/model.html"><span class="doc">arcxx::model</span></a> および <a class="reference internal" href="../api/arcxx/attributes.html"><span class="doc">arcxx::attribute</span></a> はCRTP(奇妙に再帰したテンプレートパターン)を使用しています。</p>
 <table class="docutils align-default" id="id2">
 <caption><span class="caption-text">example_table</span><a class="headerlink" href="#id2" title="このテーブルへのパーマリンク"></a></caption>
 <colgroup>
@@ -156,15 +155,15 @@ And column struct requires <code class="code docutils literal notranslate"><span
 </pre></div>
 </div>
 </div>
-<p>Attribute details are written in <a class="reference internal" href="../api/arcxx/attributes.html"><span class="doc">namespace arcxx::attributes</span></a>.</p>
+<p>Attributeの詳細は <a class="reference internal" href="../api/arcxx/attributes.html"><span class="doc">namespace arcxx::attributes</span></a> に書いてあります。</p>
 </section>
 <section id="id1">
-<h2>Table Creation<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<h2>テーブルの作成<a class="headerlink" href="#id1" title="この見出しへのパーマリンク"></a></h2>
 <p>Use <code class="code docutils literal notranslate"><span class="pre">connector::create_table()</span></code> to create table into database.
 <code class="code docutils literal notranslate"><span class="pre">create_table()</span></code> will not cause error when a given table exists.
 <code class="code docutils literal notranslate"><span class="pre">create_table(abort_if_exists)</span></code> will return error message when exists the table.</p>
 <div class="literal-block-wrapper docutils container" id="id4">
-<div class="code-block-caption"><span class="caption-text">Generated SQL code (SQLite3)</span><a class="headerlink" href="#id4" title="このコードへのパーマリンク"></a></div>
+<div class="code-block-caption"><span class="caption-text">生成されたSQL文</span><a class="headerlink" href="#id4" title="このコードへのパーマリンク"></a></div>
 <div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">example_table</span><span class="p">(</span><span class="w"></span>
 <span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"></span>
@@ -173,7 +172,7 @@ And column struct requires <code class="code docutils literal notranslate"><span
 </div>
 </div>
 <div class="literal-block-wrapper docutils container" id="id5">
-<div class="code-block-caption"><span class="caption-text">Create table into Database file.</span><a class="headerlink" href="#id5" title="このコードへのパーマリンク"></a></div>
+<div class="code-block-caption"><span class="caption-text">データベースファイルへのテーブルの作成</span><a class="headerlink" href="#id5" title="このコードへのパーマリンク"></a></div>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">sqlite3_connector</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;example.sqlite3&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">sqlite3</span><span class="o">::</span><span class="n">options</span><span class="o">::</span><span class="n">create</span><span class="p">);</span><span class="w"></span>
 <span class="n">connection</span><span class="p">.</span><span class="n">create_table</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span><span class="p">();</span><span class="w"></span>
 
