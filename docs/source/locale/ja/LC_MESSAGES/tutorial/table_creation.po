@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ARCXX \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-04 16:23+0000\n"
+"POT-Creation-Date: 2022-08-16 09:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,15 +34,14 @@ msgid ""
 ":code:`column_name` and inheriting constructors in the definition."
 msgstr ""
 "モデルの定義には、その構造体中に :code:`table_name` "
-"が必要です。また、モデルは構造化束縛が可能である必要があります"
-"加えて、カラムの定義には :code:`column_name` "
+"が必要です。また、モデルは構造化束縛が可能である必要があります加えて、カラムの定義には :code:`column_name` "
 "と継承コンストラクタが必要です。"
 
 #: ../../source/tutorial/table_creation.rst:12
 msgid ""
 "base classes, :doc:`arcxx::model </api/arcxx/model>` and "
-":doc:`arcxx::attribute </api/arcxx/attributes>` are using"
-" CRTP(Curiously Recurring Template Pattern)."
+":doc:`arcxx::attribute </api/arcxx/attributes>` are using CRTP(Curiously "
+"Recurring Template Pattern)."
 msgstr ""
 "基底クラスである :doc:`arcxx::model </api/arcxx/model>` および "
 ":doc:`arcxx::attribute </api/arcxx/attributes>` "
@@ -93,13 +92,21 @@ msgid "Attribute details are written in :doc:`/api/arcxx/attributes`."
 msgstr "Attributeの詳細は :doc:`/api/arcxx/attributes` に書いてあります。"
 
 #: ../../source/tutorial/table_creation.rst:53
-msgid "Generate table creation SQL code (SQLite3)"
-msgstr "テーブル作成のSQL文の生成 (SQLite3)"
+msgid ""
+"Use :code:`connector::create_table()` to create table into database. "
+":code:`create_table()` will not cause error when a given table exists. "
+":code:`create_table(abort_if_exists)` will return error message when "
+"exists the table."
+msgstr ""
 
-#: ../../source/tutorial/table_creation.rst:58
+#: ../../source/tutorial/table_creation.rst:57
 msgid "Generated SQL code (SQLite3)"
 msgstr "生成されたSQL文"
 
-#: ../../source/tutorial/table_creation.rst:66
+#: ../../source/tutorial/table_creation.rst:65
 msgid "Create table into Database file."
 msgstr "データベースファイルへのテーブルの作成"
+
+#~ msgid "Generate table creation SQL code (SQLite3)"
+#~ msgstr "テーブル作成のSQL文の生成 (SQLite3)"
+
