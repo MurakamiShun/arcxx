@@ -89,7 +89,7 @@ namespace arcxx {
     requires regarded_as_clock<typename Attr::value_type>
     [[nodiscard]] inline arcxx::string to_string(const Attr& attr, arcxx::string&& buff) {
         // YYYY-MM-DD hh:mm:ss
-        using clock = Attr::value_type::clock;
+        using clock = typename Attr::value_type::clock;
         using duration = typename Attr::value_type::duration;
         namespace chrono = std::chrono;
 
@@ -123,7 +123,7 @@ namespace arcxx {
     template<std::same_as<common_connector> Connector, is_attribute Attr>
     requires regarded_as_clock<typename Attr::value_type>
     inline void from_string(Attr& attr, const arcxx::string_view str){
-        using clock = Attr::value_type::clock;
+        using clock = typename Attr::value_type::clock;
         using duration = typename Attr::value_type::duration;
         namespace chrono = std::chrono;
 
@@ -181,6 +181,6 @@ namespace arcxx {
     }
     template<std::same_as<common_connector> Connector, is_attribute Attr>
     requires std::same_as<typename Attr::value_type, std::vector<std::byte>>
-    inline void from_string(Attr& attr, const arcxx::string_view str){
+    inline void from_string(Attr&, const arcxx::string_view){
     }
 }
