@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Table Creation &mdash; ARCXX  documentation</title>
@@ -11,11 +11,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,11 +28,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> ARCXX
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ARCXX
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -92,8 +96,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Table Creation</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Table Creation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/tutorial/table_creation.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -104,19 +108,14 @@
            <div itemprop="articleBody">
              
   <section id="table-creation">
-<h1>Table Creation<a class="headerlink" href="#table-creation" title="Permalink to this heading"></a></h1>
+<h1>Table Creation<a class="headerlink" href="#table-creation" title="Link to this heading"></a></h1>
 <section id="model-definition">
-<h2>Model Definition<a class="headerlink" href="#model-definition" title="Permalink to this heading"></a></h2>
+<h2>Model Definition<a class="headerlink" href="#model-definition" title="Link to this heading"></a></h2>
 <p><code class="code docutils literal notranslate"><span class="pre">table_name</span></code> is required in model struct definition. Also, the model needs to be structured bindable.
 And column struct requires <code class="code docutils literal notranslate"><span class="pre">column_name</span></code> and inheriting constructors in the definition.</p>
 <p>base classes, <a class="reference internal" href="../api/arcxx/model.html"><span class="doc">arcxx::model</span></a> and <a class="reference internal" href="../api/arcxx/attributes.html"><span class="doc">arcxx::attribute</span></a> are using CRTP(Curiously Recurring Template Pattern).</p>
 <table class="docutils align-default" id="id2">
-<caption><span class="caption-text">example_table</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
+<caption><span class="caption-text">example_table</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
 <tbody>
 <tr class="row-odd"><td><p>column name</p></td>
 <td><p>data type</p></td>
@@ -133,48 +132,48 @@ And column struct requires <code class="code docutils literal notranslate"><span
 </tbody>
 </table>
 <div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-text">example_table code</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;arcxx.hpp&gt;</span><span class="cp"></span>
+<div class="code-block-caption"><span class="caption-text">example_table code</span><a class="headerlink" href="#id3" title="Link to this code"></a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;arcxx.hpp&gt;</span>
 
-<span class="k">struct</span><span class="w"> </span><span class="nc">ExampleTable</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">model</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_table&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">ExampleTable</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">model</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_table&quot;</span><span class="p">;</span>
 
 <span class="w">    </span><span class="c1">// id column</span>
-<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">ID</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">integer</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span><span class="w"> </span><span class="n">ID</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">using</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">integer</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span><span class="w"> </span><span class="n">ID</span><span class="o">&gt;::</span><span class="n">integer</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">column_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;id&quot;</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kr">inline</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">constraints</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">primary_key</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="n">id</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">ID</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">integer</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span><span class="w"> </span><span class="n">ID</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">using</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">integer</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span><span class="w"> </span><span class="n">ID</span><span class="o">&gt;::</span><span class="n">integer</span><span class="p">;</span>
+<span class="w">        </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">column_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;id&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">inline</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">constraints</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">primary_key</span><span class="w"> </span><span class="p">};</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
 
 <span class="w">    </span><span class="c1">// name column</span>
-<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">Name</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">string</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span><span class="w"> </span><span class="n">Name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">using</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">string</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span><span class="w"> </span><span class="n">Name</span><span class="o">&gt;::</span><span class="n">string</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">column_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w"></span>
-<span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">Name</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">string</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span><span class="w"> </span><span class="n">Name</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">using</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">attributes</span><span class="o">::</span><span class="n">string</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="p">,</span><span class="w"> </span><span class="n">Name</span><span class="o">&gt;::</span><span class="n">string</span><span class="p">;</span>
+<span class="w">        </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">column_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="p">};</span>
 </pre></div>
 </div>
 </div>
 <p>Attribute details are written in <a class="reference internal" href="../api/arcxx/attributes.html"><span class="doc">namespace arcxx::attributes</span></a>.</p>
 </section>
 <section id="id1">
-<h2>Table Creation<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<h2>Table Creation<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <p>Use <code class="code docutils literal notranslate"><span class="pre">connector::create_table()</span></code> to create table into database.
 <code class="code docutils literal notranslate"><span class="pre">create_table()</span></code> will not cause error when a given table exists.
 <code class="code docutils literal notranslate"><span class="pre">create_table(abort_if_exists)</span></code> will return error message when exists the table.</p>
 <div class="literal-block-wrapper docutils container" id="id4">
-<div class="code-block-caption"><span class="caption-text">Generated SQL code (SQLite3)</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
-<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">example_table</span><span class="p">(</span><span class="w"></span>
-<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"></span>
-<span class="p">);</span><span class="w"></span>
+<div class="code-block-caption"><span class="caption-text">Generated SQL code (SQLite3)</span><a class="headerlink" href="#id4" title="Link to this code"></a></div>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">example_table</span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">TEXT</span>
+<span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="literal-block-wrapper docutils container" id="id5">
-<div class="code-block-caption"><span class="caption-text">Create table into Database file.</span><a class="headerlink" href="#id5" title="Permalink to this code"></a></div>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">sqlite3_connector</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;example.sqlite3&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">sqlite3</span><span class="o">::</span><span class="n">options</span><span class="o">::</span><span class="n">create</span><span class="p">);</span><span class="w"></span>
-<span class="n">connection</span><span class="p">.</span><span class="n">create_table</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span><span class="p">();</span><span class="w"></span>
+<div class="code-block-caption"><span class="caption-text">Create table into Database file.</span><a class="headerlink" href="#id5" title="Link to this code"></a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">sqlite3_connector</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;example.sqlite3&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">sqlite3</span><span class="o">::</span><span class="n">options</span><span class="o">::</span><span class="n">create</span><span class="p">);</span>
+<span class="n">connection</span><span class="p">.</span><span class="n">create_table</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span><span class="p">();</span>
 
 <span class="n">connection</span><span class="p">.</span><span class="n">create_table</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arcxx</span><span class="o">::</span><span class="n">abort_if_exists</span><span class="p">);</span><span class="w"> </span><span class="c1">// return error message due to exists table</span>
 </pre></div>

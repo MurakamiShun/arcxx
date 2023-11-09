@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>arcxx::model &mdash; ARCXX  documentation</title>
@@ -11,11 +11,11 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -28,11 +28,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> ARCXX
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ARCXX
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,7 +65,32 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">class</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">arcxx::model</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">arcxx::model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#_CPPv4I0E5model"><code class="docutils literal notranslate"><span class="pre">model</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model6schemaE"><code class="docutils literal notranslate"><span class="pre">model::schema</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5model6schema6to_sqlEv"><code class="docutils literal notranslate"><span class="pre">model::schema::to_sql()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model6insertEv"><code class="docutils literal notranslate"><span class="pre">model::insert()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model3allEv"><code class="docutils literal notranslate"><span class="pre">model::all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model6selectEv"><code class="docutils literal notranslate"><span class="pre">model::select()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model5pluckEv"><code class="docutils literal notranslate"><span class="pre">model::pluck()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model5whereEv"><code class="docutils literal notranslate"><span class="pre">model::where()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model7destroyEv"><code class="docutils literal notranslate"><span class="pre">model::destroy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model5limitEv"><code class="docutils literal notranslate"><span class="pre">model::limit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model8order_byEv"><code class="docutils literal notranslate"><span class="pre">model::order_by()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model4joinEv"><code class="docutils literal notranslate"><span class="pre">model::join()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model9left_joinEv"><code class="docutils literal notranslate"><span class="pre">model::left_join()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model8group_byEv"><code class="docutils literal notranslate"><span class="pre">model::group_by()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model5countEv"><code class="docutils literal notranslate"><span class="pre">model::count()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model3sumEv"><code class="docutils literal notranslate"><span class="pre">model::sum()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model3avgEv"><code class="docutils literal notranslate"><span class="pre">model::avg()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model3maxEv"><code class="docutils literal notranslate"><span class="pre">model::max()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5model3minEv"><code class="docutils literal notranslate"><span class="pre">model::min()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="query_condition.html">arcxx::query_condition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="query_relation.html">arcxx::query_relation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attributes/binary.html">arcxx::attributes::binary</a></li>
@@ -88,9 +117,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../arcxx.html">namespace arcxx</a> &raquo;</li>
-      <li>arcxx::model</li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../arcxx.html">namespace arcxx</a></li>
+      <li class="breadcrumb-item active">arcxx::model</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/api/arcxx/model.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -101,27 +130,23 @@
            <div itemprop="articleBody">
              
   <section id="arcxx-model">
-<h1>arcxx::model<a class="headerlink" href="#arcxx-model" title="Permalink to this heading"></a></h1>
+<h1>arcxx::model<a class="headerlink" href="#arcxx-model" title="Link to this heading"></a></h1>
 <dl class="cpp struct">
 <dt class="sig sig-object cpp" id="_CPPv4I0E5model">
-<span id="_CPPv3I0E5model"></span><span id="_CPPv2I0E5model"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Derived</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">model</span></span></span><a class="headerlink" href="#_CPPv4I0E5model" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3I0E5model"></span><span id="_CPPv2I0E5model"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Derived</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">model</span></span></span><a class="headerlink" href="#_CPPv4I0E5model" title="Link to this definition"></a><br /></dt>
 <dd><p><code class="code docutils literal notranslate"><span class="pre">table_name</span></code> static member variable is required in model struct definition.
 <code class="code docutils literal notranslate"><span class="pre">arcxx::model</span></code> is designed using
 CRTP(Curiously Recurring Template Pattern).</p>
 <div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">A Minimum model define code</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">ExampleTable</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">model</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_table&quot;</span><span class="p">;</span><span class="w"></span>
-<span class="p">};</span><span class="w"></span>
+<div class="code-block-caption"><span class="caption-text">A Minimum model define code</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">ExampleTable</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">model</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">table_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example_table&quot;</span><span class="p">;</span>
+<span class="p">};</span>
 </pre></div>
 </div>
 </div>
 <table class="docutils align-default" id="id2">
-<caption><span class="caption-text">Member functions</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
+<caption><span class="caption-text">Member functions</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
 <tbody>
 <tr class="row-odd"><td><p>(constructor)</p></td>
 <td></td>
@@ -132,11 +157,7 @@ CRTP(Curiously Recurring Template Pattern).</p>
 </tbody>
 </table>
 <table class="docutils align-default" id="id3">
-<caption><span class="caption-text">Generates query functions</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
+<caption><span class="caption-text">Generates query functions</span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#_CPPv4N5model6insertEv" title="model::insert"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">insert()</span></code></a></p></td>
 <td></td>
@@ -189,11 +210,7 @@ CRTP(Curiously Recurring Template Pattern).</p>
 </tbody>
 </table>
 <table class="docutils align-default" id="id4">
-<caption><span class="caption-text">Member structures</span><a class="headerlink" href="#id4" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
+<caption><span class="caption-text">Member structures</span><a class="headerlink" href="#id4" title="Link to this table"></a></caption>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#_CPPv4N5model6schemaE" title="model::schema"><code class="xref cpp cpp-struct docutils literal notranslate"><span class="pre">schema</span></code></a></p></td>
 <td></td>
@@ -202,12 +219,12 @@ CRTP(Curiously Recurring Template Pattern).</p>
 </table>
 <dl class="cpp struct">
 <dt class="sig sig-object cpp" id="_CPPv4N5model6schemaE">
-<span id="_CPPv3N5model6schemaE"></span><span id="_CPPv2N5model6schemaE"></span><span id="model::schema"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">schema</span></span></span><a class="headerlink" href="#_CPPv4N5model6schemaE" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3N5model6schemaE"></span><span id="_CPPv2N5model6schemaE"></span><span id="model::schema"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">schema</span></span></span><a class="headerlink" href="#_CPPv4N5model6schemaE" title="Link to this definition"></a><br /></dt>
 <dd><dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model6schema6to_sqlEv">
-<span id="_CPPv3N5model6schema6to_sqlEv"></span><span id="_CPPv2N5model6schema6to_sqlEv"></span><span id="model::schema::to_sql"></span><span class="sig-name descname"><span class="n"><span class="pre">to_sql</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model6schema6to_sqlEv" title="Permalink to this definition"></a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">derived_from</span><span class="o">&lt;</span><span class="n">connector</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Connector</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">to_sql</span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">create_if_not_exist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span><span class="w"></span>
+<span id="_CPPv3N5model6schema6to_sqlEv"></span><span id="_CPPv2N5model6schema6to_sqlEv"></span><span id="model::schema::to_sql"></span><span class="sig-name descname"><span class="n"><span class="pre">to_sql</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model6schema6to_sqlEv" title="Link to this definition"></a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">derived_from</span><span class="o">&lt;</span><span class="n">connector</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Connector</span><span class="o">&gt;</span>
+<span class="k">static</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">to_sql</span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">create_if_not_exist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -216,167 +233,167 @@ CRTP(Curiously Recurring Template Pattern).</p>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model6insertEv">
-<span id="_CPPv3N5model6insertEv"></span><span id="_CPPv2N5model6insertEv"></span><span id="model::insert"></span><span class="sig-name descname"><span class="n"><span class="pre">insert</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model6insertEv" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3N5model6insertEv"></span><span id="_CPPv2N5model6insertEv"></span><span id="model::insert"></span><span class="sig-name descname"><span class="n"><span class="pre">insert</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model6insertEv" title="Link to this definition"></a><br /></dt>
 <dd><p>The data inserting example is <a class="reference internal" href="../../tutorial/inserting.html"><span class="doc">here</span></a>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">insert</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Derived</span><span class="o">&amp;</span><span class="w"> </span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">bind</span><span class="w"> </span><span class="n">attributes</span><span class="p">...</span><span class="o">&gt;&gt;</span><span class="p">;</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">insert</span><span class="p">(</span><span class="n">Derived</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">bind</span><span class="w"> </span><span class="n">attributes</span><span class="p">...</span><span class="o">&gt;&gt;</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">insert</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Derived</span><span class="o">&amp;</span><span class="w"> </span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">bind</span><span class="w"> </span><span class="n">attributes</span><span class="p">...</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">insert</span><span class="p">(</span><span class="n">Derived</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">model</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">bind</span><span class="w"> </span><span class="n">attributes</span><span class="p">...</span><span class="o">&gt;&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model3allEv">
-<span id="_CPPv3N5model3allEv"></span><span id="_CPPv2N5model3allEv"></span><span id="model::all"></span><span class="sig-name descname"><span class="n"><span class="pre">all</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model3allEv" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3N5model3allEv"></span><span id="_CPPv2N5model3allEv"></span><span id="model::all"></span><span class="sig-name descname"><span class="n"><span class="pre">all</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model3allEv" title="Link to this definition"></a><br /></dt>
 <dd><p>Get all model data in database.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">all</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">all</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model6selectEv">
-<span id="_CPPv3N5model6selectEv"></span><span id="_CPPv2N5model6selectEv"></span><span id="model::select"></span><span class="sig-name descname"><span class="n"><span class="pre">select</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model6selectEv" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3N5model6selectEv"></span><span id="_CPPv2N5model6selectEv"></span><span id="model::select"></span><span class="sig-name descname"><span class="n"><span class="pre">select</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model6selectEv" title="Link to this definition"></a><br /></dt>
 <dd><p>The select function example is <a class="reference internal" href="../../tutorial/select_columns.html"><span class="doc">here</span></a>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="p">...</span><span class="w"> </span><span class="n">Attrs</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">select</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">Attrs</span><span class="p">...</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span><span class="w"></span>
-<span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute_aggregator</span><span class="p">...</span><span class="w"> </span><span class="n">Aggregators</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">select</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">Aggregators</span><span class="o">::</span><span class="n">attribute_type</span><span class="p">...</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="p">...</span><span class="w"> </span><span class="n">Attrs</span><span class="o">&gt;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">select</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">Attrs</span><span class="p">...</span><span class="o">&gt;&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute_aggregator</span><span class="p">...</span><span class="w"> </span><span class="n">Aggregators</span><span class="o">&gt;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">select</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">Aggregators</span><span class="o">::</span><span class="n">attribute_type</span><span class="p">...</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model5pluckEv">
-<span id="_CPPv3N5model5pluckEv"></span><span id="_CPPv2N5model5pluckEv"></span><span id="model::pluck"></span><span class="sig-name descname"><span class="n"><span class="pre">pluck</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model5pluckEv" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3N5model5pluckEv"></span><span id="_CPPv2N5model5pluckEv"></span><span id="model::pluck"></span><span class="sig-name descname"><span class="n"><span class="pre">pluck</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model5pluckEv" title="Link to this definition"></a><br /></dt>
 <dd><p>The pluck function example is <a class="reference internal" href="../../tutorial/select_columns.html"><span class="doc">here</span></a>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">pluck</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Attr</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span><span class="w"></span>
-<span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute_aggregator</span><span class="w"> </span><span class="n">Aggregator</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">pluck</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">Aggregator</span><span class="o">::</span><span class="n">attribute_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">pluck</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Attr</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute_aggregator</span><span class="w"> </span><span class="n">Aggregator</span><span class="o">&gt;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">pluck</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">Aggregator</span><span class="o">::</span><span class="n">attribute_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model5whereEv">
-<span id="_CPPv3N5model5whereEv"></span><span id="_CPPv2N5model5whereEv"></span><span id="model::where"></span><span class="sig-name descname"><span class="n"><span class="pre">where</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model5whereEv" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3N5model5whereEv"></span><span id="_CPPv2N5model5whereEv"></span><span id="model::where"></span><span class="sig-name descname"><span class="n"><span class="pre">where</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model5whereEv" title="Link to this definition"></a><br /></dt>
 <dd><p>The example is <a class="reference internal" href="../../tutorial/find_columns.html"><span class="doc">here</span></a>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">where</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Attr</span><span class="o">&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">Attr</span><span class="o">&gt;&gt;</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">where</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Attr</span><span class="o">&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">Attr</span><span class="o">&gt;&gt;</span><span class="p">;</span>
 
-<span class="k">template</span><span class="o">&lt;</span><span class="n">specialized_from</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SrcBindAttrs</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">where</span><span class="p">(</span><span class="n">query_condition</span><span class="o">&lt;</span><span class="n">SrcBindAttrs</span><span class="o">&gt;&amp;&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">SrcBindAttrs</span><span class="o">&gt;</span><span class="p">;</span><span class="w"></span>
+<span class="k">template</span><span class="o">&lt;</span><span class="n">specialized_from</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SrcBindAttrs</span><span class="o">&gt;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">where</span><span class="p">(</span><span class="n">query_condition</span><span class="o">&lt;</span><span class="n">SrcBindAttrs</span><span class="o">&gt;&amp;&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">SrcBindAttrs</span><span class="o">&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model7destroyEv">
-<span id="_CPPv3N5model7destroyEv"></span><span id="_CPPv2N5model7destroyEv"></span><span id="model::destroy"></span><span class="sig-name descname"><span class="n"><span class="pre">destroy</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model7destroyEv" title="Permalink to this definition"></a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">destroy</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Attr</span><span class="o">&amp;&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">Attr</span><span class="o">&gt;&gt;</span><span class="p">;</span><span class="w"></span>
+<span id="_CPPv3N5model7destroyEv"></span><span id="_CPPv2N5model7destroyEv"></span><span id="model::destroy"></span><span class="sig-name descname"><span class="n"><span class="pre">destroy</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model7destroyEv" title="Link to this definition"></a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">destroy</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Attr</span><span class="o">&amp;&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">Attr</span><span class="o">&gt;&gt;</span><span class="p">;</span>
 
-<span class="k">template</span><span class="o">&lt;</span><span class="n">specialized_from</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SrcBindAttrs</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">destroy</span><span class="p">(</span><span class="n">query_condition</span><span class="o">&lt;</span><span class="n">SrcBindAttrs</span><span class="o">&gt;&amp;&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="n">SrcBindAttrs</span><span class="o">&gt;</span><span class="p">;</span><span class="w"></span>
+<span class="k">template</span><span class="o">&lt;</span><span class="n">specialized_from</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SrcBindAttrs</span><span class="o">&gt;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">destroy</span><span class="p">(</span><span class="n">query_condition</span><span class="o">&lt;</span><span class="n">SrcBindAttrs</span><span class="o">&gt;&amp;&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="n">SrcBindAttrs</span><span class="o">&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model5limitEv">
-<span id="_CPPv3N5model5limitEv"></span><span id="_CPPv2N5model5limitEv"></span><span id="model::limit"></span><span class="sig-name descname"><span class="n"><span class="pre">limit</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model5limitEv" title="Permalink to this definition"></a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">limit</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span><span class="w"></span>
+<span id="_CPPv3N5model5limitEv"></span><span id="_CPPv2N5model5limitEv"></span><span id="model::limit"></span><span class="sig-name descname"><span class="n"><span class="pre">limit</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model5limitEv" title="Link to this definition"></a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">limit</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model8order_byEv">
-<span id="_CPPv3N5model8order_byEv"></span><span id="_CPPv2N5model8order_byEv"></span><span id="model::order_by"></span><span class="sig-name descname"><span class="n"><span class="pre">order_by</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model8order_byEv" title="Permalink to this definition"></a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">order_by</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">order</span><span class="o">::</span><span class="n">asc</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span><span class="w"></span>
+<span id="_CPPv3N5model8order_byEv"></span><span id="_CPPv2N5model8order_byEv"></span><span id="model::order_by"></span><span class="sig-name descname"><span class="n"><span class="pre">order_by</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model8order_byEv" title="Link to this definition"></a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">order_by</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">order</span><span class="o">::</span><span class="n">asc</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model4joinEv">
-<span id="_CPPv3N5model4joinEv"></span><span id="_CPPv2N5model4joinEv"></span><span id="model::join"></span><span class="sig-name descname"><span class="n"><span class="pre">join</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model4joinEv" title="Permalink to this definition"></a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ReferModel</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">requires</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">derived_from</span><span class="o">&lt;</span><span class="n">ReferModel</span><span class="p">,</span><span class="w"> </span><span class="n">model</span><span class="o">&lt;</span><span class="n">ReferModel</span><span class="o">&gt;&gt;</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">join</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span><span class="w"></span>
+<span id="_CPPv3N5model4joinEv"></span><span id="_CPPv2N5model4joinEv"></span><span id="model::join"></span><span class="sig-name descname"><span class="n"><span class="pre">join</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model4joinEv" title="Link to this definition"></a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ReferModel</span><span class="o">&gt;</span>
+<span class="k">requires</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">derived_from</span><span class="o">&lt;</span><span class="n">ReferModel</span><span class="p">,</span><span class="w"> </span><span class="n">model</span><span class="o">&lt;</span><span class="n">ReferModel</span><span class="o">&gt;&gt;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">join</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model9left_joinEv">
-<span id="_CPPv3N5model9left_joinEv"></span><span id="_CPPv2N5model9left_joinEv"></span><span id="model::left_join"></span><span class="sig-name descname"><span class="n"><span class="pre">left_join</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model9left_joinEv" title="Permalink to this definition"></a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ReferModel</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">requires</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">derived_from</span><span class="o">&lt;</span><span class="n">ReferModel</span><span class="p">,</span><span class="w"> </span><span class="n">model</span><span class="o">&lt;</span><span class="n">ReferModel</span><span class="o">&gt;&gt;</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">left_join</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span><span class="w"></span>
+<span id="_CPPv3N5model9left_joinEv"></span><span id="_CPPv2N5model9left_joinEv"></span><span id="model::left_join"></span><span class="sig-name descname"><span class="n"><span class="pre">left_join</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model9left_joinEv" title="Link to this definition"></a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ReferModel</span><span class="o">&gt;</span>
+<span class="k">requires</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">derived_from</span><span class="o">&lt;</span><span class="n">ReferModel</span><span class="p">,</span><span class="w"> </span><span class="n">model</span><span class="o">&lt;</span><span class="n">ReferModel</span><span class="o">&gt;&gt;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">left_join</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Derived</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model8group_byEv">
-<span id="_CPPv3N5model8group_byEv"></span><span id="_CPPv2N5model8group_byEv"></span><span id="model::group_by"></span><span class="sig-name descname"><span class="n"><span class="pre">group_by</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model8group_byEv" title="Permalink to this definition"></a><br /></dt>
-<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">group_by</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">Attr</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span><span class="w"></span>
+<span id="_CPPv3N5model8group_byEv"></span><span id="_CPPv2N5model8group_byEv"></span><span id="model::group_by"></span><span class="sig-name descname"><span class="n"><span class="pre">group_by</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model8group_byEv" title="Link to this definition"></a><br /></dt>
+<dd><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">group_by</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">Attr</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model5countEv">
-<span id="_CPPv3N5model5countEv"></span><span id="_CPPv2N5model5countEv"></span><span id="model::count"></span><span class="sig-name descname"><span class="n"><span class="pre">count</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model5countEv" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3N5model5countEv"></span><span id="_CPPv2N5model5countEv"></span><span id="model::count"></span><span class="sig-name descname"><span class="n"><span class="pre">count</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model5countEv" title="Link to this definition"></a><br /></dt>
 <dd><p>The aggregation example is <a class="reference internal" href="../../tutorial/aggregation.html"><span class="doc">here</span></a>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">count</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">count</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model3sumEv">
-<span id="_CPPv3N5model3sumEv"></span><span id="_CPPv2N5model3sumEv"></span><span id="model::sum"></span><span class="sig-name descname"><span class="n"><span class="pre">sum</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model3sumEv" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3N5model3sumEv"></span><span id="_CPPv2N5model3sumEv"></span><span id="model::sum"></span><span class="sig-name descname"><span class="n"><span class="pre">sum</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model3sumEv" title="Link to this definition"></a><br /></dt>
 <dd><p>The aggregation example is <a class="reference internal" href="../../tutorial/aggregation.html"><span class="doc">here</span></a>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">requires</span><span class="w"> </span><span class="k">requires</span><span class="p">{</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">Attr</span><span class="o">::</span><span class="n">sum</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">sum</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">Attr</span><span class="o">::</span><span class="n">sum</span><span class="o">::</span><span class="n">attribute_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span>
+<span class="k">requires</span><span class="w"> </span><span class="k">requires</span><span class="p">{</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">Attr</span><span class="o">::</span><span class="n">sum</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">sum</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">Attr</span><span class="o">::</span><span class="n">sum</span><span class="o">::</span><span class="n">attribute_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model3avgEv">
-<span id="_CPPv3N5model3avgEv"></span><span id="_CPPv2N5model3avgEv"></span><span id="model::avg"></span><span class="sig-name descname"><span class="n"><span class="pre">avg</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model3avgEv" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3N5model3avgEv"></span><span id="_CPPv2N5model3avgEv"></span><span id="model::avg"></span><span class="sig-name descname"><span class="n"><span class="pre">avg</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model3avgEv" title="Link to this definition"></a><br /></dt>
 <dd><p>The aggregation example is <a class="reference internal" href="../../tutorial/aggregation.html"><span class="doc">here</span></a>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">requires</span><span class="w"> </span><span class="k">requires</span><span class="p">{</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">Attr</span><span class="o">::</span><span class="n">avg</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">avg</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">Attr</span><span class="o">::</span><span class="n">avg</span><span class="o">::</span><span class="n">attribute_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span>
+<span class="k">requires</span><span class="w"> </span><span class="k">requires</span><span class="p">{</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">Attr</span><span class="o">::</span><span class="n">avg</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">avg</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">Attr</span><span class="o">::</span><span class="n">avg</span><span class="o">::</span><span class="n">attribute_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model3maxEv">
-<span id="_CPPv3N5model3maxEv"></span><span id="_CPPv2N5model3maxEv"></span><span id="model::max"></span><span class="sig-name descname"><span class="n"><span class="pre">max</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model3maxEv" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3N5model3maxEv"></span><span id="_CPPv2N5model3maxEv"></span><span id="model::max"></span><span class="sig-name descname"><span class="n"><span class="pre">max</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model3maxEv" title="Link to this definition"></a><br /></dt>
 <dd><p>The aggregation example is <a class="reference internal" href="../../tutorial/aggregation.html"><span class="doc">here</span></a>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">requires</span><span class="w"> </span><span class="k">requires</span><span class="p">{</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">Attr</span><span class="o">::</span><span class="n">max</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">max</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">Attr</span><span class="o">::</span><span class="n">max</span><span class="o">::</span><span class="n">attribute_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span>
+<span class="k">requires</span><span class="w"> </span><span class="k">requires</span><span class="p">{</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">Attr</span><span class="o">::</span><span class="n">max</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">max</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">Attr</span><span class="o">::</span><span class="n">max</span><span class="o">::</span><span class="n">attribute_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5model3minEv">
-<span id="_CPPv3N5model3minEv"></span><span id="_CPPv2N5model3minEv"></span><span id="model::min"></span><span class="sig-name descname"><span class="n"><span class="pre">min</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model3minEv" title="Permalink to this definition"></a><br /></dt>
+<span id="_CPPv3N5model3minEv"></span><span id="_CPPv2N5model3minEv"></span><span id="model::min"></span><span class="sig-name descname"><span class="n"><span class="pre">min</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5model3minEv" title="Link to this definition"></a><br /></dt>
 <dd><p>The aggregation example is <a class="reference internal" href="../../tutorial/aggregation.html"><span class="doc">here</span></a>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span><span class="w"></span>
-<span class="k">requires</span><span class="w"> </span><span class="k">requires</span><span class="p">{</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">Attr</span><span class="o">::</span><span class="n">min</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">min</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">Attr</span><span class="o">::</span><span class="n">min</span><span class="o">::</span><span class="n">attribute_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="n">is_attribute</span><span class="w"> </span><span class="n">Attr</span><span class="o">&gt;</span>
+<span class="k">requires</span><span class="w"> </span><span class="k">requires</span><span class="p">{</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">Attr</span><span class="o">::</span><span class="n">min</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">min</span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query_relation</span><span class="o">&lt;</span><span class="n">Attr</span><span class="o">::</span><span class="n">min</span><span class="o">::</span><span class="n">attribute_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;&gt;&gt;</span><span class="p">;</span>
 </pre></div>
 </div>
 </dd></dl>

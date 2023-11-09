@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Group by &mdash; ARCXX  documentation</title>
@@ -11,11 +11,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,11 +28,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> ARCXX
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ARCXX
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -91,8 +95,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Group by</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Group by</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/tutorial/group_by.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -103,20 +107,20 @@
            <div itemprop="articleBody">
              
   <section id="group-by">
-<h1>Group by<a class="headerlink" href="#group-by" title="Permalink to this heading"></a></h1>
+<h1>Group by<a class="headerlink" href="#group-by" title="Link to this heading"></a></h1>
 <section id="column-aggregations-by-grouping">
-<h2>Column aggregations by grouping<a class="headerlink" href="#column-aggregations-by-grouping" title="Permalink to this heading"></a></h2>
+<h2>Column aggregations by grouping<a class="headerlink" href="#column-aggregations-by-grouping" title="Link to this heading"></a></h2>
 <p>To count grouped columns, use <code class="code docutils literal notranslate"><span class="pre">group_by()</span></code> and <code class="code docutils literal notranslate"><span class="pre">count()</span></code>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">User</span><span class="o">::</span><span class="n">group_by</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Gender</span><span class="o">&gt;</span><span class="p">().</span><span class="n">count</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">conn</span><span class="p">);</span><span class="w"></span>
-<span class="k">static_assert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_same_v</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="o">::</span><span class="n">value_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Gender</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="o">&gt;&gt;</span><span class="p">);</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">User</span><span class="o">::</span><span class="n">group_by</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Gender</span><span class="o">&gt;</span><span class="p">().</span><span class="n">count</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">conn</span><span class="p">);</span>
+<span class="k">static_assert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_same_v</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="o">::</span><span class="n">value_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Gender</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="o">&gt;&gt;</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>To aggregate grouped columns, use <code class="code docutils literal notranslate"><span class="pre">pluck()</span></code> or <code class="code docutils literal notranslate"><span class="pre">select()</span></code>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">select_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">User</span><span class="o">::</span><span class="n">group_by</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Gender</span><span class="o">&gt;</span><span class="p">().</span><span class="n">select</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Age</span><span class="o">::</span><span class="n">max</span><span class="p">,</span><span class="w"> </span><span class="n">User</span><span class="o">::</span><span class="n">Age</span><span class="o">::</span><span class="n">min</span><span class="o">&gt;</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">conn</span><span class="p">);</span><span class="w"></span>
-<span class="k">static_assert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_same_v</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">select_result</span><span class="p">)</span><span class="o">::</span><span class="n">value_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Gender</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Age</span><span class="o">::</span><span class="n">max</span><span class="p">,</span><span class="w"> </span><span class="n">User</span><span class="o">::</span><span class="n">Age</span><span class="o">::</span><span class="n">min</span><span class="o">&gt;&gt;&gt;</span><span class="p">);</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">select_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">User</span><span class="o">::</span><span class="n">group_by</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Gender</span><span class="o">&gt;</span><span class="p">().</span><span class="n">select</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Age</span><span class="o">::</span><span class="n">max</span><span class="p">,</span><span class="w"> </span><span class="n">User</span><span class="o">::</span><span class="n">Age</span><span class="o">::</span><span class="n">min</span><span class="o">&gt;</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">conn</span><span class="p">);</span>
+<span class="k">static_assert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_same_v</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">select_result</span><span class="p">)</span><span class="o">::</span><span class="n">value_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Gender</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Age</span><span class="o">::</span><span class="n">max</span><span class="p">,</span><span class="w"> </span><span class="n">User</span><span class="o">::</span><span class="n">Age</span><span class="o">::</span><span class="n">min</span><span class="o">&gt;&gt;&gt;</span><span class="p">);</span>
 
-<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">pluck_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">User</span><span class="o">::</span><span class="n">group_by</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Gender</span><span class="o">&gt;</span><span class="p">().</span><span class="n">pluck</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Age</span><span class="o">::</span><span class="n">avg</span><span class="o">&gt;</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">conn</span><span class="p">);</span><span class="w"></span>
-<span class="k">static_assert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_same_v</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">pluck_result</span><span class="p">)</span><span class="o">::</span><span class="n">value_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Gender</span><span class="p">,</span><span class="w"> </span><span class="n">User</span><span class="o">::</span><span class="n">Age</span><span class="o">::</span><span class="n">avg</span><span class="o">&gt;&gt;</span><span class="p">);</span><span class="w"></span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">pluck_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">User</span><span class="o">::</span><span class="n">group_by</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Gender</span><span class="o">&gt;</span><span class="p">().</span><span class="n">pluck</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Age</span><span class="o">::</span><span class="n">avg</span><span class="o">&gt;</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">conn</span><span class="p">);</span>
+<span class="k">static_assert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_same_v</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">pluck_result</span><span class="p">)</span><span class="o">::</span><span class="n">value_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">User</span><span class="o">::</span><span class="n">Gender</span><span class="p">,</span><span class="w"> </span><span class="n">User</span><span class="o">::</span><span class="n">Age</span><span class="o">::</span><span class="n">avg</span><span class="o">&gt;&gt;</span><span class="p">);</span>
 </pre></div>
 </div>
 </section>

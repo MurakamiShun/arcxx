@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Aggregation &mdash; ARCXX  documentation</title>
@@ -11,11 +11,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,11 +28,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> ARCXX
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ARCXX
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -92,8 +96,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Aggregation</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Aggregation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/tutorial/aggregation.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -104,43 +108,43 @@
            <div itemprop="articleBody">
              
   <section id="aggregation">
-<h1>Aggregation<a class="headerlink" href="#aggregation" title="Permalink to this heading"></a></h1>
+<h1>Aggregation<a class="headerlink" href="#aggregation" title="Link to this heading"></a></h1>
 <section id="columns-count">
-<h2>Columns count<a class="headerlink" href="#columns-count" title="Permalink to this heading"></a></h2>
+<h2>Columns count<a class="headerlink" href="#columns-count" title="Link to this heading"></a></h2>
 <p>To count columns, use <code class="code docutils literal notranslate"><span class="pre">count()</span></code>.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">sqlite3</span><span class="o">::</span><span class="n">connector</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;example.sqlite3&quot;</span><span class="p">);</span><span class="w"></span>
-<span class="k">auto</span><span class="w"> </span><span class="n">sql_stmt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">count</span><span class="p">();</span><span class="w"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arcxx</span><span class="o">::</span><span class="n">sqlite3</span><span class="o">::</span><span class="n">connector</span><span class="o">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;example.sqlite3&quot;</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">sql_stmt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">count</span><span class="p">();</span>
 
 <span class="c1">// print SQL code</span>
-<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">to_sql</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">to_sql</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 
 <span class="c1">// Execute data counting</span>
-<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">count_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">count_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sql_stmt</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span>
 
 <span class="c1">// decltype(count_result) == tl::expected&lt;size_t, arcxx::string&gt;</span>
-<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">count_result</span><span class="p">){</span><span class="w"></span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">count_result</span><span class="p">){</span>
 <span class="w">    </span><span class="c1">// error handling</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Error message:&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">count_result</span><span class="p">.</span><span class="n">error</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Error message:&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">count_result</span><span class="p">.</span><span class="n">error</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;columns count:&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">count_result</span><span class="p">.</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;columns count:&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">count_result</span><span class="p">.</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 </pre></div>
 </div>
 </section>
 <section id="column-aggregations">
-<h2>Column aggregations<a class="headerlink" href="#column-aggregations" title="Permalink to this heading"></a></h2>
+<h2>Column aggregations<a class="headerlink" href="#column-aggregations" title="Link to this heading"></a></h2>
 <p>Column aggregation functions, <code class="code docutils literal notranslate"><span class="pre">avg()</span></code> and <code class="code docutils literal notranslate"><span class="pre">max</span></code> etc… are used like <code class="code docutils literal notranslate"><span class="pre">count()</span></code> function.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// decltype(max_result) == tl::expected&lt;ExampleTable::ID, arcxx::string&gt;</span>
-<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">max_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">max</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">&gt;</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
-<span class="n">max_result</span><span class="p">.</span><span class="n">value</span><span class="p">();</span><span class="w"></span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">max_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">max</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">&gt;</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span>
+<span class="n">max_result</span><span class="p">.</span><span class="n">value</span><span class="p">();</span>
 
 <span class="cm">/*</span>
 <span class="cm"> * decltype(avg_result) == tl::expected&lt;ExampleTable::ID::avg_attribute, arcxx::string&gt;</span>
 <span class="cm"> * value_type of avg_attribute is std::optional&lt;double&gt;.</span>
 <span class="cm"> * Because the average type will be double.</span>
-<span class="cm"> */</span><span class="w"></span>
-<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">avg_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">avg</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">&gt;</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
-<span class="n">avg_result</span><span class="p">.</span><span class="n">value</span><span class="p">();</span><span class="w"></span>
+<span class="cm"> */</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">avg_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">avg</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">&gt;</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span>
+<span class="n">avg_result</span><span class="p">.</span><span class="n">value</span><span class="p">();</span>
 </pre></div>
 </div>
 <p>Also, aggregation functions can be used in select.</p>
@@ -148,11 +152,11 @@
 <span class="cm"> * decltype(aggrgated_tuple) == std::tuple&lt;ExampleTable::ID, ExampleTable::ID&gt;</span>
 <span class="cm"> * The first element is max id.</span>
 <span class="cm"> * Second one is min id;</span>
-<span class="cm"> */</span><span class="w"></span>
-<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">aggrgated_tuple_result</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
-<span class="w">    </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">select</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">::</span><span class="n">max</span><span class="p">,</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">::</span><span class="n">min</span><span class="o">&gt;</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span><span class="w"></span>
+<span class="cm"> */</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">aggrgated_tuple_result</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">select</span><span class="o">&lt;</span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">::</span><span class="n">max</span><span class="p">,</span><span class="w"> </span><span class="n">ExampleTable</span><span class="o">::</span><span class="n">ID</span><span class="o">::</span><span class="n">min</span><span class="o">&gt;</span><span class="p">().</span><span class="n">exec</span><span class="p">(</span><span class="n">connection</span><span class="p">);</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">aggrgated_tuple_result</span><span class="p">.</span><span class="n">value</span><span class="p">());</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">aggrgated_tuple_result</span><span class="p">.</span><span class="n">value</span><span class="p">());</span>
 </pre></div>
 </div>
 </section>
