@@ -9,7 +9,7 @@ endif()
 project(ARCXX
     VERSION 0.1
     LANGUAGES CXX
-    HOMEPAGE_URL "https://github.com/akisute514/arcxx"
+    HOMEPAGE_URL "https://github.com/MurakamiShun/arcxx"
 )
 
 include(GNUInstallDirs)
